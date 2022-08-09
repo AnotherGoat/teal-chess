@@ -7,5 +7,6 @@ The following features are planned but still in the works:
 - Add a confirmation warning when closing the game.
 - Indicate which player's is the current turn.
 - Add feedback when selecting a piece.
+- Parse a text file to put the pieces on the board.
 
 There are also many TODOs thrown around in the code, for specific implementation details.

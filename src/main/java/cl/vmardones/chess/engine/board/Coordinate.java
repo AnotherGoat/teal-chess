@@ -7,14 +7,13 @@ package cl.vmardones.chess.engine.board;
 
 import cl.vmardones.chess.engine.player.Alliance;
 import com.google.common.collect.ImmutableList;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 import javax.annotation.MatchesPattern;
+import org.hibernate.validator.constraints.Range;
 
 /**
  * A coordinate is one of the 64 positions where a chess piece can be. It's usually identified by
@@ -33,8 +32,7 @@ public final class Coordinate {
         .collect(ImmutableList.toImmutableList());
   }
 
-  @Min(Board.MIN_TILES)
-  @Max(Board.MAX_TILES - 1)
+  @Range(min = Board.MIN_TILES, max = Board.MAX_TILES - 1)
   private final int index;
 
   /* Index notation initialization */
@@ -43,14 +41,23 @@ public final class Coordinate {
     this.index = index;
   }
 
+  private static boolean isOutsideBoard(final int index) {
+    return index < Board.MIN_TILES || index >= Board.MAX_TILES;
+  }
+
   /**
    * Create a coordinate, using an array index. Generally used when creating every coordinate, one
    * by one.
    *
    * @param index The array index of the coordinate
    * @return The created coordinate
+   * @throws InvalidCoordinateException If the coordinate is outside the chessboard
    */
   public static Coordinate of(final int index) {
+    if (isOutsideBoard(index)) {
+      throw new InvalidCoordinateException("Index is outside chessboard: " + index);
+    }
+
     return COORDINATES_CACHE.get(index);
   }
 

@@ -71,6 +71,7 @@ dependencies {
 
     // General validations
     implementation("org.hibernate.validator:hibernate-validator:7.0.5.Final")
+    testImplementation("org.glassfish:jakarta.el:4.0.2")
 
     // Unit testing
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")

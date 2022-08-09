@@ -44,16 +44,9 @@ class SquarePanel<T extends JPanel> extends JPanel {
     };
   }
 
+  // TODO: Resize every component along with the panel
   private void resize() {
-
-    final var containerHeight = getHeight();
-    final var containerWidth = getWidth();
-
-    if (containerHeight > containerWidth) {
-      square.setPreferredSize(new SquareDimension(containerWidth));
-    } else if (containerHeight < containerWidth) {
-      square.setPreferredSize(new SquareDimension(containerHeight));
-    }
+    square.setPreferredSize(new SquareDimension(Math.min(getHeight(), getWidth())));
   }
 
   private static class SquareDimension extends Dimension {

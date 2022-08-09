@@ -18,6 +18,7 @@ import cl.vmardones.chess.io.FontLoader;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.google.common.collect.Lists;
+import jakarta.validation.constraints.NotNull;
 import java.awt.*;
 import java.awt.event.WindowStateListener;
 import java.util.List;
@@ -43,8 +44,10 @@ public class Table {
 
   @Getter @Setter private Game game;
 
+  // TODO: Replace move log with game history
   private final MoveLog moveLog;
 
+  // TODO: Group these 3 in a "PlayerSelection" class
   @Getter @Setter private Tile sourceTile;
 
   @Getter @Setter private Tile destinationTile;
@@ -55,7 +58,7 @@ public class Table {
 
   private boolean darkTheme;
 
-  @Getter private BoardDirection boardDirection;
+  @NotNull @Getter private BoardDirection boardDirection;
 
   public Table(final boolean darkTheme, final boolean highlightLegals, final boolean flipBoard) {
     this.darkTheme = darkTheme;

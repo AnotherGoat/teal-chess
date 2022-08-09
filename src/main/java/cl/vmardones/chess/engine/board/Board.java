@@ -11,6 +11,7 @@ import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Alliance;
 import com.google.common.collect.ImmutableList;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.util.*;
 import java.util.stream.IntStream;
 import lombok.*;
@@ -24,15 +25,20 @@ public class Board {
   public static final int MIN_TILES = 0;
   public static final int MAX_TILES = SIDE_LENGTH * SIDE_LENGTH;
 
+  @Size(min = MAX_TILES, max = MAX_TILES)
   private final List<Tile> tiles;
 
-  @Getter private final Collection<Piece> whitePieces;
+  @Getter
+  @Size(max = 16)
+  private final Collection<Piece> whitePieces;
 
-  @Getter private final King whiteKing;
+  @NotNull @Getter private final King whiteKing;
 
-  @Getter private final Collection<Piece> blackPieces;
+  @Getter
+  @Size(max = 16)
+  private final Collection<Piece> blackPieces;
 
-  @Getter private final King blackKing;
+  @NotNull @Getter private final King blackKing;
 
   @Getter private final Pawn enPassantPawn;
 

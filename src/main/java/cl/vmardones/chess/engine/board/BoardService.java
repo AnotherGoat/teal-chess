@@ -24,7 +24,6 @@ public class BoardService {
    *
    * @return The standard chessboard
    */
-  // TODO: Parse a text file to create the board
   public Board createStandardBoard() {
 
     final var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
