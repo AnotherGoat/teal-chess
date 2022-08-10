@@ -33,9 +33,8 @@ class TilePanel extends JPanel {
   private static final Color LIGHT_COLOR = Color.decode("#FFCE9E");
   private static final Color DARK_COLOR = Color.decode("#D18B47");
 
-  private static final Integer BACKGROUND_LAYER = 1;
-  private static final Integer PIECE_LAYER = 2;
-  private static final Integer HIGHLIGHT_LAYER = 3;
+  private static final Integer PIECE_LAYER = 1;
+  private static final Integer HIGHLIGHT_LAYER = 2;
 
   private final transient Table table;
   private JLayeredPane layeredPane;
@@ -156,7 +155,7 @@ class TilePanel extends JPanel {
 
   void drawTile(final Board board) {
     layeredPane = createLayeredPane();
-    assignTileColor();
+    // assignTileColor();
     assignPieceIcon(table.getTileAt(coordinate));
     highlightLegals(board);
     add(layeredPane, BorderLayout.CENTER);
@@ -173,7 +172,7 @@ class TilePanel extends JPanel {
 
     if (tile.getPiece().isPresent()) {
       PieceIconLoader.load(tile.getPiece().get(), INITIAL_SIZE.width, INITIAL_SIZE.height)
-          .ifPresent(image -> addImage(image, JLayeredPane.DEFAULT_LAYER));
+          .ifPresent(image -> addImage(image, PIECE_LAYER));
     }
   }
 
@@ -193,7 +192,7 @@ class TilePanel extends JPanel {
                     SvgLoader.load(
                         "art/misc/green_dot.svg", INITIAL_SIZE.width / 2, INITIAL_SIZE.height / 2);
 
-                bufferedImage.ifPresent(image -> addImage(image, JLayeredPane.PALETTE_LAYER));
+                bufferedImage.ifPresent(image -> addImage(image, HIGHLIGHT_LAYER));
               });
     }
   }

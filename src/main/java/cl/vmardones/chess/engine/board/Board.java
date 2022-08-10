@@ -10,8 +10,6 @@ import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Alliance;
 import com.google.common.collect.ImmutableList;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import java.util.*;
 import java.util.stream.IntStream;
 import lombok.*;
@@ -25,20 +23,15 @@ public class Board {
   public static final int MIN_TILES = 0;
   public static final int MAX_TILES = SIDE_LENGTH * SIDE_LENGTH;
 
-  @Size(min = MAX_TILES, max = MAX_TILES)
   private final List<Tile> tiles;
 
-  @Getter
-  @Size(max = 16)
-  private final Collection<Piece> whitePieces;
+  @Getter private final Collection<Piece> whitePieces;
 
-  @NotNull @Getter private final King whiteKing;
+  @NonNull @Getter private final King whiteKing;
 
-  @Getter
-  @Size(max = 16)
-  private final Collection<Piece> blackPieces;
+  @Getter private final Collection<Piece> blackPieces;
 
-  @NotNull @Getter private final King blackKing;
+  @NonNull @Getter private final King blackKing;
 
   @Getter private final Pawn enPassantPawn;
 
@@ -78,18 +71,18 @@ public class Board {
 
   /* Methods for checking the board */
 
-  public Tile getTile(@NotNull final Coordinate coordinate) {
+  public Tile getTile(@NonNull final Coordinate coordinate) {
     return tiles.get(coordinate.index());
   }
 
   public boolean contains(
-      @NotNull final Coordinate coordinate, @NotNull final Piece.PieceType pieceType) {
+      @NonNull final Coordinate coordinate, @NonNull final Piece.PieceType pieceType) {
     final var piece = getTile(coordinate).getPiece();
 
     return piece.isPresent() && piece.get().getPieceType() == pieceType;
   }
 
-  public boolean containsNothing(@NotNull final Coordinate coordinate) {
+  public boolean containsNothing(@NonNull final Coordinate coordinate) {
     return getTile(coordinate).getPiece().isEmpty();
   }
 
@@ -102,7 +95,7 @@ public class Board {
    *
    * @return The board builder
    */
-  public static BoardBuilder builder(@NotNull final King whiteKing, @NotNull final King blackKing) {
+  public static BoardBuilder builder(@NonNull final King whiteKing, @NonNull final King blackKing) {
     return new BoardBuilder(whiteKing, blackKing);
   }
 

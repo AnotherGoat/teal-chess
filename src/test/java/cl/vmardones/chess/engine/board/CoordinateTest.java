@@ -9,19 +9,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cl.vmardones.chess.engine.player.Alliance;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class CoordinateTest {
-
-  Validator validator;
-
-  @BeforeEach
-  void setUp() {
-    validator = Validation.buildDefaultValidatorFactory().getValidator();
-  }
 
   @Test
   void cache() {
@@ -38,6 +28,13 @@ class CoordinateTest {
     assertThatThrownBy(() -> Coordinate.of(-1))
         .isInstanceOf(InvalidCoordinateException.class)
         .hasMessageContaining("-1");
+  }
+
+  @Test
+  void tooHighIndex() {
+    assertThatThrownBy(() -> Coordinate.of(64))
+        .isInstanceOf(InvalidCoordinateException.class)
+        .hasMessageContaining("64");
   }
 
   @Test

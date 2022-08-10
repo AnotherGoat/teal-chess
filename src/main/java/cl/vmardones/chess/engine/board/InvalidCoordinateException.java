@@ -5,7 +5,7 @@
 
 package cl.vmardones.chess.engine.board;
 
-/** An exception that is thrown when trying to access coordinate outside of the chessboard. */
+/** An exception that is thrown when trying to access a coordinate outside of the chessboard. */
 public class InvalidCoordinateException extends RuntimeException {
 
   /**

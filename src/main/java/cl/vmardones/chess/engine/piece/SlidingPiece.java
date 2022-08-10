@@ -9,16 +9,16 @@ import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.board.Tile;
 import com.google.common.collect.ImmutableList;
-import jakarta.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.IntStream;
+import lombok.NonNull;
 
 interface SlidingPiece extends Piece {
 
   Collection<int[]> getMoveVectors();
 
   @Override
-  default Collection<Coordinate> calculatePossibleDestinations(@NotNull final Board board) {
+  default Collection<Coordinate> calculatePossibleDestinations(@NonNull final Board board) {
     return getMoveVectors().stream()
         .map(vector -> calculateOffsets(vector, board))
         .flatMap(Collection::stream)

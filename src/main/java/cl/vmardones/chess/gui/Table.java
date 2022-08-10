@@ -18,12 +18,12 @@ import cl.vmardones.chess.io.FontLoader;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.google.common.collect.Lists;
-import jakarta.validation.constraints.NotNull;
 import java.awt.*;
 import java.awt.event.WindowStateListener;
 import java.util.List;
 import javax.swing.*;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,7 +58,7 @@ public class Table {
 
   private boolean darkTheme;
 
-  @NotNull @Getter private BoardDirection boardDirection;
+  @NonNull @Getter private BoardDirection boardDirection;
 
   public Table(final boolean darkTheme, final boolean highlightLegals, final boolean flipBoard) {
     this.darkTheme = darkTheme;
@@ -218,6 +218,5 @@ public class Table {
         case FLIPPED -> NORMAL;
       };
     }
-    ;
   }
 }
