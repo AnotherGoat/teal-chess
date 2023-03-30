@@ -14,8 +14,7 @@ import lombok.EqualsAndHashCode;
 /** A move where a pawn captures another piece. */
 @EqualsAndHashCode(callSuper = true)
 public class PawnCaptureMove extends CaptureMove {
-  public PawnCaptureMove(
-      final Board board, final Pawn pawn, final Coordinate destination, final Piece capturedPiece) {
+  public PawnCaptureMove(Board board, Pawn pawn, Coordinate destination, Piece capturedPiece) {
     super(board, pawn, destination, capturedPiece);
   }
 

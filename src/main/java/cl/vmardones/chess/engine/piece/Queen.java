@@ -33,12 +33,12 @@ public final class Queen implements SlidingPiece {
   private Alliance alliance;
   private boolean firstMove;
 
-  public Queen(final Coordinate position, final Alliance alliance) {
+  public Queen(Coordinate position, Alliance alliance) {
     this(position, alliance, true);
   }
 
   @Override
-  public Queen move(final Move move) {
+  public Queen move(Move move) {
     return new Queen(move.getDestination(), alliance, false);
   }
 

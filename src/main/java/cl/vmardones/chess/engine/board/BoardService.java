@@ -24,10 +24,10 @@ public class BoardService {
    */
   public Board createStandardBoard() {
 
-    final var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
-    final var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
+    var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
+    var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
 
-    final var builder = Board.builder(whiteKing, blackKing);
+    var builder = Board.builder(whiteKing, blackKing);
 
     builder
         .piece(new Rook(Coordinate.of("a8"), Alliance.BLACK))
@@ -62,8 +62,8 @@ public class BoardService {
     return builder.build();
   }
 
-  public String prettyPrint(final Board board) {
-    final var builder = new StringBuilder();
+  public String prettyPrint(Board board) {
+    var builder = new StringBuilder();
 
     IntStream.range(MIN_TILES, MAX_TILES)
         .mapToObj(Coordinate::of)
@@ -73,11 +73,11 @@ public class BoardService {
     return builder.toString();
   }
 
-  private String getFormat(final Coordinate coordinate) {
+  private String getFormat(Coordinate coordinate) {
     return (coordinate.index() + 1) % Board.SIDE_LENGTH == 0 ? "%s  \n" : "%s  ";
   }
 
-  public List<Move> calculateLegals(final Board board, final List<Piece> pieces) {
+  public List<Move> calculateLegals(Board board, List<Piece> pieces) {
     return pieces.stream()
         .map(piece -> piece.calculateLegals(board))
         .flatMap(Collection::stream)

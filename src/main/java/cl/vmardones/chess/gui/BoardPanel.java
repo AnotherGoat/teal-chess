@@ -20,7 +20,7 @@ class BoardPanel extends JPanel {
   private final transient Table table;
   private final List<TilePanel> boardTiles;
 
-  BoardPanel(final Table table) {
+  BoardPanel(Table table) {
     super(new GridLayout(8, 8));
     this.table = table;
 
@@ -39,7 +39,7 @@ class BoardPanel extends JPanel {
     validate();
   }
 
-  void drawBoard(final Board board) {
+  void drawBoard(Board board) {
     removeAll();
 
     table

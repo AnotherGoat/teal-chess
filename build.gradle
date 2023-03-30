@@ -97,7 +97,7 @@ tasks {
     jacocoTestReport {
         reports {
             // Required to make Sonarqube understand the results
-            xml.required = true
+            xml.required.set(true)
         }
     }
 

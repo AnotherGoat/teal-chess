@@ -31,7 +31,7 @@ public sealed interface Piece permits JumpingPiece, SlidingPiece {
    * @param board Current state of the game board
    * @return List of possible moves
    */
-  default List<Move> calculateLegals(final Board board) {
+  default List<Move> calculateLegals(Board board) {
     return calculatePossibleDestinations(board).stream()
         .map(board::getTile)
         .filter(this::canAccess)
@@ -40,9 +40,9 @@ public sealed interface Piece permits JumpingPiece, SlidingPiece {
         .toList();
   }
 
-  List<Coordinate> calculatePossibleDestinations(final Board board);
+  List<Coordinate> calculatePossibleDestinations(Board board);
 
-  default boolean isInMoveRange(final Board board, final Coordinate coordinate) {
+  default boolean isInMoveRange(Board board, Coordinate coordinate) {
     return calculateLegals(board).stream()
         .map(Move::getDestination)
         .anyMatch(destination -> destination == coordinate);
@@ -56,16 +56,16 @@ public sealed interface Piece permits JumpingPiece, SlidingPiece {
     return !isWhite();
   }
 
-  default boolean isAllyOf(final Piece other) {
+  default boolean isAllyOf(Piece other) {
     return getAlliance() == other.getAlliance();
   }
 
-  default boolean isEnemyOf(final Piece other) {
+  default boolean isEnemyOf(Piece other) {
     return !isAllyOf(other);
   }
 
   default String toSingleChar() {
-    final var singleChar = getClass().getSimpleName().substring(0, 1);
+    var singleChar = getClass().getSimpleName().substring(0, 1);
 
     return isBlack() ? singleChar.toLowerCase() : singleChar;
   }
@@ -77,12 +77,12 @@ public sealed interface Piece permits JumpingPiece, SlidingPiece {
    * @param destination The target destination
    * @return True if the piece can get to the destination
    */
-  default boolean canAccess(final Tile destination) {
-    final var pieceAtDestination = destination.getPiece();
+  default boolean canAccess(Tile destination) {
+    var pieceAtDestination = destination.getPiece();
     return pieceAtDestination == null || isEnemyOf(pieceAtDestination);
   }
 
-  Piece move(final Move move);
+  Piece move(Move move);
 
   /**
    * Creates a move, based on the piece and the destination.
@@ -91,12 +91,12 @@ public sealed interface Piece permits JumpingPiece, SlidingPiece {
    * @param board The current game board
    * @return A move, selected depending on the source and destination
    */
-  default @Nullable Move createMove(final Tile destination, final Board board) {
+  default @Nullable Move createMove(Tile destination, Board board) {
     if (destination.getPiece() == null) {
       return new MajorMove(board, this, destination.getCoordinate());
     }
 
-    final var capturablePiece = destination.getPiece();
+    var capturablePiece = destination.getPiece();
 
     if (capturablePiece != null && isEnemyOf(capturablePiece)) {
       return new CaptureMove(board, this, destination.getCoordinate(), capturablePiece);

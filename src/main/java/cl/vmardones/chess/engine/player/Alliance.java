@@ -26,7 +26,7 @@ public enum Alliance {
    * @param players Players to choose from
    * @return The chosen player
    */
-  public Player choosePlayer(final List<Player> players) {
+  public Player choosePlayer(List<Player> players) {
     return players.stream().filter(player -> player.getAlliance() == this).findFirst().orElse(null);
   }
 
@@ -43,6 +43,6 @@ public enum Alliance {
 
   @Override
   public String toString() {
-    return "" + super.toString().toLowerCase().charAt(0);
+    return String.valueOf(super.toString().toLowerCase().charAt(0));
   }
 }

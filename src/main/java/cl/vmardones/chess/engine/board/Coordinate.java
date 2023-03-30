@@ -31,11 +31,11 @@ public final class Coordinate {
 
   /* Index notation initialization */
 
-  private Coordinate(final int index) {
+  private Coordinate(int index) {
     this.index = index;
   }
 
-  private static boolean isOutsideBoard(final int index) {
+  private static boolean isOutsideBoard(int index) {
     return index < Board.MIN_TILES || index >= Board.MAX_TILES;
   }
 
@@ -47,7 +47,7 @@ public final class Coordinate {
    * @return The created coordinate
    * @throws InvalidCoordinateException If the coordinate is outside the chessboard
    */
-  public static Coordinate of(final int index) {
+  public static Coordinate of(int index) {
     if (isOutsideBoard(index)) {
       throw new InvalidCoordinateException("Index is outside chessboard: " + index);
     }
@@ -64,7 +64,7 @@ public final class Coordinate {
    * @return The created coordinate
    * @throws InvalidCoordinateException If the coordinate isn't inside the chessboard
    */
-  public static Coordinate of(final String algebraic) {
+  public static Coordinate of(String algebraic) {
     if (!ALGEBRAIC_PATTERN.matcher(algebraic).matches()) {
       throw new InvalidCoordinateException("Invalid algebraic notation: " + algebraic);
     }
@@ -72,11 +72,11 @@ public final class Coordinate {
     return COORDINATES_CACHE.get(calculateIndex(algebraic));
   }
 
-  private static int calculateIndex(final String algebraicCoordinate) {
-    final var column = Column.indexOf(algebraicCoordinate.charAt(0));
-    final var rank =
+  private static int calculateIndex(String algebraicCoordinate) {
+    var column = Column.indexOf(algebraicCoordinate.charAt(0));
+    var rank =
         Board.SIDE_LENGTH
-            * (Board.SIDE_LENGTH - Integer.parseInt("" + algebraicCoordinate.charAt(1)));
+            * (Board.SIDE_LENGTH - Integer.parseInt(String.valueOf(algebraicCoordinate.charAt(1))));
 
     return column + rank;
   }
@@ -109,7 +109,7 @@ public final class Coordinate {
    * @param other The other coordinate
    * @return True if both are on the same column
    */
-  public boolean sameColumnAs(final Coordinate other) {
+  public boolean sameColumnAs(Coordinate other) {
     return getColumn() == other.getColumn();
   }
 
@@ -139,7 +139,7 @@ public final class Coordinate {
    * @param other The other coordinate
    * @return True if both are on the same rank
    */
-  public boolean sameRankAs(final Coordinate other) {
+  public boolean sameRankAs(Coordinate other) {
     return getRank() == other.getRank();
   }
 
@@ -150,7 +150,7 @@ public final class Coordinate {
    */
   @Override
   public String toString() {
-    return "" + getColumn() + getRank();
+    return String.valueOf(getColumn()) + getRank();
   }
 
   /**
@@ -172,7 +172,7 @@ public final class Coordinate {
    * @param other The other coordinate
    * @return True if both are the same color
    */
-  public boolean sameColorAs(final Coordinate other) {
+  public boolean sameColorAs(Coordinate other) {
     return getColor() == other.getColor();
   }
 
@@ -185,27 +185,26 @@ public final class Coordinate {
    * @param y Y axis movement, positive goes up
    * @return Coordinate at the relative position, if it is inside the board
    */
-  public @Nullable Coordinate to(final int x, final int y) {
+  public @Nullable Coordinate to(int x, int y) {
     try {
-      final var destination =
-          COORDINATES_CACHE.get(index + horizontalClamp(x) - y * Board.SIDE_LENGTH);
+      var destination = COORDINATES_CACHE.get(index + horizontalClamp(x) - y * Board.SIDE_LENGTH);
 
       if (illegalJump(x, destination)) {
         return null;
       }
 
       return destination;
-    } catch (final IndexOutOfBoundsException e) {
+    } catch (IndexOutOfBoundsException e) {
       return null;
     }
   }
 
-  private boolean illegalJump(final int x, final Coordinate destination) {
+  private boolean illegalJump(int x, Coordinate destination) {
     return x < 0 && destination.getColumnIndex() > getColumnIndex()
         || x > 0 && destination.getColumnIndex() < getColumnIndex();
   }
 
-  private int horizontalClamp(final int x) {
+  private int horizontalClamp(int x) {
     return x % Board.SIDE_LENGTH;
   }
 
@@ -215,7 +214,7 @@ public final class Coordinate {
    * @param spaces Number of spaces to jump, it can also be negative to move backwards
    * @return Coordinate at the relative position, if it is inside the board
    */
-  public @Nullable Coordinate up(final int spaces) {
+  public @Nullable Coordinate up(int spaces) {
     return to(0, spaces);
   }
 
@@ -225,7 +224,7 @@ public final class Coordinate {
    * @param spaces Number of spaces to jump, it can also be negative to move backwards
    * @return Coordinate at the relative position, if it is inside the board
    */
-  public @Nullable Coordinate down(final int spaces) {
+  public @Nullable Coordinate down(int spaces) {
     return up(-spaces);
   }
 
@@ -235,7 +234,7 @@ public final class Coordinate {
    * @param spaces Number of spaces to jump, it can also be negative to move backwards
    * @return Coordinate at the relative position, if it is inside the board
    */
-  public @Nullable Coordinate left(final int spaces) {
+  public @Nullable Coordinate left(int spaces) {
     return right(-spaces);
   }
 
@@ -245,7 +244,7 @@ public final class Coordinate {
    * @param spaces Number of spaces to jump, it can also be negative to move backwards
    * @return Coordinate at the relative position, if it is inside the board
    */
-  public @Nullable Coordinate right(final int spaces) {
+  public @Nullable Coordinate right(int spaces) {
     return to(spaces, 0);
   }
 
@@ -262,11 +261,11 @@ public final class Coordinate {
     private static final List<Character> names =
         Arrays.stream(values()).map(Column::getName).toList();
 
-    private static char getByIndex(final int index) {
+    private static char getByIndex(int index) {
       return values()[index].getName();
     }
 
-    private static int indexOf(final Character name) {
+    private static int indexOf(Character name) {
       return names.indexOf(name);
     }
 

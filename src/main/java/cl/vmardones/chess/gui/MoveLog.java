@@ -20,7 +20,7 @@ class MoveLog {
 
   private Move lastMove;
 
-  void add(final Move move) {
+  void add(Move move) {
     moves.add(move);
     lastMove = move;
   }
@@ -33,18 +33,18 @@ class MoveLog {
     moves.clear();
   }
 
-  Move remove(final int index) {
+  Move remove(int index) {
     return moves.remove(index);
   }
 
-  boolean remove(final Move move) {
+  boolean remove(Move move) {
     return moves.remove(move);
   }
 
   @Nullable
   Move getLastMove() {
 
-    final var move = lastMove;
+    var move = lastMove;
     lastMove = null;
     return move;
   }

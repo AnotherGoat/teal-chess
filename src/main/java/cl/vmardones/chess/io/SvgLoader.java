@@ -19,13 +19,13 @@ public final class SvgLoader {
     throw new UnsupportedOperationException("You cannot instantiate me!");
   }
 
-  public static @Nullable BufferedImage load(final String path, final int width, final int height) {
+  public static @Nullable BufferedImage load(String path, int width, int height) {
 
-    final var iconResource = ResourceImporter.get(path);
+    var iconResource = ResourceImporter.get(path);
 
     try {
       return SvgImporter.get(iconResource, width, height);
-    } catch (final IOException e) {
+    } catch (IOException e) {
       log.warn("Could not load the SVG file {}", path);
       return null;
     }

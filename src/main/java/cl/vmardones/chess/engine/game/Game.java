@@ -31,7 +31,7 @@ public class Game {
     registerTurn(createFirstTurn());
   }
 
-  private void registerTurn(final Turn turn) {
+  private void registerTurn(Turn turn) {
     gameState.setCurrentTurn(turn);
     gameHistory.add(gameState.save());
   }
@@ -40,32 +40,32 @@ public class Game {
     return createTurn(boardService.createStandardBoard(), Alliance.WHITE);
   }
 
-  private Turn createTurn(final Board board, final Alliance nextMoveMaker) {
-    final var whiteLegals = calculateWhiteLegals(board);
+  private Turn createTurn(Board board, Alliance nextMoveMaker) {
+    var whiteLegals = calculateWhiteLegals(board);
     log.debug("White legals: {}", whiteLegals);
-    final var blackLegals = calculateBlackLegals(board);
+    var blackLegals = calculateBlackLegals(board);
     log.debug("Black legals: {}", blackLegals);
 
-    final var whitePlayer = new WhitePlayer(board, board.getWhiteKing(), whiteLegals, blackLegals);
+    var whitePlayer = new WhitePlayer(board, board.getWhiteKing(), whiteLegals, blackLegals);
     log.debug("White player: {}", whitePlayer);
-    final var blackPlayer = new BlackPlayer(board, board.getBlackKing(), blackLegals, whiteLegals);
+    var blackPlayer = new BlackPlayer(board, board.getBlackKing(), blackLegals, whiteLegals);
     log.debug("Black player: {}", blackPlayer);
 
-    final var turn = new Turn(board, nextMoveMaker, whitePlayer, blackPlayer);
+    var turn = new Turn(board, nextMoveMaker, whitePlayer, blackPlayer);
     registerTurn(turn);
 
     return turn;
   }
 
-  private List<Move> calculateWhiteLegals(final Board board) {
+  private List<Move> calculateWhiteLegals(Board board) {
     return boardService.calculateLegals(board, board.getWhitePieces());
   }
 
-  private List<Move> calculateBlackLegals(final Board board) {
+  private List<Move> calculateBlackLegals(Board board) {
     return boardService.calculateLegals(board, board.getBlackPieces());
   }
 
-  public Turn createNextTurn(final Move move) {
+  public Turn createNextTurn(Move move) {
     return createTurn(move.execute(), getOpponent().getAlliance());
   }
 
@@ -94,7 +94,7 @@ public class Game {
     return gameState.getCurrentTurn().blackPlayer();
   }
 
-  public MoveTransition performMove(final Move move) {
+  public MoveTransition performMove(Move move) {
     return getCurrentPlayer().makeMove(getCurrentPlayer(), move);
   }
 }

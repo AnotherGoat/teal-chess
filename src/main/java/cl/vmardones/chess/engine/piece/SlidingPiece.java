@@ -16,15 +16,15 @@ sealed interface SlidingPiece extends Piece permits Bishop, Queen, Rook {
   List<int[]> getMoveVectors();
 
   @Override
-  default List<Coordinate> calculatePossibleDestinations(final Board board) {
+  default List<Coordinate> calculatePossibleDestinations(Board board) {
     return getMoveVectors().stream()
         .map(vector -> calculateOffsets(vector, board))
         .flatMap(Collection::stream)
         .toList();
   }
 
-  private List<Coordinate> calculateOffsets(final int[] vector, final Board board) {
-    final var tiles =
+  private List<Coordinate> calculateOffsets(int[] vector, Board board) {
+    var tiles =
         IntStream.range(1, Board.SIDE_LENGTH + 1)
             .mapToObj(i -> getPosition().to(vector[0] * i, vector[1] * i))
             .filter(Objects::nonNull)
@@ -36,13 +36,13 @@ sealed interface SlidingPiece extends Piece permits Bishop, Queen, Rook {
   }
 
   // TODO: Replace this method with something more stream-friendly
-  private List<Tile> filterAccessible(final Iterator<Tile> tiles) {
+  private List<Tile> filterAccessible(Iterator<Tile> tiles) {
 
-    final List<Tile> accessibleTiles = new ArrayList<>();
+    List<Tile> accessibleTiles = new ArrayList<>();
 
     while (tiles.hasNext()) {
-      final var destination = tiles.next();
-      final var pieceAtDestination = destination.getPiece();
+      var destination = tiles.next();
+      var pieceAtDestination = destination.getPiece();
 
       if (pieceAtDestination == null) {
         accessibleTiles.add(destination);

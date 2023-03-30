@@ -14,7 +14,7 @@ class VersionProvider implements CommandLine.IVersionProvider {
   @Override
   public String[] getVersion() {
 
-    final var implementationVersion = getClass().getPackage().getImplementationVersion();
+    var implementationVersion = getClass().getPackage().getImplementationVersion();
 
     if (implementationVersion == null || implementationVersion.isBlank()) {
       return UNKNOWN_VERSION;

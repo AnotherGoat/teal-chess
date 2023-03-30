@@ -13,7 +13,7 @@ public class InvalidCoordinateException extends RuntimeException {
    *
    * @param message The detail message, specifying the cause of the exception being thrown
    */
-  public InvalidCoordinateException(final String message) {
+  public InvalidCoordinateException(String message) {
     super(message);
   }
 }

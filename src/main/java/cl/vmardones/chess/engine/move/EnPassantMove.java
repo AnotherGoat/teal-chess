@@ -16,8 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @EqualsAndHashCode(callSuper = true)
 @Slf4j
 public class EnPassantMove extends CaptureMove {
-  public EnPassantMove(
-      final Board board, final Pawn pawn, final Coordinate destination, final Piece capturedPiece) {
+  public EnPassantMove(Board board, Pawn pawn, Coordinate destination, Piece capturedPiece) {
     super(board, pawn, destination, capturedPiece);
   }
 }

@@ -30,12 +30,12 @@ public final class Rook implements SlidingPiece {
   private Alliance alliance;
   private boolean firstMove;
 
-  public Rook(final Coordinate position, final Alliance alliance) {
+  public Rook(Coordinate position, Alliance alliance) {
     this(position, alliance, true);
   }
 
   @Override
-  public Rook move(final Move move) {
+  public Rook move(Move move) {
     return new Rook(move.getDestination(), alliance, false);
   }
 

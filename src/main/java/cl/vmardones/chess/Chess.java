@@ -20,7 +20,7 @@ public final class Chess {
     throw new UnsupportedOperationException("You cannot instantiate me!");
   }
 
-  public static void main(final String... args) {
+  public static void main(String... args) {
     new CommandLine(new MainCommand()).execute(args);
   }
 }

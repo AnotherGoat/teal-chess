@@ -60,7 +60,7 @@ public class Table {
 
   @Getter private BoardDirection boardDirection;
 
-  public Table(final boolean darkTheme, final boolean highlightLegals, final boolean flipBoard) {
+  public Table(boolean darkTheme, boolean highlightLegals, boolean flipBoard) {
     this.darkTheme = darkTheme;
     this.highlightLegals = highlightLegals;
     boardDirection = flipBoard ? BoardDirection.FLIPPED : BoardDirection.NORMAL;
@@ -105,7 +105,7 @@ public class Table {
     };
   }
 
-  private void setUIFont(final Font font) {
+  private void setUIFont(Font font) {
     UIManager.getLookAndFeel()
         .getDefaults()
         .keys()
@@ -131,20 +131,20 @@ public class Table {
   }
 
   private JMenuBar createMenuBar() {
-    final var menuBar = new JMenuBar();
+    var menuBar = new JMenuBar();
     menuBar.add(createFileMenu());
     menuBar.add(createPreferencesMenu());
     return menuBar;
   }
 
   private JMenu createFileMenu() {
-    final var fileMenu = new JMenu("File");
+    var fileMenu = new JMenu("File");
 
-    final var openPGN = new JMenuItem("Load PGN file");
+    var openPGN = new JMenuItem("Load PGN file");
     openPGN.addActionListener(e -> log.debug("Open PGN file!"));
     fileMenu.add(openPGN);
 
-    final var exit = new JMenuItem("Exit");
+    var exit = new JMenuItem("Exit");
     exit.addActionListener(e -> System.exit(0));
     fileMenu.add(exit);
 
@@ -152,19 +152,19 @@ public class Table {
   }
 
   private JMenu createPreferencesMenu() {
-    final var preferencesMenu = new JMenu("Preferences");
+    var preferencesMenu = new JMenu("Preferences");
 
-    final var flipBoard = new JMenuItem("Flip Board");
+    var flipBoard = new JMenuItem("Flip Board");
     flipBoard.addActionListener(
         e -> {
           boardDirection = boardDirection.getOpposite();
           boardPanel.drawBoard(game.getBoard());
         });
 
-    final var highlightCheckbox = new JCheckBoxMenuItem("Highlight Legal Moves", highlightLegals);
+    var highlightCheckbox = new JCheckBoxMenuItem("Highlight Legal Moves", highlightLegals);
     highlightCheckbox.addActionListener(e -> highlightLegals = highlightCheckbox.isSelected());
 
-    final var darkThemeCheckbox = new JCheckBoxMenuItem("Dark Theme", darkTheme);
+    var darkThemeCheckbox = new JCheckBoxMenuItem("Dark Theme", darkTheme);
     darkThemeCheckbox.addActionListener(
         e -> {
           darkTheme = darkThemeCheckbox.isSelected();
@@ -189,15 +189,15 @@ public class Table {
     boardPanel.drawBoard(game.getBoard());
   }
 
-  void addToLog(final Move move) {
+  void addToLog(Move move) {
     moveLog.add(move);
   }
 
-  Tile getTileAt(final Coordinate coordinate) {
+  Tile getTileAt(Coordinate coordinate) {
     return getGame().getBoard().getTile(coordinate);
   }
 
-  MoveTransition makeMove(final Move move) {
+  MoveTransition makeMove(Move move) {
     return getGame().performMove(move);
   }
 
@@ -205,11 +205,11 @@ public class Table {
     NORMAL,
     FLIPPED;
 
-    List<TilePanel> traverse(final List<TilePanel> boardTiles) {
+    List<TilePanel> traverse(List<TilePanel> boardTiles) {
       return switch (this) {
         case NORMAL -> boardTiles;
         case FLIPPED -> {
-          final var reversedTiles = new ArrayList<>(boardTiles);
+          var reversedTiles = new ArrayList<>(boardTiles);
           Collections.reverse(reversedTiles);
           yield Collections.unmodifiableList(reversedTiles);
         }

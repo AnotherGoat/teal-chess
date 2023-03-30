@@ -28,7 +28,7 @@ public final class Knight implements JumpingPiece {
   private Alliance alliance;
   private boolean firstMove;
 
-  public Knight(final Coordinate position, final Alliance alliance) {
+  public Knight(Coordinate position, Alliance alliance) {
     this(position, alliance, true);
   }
 
@@ -38,7 +38,7 @@ public final class Knight implements JumpingPiece {
   }
 
   @Override
-  public Knight move(final Move move) {
+  public Knight move(Move move) {
     return new Knight(move.getDestination(), alliance, false);
   }
 

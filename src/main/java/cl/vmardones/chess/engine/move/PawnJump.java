@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 public class PawnJump extends Move {
-  public PawnJump(final Board board, final Pawn pawn, final Coordinate destination) {
+  public PawnJump(Board board, Pawn pawn, Coordinate destination) {
     super(board, pawn, destination);
   }
 

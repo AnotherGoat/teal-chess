@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 /** A move where a non-pawn piece gets to another tile. */
 @EqualsAndHashCode(callSuper = true)
 public class MajorMove extends Move {
-  public MajorMove(final Board board, final Piece piece, final Coordinate destination) {
+  public MajorMove(Board board, Piece piece, Coordinate destination) {
     super(board, piece, destination);
   }
 }

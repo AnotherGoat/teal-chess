@@ -21,7 +21,7 @@ class GameState {
     return new TurnMemento(currentTurn);
   }
 
-  void load(final TurnMemento turnMemento) {
+  void load(TurnMemento turnMemento) {
     currentTurn = turnMemento.state();
   }
 }

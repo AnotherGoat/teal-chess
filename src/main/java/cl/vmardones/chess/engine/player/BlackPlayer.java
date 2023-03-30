@@ -14,8 +14,7 @@ import java.util.List;
 /** The player that uses the black pieces. */
 public class BlackPlayer extends Player {
 
-  public BlackPlayer(
-      final Board board, final King king, final List<Move> legals, final List<Move> opponentMoves) {
+  public BlackPlayer(Board board, King king, List<Move> legals, List<Move> opponentMoves) {
     super(board, king, legals, opponentMoves);
   }
 

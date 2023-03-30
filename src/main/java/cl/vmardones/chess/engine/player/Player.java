@@ -35,11 +35,7 @@ public abstract class Player {
   private final boolean inCheck;
   private Boolean noEscapeMoves;
 
-  protected Player(
-      final Board board,
-      final King king,
-      final List<Move> legals,
-      final List<Move> opponentLegals) {
+  protected Player(Board board, King king, List<Move> legals, List<Move> opponentLegals) {
     this.board = board;
     this.king = king;
     this.opponentLegals = opponentLegals;
@@ -49,8 +45,7 @@ public abstract class Player {
     inCheck = !Player.calculateAttacksOnTile(king.getPosition(), opponentLegals).isEmpty();
   }
 
-  protected static List<Move> calculateAttacksOnTile(
-      final Coordinate kingPosition, final List<Move> moves) {
+  protected static List<Move> calculateAttacksOnTile(Coordinate kingPosition, List<Move> moves) {
     return moves.stream().filter(move -> kingPosition == move.getDestination()).toList();
   }
 
@@ -60,7 +55,7 @@ public abstract class Player {
    * @param move The move to check
    * @return True if the move is legal
    */
-  public boolean isLegal(final Move move) {
+  public boolean isLegal(Move move) {
     return legals.contains(move);
   }
 
@@ -108,7 +103,7 @@ public abstract class Player {
     return false;
   }
 
-  public MoveTransition makeMove(final Player currentPlayer, final Move move) {
+  public MoveTransition makeMove(Player currentPlayer, Move move) {
     if (move.isNull()) {
       return new MoveTransition(board, move, MoveStatus.NULL);
     }
@@ -117,7 +112,7 @@ public abstract class Player {
       return new MoveTransition(board, move, MoveStatus.ILLEGAL);
     }
 
-    final List<Move> kingAttacks =
+    List<Move> kingAttacks =
         Player.calculateAttacksOnTile(currentPlayer.getKing().getPosition(), opponentLegals);
 
     if (!kingAttacks.isEmpty()) {
@@ -142,19 +137,19 @@ public abstract class Player {
   public abstract Alliance getAlliance();
 
   // TODO: Refactor this method, maybe use combinator pattern
-  protected List<Move> calculateCastles(final List<Move> opponentLegals) {
+  protected List<Move> calculateCastles(List<Move> opponentLegals) {
 
     if (!king.isFirstMove() || isInCheck() || king.getPosition().getColumn() != 'e') {
       return Collections.emptyList();
     }
 
-    final List<Move> castles = new ArrayList<>();
-    final var kingPosition = king.getPosition();
+    List<Move> castles = new ArrayList<>();
+    var kingPosition = king.getPosition();
 
     if (isKingSideCastlePossible(kingPosition, opponentLegals)) {
-      final var rook = (Rook) board.getTile(kingPosition.right(3)).getPiece();
-      final var kingDestination = kingPosition.right(2);
-      final var rookDestination = kingPosition.right(1);
+      var rook = (Rook) board.getTile(kingPosition.right(3)).getPiece();
+      var kingDestination = kingPosition.right(2);
+      var rookDestination = kingPosition.right(1);
 
       if (rook.isFirstMove()) {
         castles.add(new KingSideCastleMove(board, king, kingDestination, rook, rookDestination));
@@ -162,9 +157,9 @@ public abstract class Player {
     }
 
     if (isQueenSideCastlePossible(kingPosition, opponentLegals)) {
-      final var rook = (Rook) board.getTile(kingPosition.right(3)).getPiece();
-      final var kingDestination = kingPosition.left(2);
-      final var rookDestination = kingPosition.left(1);
+      var rook = (Rook) board.getTile(kingPosition.right(3)).getPiece();
+      var kingDestination = kingPosition.left(2);
+      var rookDestination = kingPosition.left(1);
 
       if (rook.isFirstMove()) {
         castles.add(new QueenSideCastleMove(board, king, kingDestination, rook, rookDestination));
@@ -174,8 +169,7 @@ public abstract class Player {
     return Collections.unmodifiableList(castles);
   }
 
-  private boolean isKingSideCastlePossible(
-      final Coordinate kingPosition, final List<Move> opponentLegals) {
+  private boolean isKingSideCastlePossible(Coordinate kingPosition, List<Move> opponentLegals) {
     return isTileFree(kingPosition, 1)
         && isTileFree(kingPosition, 2)
         && isTileRook(kingPosition, 3)
@@ -183,8 +177,7 @@ public abstract class Player {
         && isUnreachableByEnemy(kingPosition, 2, opponentLegals);
   }
 
-  private boolean isQueenSideCastlePossible(
-      final Coordinate kingPosition, final List<Move> opponentLegals) {
+  private boolean isQueenSideCastlePossible(Coordinate kingPosition, List<Move> opponentLegals) {
     return isTileFree(kingPosition, -1)
         && isTileFree(kingPosition, -2)
         && isTileFree(kingPosition, -3)
@@ -194,22 +187,22 @@ public abstract class Player {
         && isUnreachableByEnemy(kingPosition, -3, opponentLegals);
   }
 
-  private boolean isTileFree(final Coordinate kingPosition, final int offset) {
-    final var destination = kingPosition.right(offset);
+  private boolean isTileFree(Coordinate kingPosition, int offset) {
+    var destination = kingPosition.right(offset);
 
     return destination != null && board.containsNothing(destination);
   }
 
   private boolean isUnreachableByEnemy(
-      final Coordinate kingPosition, final int offset, final List<Move> opponentLegals) {
-    final var destination = kingPosition.right(offset);
+      Coordinate kingPosition, int offset, List<Move> opponentLegals) {
+    var destination = kingPosition.right(offset);
 
     return destination != null
         && Player.calculateAttacksOnTile(destination, opponentLegals).isEmpty();
   }
 
-  private boolean isTileRook(final Coordinate kingPosition, final int offset) {
-    final var destination = kingPosition.right(offset);
+  private boolean isTileRook(Coordinate kingPosition, int offset) {
+    var destination = kingPosition.right(offset);
 
     return destination != null && board.contains(destination, Rook.class);
   }

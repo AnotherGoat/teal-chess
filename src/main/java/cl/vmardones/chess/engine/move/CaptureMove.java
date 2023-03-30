@@ -14,11 +14,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class CaptureMove extends Move {
 
-  public CaptureMove(
-      final Board board,
-      final Piece piece,
-      final Coordinate destination,
-      final Piece capturedPiece) {
+  public CaptureMove(Board board, Piece piece, Coordinate destination, Piece capturedPiece) {
     super(board, piece, destination);
 
     this.capturedPiece = capturedPiece;

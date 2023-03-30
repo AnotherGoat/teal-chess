@@ -17,7 +17,7 @@ final class ResourceImporter {
     throw new UnsupportedOperationException("You cannot instantiate me!");
   }
 
-  static InputStream get(final String path) {
+  static InputStream get(String path) {
     return ResourceImporter.class.getClassLoader().getResourceAsStream(path);
   }
 }

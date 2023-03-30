@@ -40,7 +40,7 @@ class TilePanel extends JPanel {
   private JLayeredPane layeredPane;
   private final transient Coordinate coordinate;
 
-  TilePanel(final Table table, final Coordinate coordinate) {
+  TilePanel(Table table, Coordinate coordinate) {
     super(new BorderLayout());
 
     this.table = table;
@@ -61,7 +61,7 @@ class TilePanel extends JPanel {
   }
 
   private JLayeredPane createLayeredPane() {
-    final var layeredPane = new JLayeredPane();
+    var layeredPane = new JLayeredPane();
 
     layeredPane.setLayout(new BorderLayout());
     layeredPane.setOpaque(true);
@@ -73,7 +73,7 @@ class TilePanel extends JPanel {
 
     return new MouseListener() {
       @Override
-      public void mouseClicked(final MouseEvent e) {
+      public void mouseClicked(MouseEvent e) {
         if (isLeftMouseButton(e)) {
           if (table.getSourceTile() == null) {
             firstLeftClick();
@@ -89,22 +89,22 @@ class TilePanel extends JPanel {
       }
 
       @Override
-      public void mousePressed(final MouseEvent e) {
+      public void mousePressed(MouseEvent e) {
         // Do nothing
       }
 
       @Override
-      public void mouseReleased(final MouseEvent e) {
+      public void mouseReleased(MouseEvent e) {
         // Do nothing
       }
 
       @Override
-      public void mouseEntered(final MouseEvent e) {
+      public void mouseEntered(MouseEvent e) {
         // Do nothing
       }
 
       @Override
-      public void mouseExited(final MouseEvent e) {
+      public void mouseExited(MouseEvent e) {
         // Do nothing
       }
     };
@@ -133,7 +133,7 @@ class TilePanel extends JPanel {
     log.debug("Selected the destination {}", coordinate);
     table.setDestinationTile(table.getTileAt(coordinate));
 
-    final var move =
+    var move =
         Move.MoveFactory.create(
             table.getGame().getCurrentPlayer().getLegals(),
             table.getSourceTile().getCoordinate(),
@@ -142,7 +142,7 @@ class TilePanel extends JPanel {
     log.debug("Is there a move that can get to the destination? {}", move != null);
 
     if (move != null) {
-      final var moveTransition = table.makeMove(move);
+      var moveTransition = table.makeMove(move);
 
       if (moveTransition.getMoveStatus().isDone()) {
         table.getGame().createNextTurn(move);
@@ -153,7 +153,7 @@ class TilePanel extends JPanel {
     table.resetSelection();
   }
 
-  void drawTile(final Board board) {
+  void drawTile(Board board) {
     layeredPane = createLayeredPane();
     // assignTileColor();
     assignPieceIcon(table.getTileAt(coordinate));
@@ -167,12 +167,11 @@ class TilePanel extends JPanel {
     setBackground(coordinate.getColor() == Alliance.WHITE ? LIGHT_COLOR : DARK_COLOR);
   }
 
-  private void assignPieceIcon(final Tile tile) {
+  private void assignPieceIcon(Tile tile) {
     removeAll();
 
     if (tile.getPiece() != null) {
-      final var icon =
-          PieceIconLoader.load(tile.getPiece(), INITIAL_SIZE.width, INITIAL_SIZE.height);
+      var icon = PieceIconLoader.load(tile.getPiece(), INITIAL_SIZE.width, INITIAL_SIZE.height);
 
       if (icon != null) {
         addImage(icon, PIECE_LAYER);
@@ -180,19 +179,19 @@ class TilePanel extends JPanel {
     }
   }
 
-  private void addImage(final BufferedImage bufferedImage, final Integer layer) {
-    final var image = new JLabel(new ImageIcon(bufferedImage));
+  private void addImage(BufferedImage bufferedImage, Integer layer) {
+    var image = new JLabel(new ImageIcon(bufferedImage));
 
     layeredPane.add(image, BorderLayout.CENTER, layer);
   }
 
-  private void highlightLegals(final Board board) {
+  private void highlightLegals(Board board) {
     if (table.isHighlightLegals()) {
       selectedPieceLegals(board).stream()
           .filter(move -> move.getDestination() == coordinate)
           .forEach(
               move -> {
-                final var greenDot =
+                var greenDot =
                     SvgLoader.load(
                         "art/misc/green_dot.svg", INITIAL_SIZE.width / 2, INITIAL_SIZE.height / 2);
 
@@ -203,7 +202,7 @@ class TilePanel extends JPanel {
     }
   }
 
-  private List<Move> selectedPieceLegals(final Board board) {
+  private List<Move> selectedPieceLegals(Board board) {
     if (table.getSelectedPiece() == null || isOpponentPieceSelected()) {
       return Collections.emptyList();
     }

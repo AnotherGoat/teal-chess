@@ -15,11 +15,7 @@ abstract class CastleMove extends Move {
   protected final Coordinate rookDestination;
 
   protected CastleMove(
-      final Board board,
-      final Piece piece,
-      final Coordinate destination,
-      final Rook rook,
-      final Coordinate rookDestination) {
+      Board board, Piece piece, Coordinate destination, Rook rook, Coordinate rookDestination) {
     super(board, piece, destination);
     this.rook = rook;
     this.rookDestination = rookDestination;

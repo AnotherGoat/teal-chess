@@ -23,13 +23,13 @@ public final class FontLoader {
     throw new UnsupportedOperationException("You cannot instantiate me!");
   }
 
-  public static Font load(final String fontName) {
+  public static Font load(String fontName) {
     try {
-      final var fontResource = ResourceImporter.get(FONT_PATH + fontName);
+      var fontResource = ResourceImporter.get(FONT_PATH + fontName);
 
       return Font.createFont(Font.TRUETYPE_FONT, fontResource).deriveFont(Font.PLAIN, FONT_SIZE);
 
-    } catch (final FontFormatException | IOException e) {
+    } catch (FontFormatException | IOException e) {
       log.warn("Could not load the font {}, defaulting to system font", fontName);
       return SYSTEM_FONT;
     }

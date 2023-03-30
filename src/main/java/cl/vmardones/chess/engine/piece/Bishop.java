@@ -28,12 +28,12 @@ public final class Bishop implements SlidingPiece {
   private Alliance alliance;
   private boolean firstMove;
 
-  public Bishop(final Coordinate position, final Alliance alliance) {
+  public Bishop(Coordinate position, Alliance alliance) {
     this(position, alliance, true);
   }
 
   @Override
-  public Bishop move(final Move move) {
+  public Bishop move(Move move) {
     return new Bishop(move.getDestination(), alliance, false);
   }
 

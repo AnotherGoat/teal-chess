@@ -14,7 +14,7 @@ class SquarePanel<T extends JPanel> extends JPanel {
 
   private final T square;
 
-  SquarePanel(final T square) {
+  SquarePanel(T square) {
     this.square = square;
 
     addComponentListener(resizeListener());
@@ -25,20 +25,20 @@ class SquarePanel<T extends JPanel> extends JPanel {
 
     return new ComponentListener() {
 
-      public void componentResized(final ComponentEvent e) {
+      public void componentResized(ComponentEvent e) {
         resize();
         revalidate();
       }
 
-      public void componentMoved(final ComponentEvent e) {
+      public void componentMoved(ComponentEvent e) {
         // Do nothing
       }
 
-      public void componentShown(final ComponentEvent e) {
+      public void componentShown(ComponentEvent e) {
         // Do nothing
       }
 
-      public void componentHidden(final ComponentEvent e) {
+      public void componentHidden(ComponentEvent e) {
         // Do nothing
       }
     };
@@ -50,7 +50,7 @@ class SquarePanel<T extends JPanel> extends JPanel {
   }
 
   private static class SquareDimension extends Dimension {
-    public SquareDimension(final int side) {
+    public SquareDimension(int side) {
       super(side, side);
     }
   }

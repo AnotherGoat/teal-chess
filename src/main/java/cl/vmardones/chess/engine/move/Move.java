@@ -33,7 +33,7 @@ public abstract class Move {
 
   @Getter protected Piece capturedPiece;
 
-  protected Move(final Board board, final Piece piece, final Coordinate destination) {
+  protected Move(Board board, Piece piece, Coordinate destination) {
     this.board = board;
     this.piece = piece;
     this.destination = destination;
@@ -85,9 +85,7 @@ public abstract class Move {
      * @return Move that goes from the source to the destination, if possible.
      */
     public static @Nullable Move create(
-        final List<Move> currentPlayerLegals,
-        final Coordinate source,
-        final Coordinate destination) {
+        List<Move> currentPlayerLegals, Coordinate source, Coordinate destination) {
       if (source.equals(destination)) {
         return null;
       }
@@ -102,8 +100,7 @@ public abstract class Move {
           .orElse(null);
     }
 
-    private static Predicate<Move> isMovePossible(
-        final Coordinate source, final Coordinate destination) {
+    private static Predicate<Move> isMovePossible(Coordinate source, Coordinate destination) {
       return move -> move.getSource().equals(source) && move.getDestination() == destination;
     }
   }

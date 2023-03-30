@@ -15,11 +15,7 @@ import lombok.EqualsAndHashCode;
 public class KingSideCastleMove extends CastleMove {
 
   public KingSideCastleMove(
-      final Board board,
-      final Piece piece,
-      final Coordinate destination,
-      final Rook rook,
-      final Coordinate rookDestination) {
+      Board board, Piece piece, Coordinate destination, Rook rook, Coordinate rookDestination) {
     super(board, piece, destination, rook, rookDestination);
   }
 

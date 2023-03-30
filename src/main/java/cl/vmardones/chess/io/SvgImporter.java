@@ -28,33 +28,33 @@ final class SvgImporter {
     throw new UnsupportedOperationException("You cannot instantiate me!");
   }
 
-  static @Nullable BufferedImage get(
-      final InputStream inputStream, final int width, final int height) throws IOException {
+  static @Nullable BufferedImage get(InputStream inputStream, int width, int height)
+      throws IOException {
 
     if (inputStream == null) {
       log.error("The file does not exist!");
       return null;
     }
 
-    final var transcoder = new PNGTranscoder();
+    var transcoder = new PNGTranscoder();
 
     transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_WIDTH, (float) width);
     transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, (float) height);
 
     try (inputStream;
-        final var outputStream = new ByteArrayOutputStream()) {
+        var outputStream = new ByteArrayOutputStream()) {
 
-      final var input = new TranscoderInput(inputStream);
-      final var output = new TranscoderOutput(outputStream);
+      var input = new TranscoderInput(inputStream);
+      var output = new TranscoderOutput(outputStream);
 
       transcoder.transcode(input, output);
 
       outputStream.flush();
 
-      final var imageData = outputStream.toByteArray();
+      var imageData = outputStream.toByteArray();
       return ImageIO.read(new ByteArrayInputStream(imageData));
 
-    } catch (final TranscoderException e) {
+    } catch (TranscoderException e) {
       log.error("Failed to transcode the SVG image!", e);
       return null;
     }

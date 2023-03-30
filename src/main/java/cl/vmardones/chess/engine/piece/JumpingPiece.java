@@ -19,7 +19,7 @@ sealed interface JumpingPiece extends Piece permits King, Knight, Pawn {
   List<int[]> getMoveOffsets();
 
   @Override
-  default List<Coordinate> calculatePossibleDestinations(final Board board) {
+  default List<Coordinate> calculatePossibleDestinations(Board board) {
     return getMoveOffsets().stream()
         .map(offset -> getPosition().to(offset[0], offset[1]))
         .filter(Objects::nonNull)

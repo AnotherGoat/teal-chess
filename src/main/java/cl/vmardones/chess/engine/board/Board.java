@@ -34,7 +34,7 @@ public class Board {
 
   @Getter private final Pawn enPassantPawn;
 
-  private Board(final BoardBuilder builder) {
+  private Board(BoardBuilder builder) {
     tiles = createTiles(builder);
     log.debug("Current gameboard: {}", tiles);
 
@@ -52,14 +52,14 @@ public class Board {
     log.debug("En passant pawn: {}", enPassantPawn);
   }
 
-  private List<Tile> createTiles(final BoardBuilder builder) {
+  private List<Tile> createTiles(BoardBuilder builder) {
     return IntStream.range(MIN_TILES, MAX_TILES)
         .mapToObj(Coordinate::of)
         .map(coordinate -> Tile.create(coordinate, builder.boardConfig.get(coordinate)))
         .toList();
   }
 
-  private List<Piece> calculateActivePieces(final List<Tile> gameBoard, final Alliance alliance) {
+  private List<Piece> calculateActivePieces(List<Tile> gameBoard, Alliance alliance) {
     return gameBoard.stream()
         .map(Tile::getPiece)
         .filter(piece -> piece != null && piece.getAlliance() == alliance)
@@ -68,17 +68,17 @@ public class Board {
 
   /* Methods for checking the board */
 
-  public Tile getTile(final Coordinate coordinate) {
+  public Tile getTile(Coordinate coordinate) {
     return tiles.get(coordinate.index());
   }
 
-  public boolean contains(final Coordinate coordinate, final Class<?> pieceType) {
-    final var piece = getTile(coordinate).getPiece();
+  public boolean contains(Coordinate coordinate, Class<?> pieceType) {
+    var piece = getTile(coordinate).getPiece();
 
     return pieceType.isInstance(piece);
   }
 
-  public boolean containsNothing(final Coordinate coordinate) {
+  public boolean containsNothing(Coordinate coordinate) {
     return getTile(coordinate).getPiece() == null;
   }
 
@@ -91,7 +91,7 @@ public class Board {
    *
    * @return The board builder
    */
-  public static BoardBuilder builder(final King whiteKing, final King blackKing) {
+  public static BoardBuilder builder(King whiteKing, King blackKing) {
     return new BoardBuilder(whiteKing, blackKing);
   }
 
@@ -114,7 +114,7 @@ public class Board {
     private final King blackKing;
     private Pawn enPassantPawn;
 
-    private BoardBuilder(final Board board) {
+    private BoardBuilder(Board board) {
       whiteKing = board.whiteKing;
       blackKing = board.blackKing;
 
@@ -122,17 +122,17 @@ public class Board {
       board.getBlackPieces().forEach(this::piece);
     }
 
-    public BoardBuilder piece(final Piece piece) {
+    public BoardBuilder piece(Piece piece) {
       boardConfig.put(piece.getPosition(), piece);
       return this;
     }
 
-    public BoardBuilder withoutPiece(final Piece piece) {
+    public BoardBuilder withoutPiece(Piece piece) {
       boardConfig.remove(piece.getPosition(), piece);
       return this;
     }
 
-    public BoardBuilder enPassantPawn(final Pawn pawn) {
+    public BoardBuilder enPassantPawn(Pawn pawn) {
       this.enPassantPawn = pawn;
       return this;
     }

@@ -12,11 +12,11 @@ class GameHistory {
 
   private final List<TurnMemento> history = new ArrayList<>();
 
-  void add(final TurnMemento state) {
+  void add(TurnMemento state) {
     history.add(state);
   }
 
-  TurnMemento get(final int index) {
+  TurnMemento get(int index) {
     return history.get(index);
   }
 }

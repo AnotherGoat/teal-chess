@@ -37,12 +37,12 @@ public final class Pawn implements JumpingPiece {
   private Alliance alliance;
   private boolean firstMove;
 
-  public Pawn(final Coordinate position, final Alliance alliance) {
+  public Pawn(Coordinate position, Alliance alliance) {
     this(position, alliance, true);
   }
 
   @Override
-  public @Nullable Move createMove(final Tile destination, final Board board) {
+  public @Nullable Move createMove(Tile destination, Board board) {
 
     if (isCaptureMove(destination)) {
       if (!isEnPassantPossible(board, destination)) {
@@ -60,39 +60,39 @@ public final class Pawn implements JumpingPiece {
     return createForwardMove(board, destination);
   }
 
-  private @Nullable Move createEnPassantMove(final Board board, final Tile destination) {
-    final var enPassantMove =
+  private @Nullable Move createEnPassantMove(Board board, Tile destination) {
+    var enPassantMove =
         new EnPassantMove(board, this, destination.getCoordinate(), board.getEnPassantPawn());
 
     log.debug("Created en passant move: {}", enPassantMove);
     return enPassantMove;
   }
 
-  private boolean isEnPassantPossible(final Board board, final Tile destination) {
+  private boolean isEnPassantPossible(Board board, Tile destination) {
 
     if (board.getEnPassantPawn() == null) {
       return false;
     }
 
-    final var side = destination.getCoordinate().to(0, alliance.getOppositeDirection());
+    var side = destination.getCoordinate().to(0, alliance.getOppositeDirection());
 
     if (side == null) {
       return false;
     }
 
-    final var pieceAtSide = board.getTile(side).getPiece();
+    var pieceAtSide = board.getTile(side).getPiece();
 
     return pieceAtSide != null
         && pieceAtSide.equals(board.getEnPassantPawn())
         && destination.getPiece() == null;
   }
 
-  private boolean isCaptureMove(final Tile destination) {
+  private boolean isCaptureMove(Tile destination) {
     return !getPosition().sameColumnAs(destination.getCoordinate());
   }
 
-  private @Nullable Move createCaptureMove(final Board board, final Tile destination) {
-    final var capturablePiece = destination.getPiece();
+  private @Nullable Move createCaptureMove(Board board, Tile destination) {
+    var capturablePiece = destination.getPiece();
 
     if (capturablePiece != null && isEnemyOf(capturablePiece)) {
       return new PawnCaptureMove(board, this, destination.getCoordinate(), capturablePiece);
@@ -101,13 +101,13 @@ public final class Pawn implements JumpingPiece {
     return null;
   }
 
-  private @Nullable Move createJumpMove(final Board board, final Tile destination) {
+  private @Nullable Move createJumpMove(Board board, Tile destination) {
     return new PawnJump(board, this, destination.getCoordinate());
   }
 
-  private boolean isJumpPossible(final Board board, final Tile destination) {
+  private boolean isJumpPossible(Board board, Tile destination) {
 
-    final var forward = position.up(alliance.getDirection());
+    var forward = position.up(alliance.getDirection());
 
     if (forward == null) {
       return false;
@@ -116,7 +116,7 @@ public final class Pawn implements JumpingPiece {
     return isFirstMove() && canAccess(board.getTile(forward)) && canAccess(destination);
   }
 
-  private @Nullable Move createForwardMove(final Board board, final Tile destination) {
+  private @Nullable Move createForwardMove(Board board, Tile destination) {
     if (destination.getPiece() != null) {
       return null;
     }
@@ -126,7 +126,7 @@ public final class Pawn implements JumpingPiece {
   }
 
   @Override
-  public Pawn move(final Move move) {
+  public Pawn move(Move move) {
     return new Pawn(move.getDestination(), alliance, false);
   }
 
@@ -139,8 +139,7 @@ public final class Pawn implements JumpingPiece {
   }
 
   private List<int[]> calculateWhiteOffsets() {
-    final List<Vector> moves =
-        new ArrayList<>(List.of(Vertical.UP, Diagonal.UP_LEFT, Diagonal.UP_RIGHT));
+    List<Vector> moves = new ArrayList<>(List.of(Vertical.UP, Diagonal.UP_LEFT, Diagonal.UP_RIGHT));
 
     if (isFirstMove()) {
       moves.add(Jump.UP);
@@ -150,7 +149,7 @@ public final class Pawn implements JumpingPiece {
   }
 
   private List<int[]> calculateBlackOffsets() {
-    final List<Vector> moves =
+    List<Vector> moves =
         new ArrayList<>(List.of(Vertical.DOWN, Diagonal.DOWN_LEFT, Diagonal.DOWN_RIGHT));
 
     if (isFirstMove()) {

@@ -25,7 +25,7 @@ class GameHistoryPanel extends JPanel {
     super(new BorderLayout());
     model = new DataModel();
 
-    final var table = new JTable(model);
+    var table = new JTable(model);
     table.setRowHeight(ROW_HEIGHT);
     table.setDefaultRenderer(Object.class, createCenteredRenderer());
 
@@ -38,17 +38,17 @@ class GameHistoryPanel extends JPanel {
   }
 
   private TableCellRenderer createCenteredRenderer() {
-    final var centeredRenderer = new DefaultTableCellRenderer();
+    var centeredRenderer = new DefaultTableCellRenderer();
     centeredRenderer.setHorizontalAlignment(SwingConstants.CENTER);
     return centeredRenderer;
   }
 
-  void redo(final Player currentPlayer, final MoveLog moveLog) {
+  void redo(Player currentPlayer, MoveLog moveLog) {
 
-    final var lastMove = moveLog.getLastMove();
+    var lastMove = moveLog.getLastMove();
 
     if (lastMove != null) {
-      final var moveText = lastMove.toString();
+      var moveText = lastMove.toString();
 
       switch (lastMove.getPiece().getAlliance()) {
         case WHITE -> model.setValueAt(
@@ -58,11 +58,11 @@ class GameHistoryPanel extends JPanel {
       }
     }
 
-    final var vertical = scrollPane.getVerticalScrollBar();
+    var vertical = scrollPane.getVerticalScrollBar();
     vertical.setValue(vertical.getMaximum());
   }
 
-  private String checkmateHash(final Player currentPlayer) {
+  private String checkmateHash(Player currentPlayer) {
     if (currentPlayer.isInCheckmate()) {
       return "#";
     } else if (currentPlayer.isInCheck()) {
@@ -79,11 +79,11 @@ class GameHistoryPanel extends JPanel {
     }
 
     void clear() {
-      dataVector = new Vector<>(0);
+      dataVector = new Vector<>();
     }
 
     @Override
-    public void setValueAt(final Object aValue, final int row, final int column) {
+    public void setValueAt(Object aValue, int row, int column) {
       if (row > getLastRowIndex()) {
         addRow(new Vector<>(List.of(aValue, "")));
       } else {

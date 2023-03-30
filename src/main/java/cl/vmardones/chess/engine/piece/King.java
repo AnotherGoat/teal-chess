@@ -35,12 +35,12 @@ public final class King implements JumpingPiece {
   private Alliance alliance;
   private boolean firstMove;
 
-  public King(final Coordinate position, final Alliance alliance) {
+  public King(Coordinate position, Alliance alliance) {
     this(position, alliance, true);
   }
 
   @Override
-  public King move(final Move move) {
+  public King move(Move move) {
     return new King(move.getDestination(), alliance, false);
   }
 

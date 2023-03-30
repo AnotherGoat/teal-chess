@@ -36,7 +36,7 @@ public abstract class Tile {
    * @param piece The piece on the tile
    * @return A new tile
    */
-  public static Tile create(final Coordinate coordinate, final Piece piece) {
+  public static Tile create(Coordinate coordinate, Piece piece) {
     return piece != null
         ? new OccupiedTile(coordinate, piece)
         : EMPTY_TILES_CACHE.get(coordinate.index());
@@ -51,7 +51,7 @@ public abstract class Tile {
 
   private static final class EmptyTile extends Tile {
 
-    private EmptyTile(final Coordinate coordinate) {
+    private EmptyTile(Coordinate coordinate) {
       super(coordinate);
     }
 
@@ -70,7 +70,7 @@ public abstract class Tile {
 
     private final Piece piece;
 
-    private OccupiedTile(final Coordinate coordinate, final Piece piece) {
+    private OccupiedTile(Coordinate coordinate, Piece piece) {
       super(coordinate);
       this.piece = piece;
     }

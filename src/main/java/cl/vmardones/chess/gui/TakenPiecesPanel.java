@@ -37,7 +37,7 @@ class TakenPiecesPanel extends JPanel {
     setPreferredSize(INITIAL_SIZE);
   }
 
-  void redo(final MoveLog moveLog) {
+  void redo(MoveLog moveLog) {
     northPanel.removeAll();
     southPanel.removeAll();
 
@@ -55,7 +55,7 @@ class TakenPiecesPanel extends JPanel {
     validate();
   }
 
-  private List<Piece> getTakenPieces(final MoveLog moveLog, final Alliance alliance) {
+  private List<Piece> getTakenPieces(MoveLog moveLog, Alliance alliance) {
     return moveLog.getMoves().stream()
         .filter(Move::isCapturing)
         .map(Move::getCapturedPiece)

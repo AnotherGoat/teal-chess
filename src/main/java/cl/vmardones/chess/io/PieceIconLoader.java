@@ -22,19 +22,19 @@ public final class PieceIconLoader {
     throw new UnsupportedOperationException("You cannot instantiate me!");
   }
 
-  public static @Nullable BufferedImage load(final Piece piece, final int width, final int height) {
+  public static @Nullable BufferedImage load(Piece piece, int width, int height) {
 
-    final var iconResource = ResourceImporter.get(getIconPath(piece));
+    var iconResource = ResourceImporter.get(getIconPath(piece));
 
     try {
       return SvgImporter.get(iconResource, width, height);
-    } catch (final IOException e) {
+    } catch (IOException e) {
       log.warn("Could not load the piece {}", getIconPath(piece));
       return null;
     }
   }
 
-  private static String getIconPath(final Piece piece) {
+  private static String getIconPath(Piece piece) {
     return "%s/%s%s.svg"
         .formatted(PIECE_ICON_PATH, piece.getAlliance(), piece.toSingleChar().toLowerCase());
   }
