@@ -34,8 +34,8 @@ public final class Knight implements JumpingPiece {
   }
 
   @Override
-  public PieceType getPieceType() {
-    return PieceType.KNIGHT;
+  public String toSingleChar() {
+    return isBlack() ? "n" : "N";
   }
 
   @Override

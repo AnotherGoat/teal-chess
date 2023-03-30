@@ -41,11 +41,6 @@ public final class King implements JumpingPiece {
   }
 
   @Override
-  public PieceType getPieceType() {
-    return PieceType.KING;
-  }
-
-  @Override
   public King move(final Move move) {
     return new King(move.getDestination(), alliance, false);
   }

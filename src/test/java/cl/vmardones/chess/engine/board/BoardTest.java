@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+import cl.vmardones.chess.engine.piece.Bishop;
 import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
@@ -41,11 +42,10 @@ class BoardTest {
   @Test
   void contains() {
     when(piece.getPosition()).thenReturn(Coordinate.of("e2"));
-    when(piece.getPieceType()).thenReturn(Piece.PieceType.BISHOP);
 
     var board = builder.piece(piece).build();
 
-    assertThat(board.contains(Coordinate.of("e2"), Piece.PieceType.BISHOP)).isTrue();
+    assertThat(board.contains(Coordinate.of("e2"), Bishop.class)).isTrue();
   }
 
   @Test

@@ -36,11 +36,6 @@ public final class Rook implements SlidingPiece {
   }
 
   @Override
-  public PieceType getPieceType() {
-    return PieceType.ROOK;
-  }
-
-  @Override
   public Rook move(final Move move) {
     return new Rook(move.getDestination(), alliance, false);
   }

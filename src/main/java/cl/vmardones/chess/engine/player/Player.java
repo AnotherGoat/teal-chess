@@ -215,6 +215,6 @@ public abstract class Player {
   private boolean isTileRook(final Coordinate kingPosition, final int offset) {
     final var destination = kingPosition.right(offset);
 
-    return destination.isPresent() && board.contains(destination.get(), Piece.PieceType.ROOK);
+    return destination.isPresent() && board.contains(destination.get(), Rook.class);
   }
 }

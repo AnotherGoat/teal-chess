@@ -16,7 +16,7 @@ import lombok.NonNull;
  * A piece that can move to a specific set of positions. It usually doesn't matter if there are
  * other pieces in the way.
  */
-interface JumpingPiece extends Piece {
+sealed interface JumpingPiece extends Piece permits King, Knight, Pawn {
 
   Collection<int[]> getMoveOffsets();
 

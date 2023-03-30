@@ -75,11 +75,10 @@ public class Board {
     return tiles.get(coordinate.index());
   }
 
-  public boolean contains(
-      @NonNull final Coordinate coordinate, @NonNull final Piece.PieceType pieceType) {
+  public boolean contains(@NonNull final Coordinate coordinate, @NonNull final Class<?> pieceType) {
     final var piece = getTile(coordinate).getPiece();
 
-    return piece.isPresent() && piece.get().getPieceType() == pieceType;
+    return piece.isPresent() && pieceType.isInstance(piece);
   }
 
   public boolean containsNothing(@NonNull final Coordinate coordinate) {

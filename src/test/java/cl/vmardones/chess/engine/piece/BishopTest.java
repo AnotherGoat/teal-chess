@@ -41,11 +41,6 @@ class BishopTest {
   }
 
   @Test
-  void getPieceType() {
-    assertThat(bishop.getPieceType()).isEqualTo(Piece.PieceType.BISHOP);
-  }
-
-  @Test
   void diagonalMove() {
     assertThat(bishop.getMoveVectors()).containsOnlyOnce(Diagonal.UP_RIGHT.getVector());
   }

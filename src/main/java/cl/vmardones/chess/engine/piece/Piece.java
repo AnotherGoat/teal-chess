@@ -15,18 +15,14 @@ import cl.vmardones.chess.engine.player.Alliance;
 import com.google.common.collect.ImmutableList;
 import java.util.Collection;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NonNull;
 
 /** A chess piece. */
-public interface Piece {
+public sealed interface Piece permits JumpingPiece, SlidingPiece {
 
   Coordinate getPosition();
 
   Alliance getAlliance();
-
-  PieceType getPieceType();
 
   boolean isFirstMove();
 
@@ -70,11 +66,9 @@ public interface Piece {
   }
 
   default String toSingleChar() {
-    return getPieceType().pieceName;
-  }
+    final var singleChar = getClass().getSimpleName().substring(0, 1);
 
-  default boolean isRook() {
-    return getPieceType() == PieceType.ROOK;
+    return isBlack() ? singleChar.toLowerCase() : singleChar;
   }
 
   /**
@@ -111,18 +105,5 @@ public interface Piece {
     }
 
     return Optional.empty();
-  }
-
-  @AllArgsConstructor
-  @Getter
-  enum PieceType {
-    PAWN("P"),
-    KNIGHT("N"),
-    BISHOP("B"),
-    ROOK("R"),
-    QUEEN("Q"),
-    KING("K");
-
-    private final String pieceName;
   }
 }

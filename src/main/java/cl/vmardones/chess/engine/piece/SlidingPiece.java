@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.stream.IntStream;
 import lombok.NonNull;
 
-interface SlidingPiece extends Piece {
+sealed interface SlidingPiece extends Piece permits Bishop, Queen, Rook {
 
   Collection<int[]> getMoveVectors();
 

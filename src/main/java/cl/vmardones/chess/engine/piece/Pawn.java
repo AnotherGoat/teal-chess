@@ -45,11 +45,6 @@ public final class Pawn implements JumpingPiece {
   }
 
   @Override
-  public PieceType getPieceType() {
-    return PieceType.PAWN;
-  }
-
-  @Override
   public Optional<Move> createMove(@NonNull final Tile destination, @NonNull final Board board) {
 
     if (isCaptureMove(destination)) {

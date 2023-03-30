@@ -84,7 +84,7 @@ public abstract class Tile {
 
     @Override
     public String toString() {
-      return piece.isBlack() ? piece.toSingleChar().toLowerCase() : piece.toSingleChar();
+      return piece.toSingleChar();
     }
   }
 }
