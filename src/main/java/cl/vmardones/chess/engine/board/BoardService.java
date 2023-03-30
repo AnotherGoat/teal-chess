@@ -11,10 +11,8 @@ import static cl.vmardones.chess.engine.board.Board.MIN_TILES;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.*;
 import cl.vmardones.chess.engine.player.Alliance;
-import com.google.common.collect.ImmutableList;
 import java.util.*;
 import java.util.stream.IntStream;
-import lombok.NonNull;
 
 public class BoardService {
 
@@ -64,7 +62,7 @@ public class BoardService {
     return builder.build();
   }
 
-  public String prettyPrint(@NonNull final Board board) {
+  public String prettyPrint(final Board board) {
     final var builder = new StringBuilder();
 
     IntStream.range(MIN_TILES, MAX_TILES)
@@ -79,11 +77,10 @@ public class BoardService {
     return (coordinate.index() + 1) % Board.SIDE_LENGTH == 0 ? "%s  \n" : "%s  ";
   }
 
-  public Collection<Move> calculateLegals(
-      @NonNull final Board board, @NonNull final Collection<Piece> pieces) {
+  public List<Move> calculateLegals(final Board board, final List<Piece> pieces) {
     return pieces.stream()
         .map(piece -> piece.calculateLegals(board))
         .flatMap(Collection::stream)
-        .collect(ImmutableList.toImmutableList());
+        .toList();
   }
 }

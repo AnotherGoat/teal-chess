@@ -20,8 +20,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import javax.swing.*;
 import lombok.extern.slf4j.Slf4j;
@@ -197,7 +197,7 @@ class TilePanel extends JPanel {
     }
   }
 
-  private Collection<Move> selectedPieceLegals(final Board board) {
+  private List<Move> selectedPieceLegals(final Board board) {
     if (table.getSelectedPiece() == null || isOpponentPieceSelected()) {
       return Collections.emptyList();
     }

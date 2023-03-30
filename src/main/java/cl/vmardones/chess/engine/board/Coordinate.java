@@ -6,13 +6,11 @@
 package cl.vmardones.chess.engine.board;
 
 import cl.vmardones.chess.engine.player.Alliance;
-import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
-import lombok.NonNull;
 
 /**
  * A coordinate is one of the 64 positions where a chess piece can be. It's usually identified by
@@ -26,9 +24,7 @@ public final class Coordinate {
   private static final List<Coordinate> COORDINATES_CACHE = createAllPossibleCoordinates();
 
   private static List<Coordinate> createAllPossibleCoordinates() {
-    return IntStream.range(Board.MIN_TILES, Board.MAX_TILES)
-        .mapToObj(Coordinate::new)
-        .collect(ImmutableList.toImmutableList());
+    return IntStream.range(Board.MIN_TILES, Board.MAX_TILES).mapToObj(Coordinate::new).toList();
   }
 
   private final int index;
@@ -68,7 +64,7 @@ public final class Coordinate {
    * @return The created coordinate
    * @throws InvalidCoordinateException If the coordinate isn't inside the chessboard
    */
-  public static Coordinate of(@NonNull final String algebraic) {
+  public static Coordinate of(final String algebraic) {
     if (!ALGEBRAIC_PATTERN.matcher(algebraic).matches()) {
       throw new InvalidCoordinateException("Invalid algebraic notation: " + algebraic);
     }
@@ -113,7 +109,7 @@ public final class Coordinate {
    * @param other The other coordinate
    * @return True if both are on the same column
    */
-  public boolean sameColumnAs(@NonNull final Coordinate other) {
+  public boolean sameColumnAs(final Coordinate other) {
     return getColumn() == other.getColumn();
   }
 
@@ -143,7 +139,7 @@ public final class Coordinate {
    * @param other The other coordinate
    * @return True if both are on the same rank
    */
-  public boolean sameRankAs(@NonNull final Coordinate other) {
+  public boolean sameRankAs(final Coordinate other) {
     return getRank() == other.getRank();
   }
 
@@ -176,7 +172,7 @@ public final class Coordinate {
    * @param other The other coordinate
    * @return True if both are the same color
    */
-  public boolean sameColorAs(@NonNull final Coordinate other) {
+  public boolean sameColorAs(final Coordinate other) {
     return getColor() == other.getColor();
   }
 

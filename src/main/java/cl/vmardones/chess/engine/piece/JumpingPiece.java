@@ -7,10 +7,8 @@ package cl.vmardones.chess.engine.piece;
 
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Coordinate;
-import com.google.common.collect.ImmutableList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
-import lombok.NonNull;
 
 /**
  * A piece that can move to a specific set of positions. It usually doesn't matter if there are
@@ -18,13 +16,13 @@ import lombok.NonNull;
  */
 sealed interface JumpingPiece extends Piece permits King, Knight, Pawn {
 
-  Collection<int[]> getMoveOffsets();
+  List<int[]> getMoveOffsets();
 
   @Override
-  default Collection<Coordinate> calculatePossibleDestinations(@NonNull final Board board) {
+  default List<Coordinate> calculatePossibleDestinations(final Board board) {
     return getMoveOffsets().stream()
         .map(offset -> getPosition().to(offset[0], offset[1]))
         .flatMap(Optional::stream)
-        .collect(ImmutableList.toImmutableList());
+        .toList();
   }
 }

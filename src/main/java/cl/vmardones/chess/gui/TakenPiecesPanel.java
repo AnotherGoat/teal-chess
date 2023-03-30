@@ -9,7 +9,6 @@ import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Alliance;
 import cl.vmardones.chess.io.PieceIconLoader;
-import com.google.common.collect.ImmutableList;
 import java.awt.*;
 import java.util.List;
 import java.util.Optional;
@@ -61,6 +60,6 @@ class TakenPiecesPanel extends JPanel {
         .filter(Move::isCapturing)
         .map(Move::getCapturedPiece)
         .filter(capturedPiece -> capturedPiece.getAlliance() == alliance)
-        .collect(ImmutableList.toImmutableList());
+        .toList();
   }
 }

@@ -14,14 +14,11 @@ import cl.vmardones.chess.engine.piece.vector.Jump;
 import cl.vmardones.chess.engine.piece.vector.Vector;
 import cl.vmardones.chess.engine.piece.vector.Vertical;
 import cl.vmardones.chess.engine.player.Alliance;
-import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,7 +42,7 @@ public final class Pawn implements JumpingPiece {
   }
 
   @Override
-  public Optional<Move> createMove(@NonNull final Tile destination, @NonNull final Board board) {
+  public Optional<Move> createMove(final Tile destination, final Board board) {
 
     if (isCaptureMove(destination)) {
       if (!isEnPassantPossible(board, destination)) {
@@ -135,14 +132,14 @@ public final class Pawn implements JumpingPiece {
   }
 
   @Override
-  public Collection<int[]> getMoveOffsets() {
+  public List<int[]> getMoveOffsets() {
     return switch (getAlliance()) {
       case BLACK -> calculateBlackOffsets();
       case WHITE -> calculateWhiteOffsets();
     };
   }
 
-  private Collection<int[]> calculateWhiteOffsets() {
+  private List<int[]> calculateWhiteOffsets() {
     final List<Vector> moves =
         new ArrayList<>(List.of(Vertical.UP, Diagonal.UP_LEFT, Diagonal.UP_RIGHT));
 
@@ -150,10 +147,10 @@ public final class Pawn implements JumpingPiece {
       moves.add(Jump.UP);
     }
 
-    return moves.stream().map(Vector::getVector).collect(ImmutableList.toImmutableList());
+    return moves.stream().map(Vector::getVector).toList();
   }
 
-  private Collection<int[]> calculateBlackOffsets() {
+  private List<int[]> calculateBlackOffsets() {
     final List<Vector> moves =
         new ArrayList<>(List.of(Vertical.DOWN, Diagonal.DOWN_LEFT, Diagonal.DOWN_RIGHT));
 
@@ -161,6 +158,6 @@ public final class Pawn implements JumpingPiece {
       moves.add(Jump.DOWN);
     }
 
-    return moves.stream().map(Vector::getVector).collect(ImmutableList.toImmutableList());
+    return moves.stream().map(Vector::getVector).toList();
   }
 }

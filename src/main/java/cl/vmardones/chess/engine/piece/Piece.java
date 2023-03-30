@@ -12,10 +12,8 @@ import cl.vmardones.chess.engine.move.CaptureMove;
 import cl.vmardones.chess.engine.move.MajorMove;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.player.Alliance;
-import com.google.common.collect.ImmutableList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
-import lombok.NonNull;
 
 /** A chess piece. */
 public sealed interface Piece permits JumpingPiece, SlidingPiece {
@@ -32,18 +30,18 @@ public sealed interface Piece permits JumpingPiece, SlidingPiece {
    * @param board Current state of the game board
    * @return List of possible moves
    */
-  default Collection<Move> calculateLegals(@NonNull final Board board) {
+  default List<Move> calculateLegals(final Board board) {
     return calculatePossibleDestinations(board).stream()
         .map(board::getTile)
         .filter(this::canAccess)
         .map(tile -> createMove(tile, board))
         .flatMap(Optional::stream)
-        .collect(ImmutableList.toImmutableList());
+        .toList();
   }
 
-  Collection<Coordinate> calculatePossibleDestinations(@NonNull final Board board);
+  List<Coordinate> calculatePossibleDestinations(final Board board);
 
-  default boolean isInMoveRange(@NonNull final Board board, @NonNull final Coordinate coordinate) {
+  default boolean isInMoveRange(final Board board, final Coordinate coordinate) {
     return calculateLegals(board).stream()
         .map(Move::getDestination)
         .anyMatch(destination -> destination == coordinate);
@@ -57,11 +55,11 @@ public sealed interface Piece permits JumpingPiece, SlidingPiece {
     return !isWhite();
   }
 
-  default boolean isAllyOf(@NonNull final Piece other) {
+  default boolean isAllyOf(final Piece other) {
     return getAlliance() == other.getAlliance();
   }
 
-  default boolean isEnemyOf(@NonNull final Piece other) {
+  default boolean isEnemyOf(final Piece other) {
     return !isAllyOf(other);
   }
 
@@ -78,7 +76,7 @@ public sealed interface Piece permits JumpingPiece, SlidingPiece {
    * @param destination The target destination
    * @return True if the piece can get to the destination
    */
-  default boolean canAccess(@NonNull final Tile destination) {
+  default boolean canAccess(final Tile destination) {
     final var pieceAtDestination = destination.getPiece();
     return pieceAtDestination.isEmpty() || isEnemyOf(pieceAtDestination.get());
   }
@@ -92,7 +90,7 @@ public sealed interface Piece permits JumpingPiece, SlidingPiece {
    * @param board The current game board
    * @return A move, selected depending on the source and destination
    */
-  default Optional<Move> createMove(@NonNull final Tile destination, @NonNull final Board board) {
+  default Optional<Move> createMove(final Tile destination, final Board board) {
     if (destination.getPiece().isEmpty()) {
       return Optional.of(new MajorMove(board, this, destination.getCoordinate()));
     }

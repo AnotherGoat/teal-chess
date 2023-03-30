@@ -8,24 +8,22 @@ package cl.vmardones.chess.engine.piece;
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.board.Tile;
-import com.google.common.collect.ImmutableList;
 import java.util.*;
 import java.util.stream.IntStream;
-import lombok.NonNull;
 
 sealed interface SlidingPiece extends Piece permits Bishop, Queen, Rook {
 
-  Collection<int[]> getMoveVectors();
+  List<int[]> getMoveVectors();
 
   @Override
-  default Collection<Coordinate> calculatePossibleDestinations(@NonNull final Board board) {
+  default List<Coordinate> calculatePossibleDestinations(final Board board) {
     return getMoveVectors().stream()
         .map(vector -> calculateOffsets(vector, board))
         .flatMap(Collection::stream)
-        .collect(ImmutableList.toImmutableList());
+        .toList();
   }
 
-  private Collection<Coordinate> calculateOffsets(final int[] vector, final Board board) {
+  private List<Coordinate> calculateOffsets(final int[] vector, final Board board) {
     final var tiles =
         IntStream.range(1, Board.SIDE_LENGTH + 1)
             .mapToObj(i -> getPosition().to(vector[0] * i, vector[1] * i))
@@ -34,13 +32,11 @@ sealed interface SlidingPiece extends Piece permits Bishop, Queen, Rook {
             .toList()
             .listIterator();
 
-    return filterAccessible(tiles).stream()
-        .map(Tile::getCoordinate)
-        .collect(ImmutableList.toImmutableList());
+    return filterAccessible(tiles).stream().map(Tile::getCoordinate).toList();
   }
 
   // TODO: Replace this method with something more stream-friendly
-  private Collection<Tile> filterAccessible(final Iterator<Tile> tiles) {
+  private List<Tile> filterAccessible(final Iterator<Tile> tiles) {
 
     final List<Tile> accessibleTiles = new ArrayList<>();
 

@@ -29,9 +29,6 @@ dependencies {
     // Nullability
     compileOnly 'org.eclipse.jdt:org.eclipse.jdt.annotation:2.2.700'
 
-    // Immutable collections
-    implementation 'com.google.guava:guava:31.1-jre'
-
     // Logging
     def slf4jVersion = '2.0.5'
     implementation "org.slf4j:slf4j-api:$slf4jVersion"

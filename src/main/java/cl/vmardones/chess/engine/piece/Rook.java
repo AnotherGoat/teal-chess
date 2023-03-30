@@ -11,9 +11,8 @@ import cl.vmardones.chess.engine.piece.vector.Horizontal;
 import cl.vmardones.chess.engine.piece.vector.Vector;
 import cl.vmardones.chess.engine.piece.vector.Vertical;
 import cl.vmardones.chess.engine.player.Alliance;
-import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +24,7 @@ import lombok.ToString;
 @ToString(includeFieldNames = false)
 public final class Rook implements SlidingPiece {
 
-  private static final Collection<int[]> MOVE_VECTORS = calculateMoveVectors();
+  private static final List<int[]> MOVE_VECTORS = calculateMoveVectors();
 
   private Coordinate position;
   private Alliance alliance;
@@ -41,13 +40,13 @@ public final class Rook implements SlidingPiece {
   }
 
   @Override
-  public Collection<int[]> getMoveVectors() {
+  public List<int[]> getMoveVectors() {
     return MOVE_VECTORS;
   }
 
-  private static Collection<int[]> calculateMoveVectors() {
+  private static List<int[]> calculateMoveVectors() {
     return Stream.concat(Arrays.stream(Horizontal.values()), Arrays.stream(Vertical.values()))
         .map(Vector::getVector)
-        .collect(ImmutableList.toImmutableList());
+        .toList();
   }
 }

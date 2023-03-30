@@ -9,8 +9,8 @@ import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.player.Alliance;
 import cl.vmardones.chess.engine.player.Player;
-import com.google.common.collect.ImmutableList;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 record Turn(Board board, Alliance moveMaker, Player whitePlayer, Player blackPlayer) {
 
@@ -21,8 +21,8 @@ record Turn(Board board, Alliance moveMaker, Player whitePlayer, Player blackPla
     };
   }
 
-  Collection<Move> getPlayerLegals() {
-    return ImmutableList.copyOf(getPlayer().getLegals());
+  List<Move> getPlayerLegals() {
+    return Collections.unmodifiableList(getPlayer().getLegals());
   }
 
   Player getOpponent() {
@@ -32,7 +32,7 @@ record Turn(Board board, Alliance moveMaker, Player whitePlayer, Player blackPla
     };
   }
 
-  Collection<Move> getOpponentLegals() {
-    return ImmutableList.copyOf(getOpponent().getLegals());
+  List<Move> getOpponentLegals() {
+    return Collections.unmodifiableList(getOpponent().getLegals());
   }
 }

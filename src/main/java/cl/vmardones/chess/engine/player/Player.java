@@ -11,13 +11,11 @@ import cl.vmardones.chess.engine.move.*;
 import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.piece.Rook;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.ToString;
 
 /**
@@ -31,8 +29,8 @@ public abstract class Player {
 
   @Getter protected final King king;
 
-  @Getter @ToString.Exclude protected final Collection<Move> legals;
-  @ToString.Exclude protected final Collection<Move> opponentLegals;
+  @Getter @ToString.Exclude protected final List<Move> legals;
+  @ToString.Exclude protected final List<Move> opponentLegals;
 
   private final boolean inCheck;
   private Boolean noEscapeMoves;
@@ -40,21 +38,20 @@ public abstract class Player {
   protected Player(
       final Board board,
       final King king,
-      final Collection<Move> legals,
-      final Collection<Move> opponentLegals) {
+      final List<Move> legals,
+      final List<Move> opponentLegals) {
     this.board = board;
     this.king = king;
     this.opponentLegals = opponentLegals;
 
-    this.legals = ImmutableList.copyOf(Iterables.concat(legals, calculateCastles(opponentLegals)));
+    this.legals =
+        Stream.concat(legals.stream(), calculateCastles(opponentLegals).stream()).toList();
     inCheck = !Player.calculateAttacksOnTile(king.getPosition(), opponentLegals).isEmpty();
   }
 
-  protected static Collection<Move> calculateAttacksOnTile(
-      @NonNull final Coordinate kingPosition, @NonNull final Collection<Move> moves) {
-    return moves.stream()
-        .filter(move -> kingPosition == move.getDestination())
-        .collect(ImmutableList.toImmutableList());
+  protected static List<Move> calculateAttacksOnTile(
+      final Coordinate kingPosition, final List<Move> moves) {
+    return moves.stream().filter(move -> kingPosition == move.getDestination()).toList();
   }
 
   /**
@@ -111,7 +108,7 @@ public abstract class Player {
     return false;
   }
 
-  public MoveTransition makeMove(@NonNull final Player currentPlayer, @NonNull final Move move) {
+  public MoveTransition makeMove(final Player currentPlayer, final Move move) {
     if (move.isNull()) {
       return new MoveTransition(board, move, MoveStatus.NULL);
     }
@@ -120,7 +117,7 @@ public abstract class Player {
       return new MoveTransition(board, move, MoveStatus.ILLEGAL);
     }
 
-    final Collection<Move> kingAttacks =
+    final List<Move> kingAttacks =
         Player.calculateAttacksOnTile(currentPlayer.getKing().getPosition(), opponentLegals);
 
     if (!kingAttacks.isEmpty()) {
@@ -135,7 +132,7 @@ public abstract class Player {
    *
    * @return The player's active pieces
    */
-  public abstract Collection<Piece> getActivePieces();
+  public abstract List<Piece> getActivePieces();
 
   /**
    * Obtains the player's side.
@@ -145,14 +142,13 @@ public abstract class Player {
   public abstract Alliance getAlliance();
 
   // TODO: Refactor this method, maybe use combinator pattern
-  protected Collection<Move> calculateCastles(@NonNull final Collection<Move> opponentLegals) {
-
-    final List<Move> castles = new ArrayList<>();
+  protected List<Move> calculateCastles(final List<Move> opponentLegals) {
 
     if (!king.isFirstMove() || isInCheck() || king.getPosition().getColumn() != 'e') {
-      return ImmutableList.copyOf(castles);
+      return Collections.emptyList();
     }
 
+    final List<Move> castles = new ArrayList<>();
     final var kingPosition = king.getPosition();
 
     if (isKingSideCastlePossible(kingPosition, opponentLegals)) {
@@ -175,11 +171,11 @@ public abstract class Player {
       }
     }
 
-    return ImmutableList.copyOf(castles);
+    return Collections.unmodifiableList(castles);
   }
 
   private boolean isKingSideCastlePossible(
-      final Coordinate kingPosition, final Collection<Move> opponentLegals) {
+      final Coordinate kingPosition, final List<Move> opponentLegals) {
     return isTileFree(kingPosition, 1)
         && isTileFree(kingPosition, 2)
         && isTileRook(kingPosition, 3)
@@ -188,7 +184,7 @@ public abstract class Player {
   }
 
   private boolean isQueenSideCastlePossible(
-      final Coordinate kingPosition, final Collection<Move> opponentLegals) {
+      final Coordinate kingPosition, final List<Move> opponentLegals) {
     return isTileFree(kingPosition, -1)
         && isTileFree(kingPosition, -2)
         && isTileFree(kingPosition, -3)
@@ -205,7 +201,7 @@ public abstract class Player {
   }
 
   private boolean isUnreachableByEnemy(
-      final Coordinate kingPosition, final int offset, final Collection<Move> opponentLegals) {
+      final Coordinate kingPosition, final int offset, final List<Move> opponentLegals) {
     final var destination = kingPosition.right(offset);
 
     return destination.isPresent()

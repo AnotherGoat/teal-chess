@@ -12,9 +12,8 @@ import cl.vmardones.chess.engine.piece.vector.Horizontal;
 import cl.vmardones.chess.engine.piece.vector.Vector;
 import cl.vmardones.chess.engine.piece.vector.Vertical;
 import cl.vmardones.chess.engine.player.Alliance;
-import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +29,7 @@ import lombok.ToString;
 @ToString(includeFieldNames = false)
 public final class King implements JumpingPiece {
 
-  private static final Collection<int[]> MOVE_OFFSETS = calculateMoveOffsets();
+  private static final List<int[]> MOVE_OFFSETS = calculateMoveOffsets();
 
   private Coordinate position;
   private Alliance alliance;
@@ -46,15 +45,15 @@ public final class King implements JumpingPiece {
   }
 
   @Override
-  public Collection<int[]> getMoveOffsets() {
+  public List<int[]> getMoveOffsets() {
     return MOVE_OFFSETS;
   }
 
-  private static Collection<int[]> calculateMoveOffsets() {
+  private static List<int[]> calculateMoveOffsets() {
     return Stream.concat(
             Arrays.stream(Diagonal.values()),
             Stream.concat(Arrays.stream(Horizontal.values()), Arrays.stream(Vertical.values())))
         .map(Vector::getVector)
-        .collect(ImmutableList.toImmutableList());
+        .toList();
   }
 }

@@ -9,7 +9,6 @@ import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Alliance;
-import com.google.common.collect.ImmutableList;
 import java.util.*;
 import java.util.stream.IntStream;
 import lombok.*;
@@ -25,13 +24,13 @@ public class Board {
 
   private final List<Tile> tiles;
 
-  @Getter private final Collection<Piece> whitePieces;
+  @Getter private final List<Piece> whitePieces;
 
-  @NonNull @Getter private final King whiteKing;
+  @Getter private final King whiteKing;
 
-  @Getter private final Collection<Piece> blackPieces;
+  @Getter private final List<Piece> blackPieces;
 
-  @NonNull @Getter private final King blackKing;
+  @Getter private final King blackKing;
 
   @Getter private final Pawn enPassantPawn;
 
@@ -57,31 +56,30 @@ public class Board {
     return IntStream.range(MIN_TILES, MAX_TILES)
         .mapToObj(Coordinate::of)
         .map(coordinate -> Tile.create(coordinate, builder.boardConfig.get(coordinate)))
-        .collect(ImmutableList.toImmutableList());
+        .toList();
   }
 
-  private Collection<Piece> calculateActivePieces(
-      final List<Tile> gameBoard, final Alliance alliance) {
+  private List<Piece> calculateActivePieces(final List<Tile> gameBoard, final Alliance alliance) {
     return gameBoard.stream()
         .map(Tile::getPiece)
         .flatMap(Optional::stream)
         .filter(piece -> piece.getAlliance() == alliance)
-        .collect(ImmutableList.toImmutableList());
+        .toList();
   }
 
   /* Methods for checking the board */
 
-  public Tile getTile(@NonNull final Coordinate coordinate) {
+  public Tile getTile(final Coordinate coordinate) {
     return tiles.get(coordinate.index());
   }
 
-  public boolean contains(@NonNull final Coordinate coordinate, @NonNull final Class<?> pieceType) {
+  public boolean contains(final Coordinate coordinate, final Class<?> pieceType) {
     final var piece = getTile(coordinate).getPiece();
 
     return piece.isPresent() && pieceType.isInstance(piece);
   }
 
-  public boolean containsNothing(@NonNull final Coordinate coordinate) {
+  public boolean containsNothing(final Coordinate coordinate) {
     return getTile(coordinate).getPiece().isEmpty();
   }
 
@@ -94,7 +92,7 @@ public class Board {
    *
    * @return The board builder
    */
-  public static BoardBuilder builder(@NonNull final King whiteKing, @NonNull final King blackKing) {
+  public static BoardBuilder builder(final King whiteKing, final King blackKing) {
     return new BoardBuilder(whiteKing, blackKing);
   }
 

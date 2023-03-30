@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Optional;
 import lombok.Generated;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -23,8 +22,7 @@ public final class PieceIconLoader {
     throw new UnsupportedOperationException("You cannot instantiate me!");
   }
 
-  public static Optional<BufferedImage> load(
-      @NonNull final Piece piece, final int width, final int height) {
+  public static Optional<BufferedImage> load(final Piece piece, final int width, final int height) {
 
     final var iconResource = ResourceImporter.get(getIconPath(piece));
 

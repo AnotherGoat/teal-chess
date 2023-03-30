@@ -17,13 +17,13 @@ import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.io.FontLoader;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
-import com.google.common.collect.Lists;
 import java.awt.*;
 import java.awt.event.WindowStateListener;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,7 +58,7 @@ public class Table {
 
   private boolean darkTheme;
 
-  @NonNull @Getter private BoardDirection boardDirection;
+  @Getter private BoardDirection boardDirection;
 
   public Table(final boolean darkTheme, final boolean highlightLegals, final boolean flipBoard) {
     this.darkTheme = darkTheme;
@@ -208,7 +208,11 @@ public class Table {
     List<TilePanel> traverse(final List<TilePanel> boardTiles) {
       return switch (this) {
         case NORMAL -> boardTiles;
-        case FLIPPED -> Lists.reverse(boardTiles);
+        case FLIPPED -> {
+          final var reversedTiles = new ArrayList<>(boardTiles);
+          Collections.reverse(reversedTiles);
+          yield Collections.unmodifiableList(reversedTiles);
+        }
       };
     }
 
