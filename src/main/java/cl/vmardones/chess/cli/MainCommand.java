@@ -6,7 +6,7 @@
 package cl.vmardones.chess.cli;
 
 import cl.vmardones.chess.gui.Table;
-import org.slf4j.impl.SimpleLogger;
+import org.slf4j.simple.SimpleLogger;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.IVersionProvider;
 import picocli.CommandLine.Option;

@@ -1,0 +1,113 @@
+plugins {
+    id 'java'
+    id 'com.diffplug.spotless' version '6.8.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'jacoco'
+    id 'org.sonarqube' version '3.4.0.2513'
+}
+
+group 'cl.vmardones'
+version '0.0'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+spotless {
+    java {
+        licenseHeaderFile("license.template")
+        googleJavaFormat()
+    }
+}
+
+dependencies {
+    // Immutable collections
+    implementation 'com.google.guava:guava:31.1-jre'
+
+    // Logging
+    def slf4jVersion = '2.0.5'
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
+    implementation "org.slf4j:slf4j-simple:$slf4jVersion"
+
+    // Loading SVG files
+    def batikVersion = '1.14'
+    implementation "org.apache.xmlgraphics:batik-all:$batikVersion"
+    implementation "org.apache.xmlgraphics:batik-swing:$batikVersion"
+
+    // CLI
+    def picocliVersion = '4.7.1'
+    implementation "info.picocli:picocli:$picocliVersion"
+    annotationProcessor "info.picocli:picocli-codegen:$picocliVersion"
+
+    // GUI
+    implementation 'com.miglayout:miglayout-swing:11.0'
+    implementation 'com.formdev:flatlaf:3.0'
+
+    // Boilerplate reduction (where records aren't enough)
+    def lombokVersion = '1.18.26'
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+    testCompileOnly "org.projectlombok:lombok:$lombokVersion"
+    testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
+    // Unit testing
+    def junitVersion = '5.9.2'
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testCompileOnly "org.junit.jupiter:junit-jupiter-params:$junitVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+
+    // Mocking
+    def mockitoVersion = '5.2.0'
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+    testImplementation "org.mockito:mockito-inline:$mockitoVersion"
+
+    // Better assertions
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+}
+
+tasks {
+    compileJava {
+        dependsOn = [spotlessApply]
+
+        // Use project group and name as the base package for all source code
+        options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
+    }
+
+    shadowJar {
+        manifest {
+            attributes 'Main-Class': 'cl.vmardones.chess.launcher.Chess'
+            attributes 'Implementation-Title': project.name
+            attributes 'Implementation-Version': project.version
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+
+        // Generate a report after completing all the tests
+        finalizedBy = [jacocoTestReport]
+    }
+
+    jacocoTestReport {
+        reports {
+            // Required to make Sonarqube understand the results
+            xml.required = true
+        }
+    }
+
+    this.sonarqube {
+        dependsOn(jacocoTestReport)
+    }
+}
+
+// Reproducible JAR builds (https://imperceptiblethoughts.com/shadow/configuration/reproducible-builds/)
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
