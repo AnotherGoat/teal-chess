@@ -15,7 +15,6 @@ import cl.vmardones.chess.engine.piece.vector.Horizontal;
 import cl.vmardones.chess.engine.piece.vector.LShaped;
 import cl.vmardones.chess.engine.piece.vector.Vertical;
 import cl.vmardones.chess.engine.player.Alliance;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -24,55 +23,52 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class KingTest {
 
-  King king;
-
-  @Mock Coordinate coordinate;
-
+  @Mock Coordinate anywhere;
   @Mock Coordinate destination;
-
   @Mock Move move;
-
-  @BeforeEach
-  void setUp() {
-    king = new King(coordinate, Alliance.WHITE);
-  }
 
   @Test
   void constructor() {
-    assertThat(new King(coordinate, Alliance.BLACK)).matches(King::isFirstMove);
+    assertThat(new King(anywhere, Alliance.BLACK)).matches(King::isFirstMove);
   }
 
   @Test
   void toSingleChar() {
-    assertThat(new King(coordinate, Alliance.WHITE).toSingleChar()).isEqualTo("K");
-    assertThat(new King(coordinate, Alliance.BLACK).toSingleChar()).isEqualTo("k");
+    assertThat(new King(anywhere, Alliance.WHITE).toSingleChar()).isEqualTo("K");
+    assertThat(new King(anywhere, Alliance.BLACK).toSingleChar()).isEqualTo("k");
   }
 
   @Test
   void diagonalMove() {
+    var king = new King(anywhere, Alliance.WHITE);
     assertThat(king.getMoveOffsets()).containsOnlyOnce(Diagonal.UP_RIGHT.getVector());
   }
 
   @Test
   void horizontalMove() {
+    var king = new King(anywhere, Alliance.WHITE);
     assertThat(king.getMoveOffsets()).containsOnlyOnce(Horizontal.LEFT.getVector());
   }
 
   @Test
   void verticalMove() {
+    var king = new King(anywhere, Alliance.WHITE);
     assertThat(king.getMoveOffsets()).containsOnlyOnce(Vertical.UP.getVector());
   }
 
   @Test
   void illegalMove() {
+    var king = new King(anywhere, Alliance.WHITE);
     assertThat(king.getMoveOffsets()).doesNotContain(LShaped.UP_UP_LEFT.getVector());
   }
 
   @Test
   void move() {
+    var kingToMove = new King(anywhere, Alliance.WHITE);
+
     when(move.getDestination()).thenReturn(destination);
 
-    assertThat(king.move(move))
+    assertThat(kingToMove.move(move))
         .isInstanceOf(King.class)
         .matches(king -> king.getPosition().equals(destination))
         .matches(king -> !king.isFirstMove());

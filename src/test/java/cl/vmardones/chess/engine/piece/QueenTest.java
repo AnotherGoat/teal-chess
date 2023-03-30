@@ -15,7 +15,6 @@ import cl.vmardones.chess.engine.piece.vector.Horizontal;
 import cl.vmardones.chess.engine.piece.vector.LShaped;
 import cl.vmardones.chess.engine.piece.vector.Vertical;
 import cl.vmardones.chess.engine.player.Alliance;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -24,55 +23,52 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class QueenTest {
 
-  Queen queen;
-
-  @Mock Coordinate coordinate;
-
+  @Mock Coordinate anywhere;
   @Mock Coordinate destination;
-
   @Mock Move move;
-
-  @BeforeEach
-  void setUp() {
-    queen = new Queen(coordinate, Alliance.BLACK);
-  }
 
   @Test
   void constructor() {
-    assertThat(new Queen(coordinate, Alliance.BLACK)).matches(Queen::isFirstMove);
+    assertThat(new Queen(anywhere, Alliance.BLACK)).matches(Queen::isFirstMove);
   }
 
   @Test
   void toSingleChar() {
-    assertThat(new Queen(coordinate, Alliance.WHITE).toSingleChar()).isEqualTo("Q");
-    assertThat(new Queen(coordinate, Alliance.BLACK).toSingleChar()).isEqualTo("q");
+    assertThat(new Queen(anywhere, Alliance.WHITE).toSingleChar()).isEqualTo("Q");
+    assertThat(new Queen(anywhere, Alliance.BLACK).toSingleChar()).isEqualTo("q");
   }
 
   @Test
   void diagonalMove() {
+    var queen = new Queen(anywhere, Alliance.BLACK);
     assertThat(queen.getMoveVectors()).containsOnlyOnce(Diagonal.DOWN_RIGHT.getVector());
   }
 
   @Test
   void horizontalMove() {
+    var queen = new Queen(anywhere, Alliance.BLACK);
     assertThat(queen.getMoveVectors()).containsOnlyOnce(Horizontal.LEFT.getVector());
   }
 
   @Test
   void verticalMove() {
+    var queen = new Queen(anywhere, Alliance.BLACK);
     assertThat(queen.getMoveVectors()).containsOnlyOnce(Vertical.UP.getVector());
   }
 
   @Test
   void illegalMove() {
+    var queen = new Queen(anywhere, Alliance.BLACK);
     assertThat(queen.getMoveVectors()).doesNotContain(LShaped.UP_UP_LEFT.getVector());
   }
 
   @Test
   void move() {
+    var queenToMove = new Queen(anywhere, Alliance.BLACK);
+
     when(move.getDestination()).thenReturn(destination);
 
-    assertThat(queen.move(move))
+    assertThat(queenToMove.move(move))
         .isInstanceOf(Queen.class)
         .matches(queen -> queen.getPosition().equals(destination))
         .matches(queen -> !queen.isFirstMove());

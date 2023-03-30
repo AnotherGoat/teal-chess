@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jdt.annotation.Nullable;
 
+// TODO: Replace Move implementations with an enum
 /** The action of moving a piece. */
 @Slf4j
 @EqualsAndHashCode
@@ -101,7 +102,7 @@ public abstract class Move {
     }
 
     private static Predicate<Move> isMovePossible(Coordinate source, Coordinate destination) {
-      return move -> move.getSource().equals(source) && move.getDestination() == destination;
+      return move -> move.getSource().equals(source) && move.getDestination().equals(destination);
     }
   }
 }

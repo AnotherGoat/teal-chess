@@ -14,7 +14,6 @@ import cl.vmardones.chess.engine.piece.vector.Diagonal;
 import cl.vmardones.chess.engine.piece.vector.Horizontal;
 import cl.vmardones.chess.engine.piece.vector.Vertical;
 import cl.vmardones.chess.engine.player.Alliance;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -23,50 +22,46 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class RookTest {
 
-  Rook rook;
-
-  @Mock Coordinate coordinate;
-
+  @Mock Coordinate anywhere;
   @Mock Coordinate destination;
-
   @Mock Move move;
-
-  @BeforeEach
-  void setUp() {
-    rook = new Rook(coordinate, Alliance.BLACK);
-  }
 
   @Test
   void constructor() {
-    assertThat(new Rook(coordinate, Alliance.BLACK)).matches(Rook::isFirstMove);
+    assertThat(new Rook(anywhere, Alliance.BLACK)).matches(Rook::isFirstMove);
   }
 
   @Test
   void toSingleChar() {
-    assertThat(new Rook(coordinate, Alliance.WHITE).toSingleChar()).isEqualTo("R");
-    assertThat(new Rook(coordinate, Alliance.BLACK).toSingleChar()).isEqualTo("r");
+    assertThat(new Rook(anywhere, Alliance.WHITE).toSingleChar()).isEqualTo("R");
+    assertThat(new Rook(anywhere, Alliance.BLACK).toSingleChar()).isEqualTo("r");
   }
 
   @Test
   void horizontalMove() {
+    var rook = new Rook(anywhere, Alliance.BLACK);
     assertThat(rook.getMoveVectors()).containsOnlyOnce(Horizontal.RIGHT.getVector());
   }
 
   @Test
   void verticalMove() {
+    var rook = new Rook(anywhere, Alliance.BLACK);
     assertThat(rook.getMoveVectors()).containsOnlyOnce(Vertical.UP.getVector());
   }
 
   @Test
   void illegalMove() {
+    var rook = new Rook(anywhere, Alliance.BLACK);
     assertThat(rook.getMoveVectors()).doesNotContain(Diagonal.DOWN_RIGHT.getVector());
   }
 
   @Test
   void move() {
+    var rookToMove = new Rook(anywhere, Alliance.BLACK);
+
     when(move.getDestination()).thenReturn(destination);
 
-    assertThat(rook.move(move))
+    assertThat(rookToMove.move(move))
         .isInstanceOf(Rook.class)
         .matches(rook -> rook.getPosition().equals(destination))
         .matches(rook -> !rook.isFirstMove());

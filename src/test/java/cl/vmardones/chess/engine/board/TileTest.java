@@ -6,9 +6,11 @@
 package cl.vmardones.chess.engine.board;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
-import cl.vmardones.chess.engine.piece.Piece;
+import cl.vmardones.chess.engine.piece.Knight;
+import cl.vmardones.chess.engine.piece.Pawn;
+import cl.vmardones.chess.engine.piece.Rook;
+import cl.vmardones.chess.engine.player.Alliance;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -17,19 +19,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class TileTest {
 
-  Tile tile;
-
-  @Mock Coordinate coordinate;
-  @Mock Piece piece;
+  @Mock Coordinate anywhere;
 
   @Test
   void createOccupied() {
-    assertThat(Tile.create(coordinate, piece).getPiece()).isNotNull();
+    var piece = new Knight(anywhere, Alliance.BLACK);
+    assertThat(Tile.create(anywhere, piece).getPiece()).isNotNull().isEqualTo(piece);
   }
 
   @Test
   void createEmpty() {
-    assertThat(Tile.create(coordinate, null).getPiece()).isNull();
+    assertThat(Tile.create(anywhere, null).getPiece()).isNull();
   }
 
   @Test
@@ -40,23 +40,19 @@ class TileTest {
 
   @Test
   void whitePieceToString() {
-    when(piece.isBlack()).thenReturn(false);
-    when(piece.toSingleChar()).thenReturn("P");
-
-    assertThat(Tile.create(coordinate, piece)).hasToString("P");
+    var piece = new Pawn(anywhere, Alliance.WHITE);
+    assertThat(Tile.create(anywhere, piece)).hasToString("P");
   }
 
   @Test
   void blackPieceToString() {
-    when(piece.isBlack()).thenReturn(true);
-    when(piece.toSingleChar()).thenReturn("N");
-
-    assertThat(Tile.create(coordinate, piece)).hasToString("n");
+    var piece = new Rook(anywhere, Alliance.BLACK);
+    assertThat(Tile.create(anywhere, piece)).hasToString("r");
   }
 
   @Test
   void emptyToString() {
-    assertThat(Tile.create(coordinate, null)).hasToString("-");
+    assertThat(Tile.create(anywhere, null)).hasToString("-");
   }
 
   @Test

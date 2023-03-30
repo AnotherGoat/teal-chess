@@ -98,7 +98,7 @@ public sealed interface Piece permits JumpingPiece, SlidingPiece {
 
     var capturablePiece = destination.getPiece();
 
-    if (capturablePiece != null && isEnemyOf(capturablePiece)) {
+    if (isEnemyOf(capturablePiece)) {
       return new CaptureMove(board, this, destination.getCoordinate(), capturablePiece);
     }
 

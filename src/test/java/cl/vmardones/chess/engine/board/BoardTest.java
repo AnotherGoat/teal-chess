@@ -6,13 +6,11 @@
 package cl.vmardones.chess.engine.board;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 import cl.vmardones.chess.engine.piece.Bishop;
 import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Pawn;
-import cl.vmardones.chess.engine.piece.Piece;
+import cl.vmardones.chess.engine.piece.Queen;
 import cl.vmardones.chess.engine.player.Alliance;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,13 +24,8 @@ class BoardTest {
   Board.BoardBuilder builder;
 
   @Mock King whiteKing;
-
   @Mock King blackKing;
-
   @Mock Pawn enPassantPawn;
-
-  @Mock Piece piece;
-  @Mock Coordinate coordinate;
 
   @BeforeEach
   void setUp() {
@@ -41,8 +34,7 @@ class BoardTest {
 
   @Test
   void contains() {
-    when(piece.getPosition()).thenReturn(Coordinate.of("e2"));
-
+    var piece = new Bishop(Coordinate.of("e2"), Alliance.WHITE);
     var board = builder.piece(piece).build();
 
     assertThat(board.contains(Coordinate.of("e2"), Bishop.class)).isTrue();
@@ -52,7 +44,8 @@ class BoardTest {
   void containsNothing() {
     var board = builder.build();
 
-    assertThat(board.containsNothing(coordinate)).isTrue();
+    assertThat(board.containsNothing(Coordinate.of("a1"))).isTrue();
+    assertThat(board.containsNothing(Coordinate.of("h8"))).isTrue();
   }
 
   @Test
@@ -65,10 +58,8 @@ class BoardTest {
   }
 
   @Test
-  void piece() {
-    when(piece.getPosition()).thenReturn(Coordinate.of("d7"));
-    when(piece.getAlliance()).thenReturn(Alliance.WHITE);
-
+  void addPiece() {
+    var piece = new Queen(Coordinate.of("d7"), Alliance.WHITE);
     var board = builder.piece(piece).build();
 
     assertThat(board.getWhitePieces()).containsOnlyOnce(piece);
@@ -76,21 +67,10 @@ class BoardTest {
 
   @Test
   void withoutPiece() {
-    var board = builder.withoutPiece(piece).build();
+    var piece = new Pawn(Coordinate.of("a5"), Alliance.BLACK);
+    var board = builder.piece(piece).withoutPiece(piece).build();
 
-    assertThat(board.getWhitePieces()).isEmpty();
-  }
-
-  @Test
-  void withoutPieceItHadBefore() {
-    when(piece.getPosition()).thenReturn(Coordinate.of("d7"));
-    when(piece.getAlliance()).thenReturn(Alliance.WHITE);
-
-    var board = builder.piece(piece).build();
-    var nextTurnBoard = board.nextTurnBuilder().withoutPiece(piece).build();
-
-    assertThat(board.getWhitePieces()).containsOnlyOnce(piece);
-    assertThat(nextTurnBoard.getWhitePieces()).isEmpty();
+    assertThat(board.getBlackPieces()).doesNotContain(piece);
   }
 
   @Test
