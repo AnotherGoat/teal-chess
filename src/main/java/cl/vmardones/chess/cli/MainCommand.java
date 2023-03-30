@@ -8,13 +8,12 @@ package cl.vmardones.chess.cli;
 import cl.vmardones.chess.gui.Table;
 import org.slf4j.simple.SimpleLogger;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.IVersionProvider;
 import picocli.CommandLine.Option;
 
 @Command(
     name = "chess-game",
     mixinStandardHelpOptions = true,
-    versionProvider = MainCommand.ChessVersionProvider.class)
+    versionProvider = VersionProvider.class)
 public class MainCommand implements Runnable {
 
   @Option(
@@ -30,8 +29,9 @@ public class MainCommand implements Runnable {
   @Option(
       names = {"-l", "--highlight-legals"},
       description = "Highlight legal moves when selecting a piece.",
-      negatable = true)
-  private boolean highlightLegals = true;
+      negatable = true,
+      defaultValue = "true")
+  private boolean highlightLegals;
 
   @Option(
       names = {"-f", "--flip-board"},
@@ -47,22 +47,5 @@ public class MainCommand implements Runnable {
     }
 
     new Table(darkTheme, highlightLegals, flipBoard);
-  }
-
-  static class ChessVersionProvider implements IVersionProvider {
-
-    private static final String[] UNKNOWN_VERSION = {"UNKNOWN"};
-
-    @Override
-    public String[] getVersion() {
-
-      final var implementationVersion = getClass().getPackage().getImplementationVersion();
-
-      if (implementationVersion.isBlank()) {
-        return UNKNOWN_VERSION;
-      }
-
-      return new String[] {implementationVersion};
-    }
   }
 }

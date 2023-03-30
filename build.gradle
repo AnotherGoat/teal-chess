@@ -26,6 +26,9 @@ spotless {
 }
 
 dependencies {
+    // Nullability
+    compileOnly 'org.eclipse.jdt:org.eclipse.jdt.annotation:2.2.700'
+
     // Immutable collections
     implementation 'com.google.guava:guava:31.1-jre'
 
@@ -81,7 +84,7 @@ tasks {
 
     shadowJar {
         manifest {
-            attributes 'Main-Class': 'cl.vmardones.chess.launcher.Chess'
+            attributes 'Main-Class': 'cl.vmardones.chess.Chess'
             attributes 'Implementation-Title': project.name
             attributes 'Implementation-Version': project.version
         }

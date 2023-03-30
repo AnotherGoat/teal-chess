@@ -3,7 +3,7 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package cl.vmardones.chess.launcher;
+package cl.vmardones.chess;
 
 import cl.vmardones.chess.cli.MainCommand;
 import lombok.Generated;
