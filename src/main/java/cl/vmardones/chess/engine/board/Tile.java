@@ -7,11 +7,11 @@ package cl.vmardones.chess.engine.board;
 
 import cl.vmardones.chess.engine.piece.Piece;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.IntStream;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.eclipse.jdt.annotation.Nullable;
 
 /** A single chess tile, which may or may not contain a piece. */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -47,7 +47,7 @@ public abstract class Tile {
    *
    * @return Piece on the tile
    */
-  public abstract Optional<Piece> getPiece();
+  public abstract @Nullable Piece getPiece();
 
   private static final class EmptyTile extends Tile {
 
@@ -56,8 +56,8 @@ public abstract class Tile {
     }
 
     @Override
-    public Optional<Piece> getPiece() {
-      return Optional.empty();
+    public @Nullable Piece getPiece() {
+      return null;
     }
 
     @Override
@@ -76,8 +76,8 @@ public abstract class Tile {
     }
 
     @Override
-    public Optional<Piece> getPiece() {
-      return Optional.of(piece);
+    public @Nullable Piece getPiece() {
+      return piece;
     }
 
     @Override

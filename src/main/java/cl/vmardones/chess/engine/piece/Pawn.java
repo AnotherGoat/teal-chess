@@ -16,11 +16,11 @@ import cl.vmardones.chess.engine.piece.vector.Vertical;
 import cl.vmardones.chess.engine.player.Alliance;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * The pawn piece. It only moves forward (depending on the side) and can eat other pieces
@@ -42,7 +42,7 @@ public final class Pawn implements JumpingPiece {
   }
 
   @Override
-  public Optional<Move> createMove(final Tile destination, final Board board) {
+  public @Nullable Move createMove(final Tile destination, final Board board) {
 
     if (isCaptureMove(destination)) {
       if (!isEnPassantPossible(board, destination)) {
@@ -60,12 +60,12 @@ public final class Pawn implements JumpingPiece {
     return createForwardMove(board, destination);
   }
 
-  private Optional<Move> createEnPassantMove(final Board board, final Tile destination) {
+  private @Nullable Move createEnPassantMove(final Board board, final Tile destination) {
     final var enPassantMove =
         new EnPassantMove(board, this, destination.getCoordinate(), board.getEnPassantPawn());
 
     log.debug("Created en passant move: {}", enPassantMove);
-    return Optional.of(enPassantMove);
+    return enPassantMove;
   }
 
   private boolean isEnPassantPossible(final Board board, final Tile destination) {
@@ -76,54 +76,53 @@ public final class Pawn implements JumpingPiece {
 
     final var side = destination.getCoordinate().to(0, alliance.getOppositeDirection());
 
-    if (side.isEmpty()) {
+    if (side == null) {
       return false;
     }
 
-    final var pieceAtSide = board.getTile(side.get()).getPiece();
+    final var pieceAtSide = board.getTile(side).getPiece();
 
-    return pieceAtSide.isPresent()
-        && pieceAtSide.get().equals(board.getEnPassantPawn())
-        && destination.getPiece().isEmpty();
+    return pieceAtSide != null
+        && pieceAtSide.equals(board.getEnPassantPawn())
+        && destination.getPiece() == null;
   }
 
   private boolean isCaptureMove(final Tile destination) {
     return !getPosition().sameColumnAs(destination.getCoordinate());
   }
 
-  private Optional<Move> createCaptureMove(final Board board, final Tile destination) {
+  private @Nullable Move createCaptureMove(final Board board, final Tile destination) {
     final var capturablePiece = destination.getPiece();
 
-    if (capturablePiece.isPresent() && isEnemyOf(capturablePiece.get())) {
-      return Optional.of(
-          new PawnCaptureMove(board, this, destination.getCoordinate(), capturablePiece.get()));
+    if (capturablePiece != null && isEnemyOf(capturablePiece)) {
+      return new PawnCaptureMove(board, this, destination.getCoordinate(), capturablePiece);
     }
 
-    return Optional.empty();
+    return null;
   }
 
-  private Optional<Move> createJumpMove(final Board board, final Tile destination) {
-    return Optional.of(new PawnJump(board, this, destination.getCoordinate()));
+  private @Nullable Move createJumpMove(final Board board, final Tile destination) {
+    return new PawnJump(board, this, destination.getCoordinate());
   }
 
   private boolean isJumpPossible(final Board board, final Tile destination) {
 
     final var forward = position.up(alliance.getDirection());
 
-    if (forward.isEmpty()) {
+    if (forward == null) {
       return false;
     }
 
-    return isFirstMove() && canAccess(board.getTile(forward.get())) && canAccess(destination);
+    return isFirstMove() && canAccess(board.getTile(forward)) && canAccess(destination);
   }
 
-  private Optional<Move> createForwardMove(final Board board, final Tile destination) {
-    if (destination.getPiece().isPresent()) {
-      return Optional.empty();
+  private @Nullable Move createForwardMove(final Board board, final Tile destination) {
+    if (destination.getPiece() != null) {
+      return null;
     }
 
     // TODO: Deal with promotions
-    return Optional.of(new PawnMove(board, this, destination.getCoordinate()));
+    return new PawnMove(board, this, destination.getCoordinate());
   }
 
   @Override

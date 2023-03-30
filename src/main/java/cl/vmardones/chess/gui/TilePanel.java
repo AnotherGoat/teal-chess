@@ -22,9 +22,9 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import javax.swing.*;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jdt.annotation.Nullable;
 
 @Slf4j
 class TilePanel extends JPanel {
@@ -114,8 +114,8 @@ class TilePanel extends JPanel {
     log.debug("Selected the tile {}", coordinate);
     table.setSourceTile(table.getTileAt(coordinate));
 
-    if (getSelectedPiece().isPresent()) {
-      table.setSelectedPiece(getSelectedPiece().get());
+    if (getSelectedPiece() != null) {
+      table.setSelectedPiece(getSelectedPiece());
       log.debug("The tile contains {}", table.getSelectedPiece());
       log.debug("Highlighting legal moves");
     } else {
@@ -124,7 +124,7 @@ class TilePanel extends JPanel {
     }
   }
 
-  private Optional<Piece> getSelectedPiece() {
+  private @Nullable Piece getSelectedPiece() {
     return table.getSourceTile().getPiece();
   }
 
@@ -139,14 +139,14 @@ class TilePanel extends JPanel {
             table.getSourceTile().getCoordinate(),
             table.getDestinationTile().getCoordinate());
 
-    log.debug("Is there a move that can get to the destination? {}", move.isPresent());
+    log.debug("Is there a move that can get to the destination? {}", move != null);
 
-    if (move.isPresent()) {
-      final var moveTransition = table.makeMove(move.get());
+    if (move != null) {
+      final var moveTransition = table.makeMove(move);
 
       if (moveTransition.getMoveStatus().isDone()) {
-        table.getGame().createNextTurn(move.get());
-        table.addToLog(move.get());
+        table.getGame().createNextTurn(move);
+        table.addToLog(move);
       }
     }
 
@@ -170,9 +170,13 @@ class TilePanel extends JPanel {
   private void assignPieceIcon(final Tile tile) {
     removeAll();
 
-    if (tile.getPiece().isPresent()) {
-      PieceIconLoader.load(tile.getPiece().get(), INITIAL_SIZE.width, INITIAL_SIZE.height)
-          .ifPresent(image -> addImage(image, PIECE_LAYER));
+    if (tile.getPiece() != null) {
+      final var icon =
+          PieceIconLoader.load(tile.getPiece(), INITIAL_SIZE.width, INITIAL_SIZE.height);
+
+      if (icon != null) {
+        addImage(icon, PIECE_LAYER);
+      }
     }
   }
 
@@ -188,11 +192,13 @@ class TilePanel extends JPanel {
           .filter(move -> move.getDestination() == coordinate)
           .forEach(
               move -> {
-                final var bufferedImage =
+                final var greenDot =
                     SvgLoader.load(
                         "art/misc/green_dot.svg", INITIAL_SIZE.width / 2, INITIAL_SIZE.height / 2);
 
-                bufferedImage.ifPresent(image -> addImage(image, HIGHLIGHT_LAYER));
+                if (greenDot != null) {
+                  addImage(greenDot, HIGHLIGHT_LAYER);
+                }
               });
     }
   }

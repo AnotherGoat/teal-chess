@@ -9,12 +9,12 @@ import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.piece.Piece;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jdt.annotation.Nullable;
 
 /** The action of moving a piece. */
 @Slf4j
@@ -84,19 +84,22 @@ public abstract class Move {
      * @param destination Destination coordinate
      * @return Move that goes from the source to the destination, if possible.
      */
-    public static Optional<Move> create(
+    public static @Nullable Move create(
         final List<Move> currentPlayerLegals,
         final Coordinate source,
         final Coordinate destination) {
       if (source.equals(destination)) {
-        return Optional.empty();
+        return null;
       }
 
       log.debug(
           "Current piece legals: {}",
           currentPlayerLegals.stream().filter(move -> move.getSource().equals(source)).toList());
 
-      return currentPlayerLegals.stream().filter(isMovePossible(source, destination)).findFirst();
+      return currentPlayerLegals.stream()
+          .filter(isMovePossible(source, destination))
+          .findFirst()
+          .orElse(null);
     }
 
     private static Predicate<Move> isMovePossible(

@@ -10,7 +10,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Optional;
 import javax.imageio.ImageIO;
 import lombok.Generated;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +18,7 @@ import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.PNGTranscoder;
+import org.eclipse.jdt.annotation.Nullable;
 
 @Slf4j
 final class SvgImporter {
@@ -28,12 +28,12 @@ final class SvgImporter {
     throw new UnsupportedOperationException("You cannot instantiate me!");
   }
 
-  static Optional<BufferedImage> get(
+  static @Nullable BufferedImage get(
       final InputStream inputStream, final int width, final int height) throws IOException {
 
     if (inputStream == null) {
       log.error("The file does not exist!");
-      return Optional.empty();
+      return null;
     }
 
     final var transcoder = new PNGTranscoder();
@@ -52,11 +52,11 @@ final class SvgImporter {
       outputStream.flush();
 
       final var imageData = outputStream.toByteArray();
-      return Optional.ofNullable(ImageIO.read(new ByteArrayInputStream(imageData)));
+      return ImageIO.read(new ByteArrayInputStream(imageData));
 
     } catch (final TranscoderException e) {
       log.error("Failed to transcode the SVG image!", e);
-      return Optional.empty();
+      return null;
     }
   }
 }

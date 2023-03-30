@@ -8,10 +8,10 @@ package cl.vmardones.chess.gui;
 import cl.vmardones.chess.engine.move.Move;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.eclipse.jdt.annotation.Nullable;
 
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 class MoveLog {
@@ -41,10 +41,11 @@ class MoveLog {
     return moves.remove(move);
   }
 
-  Optional<Move> getLastMove() {
+  @Nullable
+  Move getLastMove() {
 
     final var move = lastMove;
     lastMove = null;
-    return Optional.ofNullable(move);
+    return move;
   }
 }

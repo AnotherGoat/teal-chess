@@ -8,7 +8,7 @@ package cl.vmardones.chess.engine.piece;
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Coordinate;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 /**
  * A piece that can move to a specific set of positions. It usually doesn't matter if there are
@@ -22,7 +22,7 @@ sealed interface JumpingPiece extends Piece permits King, Knight, Pawn {
   default List<Coordinate> calculatePossibleDestinations(final Board board) {
     return getMoveOffsets().stream()
         .map(offset -> getPosition().to(offset[0], offset[1]))
-        .flatMap(Optional::stream)
+        .filter(Objects::nonNull)
         .toList();
   }
 }

@@ -27,7 +27,7 @@ sealed interface SlidingPiece extends Piece permits Bishop, Queen, Rook {
     final var tiles =
         IntStream.range(1, Board.SIDE_LENGTH + 1)
             .mapToObj(i -> getPosition().to(vector[0] * i, vector[1] * i))
-            .flatMap(Optional::stream)
+            .filter(Objects::nonNull)
             .map(board::getTile)
             .toList()
             .listIterator();
@@ -44,10 +44,10 @@ sealed interface SlidingPiece extends Piece permits Bishop, Queen, Rook {
       final var destination = tiles.next();
       final var pieceAtDestination = destination.getPiece();
 
-      if (pieceAtDestination.isEmpty()) {
+      if (pieceAtDestination == null) {
         accessibleTiles.add(destination);
       } else {
-        if (isEnemyOf(pieceAtDestination.get())) {
+        if (isEnemyOf(pieceAtDestination)) {
           accessibleTiles.add(destination);
         }
 

@@ -7,9 +7,9 @@ package cl.vmardones.chess.io;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Optional;
 import lombok.Generated;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jdt.annotation.Nullable;
 
 @Slf4j
 public final class SvgLoader {
@@ -19,7 +19,7 @@ public final class SvgLoader {
     throw new UnsupportedOperationException("You cannot instantiate me!");
   }
 
-  public static Optional<BufferedImage> load(final String path, final int width, final int height) {
+  public static @Nullable BufferedImage load(final String path, final int width, final int height) {
 
     final var iconResource = ResourceImporter.get(path);
 
@@ -27,7 +27,7 @@ public final class SvgLoader {
       return SvgImporter.get(iconResource, width, height);
     } catch (final IOException e) {
       log.warn("Could not load the SVG file {}", path);
-      return Optional.empty();
+      return null;
     }
   }
 }

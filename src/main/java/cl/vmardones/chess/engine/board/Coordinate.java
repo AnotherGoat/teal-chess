@@ -8,9 +8,9 @@ package cl.vmardones.chess.engine.board;
 import cl.vmardones.chess.engine.player.Alliance;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * A coordinate is one of the 64 positions where a chess piece can be. It's usually identified by
@@ -185,18 +185,18 @@ public final class Coordinate {
    * @param y Y axis movement, positive goes up
    * @return Coordinate at the relative position, if it is inside the board
    */
-  public Optional<Coordinate> to(final int x, final int y) {
+  public @Nullable Coordinate to(final int x, final int y) {
     try {
       final var destination =
           COORDINATES_CACHE.get(index + horizontalClamp(x) - y * Board.SIDE_LENGTH);
 
       if (illegalJump(x, destination)) {
-        return Optional.empty();
+        return null;
       }
 
-      return Optional.of(destination);
+      return destination;
     } catch (final IndexOutOfBoundsException e) {
-      return Optional.empty();
+      return null;
     }
   }
 
@@ -215,7 +215,7 @@ public final class Coordinate {
    * @param spaces Number of spaces to jump, it can also be negative to move backwards
    * @return Coordinate at the relative position, if it is inside the board
    */
-  public Optional<Coordinate> up(final int spaces) {
+  public @Nullable Coordinate up(final int spaces) {
     return to(0, spaces);
   }
 
@@ -225,7 +225,7 @@ public final class Coordinate {
    * @param spaces Number of spaces to jump, it can also be negative to move backwards
    * @return Coordinate at the relative position, if it is inside the board
    */
-  public Optional<Coordinate> down(final int spaces) {
+  public @Nullable Coordinate down(final int spaces) {
     return up(-spaces);
   }
 
@@ -235,7 +235,7 @@ public final class Coordinate {
    * @param spaces Number of spaces to jump, it can also be negative to move backwards
    * @return Coordinate at the relative position, if it is inside the board
    */
-  public Optional<Coordinate> left(final int spaces) {
+  public @Nullable Coordinate left(final int spaces) {
     return right(-spaces);
   }
 
@@ -245,7 +245,7 @@ public final class Coordinate {
    * @param spaces Number of spaces to jump, it can also be negative to move backwards
    * @return Coordinate at the relative position, if it is inside the board
    */
-  public Optional<Coordinate> right(final int spaces) {
+  public @Nullable Coordinate right(final int spaces) {
     return to(spaces, 0);
   }
 

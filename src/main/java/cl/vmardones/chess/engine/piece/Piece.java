@@ -13,7 +13,8 @@ import cl.vmardones.chess.engine.move.MajorMove;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.player.Alliance;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
+import org.eclipse.jdt.annotation.Nullable;
 
 /** A chess piece. */
 public sealed interface Piece permits JumpingPiece, SlidingPiece {
@@ -35,7 +36,7 @@ public sealed interface Piece permits JumpingPiece, SlidingPiece {
         .map(board::getTile)
         .filter(this::canAccess)
         .map(tile -> createMove(tile, board))
-        .flatMap(Optional::stream)
+        .filter(Objects::nonNull)
         .toList();
   }
 
@@ -78,7 +79,7 @@ public sealed interface Piece permits JumpingPiece, SlidingPiece {
    */
   default boolean canAccess(final Tile destination) {
     final var pieceAtDestination = destination.getPiece();
-    return pieceAtDestination.isEmpty() || isEnemyOf(pieceAtDestination.get());
+    return pieceAtDestination == null || isEnemyOf(pieceAtDestination);
   }
 
   Piece move(final Move move);
@@ -90,18 +91,17 @@ public sealed interface Piece permits JumpingPiece, SlidingPiece {
    * @param board The current game board
    * @return A move, selected depending on the source and destination
    */
-  default Optional<Move> createMove(final Tile destination, final Board board) {
-    if (destination.getPiece().isEmpty()) {
-      return Optional.of(new MajorMove(board, this, destination.getCoordinate()));
+  default @Nullable Move createMove(final Tile destination, final Board board) {
+    if (destination.getPiece() == null) {
+      return new MajorMove(board, this, destination.getCoordinate());
     }
 
     final var capturablePiece = destination.getPiece();
 
-    if (capturablePiece.isPresent() && isEnemyOf(capturablePiece.get())) {
-      return Optional.of(
-          new CaptureMove(board, this, destination.getCoordinate(), capturablePiece.get()));
+    if (capturablePiece != null && isEnemyOf(capturablePiece)) {
+      return new CaptureMove(board, this, destination.getCoordinate(), capturablePiece);
     }
 
-    return Optional.empty();
+    return null;
   }
 }

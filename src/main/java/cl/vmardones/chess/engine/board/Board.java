@@ -62,8 +62,7 @@ public class Board {
   private List<Piece> calculateActivePieces(final List<Tile> gameBoard, final Alliance alliance) {
     return gameBoard.stream()
         .map(Tile::getPiece)
-        .flatMap(Optional::stream)
-        .filter(piece -> piece.getAlliance() == alliance)
+        .filter(piece -> piece != null && piece.getAlliance() == alliance)
         .toList();
   }
 
@@ -76,11 +75,11 @@ public class Board {
   public boolean contains(final Coordinate coordinate, final Class<?> pieceType) {
     final var piece = getTile(coordinate).getPiece();
 
-    return piece.isPresent() && pieceType.isInstance(piece);
+    return pieceType.isInstance(piece);
   }
 
   public boolean containsNothing(final Coordinate coordinate) {
-    return getTile(coordinate).getPiece().isEmpty();
+    return getTile(coordinate).getPiece() == null;
   }
 
   /* Board builders */

@@ -8,9 +8,9 @@ package cl.vmardones.chess.io;
 import cl.vmardones.chess.engine.piece.Piece;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Optional;
 import lombok.Generated;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jdt.annotation.Nullable;
 
 @Slf4j
 public final class PieceIconLoader {
@@ -22,7 +22,7 @@ public final class PieceIconLoader {
     throw new UnsupportedOperationException("You cannot instantiate me!");
   }
 
-  public static Optional<BufferedImage> load(final Piece piece, final int width, final int height) {
+  public static @Nullable BufferedImage load(final Piece piece, final int width, final int height) {
 
     final var iconResource = ResourceImporter.get(getIconPath(piece));
 
@@ -30,7 +30,7 @@ public final class PieceIconLoader {
       return SvgImporter.get(iconResource, width, height);
     } catch (final IOException e) {
       log.warn("Could not load the piece {}", getIconPath(piece));
-      return Optional.empty();
+      return null;
     }
   }
 

@@ -11,7 +11,7 @@ import cl.vmardones.chess.engine.player.Alliance;
 import cl.vmardones.chess.io.PieceIconLoader;
 import java.awt.*;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
@@ -44,12 +44,12 @@ class TakenPiecesPanel extends JPanel {
     // TODO: Do this process on a single loop
     getTakenPieces(moveLog, Alliance.WHITE).stream()
         .map(piece -> PieceIconLoader.load(piece, INITIAL_SIZE.width / 2, INITIAL_SIZE.width / 2))
-        .flatMap(Optional::stream)
+        .filter(Objects::nonNull)
         .forEach(image -> southPanel.add(new JLabel(new ImageIcon(image))));
 
     getTakenPieces(moveLog, Alliance.BLACK).stream()
         .map(piece -> PieceIconLoader.load(piece, INITIAL_SIZE.width / 2, INITIAL_SIZE.width / 2))
-        .flatMap(Optional::stream)
+        .filter(Objects::nonNull)
         .forEach(image -> northPanel.add(new JLabel(new ImageIcon(image))));
 
     validate();

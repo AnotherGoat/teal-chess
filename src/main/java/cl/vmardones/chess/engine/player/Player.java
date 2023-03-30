@@ -152,9 +152,9 @@ public abstract class Player {
     final var kingPosition = king.getPosition();
 
     if (isKingSideCastlePossible(kingPosition, opponentLegals)) {
-      final var rook = (Rook) board.getTile(kingPosition.right(3).get()).getPiece().get();
-      final var kingDestination = kingPosition.right(2).get();
-      final var rookDestination = kingPosition.right(1).get();
+      final var rook = (Rook) board.getTile(kingPosition.right(3)).getPiece();
+      final var kingDestination = kingPosition.right(2);
+      final var rookDestination = kingPosition.right(1);
 
       if (rook.isFirstMove()) {
         castles.add(new KingSideCastleMove(board, king, kingDestination, rook, rookDestination));
@@ -162,9 +162,9 @@ public abstract class Player {
     }
 
     if (isQueenSideCastlePossible(kingPosition, opponentLegals)) {
-      final var rook = (Rook) board.getTile(kingPosition.right(3).get()).getPiece().get();
-      final var kingDestination = kingPosition.left(2).get();
-      final var rookDestination = kingPosition.left(1).get();
+      final var rook = (Rook) board.getTile(kingPosition.right(3)).getPiece();
+      final var kingDestination = kingPosition.left(2);
+      final var rookDestination = kingPosition.left(1);
 
       if (rook.isFirstMove()) {
         castles.add(new QueenSideCastleMove(board, king, kingDestination, rook, rookDestination));
@@ -197,20 +197,20 @@ public abstract class Player {
   private boolean isTileFree(final Coordinate kingPosition, final int offset) {
     final var destination = kingPosition.right(offset);
 
-    return destination.isPresent() && board.containsNothing(destination.get());
+    return destination != null && board.containsNothing(destination);
   }
 
   private boolean isUnreachableByEnemy(
       final Coordinate kingPosition, final int offset, final List<Move> opponentLegals) {
     final var destination = kingPosition.right(offset);
 
-    return destination.isPresent()
-        && Player.calculateAttacksOnTile(destination.get(), opponentLegals).isEmpty();
+    return destination != null
+        && Player.calculateAttacksOnTile(destination, opponentLegals).isEmpty();
   }
 
   private boolean isTileRook(final Coordinate kingPosition, final int offset) {
     final var destination = kingPosition.right(offset);
 
-    return destination.isPresent() && board.contains(destination.get(), Rook.class);
+    return destination != null && board.contains(destination, Rook.class);
   }
 }
