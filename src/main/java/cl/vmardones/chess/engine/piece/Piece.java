@@ -8,9 +8,8 @@ package cl.vmardones.chess.engine.piece;
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.board.Tile;
-import cl.vmardones.chess.engine.move.CaptureMove;
-import cl.vmardones.chess.engine.move.MajorMove;
 import cl.vmardones.chess.engine.move.Move;
+import cl.vmardones.chess.engine.move.MoveType;
 import cl.vmardones.chess.engine.player.Alliance;
 import java.util.List;
 import java.util.Objects;
@@ -93,13 +92,13 @@ public sealed interface Piece permits JumpingPiece, SlidingPiece {
    */
   default @Nullable Move createMove(Tile destination, Board board) {
     if (destination.getPiece() == null) {
-      return new MajorMove(board, this, destination.getCoordinate());
+      return new Move(MoveType.CAPTURE, board, this, destination.getCoordinate());
     }
 
     var capturablePiece = destination.getPiece();
 
     if (isEnemyOf(capturablePiece)) {
-      return new CaptureMove(board, this, destination.getCoordinate(), capturablePiece);
+      return new Move(MoveType.CAPTURE, board, this, destination.getCoordinate(), capturablePiece);
     }
 
     return null;

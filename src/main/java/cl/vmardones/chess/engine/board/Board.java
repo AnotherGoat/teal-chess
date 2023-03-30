@@ -13,10 +13,12 @@ import java.util.*;
 import java.util.stream.IntStream;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jdt.annotation.Nullable;
 
 /** The game board, made of 8x8 tiles. */
 @Slf4j
 @ToString
+@EqualsAndHashCode
 public class Board {
   public static final int SIDE_LENGTH = 8;
   public static final int MIN_TILES = 0;
@@ -32,7 +34,7 @@ public class Board {
 
   @Getter private final King blackKing;
 
-  @Getter private final Pawn enPassantPawn;
+  @Getter @Nullable private final Pawn enPassantPawn;
 
   private Board(BoardBuilder builder) {
     tiles = createTiles(builder);
@@ -112,7 +114,7 @@ public class Board {
     private final Map<Coordinate, Piece> boardConfig = new HashMap<>();
     private final King whiteKing;
     private final King blackKing;
-    private Pawn enPassantPawn;
+    private @Nullable Pawn enPassantPawn;
 
     private BoardBuilder(Board board) {
       whiteKing = board.whiteKing;
@@ -122,12 +124,20 @@ public class Board {
       board.getBlackPieces().forEach(this::piece);
     }
 
-    public BoardBuilder piece(Piece piece) {
+    public BoardBuilder piece(@Nullable Piece piece) {
+      if (piece == null) {
+        return this;
+      }
+
       boardConfig.put(piece.getPosition(), piece);
       return this;
     }
 
-    public BoardBuilder withoutPiece(Piece piece) {
+    public BoardBuilder withoutPiece(@Nullable Piece piece) {
+      if (piece == null) {
+        return this;
+      }
+
       boardConfig.remove(piece.getPosition(), piece);
       return this;
     }

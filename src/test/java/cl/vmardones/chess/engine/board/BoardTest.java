@@ -66,11 +66,27 @@ class BoardTest {
   }
 
   @Test
+  void addNullPiece() {
+    var board = builder.build();
+    var nextTurnBoard = board.nextTurnBuilder().piece(null).build();
+
+    assertThat(board).isEqualTo(nextTurnBoard);
+  }
+
+  @Test
   void withoutPiece() {
     var piece = new Pawn(Coordinate.of("a5"), Alliance.BLACK);
     var board = builder.piece(piece).withoutPiece(piece).build();
 
     assertThat(board.getBlackPieces()).doesNotContain(piece);
+  }
+
+  @Test
+  void withoutNullPiece() {
+    var board = builder.build();
+    var nextTurnBoard = board.nextTurnBuilder().withoutPiece(null).build();
+
+    assertThat(board).isEqualTo(nextTurnBoard);
   }
 
   @Test

@@ -11,8 +11,7 @@ import static org.mockito.Mockito.when;
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.board.Tile;
-import cl.vmardones.chess.engine.move.CaptureMove;
-import cl.vmardones.chess.engine.move.MajorMove;
+import cl.vmardones.chess.engine.move.MoveType;
 import cl.vmardones.chess.engine.player.Alliance;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -111,7 +110,7 @@ class PieceTest {
 
     var destination = board.getTile(Coordinate.of("a7"));
 
-    assertThat(piece.createMove(destination, board)).isInstanceOf(MajorMove.class);
+    assertThat(piece.createMove(destination, board).getType()).isEqualTo(MoveType.NORMAL);
   }
 
   @Test
@@ -126,7 +125,7 @@ class PieceTest {
 
     var destination = board.getTile(Coordinate.of("a7"));
 
-    assertThat(piece.createMove(destination, board)).isInstanceOf(CaptureMove.class);
+    assertThat(piece.createMove(destination, board).getType()).isEqualTo(MoveType.CAPTURE);
   }
 
   @Test

@@ -7,7 +7,9 @@ package cl.vmardones.chess.engine.move;
 
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Coordinate;
+import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
+import cl.vmardones.chess.engine.piece.Rook;
 import java.util.List;
 import java.util.function.Predicate;
 import lombok.EqualsAndHashCode;
@@ -20,24 +22,42 @@ import org.eclipse.jdt.annotation.Nullable;
 /** The action of moving a piece. */
 @Slf4j
 @EqualsAndHashCode
-public abstract class Move {
+public class Move {
 
-  protected final Board board;
+  @Getter private final MoveType type;
+  private final Board board;
 
-  @Getter protected final Piece piece;
+  @Getter private final Piece piece;
 
-  @Getter protected final Coordinate destination;
+  @Getter private final Coordinate destination;
 
-  protected final boolean firstMove;
+  private final boolean firstMove;
 
-  @Getter protected boolean castling = false;
+  @Getter @Nullable private final Piece otherPiece;
+  @Nullable private final Coordinate rookDestination;
 
-  @Getter protected Piece capturedPiece;
+  public Move(MoveType type, Board board, Piece piece, Coordinate destination) {
+    this(type, board, piece, destination, null);
+  }
 
-  protected Move(Board board, Piece piece, Coordinate destination) {
+  public Move(
+      MoveType type, Board board, Piece piece, Coordinate destination, @Nullable Piece otherPiece) {
+    this(type, board, piece, destination, otherPiece, null);
+  }
+
+  public Move(
+      MoveType type,
+      Board board,
+      Piece piece,
+      Coordinate destination,
+      @Nullable Piece otherPiece,
+      @Nullable Coordinate rookDestination) {
+    this.type = type;
     this.board = board;
     this.piece = piece;
     this.destination = destination;
+    this.otherPiece = otherPiece;
+    this.rookDestination = rookDestination;
     firstMove = piece.isFirstMove();
   }
 
@@ -46,16 +66,37 @@ public abstract class Move {
   }
 
   public boolean isCapturing() {
-    return capturedPiece != null;
+    return otherPiece != null && rookDestination == null;
   }
 
+  public boolean isCastling() {
+    return otherPiece != null && rookDestination != null;
+  }
+
+  // TODO: Fix en passant implementation, highlighted moves don't match moves that are executed. En passant pawns are set properly, but it doesn't get added to the list of legal moves
   /**
    * When a move is performed, a new board is created, because the board class is immutable.
    *
    * @return The new board, after the move was performed
    */
   public Board execute() {
-    return board.nextTurnBuilder().withoutPiece(piece).piece(piece.move(this)).build();
+    var builder = board.nextTurnBuilder();
+
+    builder.withoutPiece(piece).withoutPiece(otherPiece).piece(piece.move(this));
+
+    if (type == MoveType.PAWN_JUMP) {
+      builder.enPassantPawn((Pawn) piece.move(this));
+    }
+
+    if (isCastling()) {
+      builder.piece(getMovedRook());
+    }
+
+    return builder.build();
+  }
+
+  private Rook getMovedRook() {
+    return new Rook(rookDestination, otherPiece.getAlliance(), false);
   }
 
   public Coordinate getSource() {
@@ -64,7 +105,14 @@ public abstract class Move {
 
   @Override
   public String toString() {
-    return getDestination().toString();
+    return switch (type) {
+      case CAPTURE -> piece.toSingleChar() + getDestination().toString();
+      case PAWN_CAPTURE -> String.format(
+          "%sx%s", piece.getPosition().getColumn(), getDestination());
+      case KING_CASTLE -> "0-0";
+      case QUEEN_CASTLE -> "0-0-0";
+      default -> getDestination().toString();
+    };
   }
 
   public boolean isNull() {

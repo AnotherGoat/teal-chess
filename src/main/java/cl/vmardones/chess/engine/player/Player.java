@@ -152,7 +152,8 @@ public abstract class Player {
       var rookDestination = kingPosition.right(1);
 
       if (rook.isFirstMove()) {
-        castles.add(new KingSideCastleMove(board, king, kingDestination, rook, rookDestination));
+        castles.add(
+            new Move(MoveType.KING_CASTLE, board, king, kingDestination, rook, rookDestination));
       }
     }
 
@@ -162,7 +163,8 @@ public abstract class Player {
       var rookDestination = kingPosition.left(1);
 
       if (rook.isFirstMove()) {
-        castles.add(new QueenSideCastleMove(board, king, kingDestination, rook, rookDestination));
+        castles.add(
+            new Move(MoveType.QUEEN_CASTLE, board, king, kingDestination, rook, rookDestination));
       }
     }
 
