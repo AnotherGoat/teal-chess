@@ -41,8 +41,9 @@ class KnightTest {
   }
 
   @Test
-  void getPieceType() {
-    assertThat(knight.getPieceType()).isEqualTo(Piece.PieceType.KNIGHT);
+  void toSingleChar() {
+    assertThat(new Knight(coordinate, Alliance.WHITE).toSingleChar()).isEqualTo("N");
+    assertThat(new Knight(coordinate, Alliance.BLACK).toSingleChar()).isEqualTo("n");
   }
 
   @Test

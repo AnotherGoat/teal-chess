@@ -43,8 +43,9 @@ class KingTest {
   }
 
   @Test
-  void getPieceType() {
-    assertThat(king.getPieceType()).isEqualTo(Piece.PieceType.KING);
+  void toSingleChar() {
+    assertThat(new King(coordinate, Alliance.WHITE).toSingleChar()).isEqualTo("K");
+    assertThat(new King(coordinate, Alliance.BLACK).toSingleChar()).isEqualTo("k");
   }
 
   @Test

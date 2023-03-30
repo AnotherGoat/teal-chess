@@ -24,12 +24,12 @@ class TileTest {
 
   @Test
   void createOccupied() {
-    assertThat(Tile.create(coordinate, piece).getPiece()).isPresent();
+    assertThat(Tile.create(coordinate, piece).getPiece()).isNotNull();
   }
 
   @Test
   void createEmpty() {
-    assertThat(Tile.create(coordinate, null).getPiece()).isEmpty();
+    assertThat(Tile.create(coordinate, null).getPiece()).isNull();
   }
 
   @Test

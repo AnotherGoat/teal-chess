@@ -116,56 +116,56 @@ class CoordinateTest {
 
   @Test
   void to() {
-    assertThat(Coordinate.of("b2").to(1, 1)).isPresent();
-    assertThat(Coordinate.of("b2").to(1, 1)).contains(Coordinate.of("c3"));
+    assertThat(Coordinate.of("b2").to(1, 1)).isNotNull();
+    assertThat(Coordinate.of("b2").to(1, 1)).isEqualTo(Coordinate.of("c3"));
   }
 
   @Test
   void toOutside() {
-    assertThat(Coordinate.of("b1").to(-2, 1)).isEmpty();
+    assertThat(Coordinate.of("b1").to(-2, 1)).isNull();
   }
 
   @Test
   void up() {
-    assertThat(Coordinate.of("a1").up(2)).isPresent();
-    assertThat(Coordinate.of("a1").up(2)).contains(Coordinate.of("a3"));
+    assertThat(Coordinate.of("a1").up(2)).isNotNull();
+    assertThat(Coordinate.of("a1").up(2)).isEqualTo(Coordinate.of("a3"));
   }
 
   @Test
   void upOutside() {
-    assertThat(Coordinate.of("c8").up(1)).isEmpty();
+    assertThat(Coordinate.of("c8").up(1)).isNull();
   }
 
   @Test
   void down() {
-    assertThat(Coordinate.of("e4").down(2)).isPresent();
-    assertThat(Coordinate.of("e4").down(2)).contains(Coordinate.of("e2"));
+    assertThat(Coordinate.of("e4").down(2)).isNotNull();
+    assertThat(Coordinate.of("e4").down(2)).isEqualTo(Coordinate.of("e2"));
   }
 
   @Test
   void downOutside() {
-    assertThat(Coordinate.of("g1").down(1)).isEmpty();
+    assertThat(Coordinate.of("g1").down(1)).isNull();
   }
 
   @Test
   void left() {
-    assertThat(Coordinate.of("e5").left(2)).isPresent();
-    assertThat(Coordinate.of("e5").left(2)).contains(Coordinate.of("c5"));
+    assertThat(Coordinate.of("e5").left(2)).isNotNull();
+    assertThat(Coordinate.of("e5").left(2)).isEqualTo(Coordinate.of("c5"));
   }
 
   @Test
   void leftOutside() {
-    assertThat(Coordinate.of("a6").left(1)).isEmpty();
+    assertThat(Coordinate.of("a6").left(1)).isNull();
   }
 
   @Test
   void right() {
-    assertThat(Coordinate.of("b5").up(2)).isPresent();
-    assertThat(Coordinate.of("b5").up(2)).contains(Coordinate.of("b7"));
+    assertThat(Coordinate.of("b5").up(2)).isNotNull();
+    assertThat(Coordinate.of("b5").up(2)).isEqualTo(Coordinate.of("b7"));
   }
 
   @Test
   void rightOutside() {
-    assertThat(Coordinate.of("h3").right(1)).isEmpty();
+    assertThat(Coordinate.of("h3").right(1)).isNull();
   }
 }

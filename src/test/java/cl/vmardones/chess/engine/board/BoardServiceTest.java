@@ -9,7 +9,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.Piece;
-import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class BoardServiceTest {
 
   BoardService boardService;
-  Collection<Piece> pieces;
 
   @Mock Board board;
   @Mock Piece piece1;
@@ -50,7 +48,7 @@ class BoardServiceTest {
 
   @Test
   void calculateLegals() {
-    pieces = List.of(piece1, piece2);
+    var pieces = List.of(piece1, piece2);
 
     Mockito.when(piece1.calculateLegals(board)).thenReturn(List.of(legalMove1));
     Mockito.when(piece2.calculateLegals(board)).thenReturn(List.of(legalMove2));

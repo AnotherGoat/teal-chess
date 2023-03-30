@@ -43,8 +43,9 @@ class PawnTest {
   }
 
   @Test
-  void getPieceType() {
-    assertThat(pawn.getPieceType()).isEqualTo(Piece.PieceType.PAWN);
+  void toSingleChar() {
+    assertThat(new Pawn(coordinate, Alliance.WHITE).toSingleChar()).isEqualTo("P");
+    assertThat(new Pawn(coordinate, Alliance.BLACK).toSingleChar()).isEqualTo("p");
   }
 
   @Test

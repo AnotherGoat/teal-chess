@@ -43,8 +43,9 @@ class QueenTest {
   }
 
   @Test
-  void getPieceType() {
-    assertThat(queen.getPieceType()).isEqualTo(Piece.PieceType.QUEEN);
+  void toSingleChar() {
+    assertThat(new Queen(coordinate, Alliance.WHITE).toSingleChar()).isEqualTo("Q");
+    assertThat(new Queen(coordinate, Alliance.BLACK).toSingleChar()).isEqualTo("q");
   }
 
   @Test

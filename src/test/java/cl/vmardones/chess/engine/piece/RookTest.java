@@ -42,8 +42,9 @@ class RookTest {
   }
 
   @Test
-  void getPieceType() {
-    assertThat(rook.getPieceType()).isEqualTo(Piece.PieceType.ROOK);
+  void toSingleChar() {
+    assertThat(new Rook(coordinate, Alliance.WHITE).toSingleChar()).isEqualTo("R");
+    assertThat(new Rook(coordinate, Alliance.BLACK).toSingleChar()).isEqualTo("r");
   }
 
   @Test

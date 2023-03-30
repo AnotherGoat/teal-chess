@@ -41,6 +41,12 @@ class BishopTest {
   }
 
   @Test
+  void toSingleChar() {
+    assertThat(new Bishop(coordinate, Alliance.WHITE).toSingleChar()).isEqualTo("B");
+    assertThat(new Bishop(coordinate, Alliance.BLACK).toSingleChar()).isEqualTo("b");
+  }
+
+  @Test
   void diagonalMove() {
     assertThat(bishop.getMoveVectors()).containsOnlyOnce(Diagonal.UP_RIGHT.getVector());
   }

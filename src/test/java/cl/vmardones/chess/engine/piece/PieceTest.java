@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 
 import cl.vmardones.chess.engine.board.Tile;
 import cl.vmardones.chess.engine.player.Alliance;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -74,7 +73,7 @@ class PieceTest {
 
   @Test
   void isEmptyAccesible() {
-    when(destinationTile.getPiece()).thenReturn(Optional.empty());
+    when(destinationTile.getPiece()).thenReturn(null);
 
     assertThat(piece.canAccess(destinationTile)).isTrue();
   }
@@ -82,7 +81,7 @@ class PieceTest {
   @Test
   void isEnemyAccessible() {
     when(piece.getAlliance()).thenReturn(Alliance.BLACK);
-    when(destinationTile.getPiece()).thenReturn(Optional.of(destinationPiece));
+    when(destinationTile.getPiece()).thenReturn(destinationPiece);
     when(destinationPiece.getAlliance()).thenReturn(Alliance.WHITE);
 
     assertThat(piece.canAccess(destinationTile)).isTrue();
@@ -91,7 +90,7 @@ class PieceTest {
   @Test
   void isNotAccesible() {
     when(piece.getAlliance()).thenReturn(Alliance.BLACK);
-    when(destinationTile.getPiece()).thenReturn(Optional.of(destinationPiece));
+    when(destinationTile.getPiece()).thenReturn(destinationPiece);
     when(destinationPiece.getAlliance()).thenReturn(Alliance.BLACK);
 
     assertThat(piece.canAccess(destinationTile)).isFalse();
