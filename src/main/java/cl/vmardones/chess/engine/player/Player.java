@@ -11,12 +11,14 @@ import cl.vmardones.chess.engine.move.*;
 import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.piece.Rook;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.BooleanSupplier;
 import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.ToString;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * The entity that controls the pieces in one side of the board. It can be controlled either by a
@@ -40,8 +42,7 @@ public abstract class Player {
     this.king = king;
     this.opponentLegals = opponentLegals;
 
-    this.legals =
-        Stream.concat(legals.stream(), calculateCastles(opponentLegals).stream()).toList();
+    this.legals = Stream.concat(legals.stream(), calculateCastles().stream()).toList();
     inCheck = !Player.calculateAttacksOnTile(king.getPosition(), opponentLegals).isEmpty();
   }
 
@@ -137,74 +138,75 @@ public abstract class Player {
   public abstract Alliance getAlliance();
 
   // TODO: Refactor this method, maybe use combinator pattern
-  protected List<Move> calculateCastles(List<Move> opponentLegals) {
+  protected List<Move> calculateCastles() {
 
-    if (!king.isFirstMove() || isInCheck() || king.getPosition().getColumn() != 'e') {
+    if (castlingIsImpossible()) {
       return Collections.emptyList();
     }
 
-    List<Move> castles = new ArrayList<>();
+    return Stream.of(generateCastleMove(true), generateCastleMove(false)).filter(Objects::nonNull).toList();
+  }
+
+  private boolean castlingIsImpossible() {
+    return !king.isFirstMove() || isInCheck() || king.getPosition().getColumn() != 'e';
+  }
+
+  private @Nullable Move generateCastleMove(boolean kingSide) {
+
+    if (kingSide && !isKingSideCastlePossible() || !kingSide && !isQueenSideCastlePossible()) {
+      return null;
+    }
+
+    // TODO: Only use king's column
     var kingPosition = king.getPosition();
 
-    if (isKingSideCastlePossible(kingPosition, opponentLegals)) {
-      var rook = (Rook) board.getTile(kingPosition.right(3)).getPiece();
-      var kingDestination = kingPosition.right(2);
-      var rookDestination = kingPosition.right(1);
+    var rookOffset = kingSide ? 3 : -4;
+    var rook = (Rook) board.getTile(kingPosition.right(rookOffset)).getPiece();
 
-      if (rook.isFirstMove()) {
-        castles.add(
-            new Move(MoveType.KING_CASTLE, board, king, kingDestination, rook, rookDestination));
-      }
+    if (rook == null || !rook.isFirstMove()) {
+      return null;
     }
 
-    if (isQueenSideCastlePossible(kingPosition, opponentLegals)) {
-      var rook = (Rook) board.getTile(kingPosition.right(3)).getPiece();
-      var kingDestination = kingPosition.left(2);
-      var rookDestination = kingPosition.left(1);
+    var direction = kingSide ? 1 : -1;
+    var kingDestination = kingPosition.right(2 * direction);
+    var rookDestination = kingPosition.right(direction);
 
-      if (rook.isFirstMove()) {
-        castles.add(
-            new Move(MoveType.QUEEN_CASTLE, board, king, kingDestination, rook, rookDestination));
-      }
-    }
-
-    return Collections.unmodifiableList(castles);
+    return new Move(kingSide ? MoveType.KING_CASTLE : MoveType.QUEEN_CASTLE, board, king, kingDestination, rook, rookDestination);
   }
 
-  private boolean isKingSideCastlePossible(Coordinate kingPosition, List<Move> opponentLegals) {
-    return isTileFree(kingPosition, 1)
-        && isTileFree(kingPosition, 2)
-        && isTileRook(kingPosition, 3)
-        && isUnreachableByEnemy(kingPosition, 1, opponentLegals)
-        && isUnreachableByEnemy(kingPosition, 2, opponentLegals);
+  private boolean isKingSideCastlePossible() {
+    return isTileFree(1)
+        && isTileFree(2)
+        && isTileRook(3)
+        && isUnreachableByEnemy(1)
+        && isUnreachableByEnemy(2);
   }
 
-  private boolean isQueenSideCastlePossible(Coordinate kingPosition, List<Move> opponentLegals) {
-    return isTileFree(kingPosition, -1)
-        && isTileFree(kingPosition, -2)
-        && isTileFree(kingPosition, -3)
-        && isTileRook(kingPosition, -4)
-        && isUnreachableByEnemy(kingPosition, -1, opponentLegals)
-        && isUnreachableByEnemy(kingPosition, -2, opponentLegals)
-        && isUnreachableByEnemy(kingPosition, -3, opponentLegals);
+  private boolean isQueenSideCastlePossible() {
+    return isTileFree(-1)
+        && isTileFree(-2)
+        && isTileFree(-3)
+        && isTileRook(-4)
+        && isUnreachableByEnemy(-1)
+        && isUnreachableByEnemy(-2)
+        && isUnreachableByEnemy(-3);
   }
 
-  private boolean isTileFree(Coordinate kingPosition, int offset) {
-    var destination = kingPosition.right(offset);
+  private boolean isTileFree(int offset) {
+    var destination = king.getPosition().right(offset);
 
     return destination != null && board.containsNothing(destination);
   }
 
-  private boolean isUnreachableByEnemy(
-      Coordinate kingPosition, int offset, List<Move> opponentLegals) {
-    var destination = kingPosition.right(offset);
+  private boolean isUnreachableByEnemy(int offset) {
+    var destination = king.getPosition().right(offset);
 
     return destination != null
         && Player.calculateAttacksOnTile(destination, opponentLegals).isEmpty();
   }
 
-  private boolean isTileRook(Coordinate kingPosition, int offset) {
-    var destination = kingPosition.right(offset);
+  private boolean isTileRook(int offset) {
+    var destination = king.getPosition().right(offset);
 
     return destination != null && board.contains(destination, Rook.class);
   }

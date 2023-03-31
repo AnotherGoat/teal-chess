@@ -31,8 +31,6 @@ public class Move {
 
   @Getter private final Coordinate destination;
 
-  private final boolean firstMove;
-
   @Getter @Nullable private final Piece otherPiece;
   @Nullable private final Coordinate rookDestination;
 
@@ -58,11 +56,6 @@ public class Move {
     this.destination = destination;
     this.otherPiece = otherPiece;
     this.rookDestination = rookDestination;
-    firstMove = piece.isFirstMove();
-  }
-
-  public boolean isFirstMove() {
-    return firstMove;
   }
 
   public boolean isCapturing() {
@@ -73,7 +66,8 @@ public class Move {
     return otherPiece != null && rookDestination != null;
   }
 
-  // TODO: Fix en passant implementation, highlighted moves don't match moves that are executed. En passant pawns are set properly, but it doesn't get added to the list of legal moves
+  // TODO: Fix en passant implementation, highlighted moves don't match moves that are executed. En
+  // passant pawns are set properly, but it doesn't get added to the list of legal moves
   /**
    * When a move is performed, a new board is created, because the board class is immutable.
    *
