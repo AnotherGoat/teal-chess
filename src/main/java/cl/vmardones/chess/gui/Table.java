@@ -26,6 +26,7 @@ import javax.swing.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jdt.annotation.Nullable;
 
 // TODO: Many methods used in the GUI should be moved to the game
 // TODO: Many methods can take simpler arguments and not every class needs access to the board
@@ -35,7 +36,7 @@ public class Table {
   private static final Dimension INITIAL_SIZE = new Dimension(700, 600);
   private static final String FONT_NAME = "NotoSans-Regular.ttf";
 
-  private final JFrame gameFrame;
+  private final JFrame frame;
   private final BoardPanel boardPanel;
 
   private final TakenPiecesPanel takenPiecesPanel;
@@ -48,11 +49,11 @@ public class Table {
   private final MoveLog moveLog;
 
   // TODO: Group these 3 in a "PlayerSelection" class
-  @Getter @Setter private Tile sourceTile;
+  @Getter @Setter @Nullable private Tile sourceTile;
 
-  @Getter @Setter private Tile destinationTile;
+  @Getter @Setter @Nullable private Tile destinationTile;
 
-  @Getter @Setter private Piece selectedPiece;
+  @Getter @Setter @Nullable private Piece selectedPiece;
 
   @Getter private boolean highlightLegals;
 
@@ -70,11 +71,11 @@ public class Table {
 
     game = new Game();
 
-    gameFrame = new JFrame("Chess game, made in Java");
-    gameFrame.setLayout(new BorderLayout());
-    gameFrame.setSize(INITIAL_SIZE);
+    frame = new JFrame("Chess game, made in Java");
+    frame.setLayout(new BorderLayout());
+    frame.setSize(INITIAL_SIZE);
 
-    gameFrame.setJMenuBar(createMenuBar());
+    frame.setJMenuBar(createMenuBar());
 
     boardPanel = new BoardPanel(this);
     takenPiecesPanel = new TakenPiecesPanel();
@@ -82,25 +83,25 @@ public class Table {
 
     moveLog = new MoveLog();
 
-    gameFrame.add(new SquarePanel<>(boardPanel), BorderLayout.CENTER);
+    frame.add(new SquarePanel<>(boardPanel), BorderLayout.CENTER);
 
-    gameFrame.add(takenPiecesPanel, BorderLayout.WEST);
-    gameFrame.add(gameHistoryPanel, BorderLayout.EAST);
+    frame.add(takenPiecesPanel, BorderLayout.WEST);
+    frame.add(gameHistoryPanel, BorderLayout.EAST);
 
-    gameFrame.setLocationRelativeTo(null);
-    gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    frame.setLocationRelativeTo(null);
+    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-    gameFrame.addWindowStateListener(maximizeListener());
+    frame.addWindowStateListener(maximizeListener());
 
-    gameFrame.setVisible(true);
-    gameFrame.pack();
+    frame.setVisible(true);
+    frame.pack();
   }
 
   private WindowStateListener maximizeListener() {
     return e -> {
       if (e.getOldState() == MAXIMIZED_BOTH && e.getNewState() == NORMAL) {
         boardPanel.setPreferredSize(BoardPanel.INITIAL_SIZE);
-        gameFrame.pack();
+        frame.pack();
       }
     };
   }
@@ -125,8 +126,8 @@ public class Table {
       FlatLightLaf.setup();
     }
 
-    if (gameFrame != null) {
-      SwingUtilities.updateComponentTreeUI(gameFrame);
+    if (frame != null) {
+      SwingUtilities.updateComponentTreeUI(frame);
     }
   }
 

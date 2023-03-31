@@ -27,6 +27,11 @@ public final class PieceIconLoader {
     var iconResource = ResourceImporter.get(getIconPath(piece));
 
     try {
+      if (iconResource == null) {
+        log.warn("Could not load the piece {}", getIconPath(piece));
+        return null;
+      }
+
       return SvgImporter.get(iconResource, width, height);
     } catch (IOException e) {
       log.warn("Could not load the piece {}", getIconPath(piece));

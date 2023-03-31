@@ -31,11 +31,6 @@ final class SvgImporter {
   static @Nullable BufferedImage get(InputStream inputStream, int width, int height)
       throws IOException {
 
-    if (inputStream == null) {
-      log.error("The file does not exist!");
-      return null;
-    }
-
     var transcoder = new PNGTranscoder();
 
     transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_WIDTH, (float) width);

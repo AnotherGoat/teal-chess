@@ -24,6 +24,11 @@ public final class SvgLoader {
     var iconResource = ResourceImporter.get(path);
 
     try {
+      if (iconResource == null) {
+        log.warn("Could not load the SVG file {}", path);
+        return null;
+      }
+
       return SvgImporter.get(iconResource, width, height);
     } catch (IOException e) {
       log.warn("Could not load the SVG file {}", path);

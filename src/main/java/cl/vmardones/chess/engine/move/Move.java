@@ -66,6 +66,10 @@ public class Move {
     return otherPiece != null && rookDestination != null;
   }
 
+  public boolean isNull() {
+    return piece.getPosition() == destination;
+  }
+
   // TODO: Fix en passant implementation, highlighted moves don't match moves that are executed. En
   // passant pawns are set properly, but it doesn't get added to the list of legal moves
   /**
@@ -83,14 +87,10 @@ public class Move {
     }
 
     if (isCastling()) {
-      builder.piece(getMovedRook());
+      builder.piece(new Rook(rookDestination, otherPiece.getAlliance(), false));
     }
 
     return builder.build();
-  }
-
-  private Rook getMovedRook() {
-    return new Rook(rookDestination, otherPiece.getAlliance(), false);
   }
 
   public Coordinate getSource() {
@@ -107,10 +107,6 @@ public class Move {
       case QUEEN_CASTLE -> "0-0-0";
       default -> getDestination().toString();
     };
-  }
-
-  public boolean isNull() {
-    return piece.getPosition() == destination;
   }
 
   public static final class MoveFactory {

@@ -27,6 +27,11 @@ public final class FontLoader {
     try {
       var fontResource = ResourceImporter.get(FONT_PATH + fontName);
 
+      if (fontResource == null) {
+        log.warn("Could not load the font {}, defaulting to system font", fontName);
+        return SYSTEM_FONT;
+      }
+
       return Font.createFont(Font.TRUETYPE_FONT, fontResource).deriveFont(Font.PLAIN, FONT_SIZE);
 
     } catch (FontFormatException | IOException e) {

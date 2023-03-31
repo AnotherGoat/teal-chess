@@ -92,7 +92,7 @@ public sealed interface Piece permits JumpingPiece, SlidingPiece {
    */
   default @Nullable Move createMove(Tile destination, Board board) {
     if (destination.getPiece() == null) {
-      return new Move(MoveType.CAPTURE, board, this, destination.getCoordinate());
+      return new Move(MoveType.NORMAL, board, this, destination.getCoordinate());
     }
 
     var capturablePiece = destination.getPiece();

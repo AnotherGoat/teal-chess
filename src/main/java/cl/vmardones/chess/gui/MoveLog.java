@@ -18,7 +18,7 @@ class MoveLog {
 
   @Getter private final List<Move> moves = new ArrayList<>();
 
-  private Move lastMove;
+  private @Nullable Move lastMove;
 
   void add(Move move) {
     moves.add(move);
@@ -43,7 +43,6 @@ class MoveLog {
 
   @Nullable
   Move getLastMove() {
-
     var move = lastMove;
     lastMove = null;
     return move;

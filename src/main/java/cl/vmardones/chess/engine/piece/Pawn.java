@@ -44,23 +44,23 @@ public final class Pawn implements JumpingPiece {
   @Override
   public @Nullable Move createMove(Tile destination, Board board) {
 
-    if (isCaptureMove(destination)) {
-      if (!isEnPassantPossible(board, destination)) {
-        return createCaptureMove(board, destination);
+    if (isNotCapture(destination)) {
+      if (isJumpPossible(board, destination)) {
+        return createJumpMove(board, destination);
       }
 
+      return createForwardMove(board, destination);
+    }
+
+    if (isEnPassantPossible(board, destination)) {
       log.debug("En passant is possible!");
       return createEnPassantMove(board, destination);
     }
 
-    if (isJumpPossible(board, destination)) {
-      return createJumpMove(board, destination);
-    }
-
-    return createForwardMove(board, destination);
+    return createCaptureMove(board, destination);
   }
 
-  private @Nullable Move createEnPassantMove(Board board, Tile destination) {
+  private Move createEnPassantMove(Board board, Tile destination) {
     var enPassantMove =
         new Move(
             MoveType.EN_PASSANT,
@@ -79,7 +79,7 @@ public final class Pawn implements JumpingPiece {
       return false;
     }
 
-    var side = destination.getCoordinate().to(0, alliance.getOppositeDirection());
+    var side = destination.getCoordinate().up(alliance.getOppositeDirection());
 
     if (side == null) {
       return false;
@@ -92,8 +92,8 @@ public final class Pawn implements JumpingPiece {
         && destination.getPiece() == null;
   }
 
-  private boolean isCaptureMove(Tile destination) {
-    return !getPosition().sameColumnAs(destination.getCoordinate());
+  private boolean isNotCapture(Tile destination) {
+    return getPosition().sameColumnAs(destination.getCoordinate());
   }
 
   private @Nullable Move createCaptureMove(Board board, Tile destination) {
@@ -107,7 +107,7 @@ public final class Pawn implements JumpingPiece {
     return null;
   }
 
-  private @Nullable Move createJumpMove(Board board, Tile destination) {
+  private Move createJumpMove(Board board, Tile destination) {
     return new Move(MoveType.PAWN_JUMP, board, this, destination.getCoordinate());
   }
 
@@ -119,7 +119,9 @@ public final class Pawn implements JumpingPiece {
       return false;
     }
 
-    return isFirstMove() && canAccess(board.getTile(forward)) && canAccess(destination);
+    return isFirstMove()
+        && board.getTile(forward).getPiece() == null
+        && destination.getPiece() == null;
   }
 
   private @Nullable Move createForwardMove(Board board, Tile destination) {

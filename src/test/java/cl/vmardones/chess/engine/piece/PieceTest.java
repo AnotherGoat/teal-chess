@@ -100,7 +100,7 @@ class PieceTest {
   }
 
   @Test
-  void createMajorMove() {
+  void createNormalMove() {
     var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
     var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
 

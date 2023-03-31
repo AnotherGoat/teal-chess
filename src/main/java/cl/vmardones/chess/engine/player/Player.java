@@ -14,7 +14,6 @@ import cl.vmardones.chess.engine.piece.Rook;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.BooleanSupplier;
 import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.ToString;
@@ -35,7 +34,7 @@ public abstract class Player {
   @ToString.Exclude protected final List<Move> opponentLegals;
 
   private final boolean inCheck;
-  private Boolean noEscapeMoves;
+  private @Nullable Boolean noEscapeMoves;
 
   protected Player(Board board, King king, List<Move> legals, List<Move> opponentLegals) {
     this.board = board;
@@ -144,7 +143,9 @@ public abstract class Player {
       return Collections.emptyList();
     }
 
-    return Stream.of(generateCastleMove(true), generateCastleMove(false)).filter(Objects::nonNull).toList();
+    return Stream.of(generateCastleMove(true), generateCastleMove(false))
+        .filter(Objects::nonNull)
+        .toList();
   }
 
   private boolean castlingIsImpossible() {
@@ -171,7 +172,13 @@ public abstract class Player {
     var kingDestination = kingPosition.right(2 * direction);
     var rookDestination = kingPosition.right(direction);
 
-    return new Move(kingSide ? MoveType.KING_CASTLE : MoveType.QUEEN_CASTLE, board, king, kingDestination, rook, rookDestination);
+    return new Move(
+        kingSide ? MoveType.KING_CASTLE : MoveType.QUEEN_CASTLE,
+        board,
+        king,
+        kingDestination,
+        rook,
+        rookDestination);
   }
 
   private boolean isKingSideCastlePossible() {
