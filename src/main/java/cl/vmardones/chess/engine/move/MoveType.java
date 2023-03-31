@@ -14,7 +14,7 @@ public enum MoveType {
    * A move where a pawn moves to an empty tile. Promotion can happen if the opposite side of the
    * board is reached by this move.
    */
-  PAWN_MOVE,
+  PAWN_NORMAL,
   /** A special move where a pawn can jump an extra tile during its first move. * */
   PAWN_JUMP,
   /** A move where a pawn attacks in diagonal to capture another piece. */

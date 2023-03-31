@@ -13,12 +13,14 @@ import cl.vmardones.chess.engine.player.Alliance;
 import java.util.Arrays;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 /** The bishop piece. It can move diagonally. */
 @Getter
 @AllArgsConstructor
+@EqualsAndHashCode
 @ToString(includeFieldNames = false)
 public final class Bishop implements SlidingPiece {
 

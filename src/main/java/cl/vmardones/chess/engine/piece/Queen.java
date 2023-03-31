@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -24,6 +25,7 @@ import lombok.ToString;
  */
 @Getter
 @AllArgsConstructor
+@EqualsAndHashCode
 @ToString(includeFieldNames = false)
 public final class Queen implements SlidingPiece {
 

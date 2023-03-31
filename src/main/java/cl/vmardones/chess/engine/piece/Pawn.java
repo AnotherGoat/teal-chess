@@ -17,6 +17,7 @@ import cl.vmardones.chess.engine.player.Alliance;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ import org.eclipse.jdt.annotation.Nullable;
  */
 @Getter
 @AllArgsConstructor
+@EqualsAndHashCode
 @ToString(includeFieldNames = false)
 @Slf4j
 public final class Pawn implements JumpingPiece {
@@ -121,7 +123,8 @@ public final class Pawn implements JumpingPiece {
 
     return isFirstMove()
         && board.getTile(forward).getPiece() == null
-        && destination.getPiece() == null;
+        && destination.getPiece() == null
+        && !destination.equals(board.getTile(forward));
   }
 
   private @Nullable Move createForwardMove(Board board, Tile destination) {
@@ -130,7 +133,7 @@ public final class Pawn implements JumpingPiece {
     }
 
     // TODO: Deal with promotions
-    return new Move(MoveType.PAWN_MOVE, board, this, destination.getCoordinate());
+    return new Move(MoveType.PAWN_NORMAL, board, this, destination.getCoordinate());
   }
 
   @Override

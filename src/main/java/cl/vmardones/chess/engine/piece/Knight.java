@@ -13,11 +13,13 @@ import cl.vmardones.chess.engine.player.Alliance;
 import java.util.Arrays;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
 /** The knight piece. It moves in an L shape. */
 @AllArgsConstructor
+@EqualsAndHashCode
 @Getter
 @ToString(includeFieldNames = false)
 public final class Knight implements JumpingPiece {
