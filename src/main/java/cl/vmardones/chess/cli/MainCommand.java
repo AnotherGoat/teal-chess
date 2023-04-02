@@ -6,7 +6,6 @@
 package cl.vmardones.chess.cli;
 
 import cl.vmardones.chess.gui.Table;
-import org.slf4j.simple.SimpleLogger;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -15,11 +14,6 @@ import picocli.CommandLine.Option;
     mixinStandardHelpOptions = true,
     versionProvider = VersionProvider.class)
 public class MainCommand implements Runnable {
-
-  @Option(
-      names = {"-D", "--debug"},
-      description = "Enable debug mode.")
-  private boolean debugMode;
 
   @Option(
       names = {"-d", "--dark-theme"},
@@ -41,10 +35,6 @@ public class MainCommand implements Runnable {
   @Override
   public void run() {
     System.setProperty("awt.useSystemAAFontSettings", "on");
-
-    if (debugMode) {
-      System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "Debug");
-    }
 
     new Table(darkTheme, highlightLegals, flipBoard);
   }

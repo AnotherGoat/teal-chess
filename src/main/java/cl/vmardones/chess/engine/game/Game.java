@@ -26,6 +26,8 @@ public class Game {
   private final BoardService boardService;
 
   public Game() {
+    LOG.info("Game started!");
+
     gameState = new GameState();
     gameHistory = new GameHistory();
     boardService = new BoardService();
