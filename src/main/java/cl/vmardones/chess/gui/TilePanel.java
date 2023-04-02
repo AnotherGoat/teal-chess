@@ -166,7 +166,7 @@ class TilePanel extends JPanel {
   }
 
   private void assignTileColor() {
-    setBackground(coordinate.getColor() == Alliance.WHITE ? LIGHT_COLOR : DARK_COLOR);
+    setBackground(coordinate.color() == Alliance.WHITE ? LIGHT_COLOR : DARK_COLOR);
   }
 
   private void assignPieceIcon(Tile tile) {
@@ -190,7 +190,7 @@ class TilePanel extends JPanel {
   private void highlightLegals(Board board) {
     if (table.isHighlightLegals()) {
       selectedPieceLegals(board).stream()
-          .filter(move -> move.getDestination() == coordinate)
+          .filter(move -> move.getDestination().equals(coordinate))
           .forEach(
               move -> {
                 var greenDot =

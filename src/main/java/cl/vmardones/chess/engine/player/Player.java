@@ -46,7 +46,7 @@ public abstract class Player {
   }
 
   protected static List<Move> calculateAttacksOnTile(Coordinate kingPosition, List<Move> moves) {
-    return moves.stream().filter(move -> kingPosition == move.getDestination()).toList();
+    return moves.stream().filter(move -> kingPosition.equals(move.getDestination())).toList();
   }
 
   /**
@@ -149,7 +149,7 @@ public abstract class Player {
   }
 
   private boolean castlingIsImpossible() {
-    return !king.isFirstMove() || isInCheck() || king.getPosition().getColumn() != 'e';
+    return !king.isFirstMove() || isInCheck() || king.getPosition().column() != 'e';
   }
 
   private @Nullable Move generateCastleMove(boolean kingSide) {

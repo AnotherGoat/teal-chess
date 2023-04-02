@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cl.vmardones.chess.engine.player.Alliance;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 class CoordinateTest {
@@ -56,12 +57,12 @@ class CoordinateTest {
 
   @Test
   void getColumn() {
-    assertThat(Coordinate.of("f5").getColumn()).isEqualTo('f');
+    assertThat(Coordinate.of("f5").column()).isEqualTo('f');
   }
 
   @Test
   void getColumnIndex() {
-    assertThat(Coordinate.of("c3").getColumnIndex()).isEqualTo(2);
+    assertThat(Coordinate.of("c3").columnIndex()).isEqualTo(2);
   }
 
   @Test
@@ -76,7 +77,7 @@ class CoordinateTest {
 
   @Test
   void getRank() {
-    assertThat(Coordinate.of("f5").getRank()).isEqualTo(5);
+    assertThat(Coordinate.of("f5").rank()).isEqualTo(5);
   }
 
   @Test
@@ -96,12 +97,12 @@ class CoordinateTest {
 
   @Test
   void getWhiteColor() {
-    assertThat(Coordinate.of("a8").getColor()).isEqualTo(Alliance.WHITE);
+    assertThat(Coordinate.of("a8").color()).isEqualTo(Alliance.WHITE);
   }
 
   @Test
   void getBlackColor() {
-    assertThat(Coordinate.of("b8").getColor()).isEqualTo(Alliance.BLACK);
+    assertThat(Coordinate.of("b8").color()).isEqualTo(Alliance.BLACK);
   }
 
   @Test
@@ -167,5 +168,10 @@ class CoordinateTest {
   @Test
   void rightOutside() {
     assertThat(Coordinate.of("h3").right(1)).isNull();
+  }
+
+  @Test
+  void equalsContract() {
+    EqualsVerifier.forClass(Coordinate.class).verify();
   }
 }

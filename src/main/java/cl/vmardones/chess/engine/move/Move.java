@@ -96,8 +96,7 @@ public class Move {
   public String toString() {
     return switch (type) {
       case CAPTURE -> piece.toSingleChar() + getDestination().toString();
-      case PAWN_CAPTURE -> String.format(
-          "%sx%s", piece.getPosition().getColumn(), getDestination());
+      case PAWN_CAPTURE -> String.format("%sx%s", piece.getPosition().column(), getDestination());
       case KING_CASTLE -> "0-0";
       case QUEEN_CASTLE -> "0-0-0";
       default -> getDestination().toString();
