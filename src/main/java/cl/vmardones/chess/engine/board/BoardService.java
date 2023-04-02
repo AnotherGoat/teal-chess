@@ -5,9 +5,6 @@
 
 package cl.vmardones.chess.engine.board;
 
-import static cl.vmardones.chess.engine.board.Board.MAX_TILES;
-import static cl.vmardones.chess.engine.board.Board.MIN_TILES;
-
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.*;
 import cl.vmardones.chess.engine.player.Alliance;
@@ -60,21 +57,6 @@ public class BoardService {
         .piece(new Rook(Coordinate.of("h1"), Alliance.WHITE));
 
     return builder.build();
-  }
-
-  public String prettyPrint(Board board) {
-    var builder = new StringBuilder();
-
-    IntStream.range(MIN_TILES, MAX_TILES)
-        .mapToObj(Coordinate::of)
-        .map(coordinate -> String.format(getFormat(coordinate), board.getTile(coordinate)))
-        .forEach(builder::append);
-
-    return builder.toString();
-  }
-
-  private String getFormat(Coordinate coordinate) {
-    return (coordinate.index() + 1) % Board.SIDE_LENGTH == 0 ? "%s  \n" : "%s  ";
   }
 
   public List<Move> calculateLegals(Board board, List<Piece> pieces) {

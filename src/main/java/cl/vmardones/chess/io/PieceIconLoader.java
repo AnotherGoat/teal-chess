@@ -9,12 +9,13 @@ import cl.vmardones.chess.engine.piece.Piece;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import lombok.Generated;
-import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jdt.annotation.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 public final class PieceIconLoader {
 
+  private static final Logger LOG = LoggerFactory.getLogger(PieceIconLoader.class);
   private static final String PIECE_ICON_PATH = "art/pieces";
 
   @Generated
@@ -28,13 +29,13 @@ public final class PieceIconLoader {
 
     try {
       if (iconResource == null) {
-        log.warn("Could not load the piece {}", getIconPath(piece));
+        LOG.warn("Could not load the piece {}", getIconPath(piece));
         return null;
       }
 
       return SvgImporter.get(iconResource, width, height);
     } catch (IOException e) {
-      log.warn("Could not load the piece {}", getIconPath(piece));
+      LOG.warn("Could not load the piece {}", getIconPath(piece));
       return null;
     }
   }

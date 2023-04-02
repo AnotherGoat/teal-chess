@@ -12,17 +12,18 @@ import cl.vmardones.chess.engine.player.Alliance;
 import java.util.*;
 import java.util.stream.IntStream;
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jdt.annotation.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** The game board, made of 8x8 tiles. */
-@Slf4j
-@ToString
 @EqualsAndHashCode
 public class Board {
+
   public static final int SIDE_LENGTH = 8;
   public static final int MIN_TILES = 0;
   public static final int MAX_TILES = SIDE_LENGTH * SIDE_LENGTH;
+  private static final Logger LOG = LoggerFactory.getLogger(Board.class);
 
   private final List<Tile> tiles;
 
@@ -38,20 +39,21 @@ public class Board {
 
   private Board(BoardBuilder builder) {
     tiles = createTiles(builder);
-    log.debug("Current gameboard: {}", tiles);
 
     whiteKing = builder.whiteKing;
-    log.debug("White king: {}", whiteKing);
     whitePieces = calculateActivePieces(tiles, Alliance.WHITE);
-    log.debug("White pieces: {}", whitePieces);
 
     blackKing = builder.blackKing;
-    log.debug("Black king: {}", blackKing);
     blackPieces = calculateActivePieces(tiles, Alliance.BLACK);
-    log.debug("Black pieces: {}", blackPieces);
 
     enPassantPawn = builder.enPassantPawn;
-    log.debug("En passant pawn: {}", enPassantPawn);
+
+    LOG.debug("Current gameboard:\n{}", this);
+    LOG.debug("White king: {}", whiteKing);
+    LOG.debug("White pieces: {}", whitePieces);
+    LOG.debug("Black king: {}", blackKing);
+    LOG.debug("Black pieces: {}", blackPieces);
+    LOG.debug("En passant pawn: {}\n", enPassantPawn);
   }
 
   private List<Tile> createTiles(BoardBuilder builder) {
@@ -106,6 +108,22 @@ public class Board {
    */
   public BoardBuilder nextTurnBuilder() {
     return new BoardBuilder(this);
+  }
+
+  @Override
+  public String toString() {
+    var builder = new StringBuilder();
+
+    IntStream.range(MIN_TILES, MAX_TILES)
+        .mapToObj(Coordinate::of)
+        .map(coordinate -> String.format(getFormat(coordinate), getTile(coordinate)))
+        .forEach(builder::append);
+
+    return builder.toString();
+  }
+
+  private String getFormat(Coordinate coordinate) {
+    return (coordinate.index() + 1) % Board.SIDE_LENGTH == 0 ? "%s  \n" : "%s  ";
   }
 
   @RequiredArgsConstructor(access = AccessLevel.PRIVATE)

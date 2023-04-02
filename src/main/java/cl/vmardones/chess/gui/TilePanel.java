@@ -12,6 +12,7 @@ import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.board.Tile;
 import cl.vmardones.chess.engine.move.Move;
+import cl.vmardones.chess.engine.move.MoveFinder;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Alliance;
 import cl.vmardones.chess.io.PieceIconLoader;
@@ -23,12 +24,13 @@ import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
-import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jdt.annotation.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 class TilePanel extends JPanel {
 
+  private static final Logger LOG = LoggerFactory.getLogger(TilePanel.class);
   private static final Dimension INITIAL_SIZE = new Dimension(60, 60);
   private static final Color LIGHT_COLOR = Color.decode("#FFCE9E");
   private static final Color DARK_COLOR = Color.decode("#D18B47");
@@ -82,7 +84,7 @@ class TilePanel extends JPanel {
           }
         } else if (isRightMouseButton(e)) {
           table.resetSelection();
-          log.debug("Pressed right click, unselecting");
+          LOG.debug("Pressed right click, unselecting");
         }
 
         SwingUtilities.invokeLater(table::update);
@@ -111,15 +113,15 @@ class TilePanel extends JPanel {
   }
 
   private void firstLeftClick() {
-    log.debug("Selected the tile {}", coordinate);
+    LOG.debug("Selected the tile {}", coordinate);
     table.setSourceTile(table.getTileAt(coordinate));
 
     if (getSelectedPiece() != null) {
       table.setSelectedPiece(getSelectedPiece());
-      log.debug("The tile contains {}", table.getSelectedPiece());
-      log.debug("Highlighting legal moves");
+      LOG.debug("The tile contains {}", table.getSelectedPiece());
+      LOG.debug("Highlighting legal moves");
     } else {
-      log.debug("The tile is unoccupied, unselecting");
+      LOG.debug("The tile is unoccupied, unselecting");
       table.resetSelection();
     }
   }
@@ -130,16 +132,16 @@ class TilePanel extends JPanel {
 
   private void secondLeftClick() {
     // TODO: Replace all these long method calls with forwarding methods
-    log.debug("Selected the destination {}", coordinate);
+    LOG.debug("Selected the destination {}", coordinate);
     table.setDestinationTile(table.getTileAt(coordinate));
 
     var move =
-        Move.MoveFactory.create(
+        MoveFinder.choose(
             table.getGame().getCurrentPlayer().getLegals(),
             table.getSourceTile().getCoordinate(),
             table.getDestinationTile().getCoordinate());
 
-    log.debug("Is there a move that can get to the destination? {}", move != null);
+    LOG.debug("Is there a move that can get to the destination? {}", move != null);
 
     if (move != null) {
       var moveTransition = table.makeMove(move);

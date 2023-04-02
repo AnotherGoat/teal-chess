@@ -7,10 +7,8 @@ package cl.vmardones.chess.io;
 
 import java.io.InputStream;
 import lombok.Generated;
-import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jdt.annotation.Nullable;
 
-@Slf4j
 final class ResourceImporter {
 
   @Generated

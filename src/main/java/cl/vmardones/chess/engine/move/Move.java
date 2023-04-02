@@ -10,17 +10,12 @@ import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.piece.Rook;
-import java.util.List;
-import java.util.function.Predicate;
 import lombok.EqualsAndHashCode;
-import lombok.Generated;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jdt.annotation.Nullable;
 
 // TODO: Replace Move implementations with an enum
 /** The action of moving a piece. */
-@Slf4j
 @EqualsAndHashCode
 public class Move {
 
@@ -107,40 +102,5 @@ public class Move {
       case QUEEN_CASTLE -> "0-0-0";
       default -> getDestination().toString();
     };
-  }
-
-  public static final class MoveFactory {
-
-    @Generated
-    private MoveFactory() {
-      throw new UnsupportedOperationException("You cannot instantiate me!");
-    }
-
-    /**
-     * Creates a move in the specified direction.
-     *
-     * @param source Source coordinate
-     * @param destination Destination coordinate
-     * @return Move that goes from the source to the destination, if possible.
-     */
-    public static @Nullable Move create(
-        List<Move> currentPlayerLegals, Coordinate source, Coordinate destination) {
-      if (source.equals(destination)) {
-        return null;
-      }
-
-      log.debug(
-          "Current piece legals: {}",
-          currentPlayerLegals.stream().filter(move -> move.getSource().equals(source)).toList());
-
-      return currentPlayerLegals.stream()
-          .filter(isMovePossible(source, destination))
-          .findFirst()
-          .orElse(null);
-    }
-
-    private static Predicate<Move> isMovePossible(Coordinate source, Coordinate destination) {
-      return move -> move.getSource().equals(source) && move.getDestination().equals(destination);
-    }
   }
 }

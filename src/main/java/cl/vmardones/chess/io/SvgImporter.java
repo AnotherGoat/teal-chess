@@ -12,16 +12,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 import lombok.Generated;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.batik.transcoder.SVGAbstractTranscoder;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.eclipse.jdt.annotation.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 final class SvgImporter {
+
+  private static final Logger LOG = LoggerFactory.getLogger(SvgImporter.class);
 
   @Generated
   private SvgImporter() {
@@ -50,7 +52,7 @@ final class SvgImporter {
       return ImageIO.read(new ByteArrayInputStream(imageData));
 
     } catch (TranscoderException e) {
-      log.error("Failed to transcode the SVG image!", e);
+      LOG.error("Failed to transcode the SVG image!", e);
       return null;
     }
   }

@@ -15,11 +15,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class BoardServiceTest {
 
   @Test
-  void prettyPrint() {
-    var boardService = new BoardService();
+  void createStandardBoard() {
     var board = new BoardService().createStandardBoard();
 
-    assertThat(boardService.prettyPrint(board))
+    assertThat(board.toString())
         .containsOnlyOnce("r  n  b  q  k  b  n  r")
         .containsOnlyOnce("p  p  p  p  p  p  p  p")
         .contains("-  -  -  -  -  -  -  -")

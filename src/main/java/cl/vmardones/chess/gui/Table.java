@@ -25,14 +25,15 @@ import java.util.List;
 import javax.swing.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jdt.annotation.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // TODO: Many methods used in the GUI should be moved to the game
 // TODO: Many methods can take simpler arguments and not every class needs access to the board
-@Slf4j
 public class Table {
 
+  private static final Logger LOG = LoggerFactory.getLogger(Table.class);
   private static final Dimension INITIAL_SIZE = new Dimension(700, 600);
   private static final String FONT_NAME = "NotoSans-Regular.ttf";
 
@@ -142,7 +143,7 @@ public class Table {
     var fileMenu = new JMenu("File");
 
     var openPGN = new JMenuItem("Load PGN file");
-    openPGN.addActionListener(e -> log.debug("Open PGN file!"));
+    openPGN.addActionListener(e -> LOG.debug("Open PGN file!"));
     fileMenu.add(openPGN);
 
     var exit = new JMenuItem("Exit");

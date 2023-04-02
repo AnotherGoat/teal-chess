@@ -14,10 +14,12 @@ import cl.vmardones.chess.engine.player.BlackPlayer;
 import cl.vmardones.chess.engine.player.Player;
 import cl.vmardones.chess.engine.player.WhitePlayer;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 public class Game {
+
+  private static final Logger LOG = LoggerFactory.getLogger(Game.class);
 
   private final GameState gameState;
   private final GameHistory gameHistory;
@@ -42,14 +44,14 @@ public class Game {
 
   private Turn createTurn(Board board, Alliance nextMoveMaker) {
     var whiteLegals = calculateWhiteLegals(board);
-    log.debug("White legals: {}", whiteLegals);
+    LOG.debug("White legals: {}", whiteLegals);
     var blackLegals = calculateBlackLegals(board);
-    log.debug("Black legals: {}", blackLegals);
+    LOG.debug("Black legals: {}", blackLegals);
 
     var whitePlayer = new WhitePlayer(board, board.getWhiteKing(), whiteLegals, blackLegals);
-    log.debug("White player: {}", whitePlayer);
+    LOG.debug("White player: {}", whitePlayer);
     var blackPlayer = new BlackPlayer(board, board.getBlackKing(), blackLegals, whiteLegals);
-    log.debug("Black player: {}", blackPlayer);
+    LOG.debug("Black player: {}", blackPlayer);
 
     var turn = new Turn(board, nextMoveMaker, whitePlayer, blackPlayer);
     registerTurn(turn);

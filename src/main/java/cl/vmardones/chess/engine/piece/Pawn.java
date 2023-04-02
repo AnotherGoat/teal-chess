@@ -20,8 +20,9 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jdt.annotation.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The pawn piece. It only moves forward (depending on the side) and can eat other pieces
@@ -32,8 +33,9 @@ import org.eclipse.jdt.annotation.Nullable;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString(includeFieldNames = false)
-@Slf4j
 public final class Pawn implements JumpingPiece {
+
+  private static final Logger LOG = LoggerFactory.getLogger(Pawn.class);
 
   private Coordinate position;
   private Alliance alliance;
@@ -55,7 +57,7 @@ public final class Pawn implements JumpingPiece {
     }
 
     if (isEnPassantPossible(board, destination)) {
-      log.debug("En passant is possible!");
+      LOG.debug("En passant is possible!");
       return createEnPassantMove(board, destination);
     }
 
@@ -71,7 +73,7 @@ public final class Pawn implements JumpingPiece {
             destination.getCoordinate(),
             board.getEnPassantPawn());
 
-    log.debug("Created en passant move: {}", enPassantMove);
+    LOG.debug("Created en passant move: {}", enPassantMove);
     return enPassantMove;
   }
 

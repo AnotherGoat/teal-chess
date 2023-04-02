@@ -8,11 +8,13 @@ package cl.vmardones.chess.io;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import lombok.Generated;
-import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jdt.annotation.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
 public final class SvgLoader {
+
+  private static final Logger LOG = LoggerFactory.getLogger(SvgLoader.class);
 
   @Generated
   private SvgLoader() {
@@ -25,13 +27,13 @@ public final class SvgLoader {
 
     try {
       if (iconResource == null) {
-        log.warn("Could not load the SVG file {}", path);
+        LOG.warn("Could not load the SVG file {}", path);
         return null;
       }
 
       return SvgImporter.get(iconResource, width, height);
     } catch (IOException e) {
-      log.warn("Could not load the SVG file {}", path);
+      LOG.warn("Could not load the SVG file {}", path);
       return null;
     }
   }
