@@ -75,14 +75,14 @@ public class Move {
   public Board execute() {
     var builder = board.nextTurnBuilder();
 
-    builder.withoutPiece(piece).withoutPiece(otherPiece).piece(piece.move(this));
+    builder.without(piece).without(otherPiece).with(piece.move(this));
 
     if (type == MoveType.PAWN_JUMP) {
       builder.enPassantPawn((Pawn) piece.move(this));
     }
 
     if (isCastling()) {
-      builder.piece(new Rook(rookDestination, otherPiece.getAlliance(), false));
+      builder.with(new Rook(rookDestination, otherPiece.getAlliance(), false));
     }
 
     return builder.build();

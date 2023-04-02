@@ -11,13 +11,13 @@ import cl.vmardones.chess.engine.player.Alliance;
 import java.util.*;
 import java.util.stream.IntStream;
 
-public class BoardService {
+public final class BoardService {
 
   /**
    * Creates a standard chessboard, which consists of a rank filled with 8 pawns on each side with a
    * formation of 8 major pieces behind.
    *
-   * @return The standard chessboard
+   * @return The standard chessboard.
    */
   public Board createStandardBoard() {
 
@@ -27,34 +27,32 @@ public class BoardService {
     var builder = Board.builder(whiteKing, blackKing);
 
     builder
-        .piece(new Rook(Coordinate.of("a8"), Alliance.BLACK))
-        .piece(new Knight(Coordinate.of("b8"), Alliance.BLACK))
-        .piece(new Bishop(Coordinate.of("c8"), Alliance.BLACK))
-        .piece(new Queen(Coordinate.of("d8"), Alliance.BLACK))
-        .piece(blackKing)
-        .piece(new Bishop(Coordinate.of("f8"), Alliance.BLACK))
-        .piece(new Knight(Coordinate.of("g8"), Alliance.BLACK))
-        .piece(new Rook(Coordinate.of("h8"), Alliance.BLACK));
+        .with(new Rook(Coordinate.of("a8"), Alliance.BLACK))
+        .with(new Knight(Coordinate.of("b8"), Alliance.BLACK))
+        .with(new Bishop(Coordinate.of("c8"), Alliance.BLACK))
+        .with(new Queen(Coordinate.of("d8"), Alliance.BLACK))
+        .with(new Bishop(Coordinate.of("f8"), Alliance.BLACK))
+        .with(new Knight(Coordinate.of("g8"), Alliance.BLACK))
+        .with(new Rook(Coordinate.of("h8"), Alliance.BLACK));
 
     IntStream.range(8, 16)
         .mapToObj(Coordinate::of)
         .map(coordinate -> new Pawn(coordinate, Alliance.BLACK))
-        .forEach(builder::piece);
+        .forEach(builder::with);
 
     IntStream.range(48, 56)
         .mapToObj(Coordinate::of)
         .map(coordinate -> new Pawn(coordinate, Alliance.WHITE))
-        .forEach(builder::piece);
+        .forEach(builder::with);
 
     builder
-        .piece(new Rook(Coordinate.of("a1"), Alliance.WHITE))
-        .piece(new Knight(Coordinate.of("b1"), Alliance.WHITE))
-        .piece(new Bishop(Coordinate.of("c1"), Alliance.WHITE))
-        .piece(new Queen(Coordinate.of("d1"), Alliance.WHITE))
-        .piece(whiteKing)
-        .piece(new Bishop(Coordinate.of("f1"), Alliance.WHITE))
-        .piece(new Knight(Coordinate.of("g1"), Alliance.WHITE))
-        .piece(new Rook(Coordinate.of("h1"), Alliance.WHITE));
+        .with(new Rook(Coordinate.of("a1"), Alliance.WHITE))
+        .with(new Knight(Coordinate.of("b1"), Alliance.WHITE))
+        .with(new Bishop(Coordinate.of("c1"), Alliance.WHITE))
+        .with(new Queen(Coordinate.of("d1"), Alliance.WHITE))
+        .with(new Bishop(Coordinate.of("f1"), Alliance.WHITE))
+        .with(new Knight(Coordinate.of("g1"), Alliance.WHITE))
+        .with(new Rook(Coordinate.of("h1"), Alliance.WHITE));
 
     return builder.build();
   }

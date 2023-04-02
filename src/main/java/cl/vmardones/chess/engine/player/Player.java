@@ -162,7 +162,7 @@ public abstract class Player {
     var kingPosition = king.getPosition();
 
     var rookOffset = kingSide ? 3 : -4;
-    var rook = (Rook) board.getTile(kingPosition.right(rookOffset)).getPiece();
+    var rook = (Rook) board.tileAt(kingPosition.right(rookOffset)).getPiece();
 
     if (rook == null || !rook.isFirstMove()) {
       return null;
@@ -202,7 +202,7 @@ public abstract class Player {
   private boolean isTileFree(int offset) {
     var destination = king.getPosition().right(offset);
 
-    return destination != null && board.containsNothing(destination);
+    return destination != null && board.isEmpty(destination);
   }
 
   private boolean isUnreachableByEnemy(int offset) {

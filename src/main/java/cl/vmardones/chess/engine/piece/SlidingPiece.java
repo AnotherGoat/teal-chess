@@ -28,7 +28,7 @@ sealed interface SlidingPiece extends Piece permits Bishop, Queen, Rook {
         IntStream.range(1, Board.SIDE_LENGTH + 1)
             .mapToObj(i -> getPosition().to(vector[0] * i, vector[1] * i))
             .filter(Objects::nonNull)
-            .map(board::getTile)
+            .map(board::tileAt)
             .toList()
             .listIterator();
 

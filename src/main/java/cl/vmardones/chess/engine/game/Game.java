@@ -50,9 +50,9 @@ public class Game {
     var blackLegals = calculateBlackLegals(board);
     LOG.debug("Black legals: {}", blackLegals);
 
-    var whitePlayer = new WhitePlayer(board, board.getWhiteKing(), whiteLegals, blackLegals);
+    var whitePlayer = new WhitePlayer(board, board.whiteKing(), whiteLegals, blackLegals);
     LOG.debug("White player: {}", whitePlayer);
-    var blackPlayer = new BlackPlayer(board, board.getBlackKing(), blackLegals, whiteLegals);
+    var blackPlayer = new BlackPlayer(board, board.blackKing(), blackLegals, whiteLegals);
     LOG.debug("Black player: {}", blackPlayer);
 
     var turn = new Turn(board, nextMoveMaker, whitePlayer, blackPlayer);
@@ -62,11 +62,11 @@ public class Game {
   }
 
   private List<Move> calculateWhiteLegals(Board board) {
-    return boardService.calculateLegals(board, board.getWhitePieces());
+    return boardService.calculateLegals(board, board.whitePieces());
   }
 
   private List<Move> calculateBlackLegals(Board board) {
-    return boardService.calculateLegals(board, board.getBlackPieces());
+    return boardService.calculateLegals(board, board.blackPieces());
   }
 
   public Turn createNextTurn(Move move) {

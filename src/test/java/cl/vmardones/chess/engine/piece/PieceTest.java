@@ -106,9 +106,9 @@ class PieceTest {
 
     var piece = new Rook(Coordinate.of("a1"), Alliance.WHITE);
 
-    var board = Board.builder(whiteKing, blackKing).piece(piece).build();
+    var board = Board.builder(whiteKing, blackKing).with(piece).build();
 
-    var destination = board.getTile(Coordinate.of("a7"));
+    var destination = board.tileAt(Coordinate.of("a7"));
 
     assertThat(piece.createMove(destination, board).getType()).isEqualTo(MoveType.NORMAL);
   }
@@ -121,9 +121,9 @@ class PieceTest {
     var piece = new Rook(Coordinate.of("a1"), Alliance.WHITE);
     var capturablePiece = new Pawn(Coordinate.of("a7"), Alliance.BLACK);
 
-    var board = Board.builder(whiteKing, blackKing).piece(piece).piece(capturablePiece).build();
+    var board = Board.builder(whiteKing, blackKing).with(piece).with(capturablePiece).build();
 
-    var destination = board.getTile(Coordinate.of("a7"));
+    var destination = board.tileAt(Coordinate.of("a7"));
 
     assertThat(piece.createMove(destination, board).getType()).isEqualTo(MoveType.CAPTURE);
   }
@@ -136,9 +136,9 @@ class PieceTest {
     var piece = new Rook(Coordinate.of("a1"), Alliance.WHITE);
     var blockingPiece = new Pawn(Coordinate.of("a7"), Alliance.WHITE);
 
-    var board = Board.builder(whiteKing, blackKing).piece(piece).piece(blockingPiece).build();
+    var board = Board.builder(whiteKing, blackKing).with(piece).with(blockingPiece).build();
 
-    var destination = board.getTile(Coordinate.of("a7"));
+    var destination = board.tileAt(Coordinate.of("a7"));
 
     assertThat(piece.createMove(destination, board)).isNull();
   }

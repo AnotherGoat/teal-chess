@@ -67,11 +67,7 @@ public final class Pawn implements JumpingPiece {
   private Move createEnPassantMove(Board board, Tile destination) {
     var enPassantMove =
         new Move(
-            MoveType.EN_PASSANT,
-            board,
-            this,
-            destination.getCoordinate(),
-            board.getEnPassantPawn());
+            MoveType.EN_PASSANT, board, this, destination.getCoordinate(), board.enPassantPawn());
 
     LOG.debug("Created en passant move: {}", enPassantMove);
     return enPassantMove;
@@ -79,7 +75,7 @@ public final class Pawn implements JumpingPiece {
 
   private boolean isEnPassantPossible(Board board, Tile destination) {
 
-    if (board.getEnPassantPawn() == null) {
+    if (board.enPassantPawn() == null) {
       return false;
     }
 
@@ -89,10 +85,10 @@ public final class Pawn implements JumpingPiece {
       return false;
     }
 
-    var pieceAtSide = board.getTile(side).getPiece();
+    var pieceAtSide = board.tileAt(side).getPiece();
 
     return pieceAtSide != null
-        && pieceAtSide.equals(board.getEnPassantPawn())
+        && pieceAtSide.equals(board.enPassantPawn())
         && destination.getPiece() == null;
   }
 
@@ -124,9 +120,9 @@ public final class Pawn implements JumpingPiece {
     }
 
     return isFirstMove()
-        && board.getTile(forward).getPiece() == null
+        && board.tileAt(forward).getPiece() == null
         && destination.getPiece() == null
-        && !destination.equals(board.getTile(forward));
+        && !destination.equals(board.tileAt(forward));
   }
 
   private @Nullable Move createForwardMove(Board board, Tile destination) {

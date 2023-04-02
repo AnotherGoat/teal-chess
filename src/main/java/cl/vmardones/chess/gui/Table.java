@@ -35,7 +35,7 @@ public class Table {
 
   private static final Logger LOG = LoggerFactory.getLogger(Table.class);
   private static final Dimension INITIAL_SIZE = new Dimension(700, 600);
-  private static final String FONT_NAME = "NotoSans-Regular.ttf";
+  private static final String UI_FONT = "NotoSans-Regular.ttf";
 
   private final JFrame frame;
   private final BoardPanel boardPanel;
@@ -68,7 +68,7 @@ public class Table {
     boardDirection = flipBoard ? BoardDirection.FLIPPED : BoardDirection.NORMAL;
 
     reloadTheme();
-    setUIFont(FontLoader.load(FONT_NAME));
+    setUIFont(FontLoader.load(UI_FONT));
 
     game = new Game();
 
@@ -142,9 +142,9 @@ public class Table {
   private JMenu createFileMenu() {
     var fileMenu = new JMenu("File");
 
-    var openPGN = new JMenuItem("Load PGN file");
-    openPGN.addActionListener(e -> LOG.debug("Open PGN file!"));
-    fileMenu.add(openPGN);
+    var openPgn = new JMenuItem("Load PGN file");
+    openPgn.addActionListener(e -> LOG.debug("Open PGN file!"));
+    fileMenu.add(openPgn);
 
     var exit = new JMenuItem("Exit");
     exit.addActionListener(e -> System.exit(0));
@@ -196,7 +196,7 @@ public class Table {
   }
 
   Tile getTileAt(Coordinate coordinate) {
-    return getGame().getBoard().getTile(coordinate);
+    return getGame().getBoard().tileAt(coordinate);
   }
 
   MoveTransition makeMove(Move move) {

@@ -32,7 +32,7 @@ public sealed interface Piece permits JumpingPiece, SlidingPiece {
    */
   default List<Move> calculateLegals(Board board) {
     return calculatePossibleDestinations(board).stream()
-        .map(board::getTile)
+        .map(board::tileAt)
         .filter(this::canAccess)
         .map(tile -> createMove(tile, board))
         .filter(Objects::nonNull)

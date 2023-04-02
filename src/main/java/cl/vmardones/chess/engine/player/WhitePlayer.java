@@ -20,7 +20,7 @@ public class WhitePlayer extends Player {
 
   @Override
   public List<Piece> getActivePieces() {
-    return board.getWhitePieces();
+    return board.whitePieces();
   }
 
   @Override
