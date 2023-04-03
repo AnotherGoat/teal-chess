@@ -22,7 +22,7 @@ record Turn(Board board, Alliance moveMaker, Player whitePlayer, Player blackPla
   }
 
   List<Move> getPlayerLegals() {
-    return Collections.unmodifiableList(getPlayer().getLegals());
+    return Collections.unmodifiableList(getPlayer().legals());
   }
 
   Player getOpponent() {
@@ -33,6 +33,6 @@ record Turn(Board board, Alliance moveMaker, Player whitePlayer, Player blackPla
   }
 
   List<Move> getOpponentLegals() {
-    return Collections.unmodifiableList(getOpponent().getLegals());
+    return Collections.unmodifiableList(getOpponent().legals());
   }
 }

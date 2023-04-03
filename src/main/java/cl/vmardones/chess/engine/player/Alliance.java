@@ -28,7 +28,7 @@ public enum Alliance {
    */
   public Player choosePlayer(List<Player> players) {
     return players.stream()
-        .filter(player -> player.getAlliance() == this)
+        .filter(player -> player.alliance() == this)
         .findFirst()
         .orElse(players.get(0));
   }

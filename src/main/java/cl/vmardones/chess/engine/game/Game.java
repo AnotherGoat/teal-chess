@@ -10,9 +10,8 @@ import cl.vmardones.chess.engine.board.BoardService;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveTransition;
 import cl.vmardones.chess.engine.player.Alliance;
-import cl.vmardones.chess.engine.player.BlackPlayer;
+import cl.vmardones.chess.engine.player.HumanPlayer;
 import cl.vmardones.chess.engine.player.Player;
-import cl.vmardones.chess.engine.player.WhitePlayer;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,15 +44,21 @@ public class Game {
   }
 
   private Turn createTurn(Board board, Alliance nextMoveMaker) {
-    var whiteLegals = calculateWhiteLegals(board);
-    LOG.debug("White legals: {}", whiteLegals);
-    var blackLegals = calculateBlackLegals(board);
-    LOG.debug("Black legals: {}", blackLegals);
+    LOG.debug("Current gameboard:\n{}", board);
+    LOG.debug("White king: {}", board.whiteKing());
+    LOG.debug("White pieces: {}", board.whitePieces());
+    LOG.debug("Black king: {}", board.blackKing());
+    LOG.debug("Black pieces: {}", board.blackPieces());
+    LOG.debug("En passant pawn: {}\n", board.enPassantPawn());
 
-    var whitePlayer = new WhitePlayer(board, board.whiteKing(), whiteLegals, blackLegals);
-    LOG.debug("White player: {}", whitePlayer);
-    var blackPlayer = new BlackPlayer(board, board.blackKing(), blackLegals, whiteLegals);
-    LOG.debug("Black player: {}", blackPlayer);
+    var whiteLegals = calculateWhiteLegals(board);
+    var blackLegals = calculateBlackLegals(board);
+    var whitePlayer = new HumanPlayer(Alliance.WHITE, board, whiteLegals, blackLegals);
+    var blackPlayer = new HumanPlayer(Alliance.BLACK, board, blackLegals, whiteLegals);
+
+    LOG.debug("Players: {} vs. {}", whitePlayer, blackPlayer);
+    LOG.debug("White legals: {}", whitePlayer.legals());
+    LOG.debug("Black legals: {}", blackPlayer.legals());
 
     var turn = new Turn(board, nextMoveMaker, whitePlayer, blackPlayer);
     registerTurn(turn);
@@ -70,7 +75,7 @@ public class Game {
   }
 
   public Turn createNextTurn(Move move) {
-    return createTurn(move.execute(), getOpponent().getAlliance());
+    return createTurn(move.execute(), getOpponent().alliance());
   }
 
   public Board getBoard() {

@@ -15,56 +15,71 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
-import lombok.Getter;
-import lombok.ToString;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * The entity that controls the pieces in one side of the board. It can be controlled either by a
  * human or an AI.
  */
-@ToString
-public abstract class Player {
+public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
 
-  @ToString.Exclude protected final Board board;
-
-  @Getter protected final King king;
-
-  @Getter @ToString.Exclude protected final List<Move> legals;
-  @ToString.Exclude protected final List<Move> opponentLegals;
+  protected final Alliance alliance;
+  protected final Board board;
+  protected final King king;
+  protected final List<Piece> pieces;
+  protected final List<Move> legals;
+  protected final List<Move> opponentLegals;
 
   private final boolean inCheck;
-  private @Nullable Boolean noEscapeMoves;
+  private final boolean noEscapeMoves;
 
-  protected Player(Board board, King king, List<Move> legals, List<Move> opponentLegals) {
-    this.board = board;
-    this.king = king;
-    this.opponentLegals = opponentLegals;
-
-    this.legals = Stream.concat(legals.stream(), calculateCastles().stream()).toList();
-    inCheck = !Player.calculateAttacksOnTile(king.getPosition(), opponentLegals).isEmpty();
-  }
-
-  protected static List<Move> calculateAttacksOnTile(Coordinate kingPosition, List<Move> moves) {
-    return moves.stream().filter(move -> kingPosition.equals(move.getDestination())).toList();
-  }
+  /* Player creation */
 
   /**
-   * Used to check if a specific move can be performed.
+   * Create a new player.
    *
-   * @param move The move to check
-   * @return True if the move is legal
+   * @param alliance The player's side of the board.
+   * @param board The chess board, used for finding the king and the player's pieces.
+   * @param legals The legal moves of the player.
+   * @param opponentLegals The legal moves of the player on the opposite side..
    */
-  public boolean isLegal(Move move) {
-    return legals.contains(move);
+  protected Player(Alliance alliance, Board board, List<Move> legals, List<Move> opponentLegals) {
+    this.alliance = alliance;
+    this.board = board;
+    king = findKing(board);
+    pieces = findPieces(board);
+    this.legals = addCastles(legals);
+    this.opponentLegals = opponentLegals;
+    inCheck = !Player.calculateAttacksOnTile(king.getPosition(), opponentLegals).isEmpty();
+    noEscapeMoves = calculateEscapeMoves();
   }
+
+  /* Getters */
+
+  public Alliance alliance() {
+    return alliance;
+  }
+
+  public King king() {
+    return king;
+  }
+
+  public List<Piece> pieces() {
+    return pieces;
+  }
+
+  public List<Move> legals() {
+    return legals;
+  }
+
+  /* Checking state */
 
   /**
    * Checks if the player is in check, which means that the king must be protected.
    *
    * @return True if the player is in check
    */
-  public boolean isInCheck() {
+  public boolean inCheck() {
     return inCheck;
   }
 
@@ -74,19 +89,8 @@ public abstract class Player {
    *
    * @return True if the player is in checkmate
    */
-  public boolean isInCheckmate() {
-    return isInCheck() && hasNoEscapeMoves();
-  }
-
-  private boolean hasNoEscapeMoves() {
-    if (noEscapeMoves == null) {
-      noEscapeMoves =
-          legals.stream()
-              .map(move -> makeMove(this, move))
-              .noneMatch(transition -> transition.getMoveStatus().isDone());
-    }
-
-    return noEscapeMoves;
+  public boolean inCheckmate() {
+    return inCheck() && noEscapeMoves;
   }
 
   /**
@@ -96,24 +100,22 @@ public abstract class Player {
    * @return True if the player is in stalemate
    */
   public boolean inInStalemate() {
-    return !isInCheck() && hasNoEscapeMoves();
+    return !inCheck() && noEscapeMoves;
   }
 
-  public boolean isCastled() {
-    return false;
-  }
+  /* Performing moves */
 
   public MoveTransition makeMove(Player currentPlayer, Move move) {
     if (move.isNull()) {
       return new MoveTransition(board, move, MoveStatus.NULL);
     }
 
-    if (!isLegal(move)) {
+    if (isIllegal(move)) {
       return new MoveTransition(board, move, MoveStatus.ILLEGAL);
     }
 
-    List<Move> kingAttacks =
-        Player.calculateAttacksOnTile(currentPlayer.getKing().getPosition(), opponentLegals);
+    var kingAttacks =
+        Player.calculateAttacksOnTile(currentPlayer.king().getPosition(), opponentLegals);
 
     if (!kingAttacks.isEmpty()) {
       return new MoveTransition(board, move, MoveStatus.LEAVES_OPPONENT_IN_CHECK);
@@ -122,21 +124,54 @@ public abstract class Player {
     return new MoveTransition(move.execute(), move, MoveStatus.DONE);
   }
 
-  /**
-   * Obtains the player's current pieces on the board.
-   *
-   * @return The player's active pieces
-   */
-  public abstract List<Piece> getActivePieces();
+  /* toString */
 
-  /**
-   * Obtains the player's side.
-   *
-   * @return The player's alliance
-   */
-  public abstract Alliance getAlliance();
+  @Override
+  public String toString() {
+    if (inCheckmate()) {
+      return String.format("%s Player, in checkmate!", alliance.name());
+    }
+
+    if (inCheck()) {
+      return String.format("%s Player, in check!", alliance.name());
+    }
+
+    if (inInStalemate()) {
+      return String.format("%s Player, in stalemate!", alliance.name());
+    }
+
+    return String.format("%s Player", alliance.name());
+  }
+
+  private King findKing(Board board) {
+    return alliance == Alliance.WHITE ? board.whiteKing() : board.blackKing();
+  }
+
+  private List<Piece> findPieces(Board board) {
+    return alliance == Alliance.WHITE ? board.whitePieces() : board.blackPieces();
+  }
+
+  private List<Move> addCastles(List<Move> legals) {
+    return Stream.concat(legals.stream(), calculateCastles().stream()).toList();
+  }
+
+  // TODO: This method should probably be moved to board service
+  private static List<Move> calculateAttacksOnTile(Coordinate kingPosition, List<Move> moves) {
+    return moves.stream().filter(move -> kingPosition.equals(move.getDestination())).toList();
+  }
+
+  private boolean calculateEscapeMoves() {
+    return legals.stream()
+        .map(move -> makeMove(this, move))
+        .noneMatch(transition -> transition.getMoveStatus().isDone());
+  }
+
+  private boolean isIllegal(Move move) {
+    return !legals.contains(move);
+  }
 
   // TODO: Refactor this method, maybe use combinator pattern
+  // TODO: The player shouldn't be the one calculating the castles
   protected List<Move> calculateCastles() {
 
     if (castlingIsImpossible()) {
@@ -149,7 +184,7 @@ public abstract class Player {
   }
 
   private boolean castlingIsImpossible() {
-    return !king.isFirstMove() || isInCheck() || king.getPosition().column() != 'e';
+    return !king.isFirstMove() || inCheck() || king.getPosition().column() != 'e';
   }
 
   private @Nullable Move generateCastleMove(boolean kingSide) {
@@ -205,16 +240,16 @@ public abstract class Player {
     return destination != null && board.isEmpty(destination);
   }
 
+  private boolean isTileRook(int offset) {
+    var destination = king.getPosition().right(offset);
+
+    return destination != null && board.contains(destination, Rook.class);
+  }
+
   private boolean isUnreachableByEnemy(int offset) {
     var destination = king.getPosition().right(offset);
 
     return destination != null
         && Player.calculateAttacksOnTile(destination, opponentLegals).isEmpty();
-  }
-
-  private boolean isTileRook(int offset) {
-    var destination = king.getPosition().right(offset);
-
-    return destination != null && board.contains(destination, Rook.class);
   }
 }

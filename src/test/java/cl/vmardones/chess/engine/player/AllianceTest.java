@@ -18,14 +18,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class AllianceTest {
 
   Alliance white = Alliance.WHITE;
-
   Alliance black = Alliance.BLACK;
 
-  List<Player> players;
+  @Mock HumanPlayer whitePlayer;
 
-  @Mock Player whitePlayer;
-
-  @Mock Player blackPlayer;
+  @Mock HumanPlayer blackPlayer;
 
   @Test
   void getWhiteOpposite() {
@@ -59,20 +56,20 @@ class AllianceTest {
 
   @Test
   void chooseWhitePlayer() {
-    when(whitePlayer.getAlliance()).thenReturn(white);
-    when(blackPlayer.getAlliance()).thenReturn(black);
+    when(whitePlayer.alliance()).thenReturn(white);
+    when(blackPlayer.alliance()).thenReturn(black);
 
-    players = List.of(blackPlayer, whitePlayer);
+    List<Player> players = List.of(blackPlayer, whitePlayer);
 
     assertThat(white.choosePlayer(players)).isEqualTo(whitePlayer);
   }
 
   @Test
   void chooseBlackPlayer() {
-    when(whitePlayer.getAlliance()).thenReturn(white);
-    when(blackPlayer.getAlliance()).thenReturn(black);
+    when(whitePlayer.alliance()).thenReturn(white);
+    when(blackPlayer.alliance()).thenReturn(black);
 
-    players = List.of(whitePlayer, blackPlayer);
+    List<Player> players = List.of(whitePlayer, blackPlayer);
 
     assertThat(black.choosePlayer(players)).isEqualTo(blackPlayer);
   }

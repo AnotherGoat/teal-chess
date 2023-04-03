@@ -9,6 +9,7 @@ import cl.vmardones.chess.engine.board.Board;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+// TODO: This class could be a record instead, and move is probably not needed here
 /** The transition from one board to another, triggered when a move is performed or checked. */
 @AllArgsConstructor
 public class MoveTransition {

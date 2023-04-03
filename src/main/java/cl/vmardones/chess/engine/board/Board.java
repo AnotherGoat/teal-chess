@@ -172,13 +172,6 @@ public final class Board {
     blackPieces = calculateActivePieces(tiles, Alliance.BLACK);
 
     enPassantPawn = builder.enPassantPawn;
-
-    LOG.debug("Current gameboard:\n{}", this);
-    LOG.debug("White king: {}", whiteKing);
-    LOG.debug("White pieces: {}", whitePieces);
-    LOG.debug("Black king: {}", blackKing);
-    LOG.debug("Black pieces: {}", blackPieces);
-    LOG.debug("En passant pawn: {}\n", enPassantPawn);
   }
 
   private List<Tile> createTiles(BoardBuilder builder) {

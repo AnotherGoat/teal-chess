@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.player.Alliance;
-import cl.vmardones.chess.engine.player.Player;
+import cl.vmardones.chess.engine.player.HumanPlayer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,8 +24,8 @@ class TurnTest {
   Turn blackTurn;
 
   @Mock Board board;
-  @Mock Player whitePlayer;
-  @Mock Player blackPlayer;
+  @Mock HumanPlayer whitePlayer;
+  @Mock HumanPlayer blackPlayer;
 
   @BeforeEach
   void setUp() {

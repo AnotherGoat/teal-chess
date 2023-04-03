@@ -14,6 +14,8 @@ import java.util.stream.IntStream;
 /** Provides utility functions to create and do calculations over the chess board. */
 public final class BoardService {
 
+  private static final Board CACHED_STANDARD_BOARD = generateStandardBoard();
+
   /* Board creation */
 
   /**
@@ -23,7 +25,24 @@ public final class BoardService {
    * @return The standard chessboard.
    */
   public Board createStandardBoard() {
+    return CACHED_STANDARD_BOARD;
+  }
 
+  /**
+   * Given a chess board, calculate the legal moves for every piece.
+   *
+   * @param board The board in its current state.
+   * @param pieces The pieces to search legal moves for.
+   * @return All the legal moves.
+   */
+  public List<Move> calculateLegals(Board board, List<Piece> pieces) {
+    return pieces.stream()
+        .map(piece -> piece.calculateLegals(board))
+        .flatMap(Collection::stream)
+        .toList();
+  }
+
+  private static Board generateStandardBoard() {
     var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
     var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
 
@@ -58,19 +77,5 @@ public final class BoardService {
         .with(new Rook(Coordinate.of("h1"), Alliance.WHITE));
 
     return builder.build();
-  }
-
-  /**
-   * Given a chess board, calculate the legal moves for every piece.
-   *
-   * @param board The board in its current state.
-   * @param pieces The pieces to search legal moves for.
-   * @return All the legal moves.
-   */
-  public List<Move> calculateLegals(Board board, List<Piece> pieces) {
-    return pieces.stream()
-        .map(piece -> piece.calculateLegals(board))
-        .flatMap(Collection::stream)
-        .toList();
   }
 }

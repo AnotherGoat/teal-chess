@@ -137,7 +137,7 @@ class TilePanel extends JPanel {
 
     var move =
         MoveFinder.choose(
-            table.getGame().getCurrentPlayer().getLegals(),
+            table.getGame().getCurrentPlayer().legals(),
             table.getSourceTile().coordinate(),
             table.getDestinationTile().coordinate());
 
@@ -213,7 +213,6 @@ class TilePanel extends JPanel {
   }
 
   private boolean isOpponentPieceSelected() {
-    return table.getSelectedPiece().getAlliance()
-        != table.getGame().getCurrentPlayer().getAlliance();
+    return table.getSelectedPiece().getAlliance() != table.getGame().getCurrentPlayer().alliance();
   }
 }
