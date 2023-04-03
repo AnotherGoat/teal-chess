@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
-import lombok.Getter;
-import lombok.Setter;
 import org.eclipse.jdt.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,23 +42,23 @@ public class Table {
 
   private final GameHistoryPanel gameHistoryPanel;
 
-  @Getter @Setter private Game game;
+  private Game game;
 
   // TODO: Replace move log with game history
   private final MoveLog moveLog;
 
   // TODO: Group these 3 in a "PlayerSelection" class
-  @Getter @Setter @Nullable private Tile sourceTile;
+  @Nullable private Tile sourceTile;
 
-  @Getter @Setter @Nullable private Tile destinationTile;
+  @Nullable private Tile destinationTile;
 
-  @Getter @Setter @Nullable private Piece selectedPiece;
+  @Nullable private Piece selectedPiece;
 
-  @Getter private boolean highlightLegals;
+  private boolean highlightLegals;
 
   private boolean darkTheme;
 
-  @Getter private BoardDirection boardDirection;
+  private BoardDirection boardDirection;
 
   public Table(boolean darkTheme, boolean highlightLegals, boolean flipBoard) {
     this.darkTheme = darkTheme;
@@ -201,6 +199,48 @@ public class Table {
 
   MoveTransition makeMove(Move move) {
     return getGame().performMove(move);
+  }
+
+  /* Getters and setters */
+
+  public Game getGame() {
+    return game;
+  }
+
+  public void setGame(Game game) {
+    this.game = game;
+  }
+
+  public @Nullable Tile getSourceTile() {
+    return sourceTile;
+  }
+
+  public void setSourceTile(Tile sourceTile) {
+    this.sourceTile = sourceTile;
+  }
+
+  public @Nullable Tile getDestinationTile() {
+    return destinationTile;
+  }
+
+  public void setDestinationTile(Tile destinationTile) {
+    this.destinationTile = destinationTile;
+  }
+
+  public @Nullable Piece getSelectedPiece() {
+    return selectedPiece;
+  }
+
+  public void setSelectedPiece(Piece selectedPiece) {
+    this.selectedPiece = selectedPiece;
+  }
+
+  public boolean isHighlightLegals() {
+    return highlightLegals;
+  }
+
+  public BoardDirection getBoardDirection() {
+    return boardDirection;
   }
 
   enum BoardDirection {

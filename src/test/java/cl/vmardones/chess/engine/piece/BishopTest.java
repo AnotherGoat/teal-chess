@@ -6,12 +6,8 @@
 package cl.vmardones.chess.engine.piece;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 import cl.vmardones.chess.engine.board.Coordinate;
-import cl.vmardones.chess.engine.move.Move;
-import cl.vmardones.chess.engine.piece.vector.Diagonal;
-import cl.vmardones.chess.engine.piece.vector.Vertical;
 import cl.vmardones.chess.engine.player.Alliance;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,40 +19,37 @@ class BishopTest {
 
   @Mock Coordinate anywhere;
   @Mock Coordinate destination;
-  @Mock Move move;
 
   @Test
   void constructor() {
-    assertThat(new Bishop(anywhere, Alliance.BLACK)).matches(Bishop::isFirstMove);
+    assertThat(new Bishop(anywhere, Alliance.BLACK)).matches(Bishop::firstMove);
   }
 
   @Test
   void toSingleChar() {
-    assertThat(new Bishop(anywhere, Alliance.WHITE).toSingleChar()).isEqualTo("B");
-    assertThat(new Bishop(anywhere, Alliance.BLACK).toSingleChar()).isEqualTo("b");
+    assertThat(new Bishop(anywhere, Alliance.WHITE).singleChar()).isEqualTo("B");
+    assertThat(new Bishop(anywhere, Alliance.BLACK).singleChar()).isEqualTo("b");
   }
 
   @Test
   void diagonalMove() {
     var bishop = new Bishop(anywhere, Alliance.BLACK);
-    assertThat(bishop.getMoveVectors()).containsOnlyOnce(Diagonal.UP_RIGHT.getVector());
+    assertThat(bishop.moveVectors()).containsOnlyOnce(new int[] {1, 1});
   }
 
   @Test
   void illegalMove() {
     var bishop = new Bishop(anywhere, Alliance.BLACK);
-    assertThat(bishop.getMoveVectors()).doesNotContain(Vertical.UP.getVector());
+    assertThat(bishop.moveVectors()).doesNotContain(new int[] {0, 1});
   }
 
   @Test
-  void move() {
+  void moveTo() {
     var bishopToMove = new Bishop(anywhere, Alliance.BLACK);
 
-    when(move.destination()).thenReturn(destination);
-
-    assertThat(bishopToMove.move(move))
+    assertThat(bishopToMove.moveTo(destination))
         .isInstanceOf(Bishop.class)
-        .matches(bishop -> bishop.getPosition().equals(destination))
-        .matches(bishop -> !bishop.isFirstMove());
+        .matches(bishop -> bishop.position().equals(destination))
+        .matches(bishop -> !bishop.firstMove());
   }
 }

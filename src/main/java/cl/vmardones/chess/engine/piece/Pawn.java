@@ -9,17 +9,8 @@ import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.board.Tile;
 import cl.vmardones.chess.engine.move.*;
-import cl.vmardones.chess.engine.piece.vector.Diagonal;
-import cl.vmardones.chess.engine.piece.vector.Jump;
-import cl.vmardones.chess.engine.piece.vector.Vector;
-import cl.vmardones.chess.engine.piece.vector.Vertical;
 import cl.vmardones.chess.engine.player.Alliance;
-import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
 import org.eclipse.jdt.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,17 +20,9 @@ import org.slf4j.LoggerFactory;
  * diagonally. A very weak piece, but it can be promoted when getting to the last rank at the
  * opposite side.
  */
-@Getter
-@AllArgsConstructor
-@EqualsAndHashCode
-@ToString(includeFieldNames = false)
-public final class Pawn implements JumpingPiece {
+public final class Pawn extends JumpingPiece {
 
   private static final Logger LOG = LoggerFactory.getLogger(Pawn.class);
-
-  private Coordinate position;
-  private Alliance alliance;
-  private boolean firstMove;
 
   public Pawn(Coordinate position, Alliance alliance) {
     this(position, alliance, true);
@@ -92,7 +75,7 @@ public final class Pawn implements JumpingPiece {
   }
 
   private boolean isNotCapture(Tile destination) {
-    return getPosition().sameColumnAs(destination.coordinate());
+    return position().sameColumnAs(destination.coordinate());
   }
 
   private @Nullable Move createCaptureMove(Board board, Tile destination) {
@@ -118,7 +101,7 @@ public final class Pawn implements JumpingPiece {
       return false;
     }
 
-    return isFirstMove()
+    return firstMove()
         && board.tileAt(forward).piece() == null
         && destination.piece() == null
         && !destination.equals(board.tileAt(forward));
@@ -134,36 +117,26 @@ public final class Pawn implements JumpingPiece {
   }
 
   @Override
-  public Pawn move(Move move) {
-    return new Pawn(move.destination(), alliance, false);
+  public Pawn moveTo(Coordinate destination) {
+    return new Pawn(destination, alliance, false);
   }
 
-  @Override
-  public List<int[]> getMoveOffsets() {
-    return switch (getAlliance()) {
-      case BLACK -> calculateBlackOffsets();
-      case WHITE -> calculateWhiteOffsets();
+  private Pawn(Coordinate position, Alliance alliance, boolean firstMove) {
+    super(position, alliance, firstMove, generateMoveOffsets(alliance, firstMove));
+  }
+
+  private static List<int[]> generateMoveOffsets(Alliance alliance, boolean firstMove) {
+    return switch (alliance) {
+      case WHITE -> calculateWhiteOffsets(firstMove);
+      case BLACK -> calculateBlackOffsets(firstMove);
     };
   }
 
-  private List<int[]> calculateWhiteOffsets() {
-    List<Vector> moves = new ArrayList<>(List.of(Vertical.UP, Diagonal.UP_LEFT, Diagonal.UP_RIGHT));
-
-    if (isFirstMove()) {
-      moves.add(Jump.UP);
-    }
-
-    return moves.stream().map(Vector::getVector).toList();
+  private static List<int[]> calculateWhiteOffsets(boolean firstMove) {
+    return firstMove ? WHITE_PAWN_MOVES : WHITE_PAWN_MOVES.subList(0, 3);
   }
 
-  private List<int[]> calculateBlackOffsets() {
-    List<Vector> moves =
-        new ArrayList<>(List.of(Vertical.DOWN, Diagonal.DOWN_LEFT, Diagonal.DOWN_RIGHT));
-
-    if (isFirstMove()) {
-      moves.add(Jump.DOWN);
-    }
-
-    return moves.stream().map(Vector::getVector).toList();
+  private static List<int[]> calculateBlackOffsets(boolean firstMove) {
+    return firstMove ? BLACK_PAWN_MOVES : BLACK_PAWN_MOVES.subList(0, 3);
   }
 }

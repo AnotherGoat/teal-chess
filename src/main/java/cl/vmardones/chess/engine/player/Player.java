@@ -50,7 +50,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
     pieces = findPieces(board);
     this.legals = addCastles(legals);
     this.opponentLegals = opponentLegals;
-    inCheck = !Player.calculateAttacksOnTile(king.getPosition(), opponentLegals).isEmpty();
+    inCheck = !Player.calculateAttacksOnTile(king.position(), opponentLegals).isEmpty();
     noEscapeMoves = calculateEscapeMoves();
   }
 
@@ -115,7 +115,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
     }
 
     var kingAttacks =
-        Player.calculateAttacksOnTile(currentPlayer.king().getPosition(), opponentLegals);
+        Player.calculateAttacksOnTile(currentPlayer.king().position(), opponentLegals);
 
     if (!kingAttacks.isEmpty()) {
       return new MoveTransition(board, move, MoveStatus.CHECKS);
@@ -163,7 +163,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
   private boolean calculateEscapeMoves() {
     return legals.stream()
         .map(move -> makeMove(this, move))
-        .noneMatch(transition -> transition.getMoveStatus() == MoveStatus.DONE);
+        .noneMatch(transition -> transition.moveStatus() == MoveStatus.DONE);
   }
 
   private boolean isIllegal(Move move) {
@@ -184,7 +184,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
   }
 
   private boolean castlingIsImpossible() {
-    return !king.isFirstMove() || inCheck() || king.getPosition().column() != 'e';
+    return !king.firstMove() || inCheck() || king.position().column() != 'e';
   }
 
   private @Nullable Move generateCastleMove(boolean kingSide) {
@@ -194,12 +194,12 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
     }
 
     // TODO: Only use king's column
-    var kingPosition = king.getPosition();
+    var kingPosition = king.position();
 
     var rookOffset = kingSide ? 3 : -4;
     var rook = (Rook) board.tileAt(kingPosition.right(rookOffset)).piece();
 
-    if (rook == null || !rook.isFirstMove()) {
+    if (rook == null || !rook.firstMove()) {
       return null;
     }
 
@@ -235,19 +235,19 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
   }
 
   private boolean isTileFree(int offset) {
-    var destination = king.getPosition().right(offset);
+    var destination = king.position().right(offset);
 
     return destination != null && board.isEmpty(destination);
   }
 
   private boolean isTileRook(int offset) {
-    var destination = king.getPosition().right(offset);
+    var destination = king.position().right(offset);
 
     return destination != null && board.contains(destination, Rook.class);
   }
 
   private boolean isUnreachableByEnemy(int offset) {
-    var destination = king.getPosition().right(offset);
+    var destination = king.position().right(offset);
 
     return destination != null
         && Player.calculateAttacksOnTile(destination, opponentLegals).isEmpty();

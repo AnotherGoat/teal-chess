@@ -50,7 +50,7 @@ class GameHistoryPanel extends JPanel {
     if (lastMove != null) {
       var moveText = lastMove.toString();
 
-      switch (lastMove.piece().getAlliance()) {
+      switch (lastMove.piece().alliance()) {
         case WHITE -> model.setValueAt(
             moveText + checkmateHash(currentPlayer), model.getLastRowIndex() + 1, 0);
         case BLACK -> model.setValueAt(

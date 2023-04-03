@@ -74,7 +74,7 @@ public final class Tile {
       return "-";
     }
 
-    return piece.toSingleChar();
+    return piece.singleChar();
   }
 
   private static List<Tile> createAllPossibleEmptyTiles() {

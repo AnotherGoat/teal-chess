@@ -9,7 +9,6 @@ import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
-import cl.vmardones.chess.engine.piece.Rook;
 import java.util.Objects;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -96,8 +95,8 @@ public final class Move {
   @Override
   public String toString() {
     return switch (type) {
-      case CAPTURE -> piece.toSingleChar() + destination();
-      case PAWN_CAPTURE -> String.format("%sx%s", piece.getPosition().column(), destination());
+      case CAPTURE -> piece.singleChar() + destination();
+      case PAWN_CAPTURE -> String.format("%sx%s", piece.position().column(), destination());
       case KING_CASTLE -> "0-0";
       case QUEEN_CASTLE -> "0-0-0";
       default -> destination().toString();
@@ -114,7 +113,7 @@ public final class Move {
   }
 
   public boolean isNone() {
-    return piece.getPosition() == destination;
+    return piece.position() == destination;
   }
 
   // TODO: Fix en passant implementation, highlighted moves don't match moves that are executed. En
@@ -127,20 +126,20 @@ public final class Move {
   public Board execute() {
     var builder = board.nextTurnBuilder();
 
-    builder.without(piece).without(otherPiece).with(piece.move(this));
+    builder.without(piece).without(otherPiece).with(piece.moveTo(destination));
 
     if (type == MoveType.PAWN_JUMP) {
-      builder.enPassantPawn((Pawn) piece.move(this));
+      builder.enPassantPawn((Pawn) piece.moveTo(destination));
     }
 
     if (isCastling()) {
-      builder.with(new Rook(rookDestination, otherPiece.getAlliance(), false));
+      builder.with(otherPiece.moveTo(rookDestination));
     }
 
     return builder.build();
   }
 
   public Coordinate getSource() {
-    return piece.getPosition();
+    return piece.position();
   }
 }

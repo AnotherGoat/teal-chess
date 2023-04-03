@@ -8,16 +8,27 @@ package cl.vmardones.chess.engine.piece;
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.board.Tile;
+import cl.vmardones.chess.engine.player.Alliance;
 import java.util.*;
 import java.util.stream.IntStream;
 
-sealed interface SlidingPiece extends Piece permits Bishop, Queen, Rook {
+abstract sealed class SlidingPiece extends Piece permits Bishop, Queen, Rook {
 
-  List<int[]> getMoveVectors();
+  protected final List<int[]> moveVectors;
+
+  protected SlidingPiece(
+      Coordinate position, Alliance alliance, boolean firstMove, List<int[]> moveVectors) {
+    super(position, alliance, firstMove);
+    this.moveVectors = moveVectors;
+  }
+
+  public List<int[]> moveVectors() {
+    return moveVectors;
+  }
 
   @Override
-  default List<Coordinate> calculatePossibleDestinations(Board board) {
-    return getMoveVectors().stream()
+  protected List<Coordinate> calculatePossibleDestinations(Board board) {
+    return moveVectors.stream()
         .map(vector -> calculateOffsets(vector, board))
         .flatMap(Collection::stream)
         .toList();
@@ -26,7 +37,7 @@ sealed interface SlidingPiece extends Piece permits Bishop, Queen, Rook {
   private List<Coordinate> calculateOffsets(int[] vector, Board board) {
     var tiles =
         IntStream.range(1, Board.SIDE_LENGTH + 1)
-            .mapToObj(i -> getPosition().to(vector[0] * i, vector[1] * i))
+            .mapToObj(i -> position().to(vector[0] * i, vector[1] * i))
             .filter(Objects::nonNull)
             .map(board::tileAt)
             .toList()

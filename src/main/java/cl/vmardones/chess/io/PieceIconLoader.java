@@ -40,6 +40,6 @@ public final class PieceIconLoader {
 
   private static String getIconPath(Piece piece) {
     return "%s/%s%s.svg"
-        .formatted(PIECE_ICON_PATH, piece.getAlliance(), piece.toSingleChar().toLowerCase());
+        .formatted(PIECE_ICON_PATH, piece.alliance(), piece.singleChar().toLowerCase());
   }
 }

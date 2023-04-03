@@ -13,6 +13,7 @@ import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.board.Tile;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveFinder;
+import cl.vmardones.chess.engine.move.MoveStatus;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Alliance;
 import cl.vmardones.chess.io.PieceIconLoader;
@@ -146,7 +147,7 @@ class TilePanel extends JPanel {
     if (move != null) {
       var moveTransition = table.makeMove(move);
 
-      if (moveTransition.getMoveStatus().isDone()) {
+      if (moveTransition.moveStatus() == MoveStatus.DONE) {
         table.getGame().createNextTurn(move);
         table.addToLog(move);
       }
@@ -213,6 +214,6 @@ class TilePanel extends JPanel {
   }
 
   private boolean isOpponentPieceSelected() {
-    return table.getSelectedPiece().getAlliance() != table.getGame().getCurrentPlayer().alliance();
+    return table.getSelectedPiece().alliance() != table.getGame().getCurrentPlayer().alliance();
   }
 }

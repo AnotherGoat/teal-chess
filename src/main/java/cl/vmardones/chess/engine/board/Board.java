@@ -184,7 +184,7 @@ public final class Board {
   private List<Piece> calculateActivePieces(List<Tile> gameBoard, Alliance alliance) {
     return gameBoard.stream()
         .map(Tile::piece)
-        .filter(piece -> piece != null && piece.getAlliance() == alliance)
+        .filter(piece -> piece != null && piece.alliance() == alliance)
         .toList();
   }
 
@@ -217,7 +217,7 @@ public final class Board {
         return this;
       }
 
-      configuration.put(piece.getPosition(), piece);
+      configuration.put(piece.position(), piece);
       return this;
     }
 
@@ -232,7 +232,7 @@ public final class Board {
         return this;
       }
 
-      configuration.remove(piece.getPosition(), piece);
+      configuration.remove(piece.position(), piece);
       return this;
     }
 

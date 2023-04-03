@@ -13,6 +13,7 @@ import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.board.Tile;
 import cl.vmardones.chess.engine.move.MoveType;
 import cl.vmardones.chess.engine.player.Alliance;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -23,30 +24,6 @@ class PieceTest {
 
   @Mock Coordinate anywhere;
   @Mock Tile destinationTile;
-
-  @Test
-  void isWhite() {
-    var piece = new Knight(anywhere, Alliance.WHITE);
-    assertThat(piece.isWhite()).isTrue();
-  }
-
-  @Test
-  void isNotWhite() {
-    var piece = new King(anywhere, Alliance.BLACK);
-    assertThat(piece.isWhite()).isFalse();
-  }
-
-  @Test
-  void isBlack() {
-    var piece = new Pawn(anywhere, Alliance.BLACK);
-    assertThat(piece.isBlack()).isTrue();
-  }
-
-  @Test
-  void isNotBlack() {
-    var piece = new Queen(anywhere, Alliance.WHITE);
-    assertThat(piece.isBlack()).isFalse();
-  }
 
   @Test
   void isAllyOf() {
@@ -141,5 +118,10 @@ class PieceTest {
     var destination = board.tileAt(Coordinate.of("a7"));
 
     assertThat(piece.createMove(destination, board)).isNull();
+  }
+
+  @Test
+  void equalsContract() {
+    EqualsVerifier.forClass(Piece.class).withNonnullFields("position").verify();
   }
 }

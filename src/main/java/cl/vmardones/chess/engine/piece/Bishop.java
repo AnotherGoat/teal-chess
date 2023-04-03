@@ -6,45 +6,21 @@
 package cl.vmardones.chess.engine.piece;
 
 import cl.vmardones.chess.engine.board.Coordinate;
-import cl.vmardones.chess.engine.move.Move;
-import cl.vmardones.chess.engine.piece.vector.Diagonal;
-import cl.vmardones.chess.engine.piece.vector.Vector;
 import cl.vmardones.chess.engine.player.Alliance;
-import java.util.Arrays;
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
 
 /** The bishop piece. It can move diagonally. */
-@Getter
-@AllArgsConstructor
-@EqualsAndHashCode
-@ToString(includeFieldNames = false)
-public final class Bishop implements SlidingPiece {
-
-  private static final List<int[]> MOVE_VECTORS = calculateMoveVectors();
-
-  private Coordinate position;
-  private Alliance alliance;
-  private boolean firstMove;
+public final class Bishop extends SlidingPiece {
 
   public Bishop(Coordinate position, Alliance alliance) {
     this(position, alliance, true);
   }
 
   @Override
-  public Bishop move(Move move) {
-    return new Bishop(move.destination(), alliance, false);
+  public Bishop moveTo(Coordinate destination) {
+    return new Bishop(destination, alliance, false);
   }
 
-  @Override
-  public List<int[]> getMoveVectors() {
-    return MOVE_VECTORS;
-  }
-
-  private static List<int[]> calculateMoveVectors() {
-    return Arrays.stream(Diagonal.values()).map(Vector::getVector).toList();
+  private Bishop(Coordinate position, Alliance alliance, boolean firstMove) {
+    super(position, alliance, firstMove, DIAGONALS);
   }
 }

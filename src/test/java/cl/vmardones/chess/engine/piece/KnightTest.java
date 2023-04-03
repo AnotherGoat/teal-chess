@@ -6,12 +6,8 @@
 package cl.vmardones.chess.engine.piece;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 import cl.vmardones.chess.engine.board.Coordinate;
-import cl.vmardones.chess.engine.move.Move;
-import cl.vmardones.chess.engine.piece.vector.LShaped;
-import cl.vmardones.chess.engine.piece.vector.Vertical;
 import cl.vmardones.chess.engine.player.Alliance;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,40 +19,37 @@ class KnightTest {
 
   @Mock Coordinate anywhere;
   @Mock Coordinate destination;
-  @Mock Move move;
 
   @Test
   void constructor() {
-    assertThat(new Knight(anywhere, Alliance.BLACK)).matches(Knight::isFirstMove);
+    assertThat(new Knight(anywhere, Alliance.BLACK)).matches(Knight::firstMove);
   }
 
   @Test
   void toSingleChar() {
-    assertThat(new Knight(anywhere, Alliance.WHITE).toSingleChar()).isEqualTo("N");
-    assertThat(new Knight(anywhere, Alliance.BLACK).toSingleChar()).isEqualTo("n");
+    assertThat(new Knight(anywhere, Alliance.WHITE).singleChar()).isEqualTo("N");
+    assertThat(new Knight(anywhere, Alliance.BLACK).singleChar()).isEqualTo("n");
   }
 
   @Test
   void lShapedMove() {
     var knight = new Knight(anywhere, Alliance.WHITE);
-    assertThat(knight.getMoveOffsets()).containsOnlyOnce(LShaped.UP_UP_LEFT.getVector());
+    assertThat(knight.moveOffsets()).containsOnlyOnce(new int[] {-2, 1});
   }
 
   @Test
   void illegalMove() {
     var knight = new Knight(anywhere, Alliance.WHITE);
-    assertThat(knight.getMoveOffsets()).doesNotContain(Vertical.UP.getVector());
+    assertThat(knight.moveOffsets()).doesNotContain(new int[] {0, 1});
   }
 
   @Test
-  void move() {
+  void moveTo() {
     var knightToMove = new Knight(anywhere, Alliance.WHITE);
 
-    when(move.destination()).thenReturn(destination);
-
-    assertThat(knightToMove.move(move))
+    assertThat(knightToMove.moveTo(destination))
         .isInstanceOf(Knight.class)
-        .matches(knight -> knight.getPosition().equals(destination))
-        .matches(knight -> !knight.isFirstMove());
+        .matches(knight -> knight.position().equals(destination))
+        .matches(knight -> !knight.firstMove());
   }
 }

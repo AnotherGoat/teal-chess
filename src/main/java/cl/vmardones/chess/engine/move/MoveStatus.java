@@ -11,12 +11,8 @@ public enum MoveStatus {
   DONE,
   /** Leaves the opponent in check. */
   CHECKS,
-  /**
-   * Violates the game's rules, cannot be performed.
-   */
+  /** Violates the game's rules, cannot be performed. */
   ILLEGAL,
-  /**
-   * Both the source and destination are the same, which means this isn't a move.
-   */
+  /** Both the source and destination are the same, which means this isn't a move. */
   NONE
 }

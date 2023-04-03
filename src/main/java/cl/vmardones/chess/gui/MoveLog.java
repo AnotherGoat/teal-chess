@@ -8,21 +8,23 @@ package cl.vmardones.chess.gui;
 import cl.vmardones.chess.engine.move.Move;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.eclipse.jdt.annotation.Nullable;
 
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
 class MoveLog {
 
-  @Getter private final List<Move> moves = new ArrayList<>();
+  private final List<Move> moves = new ArrayList<>();
 
   private @Nullable Move lastMove;
+
+  MoveLog() {}
 
   void add(Move move) {
     moves.add(move);
     lastMove = move;
+  }
+
+  List<Move> moves() {
+    return moves;
   }
 
   int size() {
