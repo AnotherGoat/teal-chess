@@ -43,7 +43,7 @@ public final class King implements JumpingPiece {
 
   @Override
   public King move(Move move) {
-    return new King(move.getDestination(), alliance, false);
+    return new King(move.destination(), alliance, false);
   }
 
   @Override

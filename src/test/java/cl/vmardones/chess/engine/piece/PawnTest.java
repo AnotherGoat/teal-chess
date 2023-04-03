@@ -66,7 +66,7 @@ class PawnTest {
   void move() {
     var pawnToMove = new Pawn(anywhere, Alliance.WHITE);
 
-    when(move.getDestination()).thenReturn(destination);
+    when(move.destination()).thenReturn(destination);
 
     assertThat(pawnToMove.move(move))
         .isInstanceOf(Pawn.class)
@@ -85,7 +85,7 @@ class PawnTest {
 
     var destination = board.tileAt(Coordinate.of("a3"));
 
-    assertThat(pawn.createMove(destination, board).getType()).isEqualTo(MoveType.PAWN_NORMAL);
+    assertThat(pawn.createMove(destination, board).type()).isEqualTo(MoveType.PAWN_NORMAL);
   }
 
   @Test
@@ -99,7 +99,7 @@ class PawnTest {
 
     var destination = board.tileAt(Coordinate.of("a4"));
 
-    assertThat(pawn.createMove(destination, board).getType()).isEqualTo(MoveType.PAWN_JUMP);
+    assertThat(pawn.createMove(destination, board).type()).isEqualTo(MoveType.PAWN_JUMP);
   }
 
   @Test
@@ -115,7 +115,7 @@ class PawnTest {
     var pawn = newBoard.tileAt(Coordinate.of("a3")).piece();
     var destination = newBoard.tileAt(Coordinate.of("a5"));
 
-    assertThat(pawn.createMove(destination, newBoard).getType()).isEqualTo(MoveType.PAWN_NORMAL);
+    assertThat(pawn.createMove(destination, newBoard).type()).isEqualTo(MoveType.PAWN_NORMAL);
   }
 
   @Test
@@ -130,7 +130,7 @@ class PawnTest {
 
     var destination = board.tileAt(Coordinate.of("b2"));
 
-    assertThat(piece.createMove(destination, board).getType()).isEqualTo(MoveType.PAWN_CAPTURE);
+    assertThat(piece.createMove(destination, board).type()).isEqualTo(MoveType.PAWN_CAPTURE);
   }
 
   @Test
@@ -147,6 +147,6 @@ class PawnTest {
     var newBoard = jumpMove.execute();
     var destination = newBoard.tileAt(Coordinate.of("b6"));
 
-    assertThat(pawn.createMove(destination, newBoard).getType()).isEqualTo(MoveType.EN_PASSANT);
+    assertThat(pawn.createMove(destination, newBoard).type()).isEqualTo(MoveType.EN_PASSANT);
   }
 }

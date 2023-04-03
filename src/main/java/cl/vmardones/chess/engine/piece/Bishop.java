@@ -36,7 +36,7 @@ public final class Bishop implements SlidingPiece {
 
   @Override
   public Bishop move(Move move) {
-    return new Bishop(move.getDestination(), alliance, false);
+    return new Bishop(move.destination(), alliance, false);
   }
 
   @Override

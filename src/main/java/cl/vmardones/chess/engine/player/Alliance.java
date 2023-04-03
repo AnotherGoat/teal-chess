@@ -6,12 +6,8 @@
 package cl.vmardones.chess.engine.player;
 
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 /** Represents a chess piece's color, which can be white or black. */
-@AllArgsConstructor
-@Getter
 public enum Alliance {
   /** The white side, at the bottom of the board. */
   WHITE(1),
@@ -20,6 +16,7 @@ public enum Alliance {
 
   private final int direction;
 
+  // TODO: This method should be moved somewhere else
   /**
    * Chooses the first player of this alliance.
    *
@@ -33,19 +30,31 @@ public enum Alliance {
         .orElse(players.get(0));
   }
 
-  public Alliance getOpposite() {
+  /* Getters */
+
+  public int direction() {
+    return direction;
+  }
+
+  public Alliance opposite() {
     return switch (this) {
       case WHITE -> BLACK;
       case BLACK -> WHITE;
     };
   }
 
-  public int getOppositeDirection() {
-    return getOpposite().getDirection();
+  public int oppositeDirection() {
+    return opposite().direction();
   }
+
+  /* toString */
 
   @Override
   public String toString() {
     return String.valueOf(super.toString().toLowerCase().charAt(0));
+  }
+
+  Alliance(int direction) {
+    this.direction = direction;
   }
 }

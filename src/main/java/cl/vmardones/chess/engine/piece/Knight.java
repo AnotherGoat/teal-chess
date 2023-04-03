@@ -41,7 +41,7 @@ public final class Knight implements JumpingPiece {
 
   @Override
   public Knight move(Move move) {
-    return new Knight(move.getDestination(), alliance, false);
+    return new Knight(move.destination(), alliance, false);
   }
 
   @Override

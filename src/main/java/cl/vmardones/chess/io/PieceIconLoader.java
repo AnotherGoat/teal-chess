@@ -8,7 +8,6 @@ package cl.vmardones.chess.io;
 import cl.vmardones.chess.engine.piece.Piece;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import lombok.Generated;
 import org.eclipse.jdt.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,6 @@ public final class PieceIconLoader {
   private static final Logger LOG = LoggerFactory.getLogger(PieceIconLoader.class);
   private static final String PIECE_ICON_PATH = "art/pieces";
 
-  @Generated
   private PieceIconLoader() {
     throw new UnsupportedOperationException("You cannot instantiate me!");
   }

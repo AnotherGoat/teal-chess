@@ -58,7 +58,7 @@ class TakenPiecesPanel extends JPanel {
   private List<Piece> getTakenPieces(MoveLog moveLog, Alliance alliance) {
     return moveLog.getMoves().stream()
         .filter(Move::isCapturing)
-        .map(Move::getOtherPiece)
+        .map(Move::otherPiece)
         .filter(capturedPiece -> capturedPiece != null && capturedPiece.getAlliance() == alliance)
         .toList();
   }

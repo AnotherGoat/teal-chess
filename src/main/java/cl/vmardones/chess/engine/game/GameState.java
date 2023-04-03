@@ -5,16 +5,10 @@
 
 package cl.vmardones.chess.engine.game;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-
 // TODO: See if this class can be immutable
 /** A mutable class that holds the current state of the game. */
 class GameState {
 
-  @Getter(AccessLevel.PACKAGE)
-  @Setter(AccessLevel.PACKAGE)
   private Turn currentTurn;
 
   TurnMemento save() {
@@ -23,5 +17,13 @@ class GameState {
 
   void load(TurnMemento turnMemento) {
     currentTurn = turnMemento.state();
+  }
+
+  Turn currentTurn() {
+    return currentTurn;
+  }
+
+  void currentTurn(Turn value) {
+    currentTurn = value;
   }
 }

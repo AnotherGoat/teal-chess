@@ -7,7 +7,6 @@ package cl.vmardones.chess.io;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import lombok.Generated;
 import org.eclipse.jdt.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,6 @@ public final class SvgLoader {
 
   private static final Logger LOG = LoggerFactory.getLogger(SvgLoader.class);
 
-  @Generated
   private SvgLoader() {
     throw new UnsupportedOperationException("You cannot instantiate me!");
   }

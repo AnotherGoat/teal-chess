@@ -43,7 +43,7 @@ public sealed interface Piece permits JumpingPiece, SlidingPiece {
 
   default boolean isInMoveRange(Board board, Coordinate coordinate) {
     return calculateLegals(board).stream()
-        .map(Move::getDestination)
+        .map(Move::destination)
         .anyMatch(destination -> destination.equals(coordinate));
   }
 

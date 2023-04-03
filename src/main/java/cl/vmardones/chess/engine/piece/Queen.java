@@ -41,7 +41,7 @@ public final class Queen implements SlidingPiece {
 
   @Override
   public Queen move(Move move) {
-    return new Queen(move.getDestination(), alliance, false);
+    return new Queen(move.destination(), alliance, false);
   }
 
   @Override

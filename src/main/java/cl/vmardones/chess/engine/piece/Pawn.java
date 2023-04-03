@@ -78,7 +78,7 @@ public final class Pawn implements JumpingPiece {
       return false;
     }
 
-    var side = destination.coordinate().up(alliance.getOppositeDirection());
+    var side = destination.coordinate().up(alliance.oppositeDirection());
 
     if (side == null) {
       return false;
@@ -112,7 +112,7 @@ public final class Pawn implements JumpingPiece {
 
   private boolean isJumpPossible(Board board, Tile destination) {
 
-    var forward = position.up(alliance.getDirection());
+    var forward = position.up(alliance.direction());
 
     if (forward == null) {
       return false;
@@ -135,7 +135,7 @@ public final class Pawn implements JumpingPiece {
 
   @Override
   public Pawn move(Move move) {
-    return new Pawn(move.getDestination(), alliance, false);
+    return new Pawn(move.destination(), alliance, false);
   }
 
   @Override

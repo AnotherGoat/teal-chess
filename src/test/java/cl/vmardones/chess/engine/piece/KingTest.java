@@ -66,7 +66,7 @@ class KingTest {
   void move() {
     var kingToMove = new King(anywhere, Alliance.WHITE);
 
-    when(move.getDestination()).thenReturn(destination);
+    when(move.destination()).thenReturn(destination);
 
     assertThat(kingToMove.move(move))
         .isInstanceOf(King.class)

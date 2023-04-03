@@ -190,7 +190,7 @@ class TilePanel extends JPanel {
   private void highlightLegals(Board board) {
     if (table.isHighlightLegals()) {
       selectedPieceLegals(board).stream()
-          .filter(move -> move.getDestination().equals(coordinate))
+          .filter(move -> move.destination().equals(coordinate))
           .forEach(
               move -> {
                 var greenDot =

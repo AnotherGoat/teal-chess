@@ -11,7 +11,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
-import lombok.Generated;
 import org.apache.batik.transcoder.SVGAbstractTranscoder;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
@@ -25,7 +24,6 @@ final class SvgImporter {
 
   private static final Logger LOG = LoggerFactory.getLogger(SvgImporter.class);
 
-  @Generated
   private SvgImporter() {
     throw new UnsupportedOperationException("You cannot instantiate me!");
   }

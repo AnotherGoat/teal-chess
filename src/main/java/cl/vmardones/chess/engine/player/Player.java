@@ -106,8 +106,8 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
   /* Performing moves */
 
   public MoveTransition makeMove(Player currentPlayer, Move move) {
-    if (move.isNull()) {
-      return new MoveTransition(board, move, MoveStatus.NULL);
+    if (move.isNone()) {
+      return new MoveTransition(board, move, MoveStatus.NONE);
     }
 
     if (isIllegal(move)) {
@@ -118,7 +118,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
         Player.calculateAttacksOnTile(currentPlayer.king().getPosition(), opponentLegals);
 
     if (!kingAttacks.isEmpty()) {
-      return new MoveTransition(board, move, MoveStatus.LEAVES_OPPONENT_IN_CHECK);
+      return new MoveTransition(board, move, MoveStatus.CHECKS);
     }
 
     return new MoveTransition(move.execute(), move, MoveStatus.DONE);
@@ -157,13 +157,13 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
 
   // TODO: This method should probably be moved to board service
   private static List<Move> calculateAttacksOnTile(Coordinate kingPosition, List<Move> moves) {
-    return moves.stream().filter(move -> kingPosition.equals(move.getDestination())).toList();
+    return moves.stream().filter(move -> kingPosition.equals(move.destination())).toList();
   }
 
   private boolean calculateEscapeMoves() {
     return legals.stream()
         .map(move -> makeMove(this, move))
-        .noneMatch(transition -> transition.getMoveStatus().isDone());
+        .noneMatch(transition -> transition.getMoveStatus() == MoveStatus.DONE);
   }
 
   private boolean isIllegal(Move move) {

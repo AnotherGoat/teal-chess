@@ -6,17 +6,11 @@
 package cl.vmardones.chess;
 
 import cl.vmardones.chess.cli.MainCommand;
-import lombok.Generated;
 import picocli.CommandLine;
 
 /** The chess game launcher. */
 public final class Chess {
 
-  /*
-  By default, JaCoCo excludes any method annotated with something that contains "Generated" from test coverage reports.
-  lombok.Generated is used for this purpose, to exclude private constructors in utility classes from the reports.
-  */
-  @Generated
   private Chess() {
     throw new UnsupportedOperationException("You cannot instantiate me!");
   }

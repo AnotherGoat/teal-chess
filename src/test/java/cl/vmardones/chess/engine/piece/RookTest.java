@@ -59,7 +59,7 @@ class RookTest {
   void move() {
     var rookToMove = new Rook(anywhere, Alliance.BLACK);
 
-    when(move.getDestination()).thenReturn(destination);
+    when(move.destination()).thenReturn(destination);
 
     assertThat(rookToMove.move(move))
         .isInstanceOf(Rook.class)

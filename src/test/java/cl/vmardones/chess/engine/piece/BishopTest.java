@@ -52,7 +52,7 @@ class BishopTest {
   void move() {
     var bishopToMove = new Bishop(anywhere, Alliance.BLACK);
 
-    when(move.getDestination()).thenReturn(destination);
+    when(move.destination()).thenReturn(destination);
 
     assertThat(bishopToMove.move(move))
         .isInstanceOf(Bishop.class)

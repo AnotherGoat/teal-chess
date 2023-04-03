@@ -35,7 +35,7 @@ public class Game {
   }
 
   private void registerTurn(Turn turn) {
-    gameState.setCurrentTurn(turn);
+    gameState.currentTurn(turn);
     gameHistory.add(gameState.save());
   }
 
@@ -79,11 +79,11 @@ public class Game {
   }
 
   public Board getBoard() {
-    return gameState.getCurrentTurn().board();
+    return gameState.currentTurn().board();
   }
 
   public Player getCurrentPlayer() {
-    return gameState.getCurrentTurn().getPlayer();
+    return gameState.currentTurn().getPlayer();
   }
 
   /**
@@ -92,15 +92,15 @@ public class Game {
    * @return The opponent
    */
   public Player getOpponent() {
-    return gameState.getCurrentTurn().getOpponent();
+    return gameState.currentTurn().getOpponent();
   }
 
   public Player getWhitePlayer() {
-    return gameState.getCurrentTurn().whitePlayer();
+    return gameState.currentTurn().whitePlayer();
   }
 
   public Player getBlackPlayer() {
-    return gameState.getCurrentTurn().blackPlayer();
+    return gameState.currentTurn().blackPlayer();
   }
 
   public MoveTransition performMove(Move move) {

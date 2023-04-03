@@ -110,7 +110,7 @@ class PieceTest {
 
     var destination = board.tileAt(Coordinate.of("a7"));
 
-    assertThat(piece.createMove(destination, board).getType()).isEqualTo(MoveType.NORMAL);
+    assertThat(piece.createMove(destination, board).type()).isEqualTo(MoveType.NORMAL);
   }
 
   @Test
@@ -125,7 +125,7 @@ class PieceTest {
 
     var destination = board.tileAt(Coordinate.of("a7"));
 
-    assertThat(piece.createMove(destination, board).getType()).isEqualTo(MoveType.CAPTURE);
+    assertThat(piece.createMove(destination, board).type()).isEqualTo(MoveType.CAPTURE);
   }
 
   @Test

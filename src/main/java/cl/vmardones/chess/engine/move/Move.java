@@ -10,24 +10,20 @@ import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.piece.Rook;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import java.util.Objects;
 import org.eclipse.jdt.annotation.Nullable;
 
-// TODO: Replace Move implementations with an enum
 /** The action of moving a piece. */
-@EqualsAndHashCode
-public class Move {
+public final class Move {
 
-  @Getter private final MoveType type;
+  private final MoveType type;
   private final Board board;
-
-  @Getter private final Piece piece;
-
-  @Getter private final Coordinate destination;
-
-  @Getter @Nullable private final Piece otherPiece;
+  private final Piece piece;
+  private final Coordinate destination;
+  @Nullable private final Piece otherPiece;
   @Nullable private final Coordinate rookDestination;
+
+  /* Creating moves */
 
   public Move(MoveType type, Board board, Piece piece, Coordinate destination) {
     this(type, board, piece, destination, null);
@@ -53,6 +49,62 @@ public class Move {
     this.rookDestination = rookDestination;
   }
 
+  /* Getters */
+
+  public MoveType type() {
+    return type;
+  }
+
+  public Piece piece() {
+    return piece;
+  }
+
+  public Coordinate destination() {
+    return destination;
+  }
+
+  public @Nullable Piece otherPiece() {
+    return otherPiece;
+  }
+
+  /* equals, hashCode and toString */
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    var other = (Move) o;
+    return type == other.type
+        && board.equals(other.board)
+        && piece.equals(other.piece)
+        && destination.equals(other.destination)
+        && Objects.equals(otherPiece, other.otherPiece)
+        && Objects.equals(rookDestination, other.rookDestination);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(type, board, piece, destination, otherPiece, rookDestination);
+  }
+
+  @Override
+  public String toString() {
+    return switch (type) {
+      case CAPTURE -> piece.toSingleChar() + destination();
+      case PAWN_CAPTURE -> String.format("%sx%s", piece.getPosition().column(), destination());
+      case KING_CASTLE -> "0-0";
+      case QUEEN_CASTLE -> "0-0-0";
+      default -> destination().toString();
+    };
+  }
+
+  /// OLDER
   public boolean isCapturing() {
     return otherPiece != null && rookDestination == null;
   }
@@ -61,7 +113,7 @@ public class Move {
     return otherPiece != null && rookDestination != null;
   }
 
-  public boolean isNull() {
+  public boolean isNone() {
     return piece.getPosition() == destination;
   }
 
@@ -90,16 +142,5 @@ public class Move {
 
   public Coordinate getSource() {
     return piece.getPosition();
-  }
-
-  @Override
-  public String toString() {
-    return switch (type) {
-      case CAPTURE -> piece.toSingleChar() + getDestination().toString();
-      case PAWN_CAPTURE -> String.format("%sx%s", piece.getPosition().column(), getDestination());
-      case KING_CASTLE -> "0-0";
-      case QUEEN_CASTLE -> "0-0-0";
-      default -> getDestination().toString();
-    };
   }
 }

@@ -25,7 +25,7 @@ class GameStateTest {
   @BeforeEach
   void setUp() {
     gameState = new GameState();
-    gameState.setCurrentTurn(firstTurn);
+    gameState.currentTurn(firstTurn);
   }
 
   @Test
@@ -36,9 +36,9 @@ class GameStateTest {
   @Test
   void load() {
     var firstState = gameState.save();
-    gameState.setCurrentTurn(secondTurn);
+    gameState.currentTurn(secondTurn);
     gameState.load(firstState);
 
-    assertThat(gameState.getCurrentTurn()).isEqualTo(firstTurn).isNotEqualTo(secondTurn);
+    assertThat(gameState.currentTurn()).isEqualTo(firstTurn).isNotEqualTo(secondTurn);
   }
 }

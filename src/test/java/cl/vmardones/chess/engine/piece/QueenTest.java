@@ -66,7 +66,7 @@ class QueenTest {
   void move() {
     var queenToMove = new Queen(anywhere, Alliance.BLACK);
 
-    when(move.getDestination()).thenReturn(destination);
+    when(move.destination()).thenReturn(destination);
 
     assertThat(queenToMove.move(move))
         .isInstanceOf(Queen.class)

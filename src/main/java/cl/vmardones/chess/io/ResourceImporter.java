@@ -6,12 +6,10 @@
 package cl.vmardones.chess.io;
 
 import java.io.InputStream;
-import lombok.Generated;
 import org.eclipse.jdt.annotation.Nullable;
 
 final class ResourceImporter {
 
-  @Generated
   private ResourceImporter() {
     throw new UnsupportedOperationException("You cannot instantiate me!");
   }

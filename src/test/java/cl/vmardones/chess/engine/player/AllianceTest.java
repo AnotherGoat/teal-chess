@@ -25,33 +25,33 @@ class AllianceTest {
   @Mock HumanPlayer blackPlayer;
 
   @Test
-  void getWhiteOpposite() {
-    assertThat(white.getOpposite()).isEqualTo(black);
+  void whiteOpposite() {
+    assertThat(white.opposite()).isEqualTo(black);
   }
 
   @Test
-  void getBlackOpposite() {
-    assertThat(black.getOpposite()).isEqualTo(white);
+  void blackOpposite() {
+    assertThat(black.opposite()).isEqualTo(white);
   }
 
   @Test
-  void getWhiteDirection() {
-    assertThat(white.getDirection()).isPositive().isEqualTo(1);
+  void whiteDirection() {
+    assertThat(white.direction()).isPositive().isEqualTo(1);
   }
 
   @Test
-  void getBlackDirection() {
-    assertThat(black.getDirection()).isNegative().isEqualTo(-1);
+  void blackDirection() {
+    assertThat(black.direction()).isNegative().isEqualTo(-1);
   }
 
   @Test
-  void getWhiteOppositeDirection() {
-    assertThat(white.getOppositeDirection()).isNegative().isEqualTo(-1);
+  void whiteOppositeDirection() {
+    assertThat(white.oppositeDirection()).isNegative().isEqualTo(-1);
   }
 
   @Test
-  void getBlackOppositeDirection() {
-    assertThat(black.getOppositeDirection()).isPositive().isEqualTo(1);
+  void blackOppositeDirection() {
+    assertThat(black.oppositeDirection()).isPositive().isEqualTo(1);
   }
 
   @Test

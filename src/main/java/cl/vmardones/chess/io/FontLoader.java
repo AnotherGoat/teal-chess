@@ -8,7 +8,6 @@ package cl.vmardones.chess.io;
 import java.awt.*;
 import java.io.IOException;
 import javax.swing.plaf.FontUIResource;
-import lombok.Generated;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +19,6 @@ public final class FontLoader {
   private static final Logger LOG = LoggerFactory.getLogger(FontLoader.class);
   private static final String FONT_PATH = "fonts/";
 
-  @Generated
   private FontLoader() {
     throw new UnsupportedOperationException("You cannot instantiate me!");
   }

@@ -52,7 +52,7 @@ class KnightTest {
   void move() {
     var knightToMove = new Knight(anywhere, Alliance.WHITE);
 
-    when(move.getDestination()).thenReturn(destination);
+    when(move.destination()).thenReturn(destination);
 
     assertThat(knightToMove.move(move))
         .isInstanceOf(Knight.class)
