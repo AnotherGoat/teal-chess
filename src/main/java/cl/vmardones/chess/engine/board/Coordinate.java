@@ -21,7 +21,7 @@ import org.eclipse.jdt.annotation.Nullable;
 public final class Coordinate {
 
   private static final Pattern ALGEBRAIC_PATTERN = Pattern.compile("^[a-h][1-8]$");
-  private static final List<Coordinate> COORDINATES_CACHE = createAllPossibleCoordinates();
+  private static final List<Coordinate> CACHED_COORDINATES = createAllPossibleCoordinates();
 
   private final int index;
 
@@ -40,7 +40,7 @@ public final class Coordinate {
       throw new InvalidCoordinateException("Index is outside chessboard: " + index);
     }
 
-    return COORDINATES_CACHE.get(index);
+    return CACHED_COORDINATES.get(index);
   }
 
   /**
@@ -55,7 +55,7 @@ public final class Coordinate {
       throw new InvalidCoordinateException("Invalid algebraic notation: " + algebraic);
     }
 
-    return COORDINATES_CACHE.get(calculateIndex(algebraic));
+    return CACHED_COORDINATES.get(calculateIndex(algebraic));
   }
 
   /* Getters */
@@ -156,7 +156,7 @@ public final class Coordinate {
    */
   public @Nullable Coordinate to(int x, int y) {
     try {
-      var destination = COORDINATES_CACHE.get(index + horizontalClamp(x) - y * Board.SIDE_LENGTH);
+      var destination = CACHED_COORDINATES.get(index + horizontalClamp(x) - y * Board.SIDE_LENGTH);
 
       if (illegalJump(x, destination)) {
         return null;

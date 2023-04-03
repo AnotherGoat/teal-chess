@@ -66,8 +66,7 @@ public final class Pawn implements JumpingPiece {
 
   private Move createEnPassantMove(Board board, Tile destination) {
     var enPassantMove =
-        new Move(
-            MoveType.EN_PASSANT, board, this, destination.getCoordinate(), board.enPassantPawn());
+        new Move(MoveType.EN_PASSANT, board, this, destination.coordinate(), board.enPassantPawn());
 
     LOG.debug("Created en passant move: {}", enPassantMove);
     return enPassantMove;
@@ -79,36 +78,36 @@ public final class Pawn implements JumpingPiece {
       return false;
     }
 
-    var side = destination.getCoordinate().up(alliance.getOppositeDirection());
+    var side = destination.coordinate().up(alliance.getOppositeDirection());
 
     if (side == null) {
       return false;
     }
 
-    var pieceAtSide = board.tileAt(side).getPiece();
+    var pieceAtSide = board.tileAt(side).piece();
 
     return pieceAtSide != null
         && pieceAtSide.equals(board.enPassantPawn())
-        && destination.getPiece() == null;
+        && destination.piece() == null;
   }
 
   private boolean isNotCapture(Tile destination) {
-    return getPosition().sameColumnAs(destination.getCoordinate());
+    return getPosition().sameColumnAs(destination.coordinate());
   }
 
   private @Nullable Move createCaptureMove(Board board, Tile destination) {
-    var capturablePiece = destination.getPiece();
+    var capturablePiece = destination.piece();
 
     if (capturablePiece != null && isEnemyOf(capturablePiece)) {
       return new Move(
-          MoveType.PAWN_CAPTURE, board, this, destination.getCoordinate(), capturablePiece);
+          MoveType.PAWN_CAPTURE, board, this, destination.coordinate(), capturablePiece);
     }
 
     return null;
   }
 
   private Move createJumpMove(Board board, Tile destination) {
-    return new Move(MoveType.PAWN_JUMP, board, this, destination.getCoordinate());
+    return new Move(MoveType.PAWN_JUMP, board, this, destination.coordinate());
   }
 
   private boolean isJumpPossible(Board board, Tile destination) {
@@ -120,18 +119,18 @@ public final class Pawn implements JumpingPiece {
     }
 
     return isFirstMove()
-        && board.tileAt(forward).getPiece() == null
-        && destination.getPiece() == null
+        && board.tileAt(forward).piece() == null
+        && destination.piece() == null
         && !destination.equals(board.tileAt(forward));
   }
 
   private @Nullable Move createForwardMove(Board board, Tile destination) {
-    if (destination.getPiece() != null) {
+    if (destination.piece() != null) {
       return null;
     }
 
     // TODO: Deal with promotions
-    return new Move(MoveType.PAWN_NORMAL, board, this, destination.getCoordinate());
+    return new Move(MoveType.PAWN_NORMAL, board, this, destination.coordinate());
   }
 
   @Override

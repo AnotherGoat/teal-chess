@@ -77,7 +77,7 @@ public sealed interface Piece permits JumpingPiece, SlidingPiece {
    * @return True if the piece can get to the destination
    */
   default boolean canAccess(Tile destination) {
-    var pieceAtDestination = destination.getPiece();
+    var pieceAtDestination = destination.piece();
     return pieceAtDestination == null || isEnemyOf(pieceAtDestination);
   }
 
@@ -91,14 +91,14 @@ public sealed interface Piece permits JumpingPiece, SlidingPiece {
    * @return A move, selected depending on the source and destination
    */
   default @Nullable Move createMove(Tile destination, Board board) {
-    if (destination.getPiece() == null) {
-      return new Move(MoveType.NORMAL, board, this, destination.getCoordinate());
+    if (destination.piece() == null) {
+      return new Move(MoveType.NORMAL, board, this, destination.coordinate());
     }
 
-    var capturablePiece = destination.getPiece();
+    var capturablePiece = destination.piece();
 
     if (isEnemyOf(capturablePiece)) {
-      return new Move(MoveType.CAPTURE, board, this, destination.getCoordinate(), capturablePiece);
+      return new Move(MoveType.CAPTURE, board, this, destination.coordinate(), capturablePiece);
     }
 
     return null;

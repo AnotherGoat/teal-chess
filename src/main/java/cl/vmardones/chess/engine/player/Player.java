@@ -162,7 +162,7 @@ public abstract class Player {
     var kingPosition = king.getPosition();
 
     var rookOffset = kingSide ? 3 : -4;
-    var rook = (Rook) board.tileAt(kingPosition.right(rookOffset)).getPiece();
+    var rook = (Rook) board.tileAt(kingPosition.right(rookOffset)).piece();
 
     if (rook == null || !rook.isFirstMove()) {
       return null;

@@ -32,7 +32,7 @@ sealed interface SlidingPiece extends Piece permits Bishop, Queen, Rook {
             .toList()
             .listIterator();
 
-    return filterAccessible(tiles).stream().map(Tile::getCoordinate).toList();
+    return filterAccessible(tiles).stream().map(Tile::coordinate).toList();
   }
 
   // TODO: Replace this method with something more stream-friendly
@@ -42,7 +42,7 @@ sealed interface SlidingPiece extends Piece permits Bishop, Queen, Rook {
 
     while (tiles.hasNext()) {
       var destination = tiles.next();
-      var pieceAtDestination = destination.getPiece();
+      var pieceAtDestination = destination.piece();
 
       if (pieceAtDestination == null) {
         accessibleTiles.add(destination);

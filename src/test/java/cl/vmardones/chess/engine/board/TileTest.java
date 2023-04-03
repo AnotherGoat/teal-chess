@@ -11,6 +11,7 @@ import cl.vmardones.chess.engine.piece.Knight;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Rook;
 import cl.vmardones.chess.engine.player.Alliance;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -24,12 +25,12 @@ class TileTest {
   @Test
   void createOccupied() {
     var piece = new Knight(anywhere, Alliance.BLACK);
-    assertThat(Tile.create(anywhere, piece).getPiece()).isNotNull().isEqualTo(piece);
+    assertThat(Tile.create(anywhere, piece).piece()).isNotNull().isEqualTo(piece);
   }
 
   @Test
   void createEmpty() {
-    assertThat(Tile.create(anywhere, null).getPiece()).isNull();
+    assertThat(Tile.create(anywhere, null).piece()).isNull();
   }
 
   @Test
@@ -57,8 +58,13 @@ class TileTest {
 
   @Test
   void getCoordinate() {
-    assertThat(Tile.create(Coordinate.of("c7"), null).getCoordinate())
+    assertThat(Tile.create(Coordinate.of("c7"), null).coordinate())
         .isNotNull()
         .isEqualTo(Coordinate.of("c7"));
+  }
+
+  @Test
+  void equalsContract() {
+    EqualsVerifier.forClass(Tile.class).withNonnullFields("coordinate").verify();
   }
 }

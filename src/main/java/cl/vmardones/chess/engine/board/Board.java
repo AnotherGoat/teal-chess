@@ -87,7 +87,7 @@ public final class Board {
    *     empty.
    */
   public boolean contains(Coordinate coordinate, Class<? extends Piece> pieceType) {
-    var piece = tileAt(coordinate).getPiece();
+    var piece = tileAt(coordinate).piece();
 
     return pieceType.isInstance(piece);
   }
@@ -99,7 +99,7 @@ public final class Board {
    * @return True if the tile doesn't have a piece.
    */
   public boolean isEmpty(Coordinate coordinate) {
-    return tileAt(coordinate).getPiece() == null;
+    return tileAt(coordinate).piece() == null;
   }
 
   /* Getters */
@@ -190,7 +190,7 @@ public final class Board {
 
   private List<Piece> calculateActivePieces(List<Tile> gameBoard, Alliance alliance) {
     return gameBoard.stream()
-        .map(Tile::getPiece)
+        .map(Tile::piece)
         .filter(piece -> piece != null && piece.getAlliance() == alliance)
         .toList();
   }

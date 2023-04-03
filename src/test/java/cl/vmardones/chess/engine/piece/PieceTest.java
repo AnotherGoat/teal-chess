@@ -74,7 +74,7 @@ class PieceTest {
   void isEmptyAccesible() {
     var piece = new Rook(anywhere, Alliance.BLACK);
 
-    when(destinationTile.getPiece()).thenReturn(null);
+    when(destinationTile.piece()).thenReturn(null);
 
     assertThat(piece.canAccess(destinationTile)).isTrue();
   }
@@ -84,7 +84,7 @@ class PieceTest {
     var piece = new Bishop(anywhere, Alliance.BLACK);
     var destinationPiece = new Pawn(anywhere, Alliance.WHITE);
 
-    when(destinationTile.getPiece()).thenReturn(destinationPiece);
+    when(destinationTile.piece()).thenReturn(destinationPiece);
 
     assertThat(piece.canAccess(destinationTile)).isTrue();
   }
@@ -94,7 +94,7 @@ class PieceTest {
     var piece = new Queen(anywhere, Alliance.BLACK);
     var destinationPiece = new King(anywhere, Alliance.BLACK);
 
-    when(destinationTile.getPiece()).thenReturn(destinationPiece);
+    when(destinationTile.piece()).thenReturn(destinationPiece);
 
     assertThat(piece.canAccess(destinationTile)).isFalse();
   }

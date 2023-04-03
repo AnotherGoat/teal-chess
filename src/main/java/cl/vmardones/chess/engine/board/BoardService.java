@@ -11,7 +11,10 @@ import cl.vmardones.chess.engine.player.Alliance;
 import java.util.*;
 import java.util.stream.IntStream;
 
+/** Provides utility functions to create and do calculations over the chess board. */
 public final class BoardService {
+
+  /* Board creation */
 
   /**
    * Creates a standard chessboard, which consists of a rank filled with 8 pawns on each side with a
@@ -57,6 +60,13 @@ public final class BoardService {
     return builder.build();
   }
 
+  /**
+   * Given a chess board, calculate the legal moves for every piece.
+   *
+   * @param board The board in its current state.
+   * @param pieces The pieces to search legal moves for.
+   * @return All the legal moves.
+   */
   public List<Move> calculateLegals(Board board, List<Piece> pieces) {
     return pieces.stream()
         .map(piece -> piece.calculateLegals(board))

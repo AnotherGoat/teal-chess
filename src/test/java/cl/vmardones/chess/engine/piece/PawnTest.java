@@ -112,7 +112,7 @@ class PawnTest {
     var firstMove = initialPawn.createMove(initialBoard.tileAt(Coordinate.of("a3")), initialBoard);
 
     var newBoard = firstMove.execute();
-    var pawn = newBoard.tileAt(Coordinate.of("a3")).getPiece();
+    var pawn = newBoard.tileAt(Coordinate.of("a3")).piece();
     var destination = newBoard.tileAt(Coordinate.of("a5"));
 
     assertThat(pawn.createMove(destination, newBoard).getType()).isEqualTo(MoveType.PAWN_NORMAL);

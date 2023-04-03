@@ -127,7 +127,7 @@ class TilePanel extends JPanel {
   }
 
   private @Nullable Piece getSelectedPiece() {
-    return table.getSourceTile().getPiece();
+    return table.getSourceTile().piece();
   }
 
   private void secondLeftClick() {
@@ -138,8 +138,8 @@ class TilePanel extends JPanel {
     var move =
         MoveFinder.choose(
             table.getGame().getCurrentPlayer().getLegals(),
-            table.getSourceTile().getCoordinate(),
-            table.getDestinationTile().getCoordinate());
+            table.getSourceTile().coordinate(),
+            table.getDestinationTile().coordinate());
 
     LOG.debug("Is there a move that can get to the destination? {}", move != null);
 
@@ -172,8 +172,8 @@ class TilePanel extends JPanel {
   private void assignPieceIcon(Tile tile) {
     removeAll();
 
-    if (tile.getPiece() != null) {
-      var icon = PieceIconLoader.load(tile.getPiece(), INITIAL_SIZE.width, INITIAL_SIZE.height);
+    if (tile.piece() != null) {
+      var icon = PieceIconLoader.load(tile.piece(), INITIAL_SIZE.width, INITIAL_SIZE.height);
 
       if (icon != null) {
         addImage(icon, PIECE_LAYER);

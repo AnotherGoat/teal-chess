@@ -7,18 +7,75 @@ package cl.vmardones.chess.engine.board;
 
 import cl.vmardones.chess.engine.piece.Piece;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
-import lombok.Getter;
 import org.eclipse.jdt.annotation.Nullable;
 
 /** A single chess tile, which may or may not contain a piece. */
-@Getter
-public class Tile {
+public final class Tile {
+
+  private static final List<Tile> CACHED_EMPTY_TILES = createAllPossibleEmptyTiles();
 
   private final Coordinate coordinate;
   private final @Nullable Piece piece;
 
-  private static final List<Tile> EMPTY_TILES_CACHE = createAllPossibleEmptyTiles();
+  /* Tile creation */
+
+  /**
+   * Static factory method for creating a new tile.
+   *
+   * @param coordinate The tile's coordinate.
+   * @param piece The piece on the tile.
+   * @return A new tile.
+   */
+  public static Tile create(Coordinate coordinate, @Nullable Piece piece) {
+    return piece != null ? new Tile(coordinate, piece) : CACHED_EMPTY_TILES.get(coordinate.index());
+  }
+
+  /* Getters */
+
+  public Coordinate coordinate() {
+    return coordinate;
+  }
+
+  public @Nullable Piece piece() {
+    return piece;
+  }
+
+  /* equals, hashCode and toString */
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    var other = (Tile) o;
+    return coordinate.equals(other.coordinate) && Objects.equals(piece, other.piece);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(coordinate, piece);
+  }
+
+  /**
+   * String representation of this tile, used when displaying the board.
+   *
+   * @return The character that represents the piece, or - if the tile is empty.
+   */
+  @Override
+  public String toString() {
+    if (piece == null) {
+      return "-";
+    }
+
+    return piece.toSingleChar();
+  }
 
   private static List<Tile> createAllPossibleEmptyTiles() {
     return IntStream.range(Board.MIN_TILES, Board.MAX_TILES)
@@ -34,34 +91,5 @@ public class Tile {
 
   private Tile(Coordinate coordinate) {
     this(coordinate, null);
-  }
-
-  /**
-   * Factory method for creating a new tile.
-   *
-   * @param coordinate The tile's coordinate
-   * @param piece The piece on the tile
-   * @return A new tile
-   */
-  public static Tile create(Coordinate coordinate, @Nullable Piece piece) {
-    return piece != null ? new Tile(coordinate, piece) : EMPTY_TILES_CACHE.get(coordinate.index());
-  }
-
-  /**
-   * Obtains the piece contained by the tile.
-   *
-   * @return Piece on the tile
-   */
-  public @Nullable Piece getPiece() {
-    return piece;
-  }
-
-  @Override
-  public String toString() {
-    if (piece == null) {
-      return "-";
-    }
-
-    return piece.toSingleChar();
   }
 }
