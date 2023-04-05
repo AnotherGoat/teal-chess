@@ -5,14 +5,16 @@
 
 package cl.vmardones.chess.engine.piece;
 
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.board.Tile;
 import cl.vmardones.chess.engine.move.*;
 import cl.vmardones.chess.engine.player.Alliance;
-import java.util.List;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
@@ -22,121 +24,117 @@ import org.eclipse.jdt.annotation.Nullable;
  */
 public final class Pawn extends JumpingPiece {
 
-  private static final Logger LOG = LogManager.getLogger(Pawn.class);
+    private static final Logger LOG = LogManager.getLogger(Pawn.class);
 
-  public Pawn(Coordinate position, Alliance alliance) {
-    this(position, alliance, true);
-  }
-
-  @Override
-  public @Nullable Move createMove(Tile destination, Board board) {
-
-    if (isNotCapture(destination)) {
-      if (isJumpPossible(board, destination)) {
-        return createJumpMove(board, destination);
-      }
-
-      return createForwardMove(board, destination);
+    public Pawn(Coordinate position, Alliance alliance) {
+        this(position, alliance, true);
     }
 
-    if (isEnPassantPossible(board, destination)) {
-      LOG.debug("En passant is possible!");
-      return createEnPassantMove(board, destination);
+    @Override
+    public @Nullable Move createMove(Tile destination, Board board) {
+
+        if (isNotCapture(destination)) {
+            if (isJumpPossible(board, destination)) {
+                return createJumpMove(board, destination);
+            }
+
+            return createForwardMove(board, destination);
+        }
+
+        if (isEnPassantPossible(board, destination)) {
+            LOG.debug("En passant is possible!");
+            return createEnPassantMove(board, destination);
+        }
+
+        return createCaptureMove(board, destination);
     }
 
-    return createCaptureMove(board, destination);
-  }
+    private Move createEnPassantMove(Board board, Tile destination) {
+        var enPassantMove = new Move(MoveType.EN_PASSANT, board, this, destination.coordinate(), board.enPassantPawn());
 
-  private Move createEnPassantMove(Board board, Tile destination) {
-    var enPassantMove =
-        new Move(MoveType.EN_PASSANT, board, this, destination.coordinate(), board.enPassantPawn());
-
-    LOG.debug("Created en passant move: {}", enPassantMove);
-    return enPassantMove;
-  }
-
-  private boolean isEnPassantPossible(Board board, Tile destination) {
-
-    if (board.enPassantPawn() == null) {
-      return false;
+        LOG.debug("Created en passant move: {}", enPassantMove);
+        return enPassantMove;
     }
 
-    var side = destination.coordinate().up(alliance.oppositeDirection());
+    private boolean isEnPassantPossible(Board board, Tile destination) {
 
-    if (side == null) {
-      return false;
+        if (board.enPassantPawn() == null) {
+            return false;
+        }
+
+        var side = destination.coordinate().up(alliance.oppositeDirection());
+
+        if (side == null) {
+            return false;
+        }
+
+        var pieceAtSide = board.tileAt(side).piece();
+
+        return pieceAtSide != null && pieceAtSide.equals(board.enPassantPawn()) && destination.piece() == null;
     }
 
-    var pieceAtSide = board.tileAt(side).piece();
-
-    return pieceAtSide != null
-        && pieceAtSide.equals(board.enPassantPawn())
-        && destination.piece() == null;
-  }
-
-  private boolean isNotCapture(Tile destination) {
-    return position().sameColumnAs(destination.coordinate());
-  }
-
-  private @Nullable Move createCaptureMove(Board board, Tile destination) {
-    var capturablePiece = destination.piece();
-
-    if (capturablePiece != null && isEnemyOf(capturablePiece)) {
-      return new Move(
-          MoveType.PAWN_CAPTURE, board, this, destination.coordinate(), capturablePiece);
+    private boolean isNotCapture(Tile destination) {
+        return position().sameColumnAs(destination.coordinate());
     }
 
-    return null;
-  }
+    private @Nullable Move createCaptureMove(Board board, Tile destination) {
+        var capturablePiece = destination.piece();
 
-  private Move createJumpMove(Board board, Tile destination) {
-    return new Move(MoveType.PAWN_JUMP, board, this, destination.coordinate());
-  }
+        if (capturablePiece != null && isEnemyOf(capturablePiece)) {
+            return new Move(MoveType.PAWN_CAPTURE, board, this, destination.coordinate(), capturablePiece);
+        }
 
-  private boolean isJumpPossible(Board board, Tile destination) {
-
-    var forward = position.up(alliance.direction());
-
-    if (forward == null) {
-      return false;
+        return null;
     }
 
-    return firstMove()
-        && board.tileAt(forward).piece() == null
-        && destination.piece() == null
-        && !destination.equals(board.tileAt(forward));
-  }
-
-  private @Nullable Move createForwardMove(Board board, Tile destination) {
-    if (destination.piece() != null) {
-      return null;
+    private Move createJumpMove(Board board, Tile destination) {
+        return new Move(MoveType.PAWN_JUMP, board, this, destination.coordinate());
     }
 
-    // TODO: Deal with promotions
-    return new Move(MoveType.PAWN_NORMAL, board, this, destination.coordinate());
-  }
+    private boolean isJumpPossible(Board board, Tile destination) {
 
-  @Override
-  public Pawn moveTo(Coordinate destination) {
-    return new Pawn(destination, alliance, false);
-  }
+        var forward = position.up(alliance.direction());
 
-  private Pawn(Coordinate position, Alliance alliance, boolean firstMove) {
-    super(position, alliance, firstMove, generateMoveOffsets(alliance, firstMove));
-  }
+        if (forward == null) {
+            return false;
+        }
 
-  private static List<int[]> generateMoveOffsets(Alliance alliance, boolean firstMove) {
-    return switch (alliance) {
-      case WHITE -> calculateWhiteOffsets(firstMove);
-      case BLACK -> calculateBlackOffsets(firstMove);
-    };
-  }
+        return firstMove()
+                && board.tileAt(forward).piece() == null
+                && destination.piece() == null
+                && !destination.equals(board.tileAt(forward));
+    }
 
-  private static List<int[]> calculateWhiteOffsets(boolean firstMove) {
-    return firstMove ? WHITE_PAWN_MOVES : WHITE_PAWN_MOVES.subList(0, 3);
-  }
+    private @Nullable Move createForwardMove(Board board, Tile destination) {
+        if (destination.piece() != null) {
+            return null;
+        }
 
-  private static List<int[]> calculateBlackOffsets(boolean firstMove) {
-    return firstMove ? BLACK_PAWN_MOVES : BLACK_PAWN_MOVES.subList(0, 3);
-  }
+        // TODO: Deal with promotions
+        return new Move(MoveType.PAWN_NORMAL, board, this, destination.coordinate());
+    }
+
+    @Override
+    public Pawn moveTo(Coordinate destination) {
+        return new Pawn(destination, alliance, false);
+    }
+
+    private Pawn(Coordinate position, Alliance alliance, boolean firstMove) {
+        super(position, alliance, firstMove, generateMoveOffsets(alliance, firstMove));
+    }
+
+    private static List<int[]> generateMoveOffsets(Alliance alliance, boolean firstMove) {
+        return switch (alliance) {
+            case WHITE -> calculateWhiteOffsets(firstMove);
+            case BLACK -> calculateBlackOffsets(firstMove);
+        };
+    }
+
+    private static List<int[]> calculateWhiteOffsets(boolean firstMove) {
+        return firstMove ? WHITE_PAWN_MOVES : WHITE_PAWN_MOVES.subList(0, 3);
+    }
+
+    private static List<int[]> calculateBlackOffsets(boolean firstMove) {
+        return firstMove ? BLACK_PAWN_MOVES : BLACK_PAWN_MOVES.subList(0, 3);
+    }
 }

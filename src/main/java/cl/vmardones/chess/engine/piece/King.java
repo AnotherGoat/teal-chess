@@ -5,9 +5,10 @@
 
 package cl.vmardones.chess.engine.piece;
 
+import java.util.stream.Stream;
+
 import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.player.Alliance;
-import java.util.stream.Stream;
 
 /**
  * The king piece. The most important piece in the game, must be defended at all costs. It moves
@@ -16,20 +17,20 @@ import java.util.stream.Stream;
  */
 public final class King extends JumpingPiece {
 
-  public King(Coordinate position, Alliance alliance) {
-    this(position, alliance, true);
-  }
+    public King(Coordinate position, Alliance alliance) {
+        this(position, alliance, true);
+    }
 
-  @Override
-  public King moveTo(Coordinate destination) {
-    return new King(destination, alliance, false);
-  }
+    @Override
+    public King moveTo(Coordinate destination) {
+        return new King(destination, alliance, false);
+    }
 
-  private King(Coordinate position, Alliance alliance, boolean firstMove) {
-    super(
-        position,
-        alliance,
-        firstMove,
-        Stream.concat(ORTHOGONALS.stream(), DIAGONALS.stream()).toList());
-  }
+    private King(Coordinate position, Alliance alliance, boolean firstMove) {
+        super(
+                position,
+                alliance,
+                firstMove,
+                Stream.concat(ORTHOGONALS.stream(), DIAGONALS.stream()).toList());
+    }
 }

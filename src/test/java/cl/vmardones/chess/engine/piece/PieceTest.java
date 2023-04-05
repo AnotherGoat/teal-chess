@@ -22,107 +22,115 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class PieceTest {
 
-  @Mock Coordinate anywhere;
+    @Mock
+    Coordinate anywhere;
 
-  @Mock Tile destinationTile;
+    @Mock
+    Tile destinationTile;
 
-  @Test
-  void isAllyOf() {
-    var first = new Pawn(anywhere, Alliance.WHITE);
-    var second = new Rook(anywhere, Alliance.WHITE);
+    @Test
+    void isAllyOf() {
+        var first = new Pawn(anywhere, Alliance.WHITE);
+        var second = new Rook(anywhere, Alliance.WHITE);
 
-    assertThat(first.isAllyOf(second)).isTrue();
-    assertThat(first.isEnemyOf(second)).isFalse();
-    assertThat(second.isAllyOf(first)).isTrue();
-    assertThat(second.isEnemyOf(first)).isFalse();
-  }
+        assertThat(first.isAllyOf(second)).isTrue();
+        assertThat(first.isEnemyOf(second)).isFalse();
+        assertThat(second.isAllyOf(first)).isTrue();
+        assertThat(second.isEnemyOf(first)).isFalse();
+    }
 
-  @Test
-  void isEnemyOf() {
-    var first = new Bishop(anywhere, Alliance.WHITE);
-    var second = new Bishop(anywhere, Alliance.BLACK);
+    @Test
+    void isEnemyOf() {
+        var first = new Bishop(anywhere, Alliance.WHITE);
+        var second = new Bishop(anywhere, Alliance.BLACK);
 
-    assertThat(first.isAllyOf(second)).isFalse();
-    assertThat(first.isEnemyOf(second)).isTrue();
-    assertThat(second.isAllyOf(first)).isFalse();
-    assertThat(second.isEnemyOf(first)).isTrue();
-  }
+        assertThat(first.isAllyOf(second)).isFalse();
+        assertThat(first.isEnemyOf(second)).isTrue();
+        assertThat(second.isAllyOf(first)).isFalse();
+        assertThat(second.isEnemyOf(first)).isTrue();
+    }
 
-  @Test
-  void isEmptyAccesible() {
-    var piece = new Rook(anywhere, Alliance.BLACK);
+    @Test
+    void isEmptyAccesible() {
+        var piece = new Rook(anywhere, Alliance.BLACK);
 
-    when(destinationTile.piece()).thenReturn(null);
+        when(destinationTile.piece()).thenReturn(null);
 
-    assertThat(piece.canAccess(destinationTile)).isTrue();
-  }
+        assertThat(piece.canAccess(destinationTile)).isTrue();
+    }
 
-  @Test
-  void isEnemyAccessible() {
-    var piece = new Bishop(anywhere, Alliance.BLACK);
-    var destinationPiece = new Pawn(anywhere, Alliance.WHITE);
+    @Test
+    void isEnemyAccessible() {
+        var piece = new Bishop(anywhere, Alliance.BLACK);
+        var destinationPiece = new Pawn(anywhere, Alliance.WHITE);
 
-    when(destinationTile.piece()).thenReturn(destinationPiece);
+        when(destinationTile.piece()).thenReturn(destinationPiece);
 
-    assertThat(piece.canAccess(destinationTile)).isTrue();
-  }
+        assertThat(piece.canAccess(destinationTile)).isTrue();
+    }
 
-  @Test
-  void isNotAccesible() {
-    var piece = new Queen(anywhere, Alliance.BLACK);
-    var destinationPiece = new King(anywhere, Alliance.BLACK);
+    @Test
+    void isNotAccesible() {
+        var piece = new Queen(anywhere, Alliance.BLACK);
+        var destinationPiece = new King(anywhere, Alliance.BLACK);
 
-    when(destinationTile.piece()).thenReturn(destinationPiece);
+        when(destinationTile.piece()).thenReturn(destinationPiece);
 
-    assertThat(piece.canAccess(destinationTile)).isFalse();
-  }
+        assertThat(piece.canAccess(destinationTile)).isFalse();
+    }
 
-  @Test
-  void createNormalMove() {
-    var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
-    var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
+    @Test
+    void createNormalMove() {
+        var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
+        var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
 
-    var piece = new Rook(Coordinate.of("a1"), Alliance.WHITE);
+        var piece = new Rook(Coordinate.of("a1"), Alliance.WHITE);
 
-    var board = Board.builder(whiteKing, blackKing).with(piece).build();
+        var board = Board.builder(whiteKing, blackKing).with(piece).build();
 
-    var destination = board.tileAt(Coordinate.of("a7"));
+        var destination = board.tileAt(Coordinate.of("a7"));
 
-    assertThat(piece.createMove(destination, board).type()).isEqualTo(MoveType.NORMAL);
-  }
+        assertThat(piece.createMove(destination, board).type()).isEqualTo(MoveType.NORMAL);
+    }
 
-  @Test
-  void createCaptureMove() {
-    var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
-    var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
+    @Test
+    void createCaptureMove() {
+        var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
+        var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
 
-    var piece = new Rook(Coordinate.of("a1"), Alliance.WHITE);
-    var capturablePiece = new Pawn(Coordinate.of("a7"), Alliance.BLACK);
+        var piece = new Rook(Coordinate.of("a1"), Alliance.WHITE);
+        var capturablePiece = new Pawn(Coordinate.of("a7"), Alliance.BLACK);
 
-    var board = Board.builder(whiteKing, blackKing).with(piece).with(capturablePiece).build();
+        var board = Board.builder(whiteKing, blackKing)
+                .with(piece)
+                .with(capturablePiece)
+                .build();
 
-    var destination = board.tileAt(Coordinate.of("a7"));
+        var destination = board.tileAt(Coordinate.of("a7"));
 
-    assertThat(piece.createMove(destination, board).type()).isEqualTo(MoveType.CAPTURE);
-  }
+        assertThat(piece.createMove(destination, board).type()).isEqualTo(MoveType.CAPTURE);
+    }
 
-  @Test
-  void dontCreateMove() {
-    var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
-    var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
+    @Test
+    void dontCreateMove() {
+        var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
+        var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
 
-    var piece = new Rook(Coordinate.of("a1"), Alliance.WHITE);
-    var blockingPiece = new Pawn(Coordinate.of("a7"), Alliance.WHITE);
+        var piece = new Rook(Coordinate.of("a1"), Alliance.WHITE);
+        var blockingPiece = new Pawn(Coordinate.of("a7"), Alliance.WHITE);
 
-    var board = Board.builder(whiteKing, blackKing).with(piece).with(blockingPiece).build();
+        var board = Board.builder(whiteKing, blackKing)
+                .with(piece)
+                .with(blockingPiece)
+                .build();
 
-    var destination = board.tileAt(Coordinate.of("a7"));
+        var destination = board.tileAt(Coordinate.of("a7"));
 
-    assertThat(piece.createMove(destination, board)).isNull();
-  }
+        assertThat(piece.createMove(destination, board)).isNull();
+    }
 
-  @Test
-  void equalsContract() {
-    EqualsVerifier.forClass(Piece.class).withNonnullFields("position").verify();
-  }
+    @Test
+    void equalsContract() {
+        EqualsVerifier.forClass(Piece.class).withNonnullFields("position").verify();
+    }
 }

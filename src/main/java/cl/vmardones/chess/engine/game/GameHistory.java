@@ -10,13 +10,13 @@ import java.util.List;
 
 class GameHistory {
 
-  private final List<TurnMemento> history = new ArrayList<>();
+    private final List<TurnMemento> history = new ArrayList<>();
 
-  void add(TurnMemento state) {
-    history.add(state);
-  }
+    void add(TurnMemento state) {
+        history.add(state);
+    }
 
-  TurnMemento get(int index) {
-    return history.get(index);
-  }
+    TurnMemento get(int index) {
+        return history.get(index);
+    }
 }

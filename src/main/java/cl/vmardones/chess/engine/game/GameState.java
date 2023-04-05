@@ -9,21 +9,21 @@ package cl.vmardones.chess.engine.game;
 /** A mutable class that holds the current state of the game. */
 class GameState {
 
-  private Turn currentTurn;
+    private Turn currentTurn;
 
-  TurnMemento save() {
-    return new TurnMemento(currentTurn);
-  }
+    TurnMemento save() {
+        return new TurnMemento(currentTurn);
+    }
 
-  void load(TurnMemento turnMemento) {
-    currentTurn = turnMemento.state();
-  }
+    void load(TurnMemento turnMemento) {
+        currentTurn = turnMemento.state();
+    }
 
-  Turn currentTurn() {
-    return currentTurn;
-  }
+    Turn currentTurn() {
+        return currentTurn;
+    }
 
-  void currentTurn(Turn value) {
-    currentTurn = value;
-  }
+    void currentTurn(Turn value) {
+        currentTurn = value;
+    }
 }

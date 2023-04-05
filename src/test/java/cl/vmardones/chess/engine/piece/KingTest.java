@@ -18,54 +18,57 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class KingTest {
 
-  @Mock Coordinate anywhere;
+    @Mock
+    Coordinate anywhere;
 
-  @Mock Coordinate destination;
+    @Mock
+    Coordinate destination;
 
-  @Mock Move move;
+    @Mock
+    Move move;
 
-  @Test
-  void constructor() {
-    assertThat(new King(anywhere, Alliance.BLACK)).matches(King::firstMove);
-  }
+    @Test
+    void constructor() {
+        assertThat(new King(anywhere, Alliance.BLACK)).matches(King::firstMove);
+    }
 
-  @Test
-  void toSingleChar() {
-    assertThat(new King(anywhere, Alliance.WHITE).singleChar()).isEqualTo("K");
-    assertThat(new King(anywhere, Alliance.BLACK).singleChar()).isEqualTo("k");
-  }
+    @Test
+    void toSingleChar() {
+        assertThat(new King(anywhere, Alliance.WHITE).singleChar()).isEqualTo("K");
+        assertThat(new King(anywhere, Alliance.BLACK).singleChar()).isEqualTo("k");
+    }
 
-  @Test
-  void diagonalMove() {
-    var king = new King(anywhere, Alliance.WHITE);
-    assertThat(king.moveOffsets()).containsOnlyOnce(new int[] {1, 1});
-  }
+    @Test
+    void diagonalMove() {
+        var king = new King(anywhere, Alliance.WHITE);
+        assertThat(king.moveOffsets()).containsOnlyOnce(new int[] {1, 1});
+    }
 
-  @Test
-  void horizontalMove() {
-    var king = new King(anywhere, Alliance.WHITE);
-    assertThat(king.moveOffsets()).containsOnlyOnce(new int[] {-1, 0});
-  }
+    @Test
+    void horizontalMove() {
+        var king = new King(anywhere, Alliance.WHITE);
+        assertThat(king.moveOffsets()).containsOnlyOnce(new int[] {-1, 0});
+    }
 
-  @Test
-  void verticalMove() {
-    var king = new King(anywhere, Alliance.WHITE);
-    assertThat(king.moveOffsets()).containsOnlyOnce(new int[] {0, 1});
-  }
+    @Test
+    void verticalMove() {
+        var king = new King(anywhere, Alliance.WHITE);
+        assertThat(king.moveOffsets()).containsOnlyOnce(new int[] {0, 1});
+    }
 
-  @Test
-  void illegalMove() {
-    var king = new King(anywhere, Alliance.WHITE);
-    assertThat(king.moveOffsets()).doesNotContain(new int[] {-1, 2});
-  }
+    @Test
+    void illegalMove() {
+        var king = new King(anywhere, Alliance.WHITE);
+        assertThat(king.moveOffsets()).doesNotContain(new int[] {-1, 2});
+    }
 
-  @Test
-  void moveTo() {
-    var kingToMove = new King(anywhere, Alliance.WHITE);
+    @Test
+    void moveTo() {
+        var kingToMove = new King(anywhere, Alliance.WHITE);
 
-    assertThat(kingToMove.moveTo(destination))
-        .isInstanceOf(King.class)
-        .matches(king -> king.position().equals(destination))
-        .matches(king -> !king.firstMove());
-  }
+        assertThat(kingToMove.moveTo(destination))
+                .isInstanceOf(King.class)
+                .matches(king -> king.position().equals(destination))
+                .matches(king -> !king.firstMove());
+    }
 }

@@ -20,8 +20,10 @@ java {
 
 spotless {
     java {
-        licenseHeaderFile("license.template")
-        googleJavaFormat()
+        palantirJavaFormat()
+        licenseHeaderFile('license.template')
+        importOrder('java|javax', 'org.apache', '')
+        formatAnnotations()
     }
 }
 

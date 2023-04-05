@@ -5,48 +5,48 @@
 
 package cl.vmardones.chess.gui;
 
-import cl.vmardones.chess.engine.move.Move;
 import java.util.ArrayList;
 import java.util.List;
+
+import cl.vmardones.chess.engine.move.Move;
 import org.eclipse.jdt.annotation.Nullable;
 
 class MoveLog {
 
-  private final List<Move> moves = new ArrayList<>();
+    private final List<Move> moves = new ArrayList<>();
 
-  private @Nullable Move lastMove;
+    private @Nullable Move lastMove;
 
-  MoveLog() {}
+    MoveLog() {}
 
-  void add(Move move) {
-    moves.add(move);
-    lastMove = move;
-  }
+    void add(Move move) {
+        moves.add(move);
+        lastMove = move;
+    }
 
-  List<Move> moves() {
-    return moves;
-  }
+    List<Move> moves() {
+        return moves;
+    }
 
-  int size() {
-    return moves.size();
-  }
+    int size() {
+        return moves.size();
+    }
 
-  void clear() {
-    moves.clear();
-  }
+    void clear() {
+        moves.clear();
+    }
 
-  Move remove(int index) {
-    return moves.remove(index);
-  }
+    Move remove(int index) {
+        return moves.remove(index);
+    }
 
-  boolean remove(Move move) {
-    return moves.remove(move);
-  }
+    boolean remove(Move move) {
+        return moves.remove(move);
+    }
 
-  @Nullable
-  Move getLastMove() {
-    var move = lastMove;
-    lastMove = null;
-    return move;
-  }
+    @Nullable Move getLastMove() {
+        var move = lastMove;
+        lastMove = null;
+        return move;
+    }
 }

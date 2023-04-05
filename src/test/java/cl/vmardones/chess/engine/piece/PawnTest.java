@@ -19,124 +19,129 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class PawnTest {
 
-  @Mock Coordinate anywhere;
+    @Mock
+    Coordinate anywhere;
 
-  @Mock Coordinate destination;
+    @Mock
+    Coordinate destination;
 
-  @Test
-  void constructor() {
-    assertThat(new Pawn(anywhere, Alliance.BLACK)).matches(Pawn::firstMove);
-  }
+    @Test
+    void constructor() {
+        assertThat(new Pawn(anywhere, Alliance.BLACK)).matches(Pawn::firstMove);
+    }
 
-  @Test
-  void toSingleChar() {
-    assertThat(new Pawn(anywhere, Alliance.WHITE).singleChar()).isEqualTo("P");
-    assertThat(new Pawn(anywhere, Alliance.BLACK).singleChar()).isEqualTo("p");
-  }
+    @Test
+    void toSingleChar() {
+        assertThat(new Pawn(anywhere, Alliance.WHITE).singleChar()).isEqualTo("P");
+        assertThat(new Pawn(anywhere, Alliance.BLACK).singleChar()).isEqualTo("p");
+    }
 
-  @Test
-  void whiteMoves() {
-    var whitePawn = new Pawn(anywhere, Alliance.WHITE);
-    assertThat(whitePawn.moveOffsets())
-        .containsOnlyOnce(new int[] {-1, 1}, new int[] {0, 1}, new int[] {1, 1});
-  }
+    @Test
+    void whiteMoves() {
+        var whitePawn = new Pawn(anywhere, Alliance.WHITE);
+        assertThat(whitePawn.moveOffsets()).containsOnlyOnce(new int[] {-1, 1}, new int[] {0, 1}, new int[] {1, 1});
+    }
 
-  @Test
-  void blackMoves() {
-    var blackPawn = new Pawn(anywhere, Alliance.BLACK);
-    assertThat(blackPawn.moveOffsets())
-        .containsOnlyOnce(new int[] {-1, -1}, new int[] {0, -1}, new int[] {1, -1});
-  }
+    @Test
+    void blackMoves() {
+        var blackPawn = new Pawn(anywhere, Alliance.BLACK);
+        assertThat(blackPawn.moveOffsets()).containsOnlyOnce(new int[] {-1, -1}, new int[] {0, -1}, new int[] {1, -1});
+    }
 
-  @Test
-  void illegalMove() {
-    var pawn = new Pawn(anywhere, Alliance.WHITE);
-    assertThat(pawn.moveOffsets()).doesNotContain(new int[] {1, 0});
-  }
+    @Test
+    void illegalMove() {
+        var pawn = new Pawn(anywhere, Alliance.WHITE);
+        assertThat(pawn.moveOffsets()).doesNotContain(new int[] {1, 0});
+    }
 
-  @Test
-  void moveTo() {
-    var pawnToMove = new Pawn(anywhere, Alliance.WHITE);
+    @Test
+    void moveTo() {
+        var pawnToMove = new Pawn(anywhere, Alliance.WHITE);
 
-    assertThat(pawnToMove.moveTo(destination))
-        .isInstanceOf(Pawn.class)
-        .matches(pawn -> pawn.position().equals(destination))
-        .matches(pawn -> !pawn.firstMove());
-  }
+        assertThat(pawnToMove.moveTo(destination))
+                .isInstanceOf(Pawn.class)
+                .matches(pawn -> pawn.position().equals(destination))
+                .matches(pawn -> !pawn.firstMove());
+    }
 
-  @Test
-  void createNormalMove() {
-    var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
-    var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
+    @Test
+    void createNormalMove() {
+        var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
+        var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
 
-    var pawn = new Pawn(Coordinate.of("a2"), Alliance.WHITE);
+        var pawn = new Pawn(Coordinate.of("a2"), Alliance.WHITE);
 
-    var board = Board.builder(whiteKing, blackKing).with(pawn).build();
+        var board = Board.builder(whiteKing, blackKing).with(pawn).build();
 
-    var destination = board.tileAt(Coordinate.of("a3"));
+        var destination = board.tileAt(Coordinate.of("a3"));
 
-    assertThat(pawn.createMove(destination, board).type()).isEqualTo(MoveType.PAWN_NORMAL);
-  }
+        assertThat(pawn.createMove(destination, board).type()).isEqualTo(MoveType.PAWN_NORMAL);
+    }
 
-  @Test
-  void createJumpMove() {
-    var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
-    var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
+    @Test
+    void createJumpMove() {
+        var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
+        var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
 
-    var pawn = new Pawn(Coordinate.of("a2"), Alliance.WHITE);
+        var pawn = new Pawn(Coordinate.of("a2"), Alliance.WHITE);
 
-    var board = Board.builder(whiteKing, blackKing).with(pawn).build();
+        var board = Board.builder(whiteKing, blackKing).with(pawn).build();
 
-    var destination = board.tileAt(Coordinate.of("a4"));
+        var destination = board.tileAt(Coordinate.of("a4"));
 
-    assertThat(pawn.createMove(destination, board).type()).isEqualTo(MoveType.PAWN_JUMP);
-  }
+        assertThat(pawn.createMove(destination, board).type()).isEqualTo(MoveType.PAWN_JUMP);
+    }
 
-  @Test
-  void dontCreateJumpMove() {
-    var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
-    var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
+    @Test
+    void dontCreateJumpMove() {
+        var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
+        var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
 
-    var initialPawn = new Pawn(Coordinate.of("a2"), Alliance.WHITE);
-    var initialBoard = Board.builder(whiteKing, blackKing).with(initialPawn).build();
-    var firstMove = initialPawn.createMove(initialBoard.tileAt(Coordinate.of("a3")), initialBoard);
+        var initialPawn = new Pawn(Coordinate.of("a2"), Alliance.WHITE);
+        var initialBoard = Board.builder(whiteKing, blackKing).with(initialPawn).build();
+        var firstMove = initialPawn.createMove(initialBoard.tileAt(Coordinate.of("a3")), initialBoard);
 
-    var newBoard = firstMove.execute();
-    var pawn = newBoard.tileAt(Coordinate.of("a3")).piece();
-    var destination = newBoard.tileAt(Coordinate.of("a5"));
+        var newBoard = firstMove.execute();
+        var pawn = newBoard.tileAt(Coordinate.of("a3")).piece();
+        var destination = newBoard.tileAt(Coordinate.of("a5"));
 
-    assertThat(pawn.createMove(destination, newBoard).type()).isEqualTo(MoveType.PAWN_NORMAL);
-  }
+        assertThat(pawn.createMove(destination, newBoard).type()).isEqualTo(MoveType.PAWN_NORMAL);
+    }
 
-  @Test
-  void createCaptureMove() {
-    var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
-    var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
+    @Test
+    void createCaptureMove() {
+        var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
+        var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
 
-    var piece = new Pawn(Coordinate.of("a1"), Alliance.WHITE);
-    var capturablePiece = new Pawn(Coordinate.of("b2"), Alliance.BLACK);
+        var piece = new Pawn(Coordinate.of("a1"), Alliance.WHITE);
+        var capturablePiece = new Pawn(Coordinate.of("b2"), Alliance.BLACK);
 
-    var board = Board.builder(whiteKing, blackKing).with(piece).with(capturablePiece).build();
+        var board = Board.builder(whiteKing, blackKing)
+                .with(piece)
+                .with(capturablePiece)
+                .build();
 
-    var destination = board.tileAt(Coordinate.of("b2"));
+        var destination = board.tileAt(Coordinate.of("b2"));
 
-    assertThat(piece.createMove(destination, board).type()).isEqualTo(MoveType.PAWN_CAPTURE);
-  }
+        assertThat(piece.createMove(destination, board).type()).isEqualTo(MoveType.PAWN_CAPTURE);
+    }
 
-  @Test
-  void createEnPassantMove() {
-    var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
-    var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
+    @Test
+    void createEnPassantMove() {
+        var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
+        var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
 
-    var pawn = new Pawn(Coordinate.of("a5"), Alliance.WHITE);
-    var capturablePiece = new Pawn(Coordinate.of("b7"), Alliance.BLACK);
-    var initialBoard = Board.builder(whiteKing, blackKing).with(pawn).with(capturablePiece).build();
+        var pawn = new Pawn(Coordinate.of("a5"), Alliance.WHITE);
+        var capturablePiece = new Pawn(Coordinate.of("b7"), Alliance.BLACK);
+        var initialBoard = Board.builder(whiteKing, blackKing)
+                .with(pawn)
+                .with(capturablePiece)
+                .build();
 
-    var jumpMove =
-        capturablePiece.createMove(initialBoard.tileAt(Coordinate.of("b5")), initialBoard);
-    var newBoard = jumpMove.execute();
-    var destination = newBoard.tileAt(Coordinate.of("b6"));
+        var jumpMove = capturablePiece.createMove(initialBoard.tileAt(Coordinate.of("b5")), initialBoard);
+        var newBoard = jumpMove.execute();
+        var destination = newBoard.tileAt(Coordinate.of("b6"));
 
-    assertThat(pawn.createMove(destination, newBoard).type()).isEqualTo(MoveType.EN_PASSANT);
-  }
+        assertThat(pawn.createMove(destination, newBoard).type()).isEqualTo(MoveType.EN_PASSANT);
+    }
 }

@@ -14,16 +14,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class BoardServiceTest {
 
-  @Test
-  void createStandardBoard() {
-    var board = new BoardService().createStandardBoard();
+    @Test
+    void createStandardBoard() {
+        var board = new BoardService().createStandardBoard();
 
-    assertThat(board.toString())
-        .containsOnlyOnce("r  n  b  q  k  b  n  r")
-        .containsOnlyOnce("p  p  p  p  p  p  p  p")
-        .contains("-  -  -  -  -  -  -  -")
-        .containsOnlyOnce("P  P  P  P  P  P  P  P")
-        .containsOnlyOnce("R  N  B  Q  K  B  N  R")
-        .contains("\n");
-  }
+        assertThat(board.toString())
+                .containsOnlyOnce("r  n  b  q  k  b  n  r")
+                .containsOnlyOnce("p  p  p  p  p  p  p  p")
+                .contains("-  -  -  -  -  -  -  -")
+                .containsOnlyOnce("P  P  P  P  P  P  P  P")
+                .containsOnlyOnce("R  N  B  Q  K  B  N  R")
+                .contains("\n");
+    }
 }

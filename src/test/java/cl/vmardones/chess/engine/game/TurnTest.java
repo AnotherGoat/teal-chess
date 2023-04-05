@@ -20,38 +20,41 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class TurnTest {
 
-  Turn whiteTurn;
-  Turn blackTurn;
+    Turn whiteTurn;
+    Turn blackTurn;
 
-  @Mock Board board;
+    @Mock
+    Board board;
 
-  @Mock HumanPlayer whitePlayer;
+    @Mock
+    HumanPlayer whitePlayer;
 
-  @Mock HumanPlayer blackPlayer;
+    @Mock
+    HumanPlayer blackPlayer;
 
-  @BeforeEach
-  void setUp() {
-    whiteTurn = new Turn(board, Alliance.WHITE, whitePlayer, blackPlayer);
-    blackTurn = new Turn(board, Alliance.BLACK, whitePlayer, blackPlayer);
-  }
+    @BeforeEach
+    void setUp() {
+        whiteTurn = new Turn(board, Alliance.WHITE, whitePlayer, blackPlayer);
+        blackTurn = new Turn(board, Alliance.BLACK, whitePlayer, blackPlayer);
+    }
 
-  @Test
-  void getWhitePlayer() {
-    assertThat(whiteTurn.getPlayer()).isEqualTo(whitePlayer);
-  }
+    @Test
+    void getWhitePlayer() {
+        assertThat(whiteTurn.getPlayer()).isEqualTo(whitePlayer);
+    }
 
-  @Test
-  void getBlackPlayer() {
-    assertThat(blackTurn.getPlayer()).isEqualTo(blackPlayer);
-  }
+    @Test
+    void getBlackPlayer() {
+        assertThat(blackTurn.getPlayer()).isEqualTo(blackPlayer);
+    }
 
-  @Test
-  void getWhiteOpponent() {
-    assertThat(whiteTurn.getOpponent()).isEqualTo(blackPlayer);
-  }
+    @Test
+    void getWhiteOpponent() {
+        assertThat(whiteTurn.getOpponent()).isEqualTo(blackPlayer);
+    }
 
-  @Test
-  void getBlackOpponent() {
-    assertThat(blackTurn.getOpponent()).isEqualTo(whitePlayer);
-  }
+    @Test
+    void getBlackOpponent() {
+        assertThat(blackTurn.getOpponent()).isEqualTo(whitePlayer);
+    }
 }

@@ -9,17 +9,17 @@ import picocli.CommandLine;
 
 class VersionProvider implements CommandLine.IVersionProvider {
 
-  private static final String[] UNKNOWN_VERSION = {"UNKNOWN"};
+    private static final String[] UNKNOWN_VERSION = {"UNKNOWN"};
 
-  @Override
-  public String[] getVersion() {
+    @Override
+    public String[] getVersion() {
 
-    var implementationVersion = getClass().getPackage().getImplementationVersion();
+        var implementationVersion = getClass().getPackage().getImplementationVersion();
 
-    if (implementationVersion == null || implementationVersion.isBlank()) {
-      return UNKNOWN_VERSION;
+        if (implementationVersion == null || implementationVersion.isBlank()) {
+            return UNKNOWN_VERSION;
+        }
+
+        return new String[] {implementationVersion};
     }
-
-    return new String[] {implementationVersion};
-  }
 }

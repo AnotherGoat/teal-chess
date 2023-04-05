@@ -11,21 +11,21 @@ import cl.vmardones.chess.engine.player.Alliance;
 /** The knight piece. It moves in an L shape. */
 public final class Knight extends JumpingPiece {
 
-  public Knight(Coordinate position, Alliance alliance) {
-    this(position, alliance, true);
-  }
+    public Knight(Coordinate position, Alliance alliance) {
+        this(position, alliance, true);
+    }
 
-  @Override
-  public String singleChar() {
-    return alliance == Alliance.BLACK ? "n" : "N";
-  }
+    @Override
+    public String singleChar() {
+        return alliance == Alliance.BLACK ? "n" : "N";
+    }
 
-  @Override
-  public Knight moveTo(Coordinate destination) {
-    return new Knight(destination, alliance, false);
-  }
+    @Override
+    public Knight moveTo(Coordinate destination) {
+        return new Knight(destination, alliance, false);
+    }
 
-  private Knight(Coordinate position, Alliance alliance, boolean firstMove) {
-    super(position, alliance, firstMove, KNIGHT_JUMPS);
-  }
+    private Knight(Coordinate position, Alliance alliance, boolean firstMove) {
+        super(position, alliance, firstMove, KNIGHT_JUMPS);
+    }
 }

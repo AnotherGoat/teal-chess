@@ -16,29 +16,31 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class GameStateTest {
 
-  GameState gameState;
+    GameState gameState;
 
-  @Mock Turn firstTurn;
+    @Mock
+    Turn firstTurn;
 
-  @Mock Turn secondTurn;
+    @Mock
+    Turn secondTurn;
 
-  @BeforeEach
-  void setUp() {
-    gameState = new GameState();
-    gameState.currentTurn(firstTurn);
-  }
+    @BeforeEach
+    void setUp() {
+        gameState = new GameState();
+        gameState.currentTurn(firstTurn);
+    }
 
-  @Test
-  void save() {
-    assertThat(gameState.save().state()).isEqualTo(firstTurn);
-  }
+    @Test
+    void save() {
+        assertThat(gameState.save().state()).isEqualTo(firstTurn);
+    }
 
-  @Test
-  void load() {
-    var firstState = gameState.save();
-    gameState.currentTurn(secondTurn);
-    gameState.load(firstState);
+    @Test
+    void load() {
+        var firstState = gameState.save();
+        gameState.currentTurn(secondTurn);
+        gameState.load(firstState);
 
-    assertThat(gameState.currentTurn()).isEqualTo(firstTurn).isNotEqualTo(secondTurn);
-  }
+        assertThat(gameState.currentTurn()).isEqualTo(firstTurn).isNotEqualTo(secondTurn);
+    }
 }
