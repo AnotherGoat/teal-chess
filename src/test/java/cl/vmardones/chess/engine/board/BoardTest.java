@@ -22,7 +22,9 @@ class BoardTest {
   Board.BoardBuilder builder;
 
   @Mock King whiteKing;
+
   @Mock King blackKing;
+
   @Mock Pawn enPassantPawn;
 
   @BeforeEach

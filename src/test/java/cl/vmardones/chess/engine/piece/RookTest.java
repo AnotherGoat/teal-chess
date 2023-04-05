@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class RookTest {
 
   @Mock Coordinate anywhere;
+
   @Mock Coordinate destination;
 
   @Test

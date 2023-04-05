@@ -24,7 +24,9 @@ class TurnTest {
   Turn blackTurn;
 
   @Mock Board board;
+
   @Mock HumanPlayer whitePlayer;
+
   @Mock HumanPlayer blackPlayer;
 
   @BeforeEach

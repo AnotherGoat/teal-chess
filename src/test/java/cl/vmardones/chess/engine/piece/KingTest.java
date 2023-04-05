@@ -19,7 +19,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class KingTest {
 
   @Mock Coordinate anywhere;
+
   @Mock Coordinate destination;
+
   @Mock Move move;
 
   @Test

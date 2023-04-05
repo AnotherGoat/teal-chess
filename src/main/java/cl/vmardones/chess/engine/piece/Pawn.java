@@ -11,9 +11,9 @@ import cl.vmardones.chess.engine.board.Tile;
 import cl.vmardones.chess.engine.move.*;
 import cl.vmardones.chess.engine.player.Alliance;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.annotation.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The pawn piece. It only moves forward (depending on the side) and can eat other pieces
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class Pawn extends JumpingPiece {
 
-  private static final Logger LOG = LoggerFactory.getLogger(Pawn.class);
+  private static final Logger LOG = LogManager.getLogger(Pawn.class);
 
   public Pawn(Coordinate position, Alliance alliance) {
     this(position, alliance, true);

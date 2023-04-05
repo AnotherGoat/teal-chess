@@ -25,13 +25,13 @@ import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.annotation.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 class TilePanel extends JPanel {
 
-  private static final Logger LOG = LoggerFactory.getLogger(TilePanel.class);
+  private static final Logger LOG = LogManager.getLogger(TilePanel.class);
   private static final Dimension INITIAL_SIZE = new Dimension(60, 60);
   private static final Color LIGHT_COLOR = Color.decode("#FFCE9E");
   private static final Color DARK_COLOR = Color.decode("#D18B47");

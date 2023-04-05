@@ -16,13 +16,13 @@ import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.PNGTranscoder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.annotation.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 final class SvgImporter {
 
-  private static final Logger LOG = LoggerFactory.getLogger(SvgImporter.class);
+  private static final Logger LOG = LogManager.getLogger(SvgImporter.class);
 
   private SvgImporter() {
     throw new UnsupportedOperationException("You cannot instantiate me!");

@@ -7,6 +7,7 @@ package cl.vmardones.chess.engine.piece;
 
 import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.player.Alliance;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -24,10 +25,10 @@ public final class Queen extends SlidingPiece {
   }
 
   private Queen(Coordinate position, Alliance alliance, boolean firstMove) {
-    super(
-        position,
-        alliance,
-        firstMove,
-        Stream.concat(ORTHOGONALS.stream(), DIAGONALS.stream()).toList());
+    super(position, alliance, firstMove, generateMoveVectors());
+  }
+
+  private static List<int[]> generateMoveVectors() {
+    return Stream.concat(ORTHOGONALS.stream(), DIAGONALS.stream()).toList();
   }
 }

@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class PawnTest {
 
   @Mock Coordinate anywhere;
+
   @Mock Coordinate destination;
 
   @Test

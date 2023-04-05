@@ -19,7 +19,9 @@ public final class Move {
   private final Board board;
   private final Piece piece;
   private final Coordinate destination;
+
   @Nullable private final Piece otherPiece;
+
   @Nullable private final Coordinate rookDestination;
 
   /* Creating moves */

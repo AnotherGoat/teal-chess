@@ -8,15 +8,15 @@ package cl.vmardones.chess.io;
 import java.awt.*;
 import java.io.IOException;
 import javax.swing.plaf.FontUIResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public final class FontLoader {
 
   public static final int FONT_SIZE = 16;
   public static final Font SYSTEM_FONT = new FontUIResource(Font.SANS_SERIF, Font.PLAIN, FONT_SIZE);
 
-  private static final Logger LOG = LoggerFactory.getLogger(FontLoader.class);
+  private static final Logger LOG = LogManager.getLogger(FontLoader.class);
   private static final String FONT_PATH = "fonts/";
 
   private FontLoader() {

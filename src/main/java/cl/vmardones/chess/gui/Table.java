@@ -23,15 +23,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.annotation.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 // TODO: Many methods used in the GUI should be moved to the game
 // TODO: Many methods can take simpler arguments and not every class needs access to the board
 public class Table {
 
-  private static final Logger LOG = LoggerFactory.getLogger(Table.class);
+  private static final Logger LOG = LogManager.getLogger(Table.class);
   private static final Dimension INITIAL_SIZE = new Dimension(700, 600);
   private static final String UI_FONT = "NotoSans-Regular.ttf";
 

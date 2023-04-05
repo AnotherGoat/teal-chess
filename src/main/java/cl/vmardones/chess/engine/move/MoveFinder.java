@@ -8,13 +8,13 @@ package cl.vmardones.chess.engine.move;
 import cl.vmardones.chess.engine.board.Coordinate;
 import java.util.List;
 import java.util.function.Predicate;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.annotation.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class MoveFinder {
 
-  private static final Logger LOG = LoggerFactory.getLogger(MoveFinder.class);
+  private static final Logger LOG = LogManager.getLogger(MoveFinder.class);
 
   private MoveFinder() {
     throw new UnsupportedOperationException("You cannot instantiate me!");

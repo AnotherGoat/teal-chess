@@ -12,6 +12,7 @@ import cl.vmardones.chess.engine.player.Player;
 import java.util.Collections;
 import java.util.List;
 
+// TODO: Check if we only need to store each player's legal moves
 record Turn(Board board, Alliance moveMaker, Player whitePlayer, Player blackPlayer) {
 
   Player getPlayer() {

@@ -7,13 +7,13 @@ package cl.vmardones.chess.io;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.annotation.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class SvgLoader {
 
-  private static final Logger LOG = LoggerFactory.getLogger(SvgLoader.class);
+  private static final Logger LOG = LogManager.getLogger(SvgLoader.class);
 
   private SvgLoader() {
     throw new UnsupportedOperationException("You cannot instantiate me!");

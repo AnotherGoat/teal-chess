@@ -12,8 +12,6 @@ import cl.vmardones.chess.engine.player.Alliance;
 import java.util.*;
 import java.util.stream.IntStream;
 import org.eclipse.jdt.annotation.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** The chess game board, made of 8x8 tiles. */
 public final class Board {
@@ -30,8 +28,6 @@ public final class Board {
    * easily fill the game board.
    */
   public static final int MAX_TILES = SIDE_LENGTH * SIDE_LENGTH;
-
-  private static final Logger LOG = LoggerFactory.getLogger(Board.class);
 
   private final List<Tile> tiles;
   private final King whiteKing;

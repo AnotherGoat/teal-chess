@@ -13,12 +13,12 @@ import cl.vmardones.chess.engine.player.Alliance;
 import cl.vmardones.chess.engine.player.HumanPlayer;
 import cl.vmardones.chess.engine.player.Player;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Game {
 
-  private static final Logger LOG = LoggerFactory.getLogger(Game.class);
+  private static final Logger LOG = LogManager.getLogger(Game.class);
 
   private final GameState gameState;
   private final GameHistory gameHistory;

@@ -23,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class PieceTest {
 
   @Mock Coordinate anywhere;
+
   @Mock Tile destinationTile;
 
   @Test

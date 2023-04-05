@@ -8,13 +8,13 @@ package cl.vmardones.chess.io;
 import cl.vmardones.chess.engine.piece.Piece;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jdt.annotation.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class PieceIconLoader {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PieceIconLoader.class);
+  private static final Logger LOG = LogManager.getLogger(PieceIconLoader.class);
   private static final String PIECE_ICON_PATH = "art/pieces";
 
   private PieceIconLoader() {
