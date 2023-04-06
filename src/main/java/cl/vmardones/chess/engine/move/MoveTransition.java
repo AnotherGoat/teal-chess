@@ -8,5 +8,5 @@ package cl.vmardones.chess.engine.move;
 import cl.vmardones.chess.engine.board.Board;
 
 // TODO: This class could be a record instead, and move is probably not needed here
-/** The transition from one board to another, triggered when a move is performed or checked. */
+/** The transition from one board to another, triggered when a move is made or checked. */
 public record MoveTransition(Board board, Move move, MoveStatus moveStatus) {}

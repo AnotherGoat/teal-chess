@@ -12,25 +12,25 @@ import java.util.stream.IntStream;
 import cl.vmardones.chess.engine.piece.Piece;
 import org.eclipse.jdt.annotation.Nullable;
 
-/** A single chess tile, which may or may not contain a piece. */
-public final class Tile {
+/** A single chess square, which may or may not contain a piece. */
+public final class Square {
 
-    private static final List<Tile> CACHED_EMPTY_TILES = createAllPossibleEmptyTiles();
+    private static final List<Square> CACHED_EMPTY_SQUARES = createEmptySquareCache();
 
     private final Coordinate coordinate;
     private final @Nullable Piece piece;
 
-    /* Tile creation */
+    /* Square creation */
 
     /**
-     * Static factory method for creating a new tile.
+     * Static factory method for creating a new square.
      *
-     * @param coordinate The tile's coordinate.
-     * @param piece The piece on the tile.
-     * @return A new tile.
+     * @param coordinate The square's coordinate.
+     * @param piece The piece on the square.
+     * @return A new square.
      */
-    public static Tile create(Coordinate coordinate, @Nullable Piece piece) {
-        return piece != null ? new Tile(coordinate, piece) : CACHED_EMPTY_TILES.get(coordinate.index());
+    public static Square create(Coordinate coordinate, @Nullable Piece piece) {
+        return piece != null ? new Square(coordinate, piece) : CACHED_EMPTY_SQUARES.get(coordinate.index());
     }
 
     /* Getters */
@@ -55,7 +55,7 @@ public final class Tile {
             return false;
         }
 
-        var other = (Tile) o;
+        var other = (Square) o;
         return coordinate.equals(other.coordinate) && Objects.equals(piece, other.piece);
     }
 
@@ -65,9 +65,9 @@ public final class Tile {
     }
 
     /**
-     * String representation of this tile, used when displaying the board.
+     * String representation of this square, used when displaying the board.
      *
-     * @return The character that represents the piece, or - if the tile is empty.
+     * @return The character that represents the piece, or - if the square is empty.
      */
     @Override
     public String toString() {
@@ -78,19 +78,19 @@ public final class Tile {
         return piece.singleChar();
     }
 
-    private static List<Tile> createAllPossibleEmptyTiles() {
-        return IntStream.range(Board.MIN_TILES, Board.MAX_TILES)
+    private static List<Square> createEmptySquareCache() {
+        return IntStream.range(Board.MIN_SQUARES, Board.MAX_SQUARES)
                 .mapToObj(Coordinate::of)
-                .map(Tile::new)
+                .map(Square::new)
                 .toList();
     }
 
-    private Tile(Coordinate coordinate, @Nullable Piece piece) {
+    private Square(Coordinate coordinate, @Nullable Piece piece) {
         this.coordinate = coordinate;
         this.piece = piece;
     }
 
-    private Tile(Coordinate coordinate) {
+    private Square(Coordinate coordinate) {
         this(coordinate, null);
     }
 }

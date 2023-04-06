@@ -22,7 +22,7 @@ import org.eclipse.jdt.annotation.Nullable;
 public final class Coordinate {
 
     private static final Pattern ALGEBRAIC_PATTERN = Pattern.compile("^[a-h][1-8]$");
-    private static final List<Coordinate> CACHED_COORDINATES = createAllPossibleCoordinates();
+    private static final List<Coordinate> CACHED_COORDINATES = createCoordinateCache();
 
     private final int index;
 
@@ -248,8 +248,8 @@ public final class Coordinate {
         return String.valueOf(column()) + rank();
     }
 
-    private static List<Coordinate> createAllPossibleCoordinates() {
-        return IntStream.range(Board.MIN_TILES, Board.MAX_TILES)
+    private static List<Coordinate> createCoordinateCache() {
+        return IntStream.range(Board.MIN_SQUARES, Board.MAX_SQUARES)
                 .mapToObj(Coordinate::new)
                 .toList();
     }
@@ -259,7 +259,7 @@ public final class Coordinate {
     }
 
     private static boolean isOutsideBoard(int index) {
-        return index < Board.MIN_TILES || index >= Board.MAX_TILES;
+        return index < Board.MIN_SQUARES || index >= Board.MAX_SQUARES;
     }
 
     private static int calculateIndex(String algebraicCoordinate) {

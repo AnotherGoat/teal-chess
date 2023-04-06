@@ -19,7 +19,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import cl.vmardones.chess.engine.board.Coordinate;
-import cl.vmardones.chess.engine.board.Tile;
+import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.game.Game;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveTransition;
@@ -50,9 +50,9 @@ public class Table {
     private final MoveLog moveLog;
 
     // TODO: Group these 3 in a "PlayerSelection" class
-    @Nullable private Tile sourceTile;
+    @Nullable private Square sourceSquare;
 
-    @Nullable private Tile destinationTile;
+    @Nullable private Square destinationSquare;
 
     @Nullable private Piece selectedPiece;
 
@@ -84,7 +84,7 @@ public class Table {
 
         moveLog = new MoveLog();
 
-        frame.add(new SquarePanel<>(boardPanel), BorderLayout.CENTER);
+        frame.add(new ContainerPanel<>(boardPanel), BorderLayout.CENTER);
 
         frame.add(takenPiecesPanel, BorderLayout.WEST);
         frame.add(gameHistoryPanel, BorderLayout.EAST);
@@ -173,8 +173,8 @@ public class Table {
     }
 
     void resetSelection() {
-        sourceTile = null;
-        destinationTile = null;
+        sourceSquare = null;
+        destinationSquare = null;
         selectedPiece = null;
     }
 
@@ -188,12 +188,12 @@ public class Table {
         moveLog.add(move);
     }
 
-    Tile getTileAt(Coordinate coordinate) {
-        return getGame().getBoard().tileAt(coordinate);
+    Square squareAt(Coordinate coordinate) {
+        return getGame().getBoard().squareAt(coordinate);
     }
 
     MoveTransition makeMove(Move move) {
-        return getGame().performMove(move);
+        return getGame().makeMove(move);
     }
 
     /* Getters and setters */
@@ -206,20 +206,20 @@ public class Table {
         this.game = game;
     }
 
-    public @Nullable Tile getSourceTile() {
-        return sourceTile;
+    public @Nullable Square getSourceSquare() {
+        return sourceSquare;
     }
 
-    public void setSourceTile(Tile sourceTile) {
-        this.sourceTile = sourceTile;
+    public void setSourceSquare(Square sourceSquare) {
+        this.sourceSquare = sourceSquare;
     }
 
-    public @Nullable Tile getDestinationTile() {
-        return destinationTile;
+    public @Nullable Square getDestinationSquare() {
+        return destinationSquare;
     }
 
-    public void setDestinationTile(Tile destinationTile) {
-        this.destinationTile = destinationTile;
+    public void setDestinationSquare(Square destinationSquare) {
+        this.destinationSquare = destinationSquare;
     }
 
     public @Nullable Piece getSelectedPiece() {
@@ -242,13 +242,13 @@ public class Table {
         NORMAL,
         FLIPPED;
 
-        List<TilePanel> traverse(List<TilePanel> boardTiles) {
+        List<SquarePanel> traverse(List<SquarePanel> boardSquares) {
             return switch (this) {
-                case NORMAL -> boardTiles;
+                case NORMAL -> boardSquares;
                 case FLIPPED -> {
-                    var reversedTiles = new ArrayList<>(boardTiles);
-                    Collections.reverse(reversedTiles);
-                    yield Collections.unmodifiableList(reversedTiles);
+                    var reversedSquares = new ArrayList<>(boardSquares);
+                    Collections.reverse(reversedSquares);
+                    yield Collections.unmodifiableList(reversedSquares);
                 }
             };
         }

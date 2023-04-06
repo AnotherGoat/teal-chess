@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Coordinate;
-import cl.vmardones.chess.engine.board.Tile;
+import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.move.*;
 import cl.vmardones.chess.engine.player.Alliance;
 import org.eclipse.jdt.annotation.Nullable;
@@ -31,7 +31,7 @@ public final class Pawn extends JumpingPiece {
     }
 
     @Override
-    public @Nullable Move createMove(Tile destination, Board board) {
+    public @Nullable Move createMove(Square destination, Board board) {
 
         if (isNotCapture(destination)) {
             if (isJumpPossible(board, destination)) {
@@ -49,14 +49,14 @@ public final class Pawn extends JumpingPiece {
         return createCaptureMove(board, destination);
     }
 
-    private Move createEnPassantMove(Board board, Tile destination) {
+    private Move createEnPassantMove(Board board, Square destination) {
         var enPassantMove = new Move(MoveType.EN_PASSANT, board, this, destination.coordinate(), board.enPassantPawn());
 
         LOG.debug("Created en passant move: {}", enPassantMove);
         return enPassantMove;
     }
 
-    private boolean isEnPassantPossible(Board board, Tile destination) {
+    private boolean isEnPassantPossible(Board board, Square destination) {
 
         if (board.enPassantPawn() == null) {
             return false;
@@ -68,16 +68,16 @@ public final class Pawn extends JumpingPiece {
             return false;
         }
 
-        var pieceAtSide = board.tileAt(side).piece();
+        var pieceAtSide = board.squareAt(side).piece();
 
         return pieceAtSide != null && pieceAtSide.equals(board.enPassantPawn()) && destination.piece() == null;
     }
 
-    private boolean isNotCapture(Tile destination) {
+    private boolean isNotCapture(Square destination) {
         return position().sameColumnAs(destination.coordinate());
     }
 
-    private @Nullable Move createCaptureMove(Board board, Tile destination) {
+    private @Nullable Move createCaptureMove(Board board, Square destination) {
         var capturablePiece = destination.piece();
 
         if (capturablePiece != null && isEnemyOf(capturablePiece)) {
@@ -87,11 +87,11 @@ public final class Pawn extends JumpingPiece {
         return null;
     }
 
-    private Move createJumpMove(Board board, Tile destination) {
+    private Move createJumpMove(Board board, Square destination) {
         return new Move(MoveType.PAWN_JUMP, board, this, destination.coordinate());
     }
 
-    private boolean isJumpPossible(Board board, Tile destination) {
+    private boolean isJumpPossible(Board board, Square destination) {
 
         var forward = position.up(alliance.direction());
 
@@ -100,12 +100,12 @@ public final class Pawn extends JumpingPiece {
         }
 
         return firstMove()
-                && board.tileAt(forward).piece() == null
+                && board.squareAt(forward).piece() == null
                 && destination.piece() == null
-                && !destination.equals(board.tileAt(forward));
+                && !destination.equals(board.squareAt(forward));
     }
 
-    private @Nullable Move createForwardMove(Board board, Tile destination) {
+    private @Nullable Move createForwardMove(Board board, Square destination) {
         if (destination.piece() != null) {
             return null;
         }

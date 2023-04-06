@@ -73,7 +73,7 @@ class PawnTest {
 
         var board = Board.builder(whiteKing, blackKing).with(pawn).build();
 
-        var destination = board.tileAt(Coordinate.of("a3"));
+        var destination = board.squareAt(Coordinate.of("a3"));
 
         assertThat(pawn.createMove(destination, board).type()).isEqualTo(MoveType.PAWN_NORMAL);
     }
@@ -87,7 +87,7 @@ class PawnTest {
 
         var board = Board.builder(whiteKing, blackKing).with(pawn).build();
 
-        var destination = board.tileAt(Coordinate.of("a4"));
+        var destination = board.squareAt(Coordinate.of("a4"));
 
         assertThat(pawn.createMove(destination, board).type()).isEqualTo(MoveType.PAWN_JUMP);
     }
@@ -99,11 +99,11 @@ class PawnTest {
 
         var initialPawn = new Pawn(Coordinate.of("a2"), Alliance.WHITE);
         var initialBoard = Board.builder(whiteKing, blackKing).with(initialPawn).build();
-        var firstMove = initialPawn.createMove(initialBoard.tileAt(Coordinate.of("a3")), initialBoard);
+        var firstMove = initialPawn.createMove(initialBoard.squareAt(Coordinate.of("a3")), initialBoard);
 
         var newBoard = firstMove.execute();
-        var pawn = newBoard.tileAt(Coordinate.of("a3")).piece();
-        var destination = newBoard.tileAt(Coordinate.of("a5"));
+        var pawn = newBoard.squareAt(Coordinate.of("a3")).piece();
+        var destination = newBoard.squareAt(Coordinate.of("a5"));
 
         assertThat(pawn.createMove(destination, newBoard).type()).isEqualTo(MoveType.PAWN_NORMAL);
     }
@@ -121,7 +121,7 @@ class PawnTest {
                 .with(capturablePiece)
                 .build();
 
-        var destination = board.tileAt(Coordinate.of("b2"));
+        var destination = board.squareAt(Coordinate.of("b2"));
 
         assertThat(piece.createMove(destination, board).type()).isEqualTo(MoveType.PAWN_CAPTURE);
     }
@@ -138,9 +138,9 @@ class PawnTest {
                 .with(capturablePiece)
                 .build();
 
-        var jumpMove = capturablePiece.createMove(initialBoard.tileAt(Coordinate.of("b5")), initialBoard);
+        var jumpMove = capturablePiece.createMove(initialBoard.squareAt(Coordinate.of("b5")), initialBoard);
         var newBoard = jumpMove.execute();
-        var destination = newBoard.tileAt(Coordinate.of("b6"));
+        var destination = newBoard.squareAt(Coordinate.of("b6"));
 
         assertThat(pawn.createMove(destination, newBoard).type()).isEqualTo(MoveType.EN_PASSANT);
     }

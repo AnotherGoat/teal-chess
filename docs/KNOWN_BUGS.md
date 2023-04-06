@@ -2,7 +2,10 @@
 
 This is a list of known bugs that will be fixed before the first release:
 
-- Some mechanics like castling and pawn promotions are unfinished.
-- Checks and checkmates aren't handled correctly.
-- Highlighted moves appear beside the target piece, not over it.
-- Castling works on white king-side but it takes the wrong rook on queen-side.
+- The icon for recommended moves makes the destination piece disappear.
+- Castling works, but the castling move doesn't appear as a recommended move.
+- The game freezes when a king is in check and there's no way to escape the
+  softlock.
+- Pawn promotion hasn't been implemented yet.
+- When a move leaves the player itself in check, it doesn't happen, but a null
+  pointer exception is thrown.

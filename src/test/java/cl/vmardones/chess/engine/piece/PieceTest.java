@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Coordinate;
-import cl.vmardones.chess.engine.board.Tile;
+import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.move.MoveType;
 import cl.vmardones.chess.engine.player.Alliance;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -26,7 +26,7 @@ class PieceTest {
     Coordinate anywhere;
 
     @Mock
-    Tile destinationTile;
+    Square destinationSquare;
 
     @Test
     void isAllyOf() {
@@ -54,9 +54,9 @@ class PieceTest {
     void isEmptyAccesible() {
         var piece = new Rook(anywhere, Alliance.BLACK);
 
-        when(destinationTile.piece()).thenReturn(null);
+        when(destinationSquare.piece()).thenReturn(null);
 
-        assertThat(piece.canAccess(destinationTile)).isTrue();
+        assertThat(piece.canAccess(destinationSquare)).isTrue();
     }
 
     @Test
@@ -64,9 +64,9 @@ class PieceTest {
         var piece = new Bishop(anywhere, Alliance.BLACK);
         var destinationPiece = new Pawn(anywhere, Alliance.WHITE);
 
-        when(destinationTile.piece()).thenReturn(destinationPiece);
+        when(destinationSquare.piece()).thenReturn(destinationPiece);
 
-        assertThat(piece.canAccess(destinationTile)).isTrue();
+        assertThat(piece.canAccess(destinationSquare)).isTrue();
     }
 
     @Test
@@ -74,9 +74,9 @@ class PieceTest {
         var piece = new Queen(anywhere, Alliance.BLACK);
         var destinationPiece = new King(anywhere, Alliance.BLACK);
 
-        when(destinationTile.piece()).thenReturn(destinationPiece);
+        when(destinationSquare.piece()).thenReturn(destinationPiece);
 
-        assertThat(piece.canAccess(destinationTile)).isFalse();
+        assertThat(piece.canAccess(destinationSquare)).isFalse();
     }
 
     @Test
@@ -88,7 +88,7 @@ class PieceTest {
 
         var board = Board.builder(whiteKing, blackKing).with(piece).build();
 
-        var destination = board.tileAt(Coordinate.of("a7"));
+        var destination = board.squareAt(Coordinate.of("a7"));
 
         assertThat(piece.createMove(destination, board).type()).isEqualTo(MoveType.NORMAL);
     }
@@ -106,7 +106,7 @@ class PieceTest {
                 .with(capturablePiece)
                 .build();
 
-        var destination = board.tileAt(Coordinate.of("a7"));
+        var destination = board.squareAt(Coordinate.of("a7"));
 
         assertThat(piece.createMove(destination, board).type()).isEqualTo(MoveType.CAPTURE);
     }
@@ -124,7 +124,7 @@ class PieceTest {
                 .with(blockingPiece)
                 .build();
 
-        var destination = board.tileAt(Coordinate.of("a7"));
+        var destination = board.squareAt(Coordinate.of("a7"));
 
         assertThat(piece.createMove(destination, board)).isNull();
     }

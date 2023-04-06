@@ -121,9 +121,9 @@ public final class Move {
     // TODO: Fix en passant implementation, highlighted moves don't match moves that are executed. En
     // passant pawns are set properly, but it doesn't get added to the list of legal moves
     /**
-     * When a move is performed, a new board is created, because the board class is immutable.
+     * When a move is made, a new board is created, due to the board class being immutable.
      *
-     * @return The new board, after the move was performed
+     * @return The new board, after the move was made.
      */
     public Board execute() {
         var builder = board.nextTurnBuilder();

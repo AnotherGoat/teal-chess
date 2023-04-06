@@ -18,7 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class TileTest {
+class SquareTest {
 
     @Mock
     Coordinate anywhere;
@@ -26,45 +26,45 @@ class TileTest {
     @Test
     void createOccupied() {
         var piece = new Knight(anywhere, Alliance.BLACK);
-        assertThat(Tile.create(anywhere, piece).piece()).isNotNull().isEqualTo(piece);
+        assertThat(Square.create(anywhere, piece).piece()).isNotNull().isEqualTo(piece);
     }
 
     @Test
     void createEmpty() {
-        assertThat(Tile.create(anywhere, null).piece()).isNull();
+        assertThat(Square.create(anywhere, null).piece()).isNull();
     }
 
     @Test
     void cache() {
-        assertThat(Tile.create(Coordinate.of("g5"), null)).isEqualTo(Tile.create(Coordinate.of("g5"), null));
+        assertThat(Square.create(Coordinate.of("g5"), null)).isEqualTo(Square.create(Coordinate.of("g5"), null));
     }
 
     @Test
     void whitePieceToString() {
         var piece = new Pawn(anywhere, Alliance.WHITE);
-        assertThat(Tile.create(anywhere, piece)).hasToString("P");
+        assertThat(Square.create(anywhere, piece)).hasToString("P");
     }
 
     @Test
     void blackPieceToString() {
         var piece = new Rook(anywhere, Alliance.BLACK);
-        assertThat(Tile.create(anywhere, piece)).hasToString("r");
+        assertThat(Square.create(anywhere, piece)).hasToString("r");
     }
 
     @Test
     void emptyToString() {
-        assertThat(Tile.create(anywhere, null)).hasToString("-");
+        assertThat(Square.create(anywhere, null)).hasToString("-");
     }
 
     @Test
     void getCoordinate() {
-        assertThat(Tile.create(Coordinate.of("c7"), null).coordinate())
+        assertThat(Square.create(Coordinate.of("c7"), null).coordinate())
                 .isNotNull()
                 .isEqualTo(Coordinate.of("c7"));
     }
 
     @Test
     void equalsContract() {
-        EqualsVerifier.forClass(Tile.class).withNonnullFields("coordinate").verify();
+        EqualsVerifier.forClass(Square.class).withNonnullFields("coordinate").verify();
     }
 }

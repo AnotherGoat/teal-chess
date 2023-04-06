@@ -10,7 +10,7 @@ import java.util.Objects;
 
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Coordinate;
-import cl.vmardones.chess.engine.board.Tile;
+import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveType;
 import cl.vmardones.chess.engine.player.Alliance;
@@ -74,7 +74,7 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
     /* Movement */
 
     /**
-     * Move this piece to another tile. No checks of any kind are done to check whether the move is
+     * Move this piece to another square. No checks of any kind are done to check whether the move is
      * legal or not.
      *
      * @param destination The destination to move the piece to.
@@ -90,9 +90,9 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
      */
     public List<Move> calculateLegals(Board board) {
         return calculatePossibleDestinations(board).stream()
-                .map(board::tileAt)
+                .map(board::squareAt)
                 .filter(this::canAccess)
-                .map(tile -> createMove(tile, board))
+                .map(square -> createMove(square, board))
                 .filter(Objects::nonNull)
                 .toList();
     }
@@ -104,7 +104,7 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
      * @param destination The target destination
      * @return True if the piece can get to the destination
      */
-    public boolean canAccess(Tile destination) {
+    public boolean canAccess(Square destination) {
         var pieceAtDestination = destination.piece();
         return pieceAtDestination == null || isEnemyOf(pieceAtDestination);
     }
@@ -146,11 +146,11 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
     /**
      * Creates a move, based on the piece and the destination.
      *
-     * @param destination The destination tile.
+     * @param destination The destination square.
      * @param board The current game board.
      * @return A move, selected depending on the source and destination.
      */
-    protected @Nullable Move createMove(Tile destination, Board board) {
+    protected @Nullable Move createMove(Square destination, Board board) {
         if (destination.piece() == null) {
             return new Move(MoveType.NORMAL, board, this, destination.coordinate());
         }

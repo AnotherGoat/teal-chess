@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Coordinate;
-import cl.vmardones.chess.engine.board.Tile;
+import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.player.Alliance;
 
 abstract sealed class SlidingPiece extends Piece permits Bishop, Queen, Rook {
@@ -35,36 +35,36 @@ abstract sealed class SlidingPiece extends Piece permits Bishop, Queen, Rook {
     }
 
     private List<Coordinate> calculateOffsets(int[] vector, Board board) {
-        var tiles = IntStream.range(1, Board.SIDE_LENGTH + 1)
+        var squares = IntStream.range(1, Board.SIDE_LENGTH + 1)
                 .mapToObj(i -> position().to(vector[0] * i, vector[1] * i))
                 .filter(Objects::nonNull)
-                .map(board::tileAt)
+                .map(board::squareAt)
                 .toList()
                 .listIterator();
 
-        return filterAccessible(tiles).stream().map(Tile::coordinate).toList();
+        return filterAccessible(squares).stream().map(Square::coordinate).toList();
     }
 
     // TODO: Replace this method with something more stream-friendly
-    private List<Tile> filterAccessible(Iterator<Tile> tiles) {
+    private List<Square> filterAccessible(Iterator<Square> squares) {
 
-        List<Tile> accessibleTiles = new ArrayList<>();
+        List<Square> accessibleSquares = new ArrayList<>();
 
-        while (tiles.hasNext()) {
-            var destination = tiles.next();
+        while (squares.hasNext()) {
+            var destination = squares.next();
             var pieceAtDestination = destination.piece();
 
             if (pieceAtDestination == null) {
-                accessibleTiles.add(destination);
+                accessibleSquares.add(destination);
             } else {
                 if (isEnemyOf(pieceAtDestination)) {
-                    accessibleTiles.add(destination);
+                    accessibleSquares.add(destination);
                 }
 
                 break;
             }
         }
 
-        return accessibleTiles;
+        return accessibleSquares;
     }
 }

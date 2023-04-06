@@ -63,7 +63,7 @@ class BoardTest {
     @Test
     void equalsContract() {
         EqualsVerifier.forClass(Board.class)
-                .withNonnullFields("tiles", "whiteKing", "whitePieces", "blackKing", "blackPieces")
+                .withNonnullFields("squares", "whiteKing", "whitePieces", "blackKing", "blackPieces")
                 .verify();
     }
 

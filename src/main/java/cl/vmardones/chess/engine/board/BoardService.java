@@ -12,7 +12,7 @@ import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.*;
 import cl.vmardones.chess.engine.player.Alliance;
 
-/** Provides utility functions to create and do calculations over the chess board. */
+/** Provides utility functions to create and do calculations over the chessboard. */
 public final class BoardService {
 
     private static final Board CACHED_STANDARD_BOARD = generateStandardBoard();
@@ -30,7 +30,7 @@ public final class BoardService {
     }
 
     /**
-     * Given a chess board, calculate the legal moves for every piece.
+     * Given a chessboard, calculate the legal moves for every piece.
      *
      * @param board The board in its current state.
      * @param pieces The pieces to search legal moves for.

@@ -19,20 +19,20 @@ class BoardPanel extends JPanel {
     public static final Dimension INITIAL_SIZE = new Dimension(500, 500);
 
     private final transient Table table;
-    private final List<TilePanel> boardTiles;
+    private final List<SquarePanel> squares;
 
     BoardPanel(Table table) {
         super(new GridLayout(8, 8));
         this.table = table;
 
-        boardTiles = new ArrayList<>();
+        squares = new ArrayList<>();
 
-        IntStream.range(Board.MIN_TILES, Board.MAX_TILES)
+        IntStream.range(Board.MIN_SQUARES, Board.MAX_SQUARES)
                 .mapToObj(Coordinate::of)
-                .map(coordinate -> new TilePanel(table, coordinate))
-                .forEach(tilePanel -> {
-                    boardTiles.add(tilePanel);
-                    add(tilePanel);
+                .map(coordinate -> new SquarePanel(table, coordinate))
+                .forEach(squarePanel -> {
+                    squares.add(squarePanel);
+                    add(squarePanel);
                 });
 
         setPreferredSize(INITIAL_SIZE);
@@ -42,9 +42,9 @@ class BoardPanel extends JPanel {
     void drawBoard(Board board) {
         removeAll();
 
-        table.getBoardDirection().traverse(boardTiles).forEach(tilePanel -> {
-            tilePanel.drawTile(board);
-            add(tilePanel);
+        table.getBoardDirection().traverse(squares).forEach(squarePanel -> {
+            squarePanel.drawSquare(board);
+            add(squarePanel);
         });
 
         validate();

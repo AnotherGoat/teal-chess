@@ -40,7 +40,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
      * Create a new player.
      *
      * @param alliance The player's side of the board.
-     * @param board The chess board, used for finding the king and the player's pieces.
+     * @param board The chessboard, used for finding the king and the player's pieces.
      * @param legals The legal moves of the player.
      * @param opponentLegals The legal moves of the player on the opposite side..
      */
@@ -51,8 +51,8 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
         pieces = findPieces(board);
         this.legals = addCastles(legals);
         this.opponentLegals = opponentLegals;
-        inCheck =
-                !Player.calculateAttacksOnTile(king.position(), opponentLegals).isEmpty();
+        inCheck = !Player.calculateAttacksOnSquare(king.position(), opponentLegals)
+                .isEmpty();
         noEscapeMoves = calculateEscapeMoves();
     }
 
@@ -86,12 +86,12 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
     }
 
     /**
-     * Checks if the player is in checkmate, which means the game is lost. This happens when the king
+     * Checks if the player is checkmated, which means they lost the game. This happens when the king
      * is in check and there are no escape moves.
      *
      * @return True if the player is in checkmate
      */
-    public boolean inCheckmate() {
+    public boolean isCheckmated() {
         return inCheck() && noEscapeMoves;
     }
 
@@ -105,7 +105,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
         return !inCheck() && noEscapeMoves;
     }
 
-    /* Performing moves */
+    /* Making moves */
 
     public MoveTransition makeMove(Player currentPlayer, Move move) {
         if (move.isNone()) {
@@ -116,7 +116,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
             return new MoveTransition(board, move, MoveStatus.ILLEGAL);
         }
 
-        var kingAttacks = Player.calculateAttacksOnTile(currentPlayer.king().position(), opponentLegals);
+        var kingAttacks = Player.calculateAttacksOnSquare(currentPlayer.king().position(), opponentLegals);
 
         if (!kingAttacks.isEmpty()) {
             return new MoveTransition(board, move, MoveStatus.CHECKS);
@@ -129,7 +129,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
 
     @Override
     public String toString() {
-        if (inCheckmate()) {
+        if (isCheckmated()) {
             return String.format("%s Player, in checkmate!", alliance.name());
         }
 
@@ -157,7 +157,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
     }
 
     // TODO: This method should probably be moved to board service
-    private static List<Move> calculateAttacksOnTile(Coordinate kingPosition, List<Move> moves) {
+    private static List<Move> calculateAttacksOnSquare(Coordinate kingPosition, List<Move> moves) {
         return moves.stream()
                 .filter(move -> kingPosition.equals(move.destination()))
                 .toList();
@@ -200,7 +200,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
         var kingPosition = king.position();
 
         var rookOffset = kingSide ? 3 : -4;
-        var rook = (Rook) board.tileAt(kingPosition.right(rookOffset)).piece();
+        var rook = (Rook) board.squareAt(kingPosition.right(rookOffset)).piece();
 
         if (rook == null || !rook.firstMove()) {
             return null;
@@ -220,26 +220,30 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
     }
 
     private boolean isKingSideCastlePossible() {
-        return isTileFree(1) && isTileFree(2) && isTileRook(3) && isUnreachableByEnemy(1) && isUnreachableByEnemy(2);
+        return isSquareFree(1)
+                && isSquareFree(2)
+                && squareHasRook(3)
+                && isUnreachableByEnemy(1)
+                && isUnreachableByEnemy(2);
     }
 
     private boolean isQueenSideCastlePossible() {
-        return isTileFree(-1)
-                && isTileFree(-2)
-                && isTileFree(-3)
-                && isTileRook(-4)
+        return isSquareFree(-1)
+                && isSquareFree(-2)
+                && isSquareFree(-3)
+                && squareHasRook(-4)
                 && isUnreachableByEnemy(-1)
                 && isUnreachableByEnemy(-2)
                 && isUnreachableByEnemy(-3);
     }
 
-    private boolean isTileFree(int offset) {
+    private boolean isSquareFree(int offset) {
         var destination = king.position().right(offset);
 
         return destination != null && board.isEmpty(destination);
     }
 
-    private boolean isTileRook(int offset) {
+    private boolean squareHasRook(int offset) {
         var destination = king.position().right(offset);
 
         return destination != null && board.contains(destination, Rook.class);
@@ -249,6 +253,6 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
         var destination = king.position().right(offset);
 
         return destination != null
-                && Player.calculateAttacksOnTile(destination, opponentLegals).isEmpty();
+                && Player.calculateAttacksOnSquare(destination, opponentLegals).isEmpty();
     }
 }

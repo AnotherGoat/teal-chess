@@ -105,7 +105,7 @@ public class Game {
         return gameState.currentTurn().blackPlayer();
     }
 
-    public MoveTransition performMove(Move move) {
+    public MoveTransition makeMove(Move move) {
         return getCurrentPlayer().makeMove(getCurrentPlayer(), move);
     }
 }

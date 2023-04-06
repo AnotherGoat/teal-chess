@@ -92,7 +92,7 @@ dependencies {
 
 tasks {
     compileJava {
-        dependsOn = [spotlessApply]
+        dependsOn = [spotlessJavaApply]
 
         // Use project group and name as the base package for all source code
         options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
