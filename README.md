@@ -8,11 +8,10 @@ This project is based on [this video tutorial series](https://www.youtube.com/pl
 This was made to learn more about the Java language in general, and to improve a project that I liked already.
 
 Teal Chess has some differences with the original project, some of which are:
-- The project uses Java 17 (the latest LTS version) by default
-- Gradle is used to manage dependencies, with the Kotlin DSL
+- The project uses Java 17 (the latest LTS version)
+- Gradle is used to manage dependencies, with the Groovy DSL
 - The UI looks a bit more modern, thanks to [FlatLaf](https://www.formdev.com/flatlaf/)
 - Chess graphics are the same as the ones [by Cburnett on Wikipedia](https://en.wikipedia.org/wiki/User:Cburnett/GFDL_images/Chess)
-- The code follows [Google's Java Style Guide](https://google.github.io/styleguide/javaguide.html)
 - Abstractions were added when it makes sense, to increase code readability
 
 The project is far from finished (even as a demo), which is why there's no release yet.

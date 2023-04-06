@@ -5,7 +5,15 @@ Replace `./gradlew` with `.\gradlew.bat` if you're using Windows.
 
 ## Using the program
 
-### Compiling a JAR
+### Running the program
+
+The game can be easily started like this:
+
+```shell
+/.gradlew run
+```
+
+### Compiling a JAR (platform-independent, but requires JRE)
 
 To generate a JAR with every dependency included, the [Gradle Shadow Plugin](https://imperceptiblethoughts.com/shadow/) can be used:
 
@@ -31,11 +39,41 @@ To check other command line options, run:
 java -jar teal-chess-0.0-all.jar --help
 ```
 
+### Packaging the application (platform-specific)
+
+The example below uses Linux and generates an RPM installer.
+Depending on your platform, you may need to reconfigure the plugin in `build.gradle` to produce a different output.
+Also, make sure that you've installed the proper packaging tools for your platform.
+
+To package the application with JRE for your platform, run:
+
+```shell
+./gradlew jpackage
+```
+
+The generated runtime image can be found in `build/image/bin/teal-chess`.
+The platform-specific installer can be found in `build/jpackage/teal-chess-0.0-1.x86_64.rpm`.
+
+To install the RPM, you can run:
+
+```shell
+sudo rpm -i teal-chess-0.0-1.x86_64.rpm
+```
+
+Then the installed program can be run like:
+
+```shell
+/opt/teal-chess/bin/teal-chess
+```
+
+And that's it! You can add it to your PATH if you want to run it more easily.
+The next sections aren't platform-specific.
+
 ## Development tools
 
-### Applying Google Java Format
+### Formatting the code
 
-Google Java format is applied automatically every time the project is compiled.
+The code is automatically formatted every time the project is compiled.
 To apply it manually, run:
 
 ```shell
