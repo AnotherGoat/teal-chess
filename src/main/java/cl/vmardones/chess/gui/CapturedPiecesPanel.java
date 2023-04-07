@@ -16,7 +16,7 @@ import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Alliance;
 import cl.vmardones.chess.io.PieceIconLoader;
 
-class TakenPiecesPanel extends JPanel {
+class CapturedPiecesPanel extends JPanel {
 
     private static final Dimension INITIAL_SIZE = new Dimension(40, 80);
     private static final EtchedBorder BORDER = new EtchedBorder(EtchedBorder.RAISED);
@@ -24,7 +24,7 @@ class TakenPiecesPanel extends JPanel {
     private final JPanel northPanel;
     private final JPanel southPanel;
 
-    TakenPiecesPanel() {
+    CapturedPiecesPanel() {
         super(new BorderLayout());
 
         setBorder(BORDER);
@@ -46,12 +46,12 @@ class TakenPiecesPanel extends JPanel {
         getTakenPieces(moveLog, Alliance.WHITE).stream()
                 .map(piece -> PieceIconLoader.load(piece, INITIAL_SIZE.width / 2, INITIAL_SIZE.width / 2))
                 .filter(Objects::nonNull)
-                .forEach(image -> southPanel.add(new JLabel(new ImageIcon(image))));
+                .forEach(icon -> southPanel.add(new JLabel(icon)));
 
         getTakenPieces(moveLog, Alliance.BLACK).stream()
                 .map(piece -> PieceIconLoader.load(piece, INITIAL_SIZE.width / 2, INITIAL_SIZE.width / 2))
                 .filter(Objects::nonNull)
-                .forEach(image -> northPanel.add(new JLabel(new ImageIcon(image))));
+                .forEach(icon -> northPanel.add(new JLabel(icon)));
 
         validate();
     }

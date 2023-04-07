@@ -9,9 +9,9 @@ import static javax.swing.SwingUtilities.isLeftMouseButton;
 import static javax.swing.SwingUtilities.isRightMouseButton;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
@@ -74,8 +74,7 @@ class SquarePanel extends JPanel {
     }
 
     private MouseListener clickListener() {
-
-        return new MouseListener() {
+        return new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (isLeftMouseButton(e)) {
@@ -90,26 +89,6 @@ class SquarePanel extends JPanel {
                 }
 
                 SwingUtilities.invokeLater(table::update);
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                // Do nothing
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                // Do nothing
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                // Do nothing
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                // Do nothing
             }
         };
     }
@@ -182,8 +161,8 @@ class SquarePanel extends JPanel {
         }
     }
 
-    private void addImage(BufferedImage bufferedImage, Integer layer) {
-        var image = new JLabel(new ImageIcon(bufferedImage));
+    private void addImage(Icon icon, Integer layer) {
+        var image = new JLabel(icon);
 
         layeredPane.add(image, BorderLayout.CENTER, layer);
     }
@@ -197,7 +176,7 @@ class SquarePanel extends JPanel {
                                 "art/misc/green_dot.svg", INITIAL_SIZE.width / 2, INITIAL_SIZE.height / 2);
 
                         if (greenDot != null) {
-                            addImage(greenDot, HIGHLIGHT_LAYER);
+                            addImage(new ImageIcon(greenDot), HIGHLIGHT_LAYER);
                         }
                     });
         }

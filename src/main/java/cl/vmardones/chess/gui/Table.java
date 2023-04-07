@@ -40,7 +40,7 @@ public class Table {
     private final JFrame frame;
     private final BoardPanel boardPanel;
 
-    private final TakenPiecesPanel takenPiecesPanel;
+    private final CapturedPiecesPanel capturedPiecesPanel;
 
     private final GameHistoryPanel gameHistoryPanel;
 
@@ -79,14 +79,14 @@ public class Table {
         frame.setJMenuBar(createMenuBar());
 
         boardPanel = new BoardPanel(this, game.getBoard());
-        takenPiecesPanel = new TakenPiecesPanel();
+        capturedPiecesPanel = new CapturedPiecesPanel();
         gameHistoryPanel = new GameHistoryPanel();
 
         moveLog = new MoveLog();
 
         frame.add(new ContainerPanel<>(boardPanel), BorderLayout.CENTER);
 
-        frame.add(takenPiecesPanel, BorderLayout.WEST);
+        frame.add(capturedPiecesPanel, BorderLayout.WEST);
         frame.add(gameHistoryPanel, BorderLayout.EAST);
 
         frame.setLocationRelativeTo(null);
@@ -182,7 +182,7 @@ public class Table {
 
     void update() {
         gameHistoryPanel.redo(game.getCurrentPlayer(), moveLog);
-        takenPiecesPanel.redo(moveLog);
+        capturedPiecesPanel.redo(moveLog);
 
         boardPanel.setBoard(game.getBoard());
         boardPanel.draw();

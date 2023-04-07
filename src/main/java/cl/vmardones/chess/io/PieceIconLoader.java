@@ -5,8 +5,8 @@
 
 package cl.vmardones.chess.io;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
+import javax.swing.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +23,7 @@ public final class PieceIconLoader {
         throw new UnsupportedOperationException("You cannot instantiate me!");
     }
 
-    public static @Nullable BufferedImage load(Piece piece, int width, int height) {
+    public static @Nullable Icon load(Piece piece, int width, int height) {
 
         var iconResource = ResourceImporter.get(getIconPath(piece));
 
@@ -33,7 +33,7 @@ public final class PieceIconLoader {
                 return null;
             }
 
-            return SvgImporter.get(iconResource, width, height);
+            return new ImageIcon(SvgImporter.get(iconResource, width, height));
         } catch (IOException e) {
             LOG.warn("Could not load the piece {}", getIconPath(piece));
             return null;
