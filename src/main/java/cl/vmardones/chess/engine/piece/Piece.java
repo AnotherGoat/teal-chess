@@ -12,7 +12,6 @@ import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Position;
 import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.move.Move;
-import cl.vmardones.chess.engine.move.MoveType;
 import cl.vmardones.chess.engine.player.Alliance;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -152,18 +151,19 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
      */
     protected @Nullable Move createMove(Square destination, Board board) {
         if (destination.piece() == null) {
-            return new Move(MoveType.NORMAL, board, this, destination.position());
+            return Move.createNormal(this, destination.position());
         }
 
         var capturablePiece = destination.piece();
 
         if (isEnemyOf(capturablePiece)) {
-            return new Move(MoveType.CAPTURE, board, this, destination.position(), capturablePiece);
+            return Move.createCapture(this, destination.position(), capturablePiece);
         }
 
         return null;
     }
 
+    // TODO: Check if this method is still needed or not
     private boolean isInMoveRange(Board board, Position position) {
         return calculateLegals(board).stream()
                 .map(Move::destination)

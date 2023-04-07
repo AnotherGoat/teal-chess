@@ -122,7 +122,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
             return new MoveTransition(board, move, MoveStatus.CHECKS);
         }
 
-        return new MoveTransition(move.make(), move, MoveStatus.DONE);
+        return new MoveTransition(MoveMaker.make(board, move), move, MoveStatus.DONE);
     }
 
     /* toString */
@@ -210,13 +210,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
         var kingDestination = kingPosition.right(2 * direction);
         var rookDestination = kingPosition.right(direction);
 
-        return new Move(
-                kingSide ? MoveType.KING_CASTLE : MoveType.QUEEN_CASTLE,
-                board,
-                king,
-                kingDestination,
-                rook,
-                rookDestination);
+        return Move.createCastle(kingSide, king, kingDestination, rook, rookDestination);
     }
 
     private boolean isKingSideCastlePossible() {

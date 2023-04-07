@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Position;
+import cl.vmardones.chess.engine.move.MoveMaker;
 import cl.vmardones.chess.engine.move.MoveType;
 import cl.vmardones.chess.engine.player.Alliance;
 import org.junit.jupiter.api.Test;
@@ -94,7 +95,7 @@ class PawnTest {
         var initialBoard = Board.builder(whiteKing, blackKing).with(initialPawn).build();
         var firstMove = initialPawn.createMove(initialBoard.squareAt(Position.of("a3")), initialBoard);
 
-        var newBoard = firstMove.make();
+        var newBoard = MoveMaker.make(initialBoard, firstMove);
         var pawn = newBoard.squareAt(Position.of("a3")).piece();
         var destination = newBoard.squareAt(Position.of("a5"));
 
@@ -132,7 +133,7 @@ class PawnTest {
                 .build();
 
         var jumpMove = capturablePiece.createMove(initialBoard.squareAt(Position.of("b5")), initialBoard);
-        var newBoard = jumpMove.make();
+        var newBoard = MoveMaker.make(initialBoard, jumpMove);
         var destination = newBoard.squareAt(Position.of("b6"));
 
         assertThat(pawn.createMove(destination, newBoard).type()).isEqualTo(MoveType.EN_PASSANT);

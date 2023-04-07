@@ -52,23 +52,13 @@ class GameHistoryPanel extends JPanel {
             var moveText = lastMove.toString();
 
             switch (lastMove.piece().alliance()) {
-                case WHITE -> model.setValueAt(moveText + checkmateHash(currentPlayer), model.getLastRowIndex() + 1, 0);
-                case BLACK -> model.setValueAt(moveText + checkmateHash(currentPlayer), model.getLastRowIndex(), 1);
+                case WHITE -> model.setValueAt(moveText, model.getLastRowIndex() + 1, 0);
+                case BLACK -> model.setValueAt(moveText, model.getLastRowIndex(), 1);
             }
         }
 
         var vertical = scrollPane.getVerticalScrollBar();
         vertical.setValue(vertical.getMaximum());
-    }
-
-    private String checkmateHash(Player currentPlayer) {
-        if (currentPlayer.isCheckmated()) {
-            return "#";
-        } else if (currentPlayer.inCheck()) {
-            return "+";
-        }
-
-        return "";
     }
 
     private static class DataModel extends DefaultTableModel {

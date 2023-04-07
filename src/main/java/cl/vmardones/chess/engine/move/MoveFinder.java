@@ -37,14 +37,12 @@ public final class MoveFinder {
 
         LOG.debug(
                 "Legal moves: {}",
-                legalMoves.stream()
-                        .filter(move -> move.getSource().equals(from))
-                        .toList());
+                legalMoves.stream().filter(move -> move.source().equals(from)).toList());
 
         return legalMoves.stream().filter(isMovePossible(from, to)).findFirst().orElse(null);
     }
 
     private static Predicate<Move> isMovePossible(Position source, Position destination) {
-        return move -> move.getSource().equals(source) && move.destination().equals(destination);
+        return move -> move.source().equals(source) && move.destination().equals(destination);
     }
 }

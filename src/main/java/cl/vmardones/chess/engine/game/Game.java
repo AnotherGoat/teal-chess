@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.BoardService;
 import cl.vmardones.chess.engine.move.Move;
+import cl.vmardones.chess.engine.move.MoveMaker;
 import cl.vmardones.chess.engine.move.MoveTransition;
 import cl.vmardones.chess.engine.player.Alliance;
 import cl.vmardones.chess.engine.player.HumanPlayer;
@@ -77,7 +78,8 @@ public class Game {
     }
 
     public Turn createNextTurn(Move move) {
-        return createTurn(move.make(), getOpponent().alliance());
+        var nextTurnBoard = MoveMaker.make(getBoard(), move);
+        return createTurn(nextTurnBoard, getOpponent().alliance());
     }
 
     public Board getBoard() {

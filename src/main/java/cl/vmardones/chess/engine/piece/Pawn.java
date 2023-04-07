@@ -34,22 +34,23 @@ public final class Pawn extends JumpingPiece {
 
         if (isNotCapture(destination)) {
             if (isJumpPossible(board, destination)) {
-                return createJumpMove(board, destination);
+                return createJumpMove(destination);
             }
 
-            return createForwardMove(board, destination);
+            return createForwardMove(destination);
         }
 
         if (isEnPassantPossible(board, destination)) {
             LOG.debug("En passant is possible!");
+
             return createEnPassantMove(board, destination);
         }
 
-        return createCaptureMove(board, destination);
+        return createCaptureMove(destination);
     }
 
     private Move createEnPassantMove(Board board, Square destination) {
-        var enPassantMove = new Move(MoveType.EN_PASSANT, board, this, destination.position(), board.enPassantPawn());
+        var enPassantMove = Move.createEnPassant(this, destination.position(), board.enPassantPawn());
 
         LOG.debug("Created en passant move: {}", enPassantMove);
         return enPassantMove;
@@ -76,18 +77,18 @@ public final class Pawn extends JumpingPiece {
         return position().sameFileAs(destination.position());
     }
 
-    private @Nullable Move createCaptureMove(Board board, Square destination) {
+    private @Nullable Move createCaptureMove(Square destination) {
         var capturablePiece = destination.piece();
 
         if (capturablePiece != null && isEnemyOf(capturablePiece)) {
-            return new Move(MoveType.PAWN_CAPTURE, board, this, destination.position(), capturablePiece);
+            return Move.createCapture(this, destination.position(), capturablePiece);
         }
 
         return null;
     }
 
-    private Move createJumpMove(Board board, Square destination) {
-        return new Move(MoveType.PAWN_JUMP, board, this, destination.position());
+    private Move createJumpMove(Square destination) {
+        return Move.createPawnJump(this, destination.position());
     }
 
     private boolean isJumpPossible(Board board, Square destination) {
@@ -104,13 +105,13 @@ public final class Pawn extends JumpingPiece {
                 && !destination.equals(board.squareAt(forward));
     }
 
-    private @Nullable Move createForwardMove(Board board, Square destination) {
+    private @Nullable Move createForwardMove(Square destination) {
         if (destination.piece() != null) {
             return null;
         }
 
         // TODO: Deal with promotions
-        return new Move(MoveType.PAWN_NORMAL, board, this, destination.position());
+        return Move.createNormal(this, destination.position());
     }
 
     @Override
