@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.board.Coordinate;
+import cl.vmardones.chess.engine.board.Position;
 import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveType;
@@ -37,13 +37,13 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
     protected static final List<int[]> BLACK_PAWN_MOVES =
             List.of(new int[] {-1, -1}, new int[] {0, -1}, new int[] {1, -1}, new int[] {0, -2});
 
-    protected final Coordinate position;
+    protected final Position position;
     protected final Alliance alliance;
     protected final boolean firstMove;
 
     /* Getters */
 
-    public Coordinate position() {
+    public Position position() {
         return position;
     }
 
@@ -136,12 +136,12 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
     }
 
     protected Piece(String position, Alliance alliance, boolean firstMove) {
-        this.position = Coordinate.of(position);
+        this.position = Position.of(position);
         this.alliance = alliance;
         this.firstMove = firstMove;
     }
 
-    protected abstract List<Coordinate> calculatePossibleDestinations(Board board);
+    protected abstract List<Position> calculatePossibleDestinations(Board board);
 
     /**
      * Creates a move, based on the piece and the destination.
@@ -152,21 +152,21 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
      */
     protected @Nullable Move createMove(Square destination, Board board) {
         if (destination.piece() == null) {
-            return new Move(MoveType.NORMAL, board, this, destination.coordinate());
+            return new Move(MoveType.NORMAL, board, this, destination.position());
         }
 
         var capturablePiece = destination.piece();
 
         if (isEnemyOf(capturablePiece)) {
-            return new Move(MoveType.CAPTURE, board, this, destination.coordinate(), capturablePiece);
+            return new Move(MoveType.CAPTURE, board, this, destination.position(), capturablePiece);
         }
 
         return null;
     }
 
-    private boolean isInMoveRange(Board board, Coordinate coordinate) {
+    private boolean isInMoveRange(Board board, Position position) {
         return calculateLegals(board).stream()
                 .map(Move::destination)
-                .anyMatch(destination -> destination.equals(coordinate));
+                .anyMatch(destination -> destination.equals(position));
     }
 }

@@ -41,7 +41,7 @@ Only the first 3 articles are taken into account.
 - ✓ (2.2) At the beginning of the game White has 16 light-coloured pieces (the
   ‘white’ pieces); Black has 16 dark-coloured pieces (the ‘black’ pieces).
 - ✓ (2.3) The initial position of the pieces on the chessboard is as follows:
-- ✗ (2.4) The eight vertical columns of squares are called ‘files’. The eight
+- ✓ (2.4) The eight vertical columns of squares are called ‘files’. The eight
   horizontal rows of squares are called ‘ranks’. A straight line of squares of
   the same colour, running from one edge of the board to an adjacent edge, is
   called a ‘diagonal’

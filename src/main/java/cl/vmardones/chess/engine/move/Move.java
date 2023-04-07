@@ -8,7 +8,7 @@ package cl.vmardones.chess.engine.move;
 import java.util.Objects;
 
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.board.Coordinate;
+import cl.vmardones.chess.engine.board.Position;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
 import org.eclipse.jdt.annotation.Nullable;
@@ -19,19 +19,19 @@ public final class Move {
     private final MoveType type;
     private final Board board;
     private final Piece piece;
-    private final Coordinate destination;
+    private final Position destination;
 
     @Nullable private final Piece otherPiece;
 
-    @Nullable private final Coordinate rookDestination;
+    @Nullable private final Position rookDestination;
 
     /* Creating moves */
 
-    public Move(MoveType type, Board board, Piece piece, Coordinate destination) {
+    public Move(MoveType type, Board board, Piece piece, Position destination) {
         this(type, board, piece, destination, null);
     }
 
-    public Move(MoveType type, Board board, Piece piece, Coordinate destination, @Nullable Piece otherPiece) {
+    public Move(MoveType type, Board board, Piece piece, Position destination, @Nullable Piece otherPiece) {
         this(type, board, piece, destination, otherPiece, null);
     }
 
@@ -39,9 +39,9 @@ public final class Move {
             MoveType type,
             Board board,
             Piece piece,
-            Coordinate destination,
+            Position destination,
             @Nullable Piece otherPiece,
-            @Nullable Coordinate rookDestination) {
+            @Nullable Position rookDestination) {
         this.type = type;
         this.board = board;
         this.piece = piece;
@@ -60,7 +60,7 @@ public final class Move {
         return piece;
     }
 
-    public Coordinate destination() {
+    public Position destination() {
         return destination;
     }
 
@@ -98,7 +98,7 @@ public final class Move {
     public String toString() {
         return switch (type) {
             case CAPTURE -> piece.singleChar() + destination();
-            case PAWN_CAPTURE -> String.format("%sx%s", piece.position().column(), destination());
+            case PAWN_CAPTURE -> String.format("%sx%s", piece.position().file(), destination());
             case KING_CASTLE -> "0-0";
             case QUEEN_CASTLE -> "0-0-0";
             default -> destination().toString();
@@ -141,7 +141,7 @@ public final class Move {
         return builder.build();
     }
 
-    public Coordinate getSource() {
+    public Position getSource() {
         return piece.position();
     }
 }

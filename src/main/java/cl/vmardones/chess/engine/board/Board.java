@@ -66,25 +66,25 @@ public final class Board {
     /* Checking the board */
 
     /**
-     * Get the square located at a specific coordinate.
+     * Get the square located at a specific position.
      *
-     * @param coordinate The coordinate to search.
+     * @param position The position to search.
      * @return The square found.
      */
-    public Square squareAt(Coordinate coordinate) {
-        return squares.get(coordinate.index());
+    public Square squareAt(Position position) {
+        return squares.get(position.index());
     }
 
     /**
      * Check whether the specified square contains a type of piece or not.
      *
-     * @param coordinate The coordinate to search.
+     * @param position The position to search.
      * @param pieceType The type of piece to search.
      * @return True if the square has a piece of the specified type. Always returns false if the square is
      *     empty.
      */
-    public boolean contains(String coordinate, Class<? extends Piece> pieceType) {
-        var piece = squareAt(Coordinate.of(coordinate)).piece();
+    public boolean contains(String position, Class<? extends Piece> pieceType) {
+        var piece = squareAt(Position.of(position)).piece();
 
         return pieceType.isInstance(piece);
     }
@@ -92,11 +92,11 @@ public final class Board {
     /**
      * Check if a specific square is empty.
      *
-     * @param coordinate The coordinate of the square to check.
+     * @param position The position of the square to check.
      * @return True if the square doesn't have a piece.
      */
-    public boolean isEmpty(Coordinate coordinate) {
-        return squareAt(coordinate).piece() == null;
+    public boolean isEmpty(Position position) {
+        return squareAt(position).piece() == null;
     }
 
     /* Getters */
@@ -156,8 +156,8 @@ public final class Board {
         var builder = new StringBuilder();
 
         IntStream.range(MIN_SQUARES, MAX_SQUARES)
-                .mapToObj(Coordinate::of)
-                .map(coordinate -> String.format(getFormat(coordinate), squareAt(coordinate)))
+                .mapToObj(Position::of)
+                .map(position -> String.format(getFormat(position), squareAt(position)))
                 .forEach(builder::append);
 
         return builder.toString();
@@ -189,8 +189,8 @@ public final class Board {
                 .toList();
     }
 
-    private String getFormat(Coordinate coordinate) {
-        return (coordinate.index() + 1) % Board.SIDE_LENGTH == 0 ? "%s  \n" : "%s  ";
+    private String getFormat(Position position) {
+        return (position.index() + 1) % Board.SIDE_LENGTH == 0 ? "%s  \n" : "%s  ";
     }
 
     /**

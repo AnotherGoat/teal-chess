@@ -19,7 +19,7 @@ public final class Square {
 
     private static final Map<String, Square> CACHED_EMPTY_SQUARES = fillEmptySquareCache();
 
-    private final Coordinate coordinate;
+    private final Position position;
     private final Alliance color;
     private final @Nullable Piece piece;
 
@@ -42,8 +42,8 @@ public final class Square {
 
     /* Getters */
 
-    public Coordinate coordinate() {
-        return coordinate;
+    public Position position() {
+        return position;
     }
 
     public Alliance color() {
@@ -79,12 +79,12 @@ public final class Square {
         }
 
         var other = (Square) o;
-        return coordinate.equals(other.coordinate) && color.equals(other.color) && Objects.equals(piece, other.piece);
+        return position.equals(other.position) && color.equals(other.color) && Objects.equals(piece, other.piece);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(coordinate, color, piece);
+        return Objects.hash(position, color, piece);
     }
 
     /**
@@ -110,22 +110,22 @@ public final class Square {
                 .collect(Collectors.toMap(Entry::algebraicNotation, Entry::square));
     }
 
-    private Square(Coordinate coordinate) {
-        this(coordinate, null);
+    private Square(Position position) {
+        this(position, null);
     }
 
     private Square(String algebraicNotation, @Nullable Piece piece) {
-        this(Coordinate.of(algebraicNotation), piece);
+        this(Position.of(algebraicNotation), piece);
     }
 
-    private Square(Coordinate coordinate, @Nullable Piece piece) {
-        this.coordinate = coordinate;
+    private Square(Position position, @Nullable Piece piece) {
+        this.position = position;
         this.piece = piece;
         color = assignColor();
     }
 
     private Alliance assignColor() {
-        if ((coordinate.index() + coordinate.index() / Board.SIDE_LENGTH) % 2 == 0) {
+        if ((position.index() + position.index() / Board.SIDE_LENGTH) % 2 == 0) {
             return Alliance.WHITE;
         }
 

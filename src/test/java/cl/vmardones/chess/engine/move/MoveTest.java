@@ -8,7 +8,7 @@ package cl.vmardones.chess.engine.move;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.board.Coordinate;
+import cl.vmardones.chess.engine.board.Position;
 import cl.vmardones.chess.engine.piece.Bishop;
 import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Pawn;
@@ -29,7 +29,7 @@ class MoveTest {
     @Test
     void normalToString() {
         var piece = new Pawn("a1", Alliance.WHITE);
-        var move = new Move(MoveType.NORMAL, board, piece, Coordinate.of("e5"));
+        var move = new Move(MoveType.NORMAL, board, piece, Position.of("e5"));
 
         assertThat(move).hasToString("e5");
     }
@@ -38,7 +38,7 @@ class MoveTest {
     void captureToString() {
         var piece = new Bishop("b1", Alliance.WHITE);
         var capturedPiece = new Bishop("c2", Alliance.BLACK);
-        var move = new Move(MoveType.CAPTURE, board, piece, Coordinate.of("c2"), capturedPiece);
+        var move = new Move(MoveType.CAPTURE, board, piece, Position.of("c2"), capturedPiece);
 
         assertThat(move).hasToString("Bc2");
     }
@@ -47,7 +47,7 @@ class MoveTest {
     void pawnCaptureToString() {
         var pawn = new Pawn("a8", Alliance.BLACK);
         var capturedPawn = new Pawn("b7", Alliance.WHITE);
-        var move = new Move(MoveType.PAWN_CAPTURE, board, pawn, Coordinate.of("b7"), capturedPawn);
+        var move = new Move(MoveType.PAWN_CAPTURE, board, pawn, Position.of("b7"), capturedPawn);
 
         assertThat(move).hasToString("axb7");
     }
@@ -56,7 +56,7 @@ class MoveTest {
     void kingCastleToString() {
         var piece = new King("e5", Alliance.WHITE);
         var rook = new Rook("e8", Alliance.WHITE);
-        var move = new Move(MoveType.KING_CASTLE, board, piece, Coordinate.of("e7"), rook, Coordinate.of("e6"));
+        var move = new Move(MoveType.KING_CASTLE, board, piece, Position.of("e7"), rook, Position.of("e6"));
 
         assertThat(move).hasToString("0-0");
     }
@@ -65,7 +65,7 @@ class MoveTest {
     void queenCastleToString() {
         var piece = new King("e5", Alliance.WHITE);
         var rook = new Rook("e1", Alliance.WHITE);
-        var move = new Move(MoveType.QUEEN_CASTLE, board, piece, Coordinate.of("e3"), rook, Coordinate.of("e4"));
+        var move = new Move(MoveType.QUEEN_CASTLE, board, piece, Position.of("e3"), rook, Position.of("e4"));
 
         assertThat(move).hasToString("0-0-0");
     }

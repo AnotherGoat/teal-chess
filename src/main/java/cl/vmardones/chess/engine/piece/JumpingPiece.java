@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.board.Coordinate;
+import cl.vmardones.chess.engine.board.Position;
 import cl.vmardones.chess.engine.player.Alliance;
 
 /**
@@ -30,7 +30,7 @@ abstract sealed class JumpingPiece extends Piece permits King, Knight, Pawn {
     }
 
     @Override
-    protected List<Coordinate> calculatePossibleDestinations(Board board) {
+    protected List<Position> calculatePossibleDestinations(Board board) {
         return moveOffsets.stream()
                 .map(offset -> position().to(offset[0], offset[1]))
                 .filter(Objects::nonNull)

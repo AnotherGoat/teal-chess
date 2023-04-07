@@ -32,7 +32,7 @@ class SquareTest {
 
     @Test
     void cache() {
-        assertThat(Square.create("g5", null)).isEqualTo(Square.create("g5", null));
+        assertThat(Square.create("g5", null)).isSameAs(Square.create("g5", null));
     }
 
     @Test
@@ -77,7 +77,7 @@ class SquareTest {
     @Test
     void equalsContract() {
         EqualsVerifier.forClass(Square.class)
-                .withNonnullFields("coordinate", "color")
+                .withNonnullFields("position", "color")
                 .verify();
     }
 }

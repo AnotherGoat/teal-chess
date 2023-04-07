@@ -26,4 +26,12 @@ class BoardServiceTest {
                 .containsOnlyOnce("R  N  B  Q  K  B  N  R")
                 .contains("\n");
     }
+
+    @Test
+    void cache() {
+        var firstBoard = new BoardService().createStandardBoard();
+        var secondBoard = new BoardService().createStandardBoard();
+
+        assertThat(firstBoard).isSameAs(secondBoard);
+    }
 }

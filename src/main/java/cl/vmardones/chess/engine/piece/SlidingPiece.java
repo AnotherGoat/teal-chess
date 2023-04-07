@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.board.Coordinate;
+import cl.vmardones.chess.engine.board.Position;
 import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.player.Alliance;
 
@@ -27,14 +27,14 @@ abstract sealed class SlidingPiece extends Piece permits Bishop, Queen, Rook {
     }
 
     @Override
-    protected List<Coordinate> calculatePossibleDestinations(Board board) {
+    protected List<Position> calculatePossibleDestinations(Board board) {
         return moveVectors.stream()
                 .map(vector -> calculateOffsets(vector, board))
                 .flatMap(Collection::stream)
                 .toList();
     }
 
-    private List<Coordinate> calculateOffsets(int[] vector, Board board) {
+    private List<Position> calculateOffsets(int[] vector, Board board) {
         var squares = IntStream.range(1, Board.SIDE_LENGTH + 1)
                 .mapToObj(i -> position().to(vector[0] * i, vector[1] * i))
                 .filter(Objects::nonNull)
@@ -42,7 +42,7 @@ abstract sealed class SlidingPiece extends Piece permits Bishop, Queen, Rook {
                 .toList()
                 .listIterator();
 
-        return filterAccessible(squares).stream().map(Square::coordinate).toList();
+        return filterAccessible(squares).stream().map(Square::position).toList();
     }
 
     // TODO: Replace this method with something more stream-friendly

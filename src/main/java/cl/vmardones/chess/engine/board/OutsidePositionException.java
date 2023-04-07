@@ -5,9 +5,9 @@
 
 package cl.vmardones.chess.engine.board;
 
-final class InvalidCoordinateException extends RuntimeException {
+final class OutsidePositionException extends RuntimeException {
 
-    InvalidCoordinateException(String message) {
+    OutsidePositionException(String message) {
         super(message);
     }
 }

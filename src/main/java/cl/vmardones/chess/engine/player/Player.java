@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.board.Coordinate;
+import cl.vmardones.chess.engine.board.Position;
 import cl.vmardones.chess.engine.move.*;
 import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Piece;
@@ -157,7 +157,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
     }
 
     // TODO: This method should probably be moved to board service
-    private static List<Move> calculateAttacksOnSquare(Coordinate kingPosition, List<Move> moves) {
+    private static List<Move> calculateAttacksOnSquare(Position kingPosition, List<Move> moves) {
         return moves.stream()
                 .filter(move -> kingPosition.equals(move.destination()))
                 .toList();
@@ -187,7 +187,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
     }
 
     private boolean castlingIsImpossible() {
-        return !king.firstMove() || inCheck() || king.position().column() != 'e';
+        return !king.firstMove() || inCheck() || king.position().file() != 'e';
     }
 
     private @Nullable Move generateCastleMove(boolean kingSide) {
@@ -196,7 +196,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
             return null;
         }
 
-        // TODO: Only use king's column
+        // TODO: Only use the king's file
         var kingPosition = king.position();
 
         var rookOffset = kingSide ? 3 : -4;

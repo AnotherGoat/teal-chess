@@ -19,10 +19,6 @@ public final class PieceIconLoader {
     private static final Logger LOG = LogManager.getLogger(PieceIconLoader.class);
     private static final String PIECE_ICON_PATH = "art/pieces";
 
-    private PieceIconLoader() {
-        throw new UnsupportedOperationException("You cannot instantiate me!");
-    }
-
     public static @Nullable Icon load(Piece piece, int width, int height) {
 
         var iconResource = ResourceImporter.get(getIconPath(piece));
@@ -43,5 +39,9 @@ public final class PieceIconLoader {
     private static String getIconPath(Piece piece) {
         return "%s/%s%s.svg"
                 .formatted(PIECE_ICON_PATH, piece.alliance(), piece.singleChar().toLowerCase());
+    }
+
+    private PieceIconLoader() {
+        throw new UnsupportedOperationException("You cannot instantiate me!");
     }
 }

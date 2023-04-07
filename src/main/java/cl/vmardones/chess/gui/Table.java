@@ -18,7 +18,7 @@ import javax.swing.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import cl.vmardones.chess.engine.board.Coordinate;
+import cl.vmardones.chess.engine.board.Position;
 import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.game.Game;
 import cl.vmardones.chess.engine.move.Move;
@@ -192,8 +192,8 @@ public class Table {
         moveLog.add(move);
     }
 
-    Square squareAt(Coordinate coordinate) {
-        return getGame().getBoard().squareAt(coordinate);
+    Square squareAt(Position position) {
+        return getGame().getBoard().squareAt(position);
     }
 
     MoveTransition makeMove(Move move) {

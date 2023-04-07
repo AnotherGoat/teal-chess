@@ -44,8 +44,8 @@ class BoardTest {
     void isEmpty() {
         var board = builder.build();
 
-        assertThat(board.isEmpty(Coordinate.of("a1"))).isTrue();
-        assertThat(board.isEmpty(Coordinate.of("h8"))).isTrue();
+        assertThat(board.isEmpty(Position.of("a1"))).isTrue();
+        assertThat(board.isEmpty(Position.of("h8"))).isTrue();
     }
 
     @Test

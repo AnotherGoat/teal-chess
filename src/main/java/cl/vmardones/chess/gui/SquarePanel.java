@@ -113,13 +113,13 @@ class SquarePanel extends JPanel {
 
     private void secondLeftClick() {
         // TODO: Replace all these long method calls with forwarding methods
-        LOG.debug("Selected the destination {}", square.coordinate());
+        LOG.debug("Selected the destination {}", square.position());
         table.setDestinationSquare(square);
 
         var move = MoveFinder.choose(
                 table.getGame().getCurrentPlayer().legals(),
-                table.getSourceSquare().coordinate(),
-                table.getDestinationSquare().coordinate());
+                table.getSourceSquare().position(),
+                table.getDestinationSquare().position());
 
         LOG.debug("Is there a move that can get to the destination? {}", move != null);
 
@@ -137,7 +137,7 @@ class SquarePanel extends JPanel {
 
     void drawSquare(Board board) {
         layeredPane = createLayeredPane();
-        square = board.squareAt(square.coordinate());
+        square = board.squareAt(square.position());
         assignPieceIcon();
         highlightLegals(board);
         add(layeredPane, BorderLayout.CENTER);
@@ -170,7 +170,7 @@ class SquarePanel extends JPanel {
     private void highlightLegals(Board board) {
         if (table.isHighlightLegals()) {
             selectedPieceLegals(board).stream()
-                    .filter(move -> move.destination().equals(square.coordinate()))
+                    .filter(move -> move.destination().equals(square.position()))
                     .forEach(move -> {
                         var greenDot = SvgLoader.load(
                                 "art/misc/green_dot.svg", INITIAL_SIZE.width / 2, INITIAL_SIZE.height / 2);

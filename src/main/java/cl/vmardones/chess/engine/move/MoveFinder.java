@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import cl.vmardones.chess.engine.board.Coordinate;
+import cl.vmardones.chess.engine.board.Position;
 import org.eclipse.jdt.annotation.Nullable;
 
 public final class MoveFinder {
@@ -25,11 +25,11 @@ public final class MoveFinder {
     /**
      * Given a list of legal moves, choose the first one that goes from the source to the destination.
      *
-     * @param from Source coordinate.
-     * @param to Destination coordinate.
+     * @param from Source position.
+     * @param to Destination position.
      * @return Move that goes from the source to the destination, if possible.
      */
-    public static @Nullable Move choose(List<Move> legalMoves, Coordinate from, Coordinate to) {
+    public static @Nullable Move choose(List<Move> legalMoves, Position from, Position to) {
 
         if (from.equals(to)) {
             return null;
@@ -44,7 +44,7 @@ public final class MoveFinder {
         return legalMoves.stream().filter(isMovePossible(from, to)).findFirst().orElse(null);
     }
 
-    private static Predicate<Move> isMovePossible(Coordinate source, Coordinate destination) {
+    private static Predicate<Move> isMovePossible(Position source, Position destination) {
         return move -> move.getSource().equals(source) && move.destination().equals(destination);
     }
 }

@@ -49,7 +49,7 @@ public final class Pawn extends JumpingPiece {
     }
 
     private Move createEnPassantMove(Board board, Square destination) {
-        var enPassantMove = new Move(MoveType.EN_PASSANT, board, this, destination.coordinate(), board.enPassantPawn());
+        var enPassantMove = new Move(MoveType.EN_PASSANT, board, this, destination.position(), board.enPassantPawn());
 
         LOG.debug("Created en passant move: {}", enPassantMove);
         return enPassantMove;
@@ -61,7 +61,7 @@ public final class Pawn extends JumpingPiece {
             return false;
         }
 
-        var side = destination.coordinate().up(alliance.oppositeDirection());
+        var side = destination.position().up(alliance.oppositeDirection());
 
         if (side == null) {
             return false;
@@ -73,21 +73,21 @@ public final class Pawn extends JumpingPiece {
     }
 
     private boolean isNotCapture(Square destination) {
-        return position().sameColumnAs(destination.coordinate());
+        return position().sameFileAs(destination.position());
     }
 
     private @Nullable Move createCaptureMove(Board board, Square destination) {
         var capturablePiece = destination.piece();
 
         if (capturablePiece != null && isEnemyOf(capturablePiece)) {
-            return new Move(MoveType.PAWN_CAPTURE, board, this, destination.coordinate(), capturablePiece);
+            return new Move(MoveType.PAWN_CAPTURE, board, this, destination.position(), capturablePiece);
         }
 
         return null;
     }
 
     private Move createJumpMove(Board board, Square destination) {
-        return new Move(MoveType.PAWN_JUMP, board, this, destination.coordinate());
+        return new Move(MoveType.PAWN_JUMP, board, this, destination.position());
     }
 
     private boolean isJumpPossible(Board board, Square destination) {
@@ -110,7 +110,7 @@ public final class Pawn extends JumpingPiece {
         }
 
         // TODO: Deal with promotions
-        return new Move(MoveType.PAWN_NORMAL, board, this, destination.coordinate());
+        return new Move(MoveType.PAWN_NORMAL, board, this, destination.position());
     }
 
     @Override
