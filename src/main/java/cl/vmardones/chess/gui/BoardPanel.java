@@ -21,7 +21,7 @@ class BoardPanel extends JPanel {
     private final List<SquarePanel> squares;
 
     BoardPanel(Table table, Board board) {
-        super(new GridLayout(8, 8));
+        super(new GridLayout(Board.SIDE_LENGTH, Board.SIDE_LENGTH));
         this.table = table;
         this.board = board;
 

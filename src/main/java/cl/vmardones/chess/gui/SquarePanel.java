@@ -42,7 +42,7 @@ class SquarePanel extends JPanel {
 
     private final transient Table table;
     private JLayeredPane layeredPane;
-    private final transient Square square;
+    private transient Square square;
 
     SquarePanel(Table table, Square square) {
         super(new BorderLayout());
@@ -158,6 +158,7 @@ class SquarePanel extends JPanel {
 
     void drawSquare(Board board) {
         layeredPane = createLayeredPane();
+        square = board.squareAt(square.coordinate());
         assignPieceIcon();
         highlightLegals(board);
         add(layeredPane, BorderLayout.CENTER);
