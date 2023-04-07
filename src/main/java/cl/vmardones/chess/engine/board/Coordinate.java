@@ -5,13 +5,10 @@
 
 package cl.vmardones.chess.engine.board;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
-import cl.vmardones.chess.engine.player.Alliance;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
@@ -21,55 +18,25 @@ import org.eclipse.jdt.annotation.Nullable;
  */
 public final class Coordinate {
 
-    private static final Pattern ALGEBRAIC_PATTERN = Pattern.compile("^[a-h][1-8]$");
-    private static final List<Coordinate> CACHED_COORDINATES = createCoordinateCache();
+    private static final List<Coordinate> CACHED_COORDINATES = fillCoordinateCache();
 
     private final int index;
 
     /* Coordinate creation */
 
     /**
-     * Create a coordinate, using an array index. Generally used when creating every coordinate, one
-     * by one.
-     *
-     * @param index The array index of the coordinate.
-     * @return The created coordinate.
-     * @throws InvalidCoordinateException If the coordinate is outside the allowed chessboard.
-     */
-    public static Coordinate of(int index) {
-        if (isOutsideBoard(index)) {
-            throw new InvalidCoordinateException("Index is outside chessboard: " + index);
-        }
-
-        return CACHED_COORDINATES.get(index);
-    }
-
-    /**
      * Create a coordinate, indicating its position with chess algebraic notation.
+     * Although this method is public, in general you'll prefer to use methods that shorten the syntax.
      *
-     * @param algebraic The algebraic notation of the coordinate.
+     * @param algebraicNotation The algebraic notation of the coordinate.
      * @return The created coordinate.
      * @throws InvalidCoordinateException If the coordinate isn't inside the allowed chessboard.
      */
-    public static Coordinate of(String algebraic) {
-        if (!ALGEBRAIC_PATTERN.matcher(algebraic).matches()) {
-            throw new InvalidCoordinateException("Invalid algebraic notation: " + algebraic);
-        }
-
-        return CACHED_COORDINATES.get(calculateIndex(algebraic));
+    public static Coordinate of(String algebraicNotation) {
+        return CACHED_COORDINATES.get(AlgebraicConverter.toIndex(algebraicNotation));
     }
 
     /* Getters */
-
-    /**
-     * Get the array index of this coordinate. Indexes start at 0 in the a8 coordinate, and end at 63
-     * in the h1 coordinate.
-     *
-     * @return This coordinate's index.
-     */
-    public int index() {
-        return index;
-    }
 
     /**
      * Obtains the column of this coordinate. The column is a letter between lowercase a (left side or
@@ -78,7 +45,7 @@ public final class Coordinate {
      * @return The coordinate's column.
      */
     public char column() {
-        return Column.getByIndex(columnIndex());
+        return toString().charAt(0);
     }
 
     /**
@@ -99,19 +66,6 @@ public final class Coordinate {
      */
     public int rank() {
         return Board.SIDE_LENGTH - index / Board.SIDE_LENGTH;
-    }
-
-    /**
-     * Obtains the color of this coordinate.
-     *
-     * @return The color, which is either black or white.
-     */
-    public Alliance color() {
-        if ((index + index / Board.SIDE_LENGTH) % 2 == 0) {
-            return Alliance.WHITE;
-        }
-
-        return Alliance.BLACK;
     }
 
     /* Comparisons */
@@ -136,16 +90,6 @@ public final class Coordinate {
         return rank() == other.rank();
     }
 
-    /**
-     * Compares this coordinate with another, to see if they have the same color.
-     *
-     * @param other The other coordinate.
-     * @return True if both are the same color.
-     */
-    public boolean sameColorAs(Coordinate other) {
-        return color() == other.color();
-    }
-
     /* Traslation operations */
 
     /**
@@ -167,14 +111,6 @@ public final class Coordinate {
         } catch (IndexOutOfBoundsException e) {
             return null;
         }
-    }
-
-    private boolean illegalJump(int x, Coordinate destination) {
-        return x < 0 && destination.columnIndex() > columnIndex() || x > 0 && destination.columnIndex() < columnIndex();
-    }
-
-    private int horizontalClamp(int x) {
-        return x % Board.SIDE_LENGTH;
     }
 
     /**
@@ -245,10 +181,24 @@ public final class Coordinate {
      */
     @Override
     public String toString() {
-        return String.valueOf(column()) + rank();
+        return AlgebraicConverter.toAlgebraic(index);
     }
 
-    private static List<Coordinate> createCoordinateCache() {
+    /* Coordinate creation (package-private) */
+
+    static Coordinate of(int index) {
+        if (isOutsideBoard(index)) {
+            throw new InvalidCoordinateException("Index is outside chessboard: " + index);
+        }
+
+        return CACHED_COORDINATES.get(index);
+    }
+
+    int index() {
+        return index;
+    }
+
+    private static List<Coordinate> fillCoordinateCache() {
         return IntStream.range(Board.MIN_SQUARES, Board.MAX_SQUARES)
                 .mapToObj(Coordinate::new)
                 .toList();
@@ -262,37 +212,11 @@ public final class Coordinate {
         return index < Board.MIN_SQUARES || index >= Board.MAX_SQUARES;
     }
 
-    private static int calculateIndex(String algebraicCoordinate) {
-        var column = Column.indexOf(algebraicCoordinate.charAt(0));
-        var rank = Board.SIDE_LENGTH
-                * (Board.SIDE_LENGTH - Integer.parseInt(String.valueOf(algebraicCoordinate.charAt(1))));
-
-        return column + rank;
+    private boolean illegalJump(int x, Coordinate destination) {
+        return x < 0 && destination.columnIndex() > columnIndex() || x > 0 && destination.columnIndex() < columnIndex();
     }
 
-    private enum Column {
-        A,
-        B,
-        C,
-        D,
-        E,
-        F,
-        G,
-        H;
-
-        private static final List<Character> names =
-                Arrays.stream(values()).map(Column::getName).toList();
-
-        private static char getByIndex(int index) {
-            return values()[index].getName();
-        }
-
-        private static int indexOf(Character name) {
-            return names.indexOf(name);
-        }
-
-        private char getName() {
-            return name().toLowerCase().charAt(0);
-        }
+    private int horizontalClamp(int x) {
+        return x % Board.SIDE_LENGTH;
     }
 }

@@ -78,7 +78,7 @@ public class Table {
 
         frame.setJMenuBar(createMenuBar());
 
-        boardPanel = new BoardPanel(this);
+        boardPanel = new BoardPanel(this, game.getBoard());
         takenPiecesPanel = new TakenPiecesPanel();
         gameHistoryPanel = new GameHistoryPanel();
 
@@ -154,7 +154,9 @@ public class Table {
         var flipBoard = new JMenuItem("Flip Board");
         flipBoard.addActionListener(e -> {
             boardDirection = boardDirection.getOpposite();
-            boardPanel.drawBoard(game.getBoard());
+
+            boardPanel.setBoard(game.getBoard());
+            boardPanel.draw();
         });
 
         var highlightCheckbox = new JCheckBoxMenuItem("Highlight Legal Moves", highlightLegals);
@@ -181,7 +183,9 @@ public class Table {
     void update() {
         gameHistoryPanel.redo(game.getCurrentPlayer(), moveLog);
         takenPiecesPanel.redo(moveLog);
-        boardPanel.drawBoard(game.getBoard());
+
+        boardPanel.setBoard(game.getBoard());
+        boardPanel.draw();
     }
 
     void addToLog(Move move) {

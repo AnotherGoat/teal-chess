@@ -122,7 +122,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
             return new MoveTransition(board, move, MoveStatus.CHECKS);
         }
 
-        return new MoveTransition(move.execute(), move, MoveStatus.DONE);
+        return new MoveTransition(move.make(), move, MoveStatus.DONE);
     }
 
     /* toString */
@@ -246,7 +246,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
     private boolean squareHasRook(int offset) {
         var destination = king.position().right(offset);
 
-        return destination != null && board.contains(destination, Rook.class);
+        return destination != null && board.contains(destination.toString(), Rook.class);
     }
 
     private boolean isUnreachableByEnemy(int offset) {

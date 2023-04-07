@@ -24,7 +24,7 @@ abstract sealed class JumpingPiece extends Piece permits King, Knight, Pawn {
         return moveOffsets;
     }
 
-    protected JumpingPiece(Coordinate position, Alliance alliance, boolean firstMove, List<int[]> moveOffsets) {
+    protected JumpingPiece(String position, Alliance alliance, boolean firstMove, List<int[]> moveOffsets) {
         super(position, alliance, firstMove);
         this.moveOffsets = moveOffsets;
     }

@@ -77,7 +77,7 @@ public class Game {
     }
 
     public Turn createNextTurn(Move move) {
-        return createTurn(move.execute(), getOpponent().alliance());
+        return createTurn(move.make(), getOpponent().alliance());
     }
 
     public Board getBoard() {

@@ -17,7 +17,7 @@ abstract sealed class SlidingPiece extends Piece permits Bishop, Queen, Rook {
 
     protected final List<int[]> moveVectors;
 
-    protected SlidingPiece(Coordinate position, Alliance alliance, boolean firstMove, List<int[]> moveVectors) {
+    protected SlidingPiece(String position, Alliance alliance, boolean firstMove, List<int[]> moveVectors) {
         super(position, alliance, firstMove);
         this.moveVectors = moveVectors;
     }

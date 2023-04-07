@@ -125,17 +125,17 @@ public final class Move {
      *
      * @return The new board, after the move was made.
      */
-    public Board execute() {
+    public Board make() {
         var builder = board.nextTurnBuilder();
 
-        builder.without(piece).without(otherPiece).with(piece.moveTo(destination));
+        builder.without(piece).without(otherPiece).with(piece.moveTo(destination.toString()));
 
         if (type == MoveType.PAWN_JUMP) {
-            builder.enPassantPawn((Pawn) piece.moveTo(destination));
+            builder.enPassantPawn((Pawn) piece.moveTo(destination.toString()));
         }
 
         if (isCastling()) {
-            builder.with(otherPiece.moveTo(rookDestination));
+            builder.with(otherPiece.moveTo(rookDestination.toString()));
         }
 
         return builder.build();

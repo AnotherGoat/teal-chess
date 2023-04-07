@@ -11,48 +11,41 @@ import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.player.Alliance;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class KnightTest {
 
-    @Mock
-    Coordinate anywhere;
-
-    @Mock
-    Coordinate destination;
-
     @Test
     void constructor() {
-        assertThat(new Knight(anywhere, Alliance.BLACK)).matches(Knight::firstMove);
+        assertThat(new Knight("a1", Alliance.BLACK)).matches(Knight::firstMove);
     }
 
     @Test
     void toSingleChar() {
-        assertThat(new Knight(anywhere, Alliance.WHITE).singleChar()).isEqualTo("N");
-        assertThat(new Knight(anywhere, Alliance.BLACK).singleChar()).isEqualTo("n");
+        assertThat(new Knight("a1", Alliance.WHITE).singleChar()).isEqualTo("N");
+        assertThat(new Knight("a1", Alliance.BLACK).singleChar()).isEqualTo("n");
     }
 
     @Test
     void lShapedMove() {
-        var knight = new Knight(anywhere, Alliance.WHITE);
+        var knight = new Knight("a1", Alliance.WHITE);
         assertThat(knight.moveOffsets()).containsOnlyOnce(new int[] {-2, 1});
     }
 
     @Test
     void illegalMove() {
-        var knight = new Knight(anywhere, Alliance.WHITE);
+        var knight = new Knight("a1", Alliance.WHITE);
         assertThat(knight.moveOffsets()).doesNotContain(new int[] {0, 1});
     }
 
     @Test
     void moveTo() {
-        var knightToMove = new Knight(anywhere, Alliance.WHITE);
+        var knightToMove = new Knight("a1", Alliance.WHITE);
 
-        assertThat(knightToMove.moveTo(destination))
+        assertThat(knightToMove.moveTo("a2"))
                 .isInstanceOf(Knight.class)
-                .matches(knight -> knight.position().equals(destination))
+                .matches(knight -> knight.position().equals(Coordinate.of("a2")))
                 .matches(knight -> !knight.firstMove());
     }
 }

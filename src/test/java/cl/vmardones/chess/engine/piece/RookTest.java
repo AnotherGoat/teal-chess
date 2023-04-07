@@ -11,54 +11,47 @@ import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.player.Alliance;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class RookTest {
 
-    @Mock
-    Coordinate anywhere;
-
-    @Mock
-    Coordinate destination;
-
     @Test
     void constructor() {
-        assertThat(new Rook(anywhere, Alliance.BLACK)).matches(Rook::firstMove);
+        assertThat(new Rook("a1", Alliance.BLACK)).matches(Rook::firstMove);
     }
 
     @Test
     void toSingleChar() {
-        assertThat(new Rook(anywhere, Alliance.WHITE).singleChar()).isEqualTo("R");
-        assertThat(new Rook(anywhere, Alliance.BLACK).singleChar()).isEqualTo("r");
+        assertThat(new Rook("a1", Alliance.WHITE).singleChar()).isEqualTo("R");
+        assertThat(new Rook("a1", Alliance.BLACK).singleChar()).isEqualTo("r");
     }
 
     @Test
     void horizontalMove() {
-        var rook = new Rook(anywhere, Alliance.BLACK);
+        var rook = new Rook("a1", Alliance.BLACK);
         assertThat(rook.moveVectors()).containsOnlyOnce(new int[] {1, 0});
     }
 
     @Test
     void verticalMove() {
-        var rook = new Rook(anywhere, Alliance.BLACK);
+        var rook = new Rook("a1", Alliance.BLACK);
         assertThat(rook.moveVectors()).containsOnlyOnce(new int[] {0, 1});
     }
 
     @Test
     void illegalMove() {
-        var rook = new Rook(anywhere, Alliance.BLACK);
+        var rook = new Rook("a1", Alliance.BLACK);
         assertThat(rook.moveVectors()).doesNotContain(new int[] {1, -1});
     }
 
     @Test
     void moveTo() {
-        var rookToMove = new Rook(anywhere, Alliance.BLACK);
+        var rookToMove = new Rook("a1", Alliance.BLACK);
 
-        assertThat(rookToMove.moveTo(destination))
+        assertThat(rookToMove.moveTo("a2"))
                 .isInstanceOf(Rook.class)
-                .matches(rook -> rook.position().equals(destination))
+                .matches(rook -> rook.position().equals(Coordinate.of("a2")))
                 .matches(rook -> !rook.firstMove());
     }
 }

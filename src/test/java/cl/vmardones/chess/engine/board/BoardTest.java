@@ -21,11 +21,8 @@ class BoardTest {
 
     Board.BoardBuilder builder;
 
-    @Mock
-    King whiteKing;
-
-    @Mock
-    King blackKing;
+    King whiteKing = new King("e1", Alliance.WHITE);
+    King blackKing = new King("e8", Alliance.BLACK);
 
     @Mock
     Pawn enPassantPawn;
@@ -37,10 +34,10 @@ class BoardTest {
 
     @Test
     void contains() {
-        var piece = new Bishop(Coordinate.of("e2"), Alliance.WHITE);
+        var piece = new Bishop("e2", Alliance.WHITE);
         var board = builder.with(piece).build();
 
-        assertThat(board.contains(Coordinate.of("e2"), Bishop.class)).isTrue();
+        assertThat(board.contains("e2", Bishop.class)).isTrue();
     }
 
     @Test
@@ -69,7 +66,7 @@ class BoardTest {
 
     @Test
     void addPiece() {
-        var piece = new Queen(Coordinate.of("d7"), Alliance.WHITE);
+        var piece = new Queen("d7", Alliance.WHITE);
         var board = builder.with(piece).build();
 
         assertThat(board.whitePieces()).containsOnlyOnce(piece);
@@ -85,8 +82,8 @@ class BoardTest {
 
     @Test
     void lastPieceTakesPrecedence() {
-        var firstPiece = new Pawn(Coordinate.of("a1"), Alliance.WHITE);
-        var secondPiece = new Rook(Coordinate.of("a1"), Alliance.WHITE);
+        var firstPiece = new Pawn("a1", Alliance.WHITE);
+        var secondPiece = new Rook("a1", Alliance.WHITE);
         var board = builder.with(firstPiece).with(secondPiece).build();
 
         assertThat(board.whitePieces()).doesNotContain(firstPiece).containsOnlyOnce(secondPiece);
@@ -94,7 +91,7 @@ class BoardTest {
 
     @Test
     void withoutPiece() {
-        var piece = new Pawn(Coordinate.of("a5"), Alliance.BLACK);
+        var piece = new Pawn("a5", Alliance.BLACK);
         var board = builder.with(piece).without(piece).build();
 
         assertThat(board.blackPieces()).doesNotContain(piece);
@@ -126,8 +123,8 @@ class BoardTest {
 
     @Test
     void alwaysAddsKings() {
-        var newBlackKing = new King(Coordinate.of("a1"), Alliance.BLACK);
-        var impostorQueen = new Queen(Coordinate.of("a1"), Alliance.BLACK);
+        var newBlackKing = new King("a1", Alliance.BLACK);
+        var impostorQueen = new Queen("a1", Alliance.BLACK);
 
         var board = Board.builder(whiteKing, newBlackKing).with(impostorQueen).build();
 

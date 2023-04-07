@@ -7,7 +7,6 @@ package cl.vmardones.chess.engine.piece;
 
 import java.util.stream.Stream;
 
-import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.player.Alliance;
 
 /**
@@ -17,16 +16,16 @@ import cl.vmardones.chess.engine.player.Alliance;
  */
 public final class King extends JumpingPiece {
 
-    public King(Coordinate position, Alliance alliance) {
+    public King(String position, Alliance alliance) {
         this(position, alliance, true);
     }
 
     @Override
-    public King moveTo(Coordinate destination) {
+    public King moveTo(String destination) {
         return new King(destination, alliance, false);
     }
 
-    private King(Coordinate position, Alliance alliance, boolean firstMove) {
+    private King(String position, Alliance alliance, boolean firstMove) {
         super(
                 position,
                 alliance,

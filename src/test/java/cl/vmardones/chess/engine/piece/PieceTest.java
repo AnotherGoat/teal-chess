@@ -23,15 +23,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class PieceTest {
 
     @Mock
-    Coordinate anywhere;
-
-    @Mock
     Square destinationSquare;
 
     @Test
     void isAllyOf() {
-        var first = new Pawn(anywhere, Alliance.WHITE);
-        var second = new Rook(anywhere, Alliance.WHITE);
+        var first = new Pawn("a1", Alliance.WHITE);
+        var second = new Rook("a1", Alliance.WHITE);
 
         assertThat(first.isAllyOf(second)).isTrue();
         assertThat(first.isEnemyOf(second)).isFalse();
@@ -41,8 +38,8 @@ class PieceTest {
 
     @Test
     void isEnemyOf() {
-        var first = new Bishop(anywhere, Alliance.WHITE);
-        var second = new Bishop(anywhere, Alliance.BLACK);
+        var first = new Bishop("a1", Alliance.WHITE);
+        var second = new Bishop("a1", Alliance.BLACK);
 
         assertThat(first.isAllyOf(second)).isFalse();
         assertThat(first.isEnemyOf(second)).isTrue();
@@ -52,7 +49,7 @@ class PieceTest {
 
     @Test
     void isEmptyAccesible() {
-        var piece = new Rook(anywhere, Alliance.BLACK);
+        var piece = new Rook("a1", Alliance.BLACK);
 
         when(destinationSquare.piece()).thenReturn(null);
 
@@ -61,8 +58,8 @@ class PieceTest {
 
     @Test
     void isEnemyAccessible() {
-        var piece = new Bishop(anywhere, Alliance.BLACK);
-        var destinationPiece = new Pawn(anywhere, Alliance.WHITE);
+        var piece = new Bishop("a1", Alliance.BLACK);
+        var destinationPiece = new Pawn("a1", Alliance.WHITE);
 
         when(destinationSquare.piece()).thenReturn(destinationPiece);
 
@@ -71,8 +68,8 @@ class PieceTest {
 
     @Test
     void isNotAccesible() {
-        var piece = new Queen(anywhere, Alliance.BLACK);
-        var destinationPiece = new King(anywhere, Alliance.BLACK);
+        var piece = new Queen("a1", Alliance.BLACK);
+        var destinationPiece = new King("a1", Alliance.BLACK);
 
         when(destinationSquare.piece()).thenReturn(destinationPiece);
 
@@ -81,10 +78,10 @@ class PieceTest {
 
     @Test
     void createNormalMove() {
-        var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
-        var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
+        var whiteKing = new King("e1", Alliance.WHITE);
+        var blackKing = new King("e8", Alliance.BLACK);
 
-        var piece = new Rook(Coordinate.of("a1"), Alliance.WHITE);
+        var piece = new Rook("a1", Alliance.WHITE);
 
         var board = Board.builder(whiteKing, blackKing).with(piece).build();
 
@@ -95,11 +92,11 @@ class PieceTest {
 
     @Test
     void createCaptureMove() {
-        var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
-        var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
+        var whiteKing = new King("e1", Alliance.WHITE);
+        var blackKing = new King("e8", Alliance.BLACK);
 
-        var piece = new Rook(Coordinate.of("a1"), Alliance.WHITE);
-        var capturablePiece = new Pawn(Coordinate.of("a7"), Alliance.BLACK);
+        var piece = new Rook("a1", Alliance.WHITE);
+        var capturablePiece = new Pawn("a7", Alliance.BLACK);
 
         var board = Board.builder(whiteKing, blackKing)
                 .with(piece)
@@ -113,11 +110,11 @@ class PieceTest {
 
     @Test
     void dontCreateMove() {
-        var whiteKing = new King(Coordinate.of("e1"), Alliance.WHITE);
-        var blackKing = new King(Coordinate.of("e8"), Alliance.BLACK);
+        var whiteKing = new King("e1", Alliance.WHITE);
+        var blackKing = new King("e8", Alliance.BLACK);
 
-        var piece = new Rook(Coordinate.of("a1"), Alliance.WHITE);
-        var blockingPiece = new Pawn(Coordinate.of("a7"), Alliance.WHITE);
+        var piece = new Rook("a1", Alliance.WHITE);
+        var blockingPiece = new Pawn("a7", Alliance.WHITE);
 
         var board = Board.builder(whiteKing, blackKing)
                 .with(piece)

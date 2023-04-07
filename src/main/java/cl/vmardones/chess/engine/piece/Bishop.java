@@ -5,22 +5,21 @@
 
 package cl.vmardones.chess.engine.piece;
 
-import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.player.Alliance;
 
 /** The bishop piece. It can move diagonally. */
 public final class Bishop extends SlidingPiece {
 
-    public Bishop(Coordinate position, Alliance alliance) {
+    public Bishop(String position, Alliance alliance) {
         this(position, alliance, true);
     }
 
     @Override
-    public Bishop moveTo(Coordinate destination) {
+    public Bishop moveTo(String destination) {
         return new Bishop(destination, alliance, false);
     }
 
-    private Bishop(Coordinate position, Alliance alliance, boolean firstMove) {
+    private Bishop(String position, Alliance alliance, boolean firstMove) {
         super(position, alliance, firstMove, DIAGONALS);
     }
 }

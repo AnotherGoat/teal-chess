@@ -83,8 +83,8 @@ public final class Board {
      * @return True if the square has a piece of the specified type. Always returns false if the square is
      *     empty.
      */
-    public boolean contains(Coordinate coordinate, Class<? extends Piece> pieceType) {
-        var piece = squareAt(coordinate).piece();
+    public boolean contains(String coordinate, Class<? extends Piece> pieceType) {
+        var piece = squareAt(Coordinate.of(coordinate)).piece();
 
         return pieceType.isInstance(piece);
     }
@@ -100,6 +100,10 @@ public final class Board {
     }
 
     /* Getters */
+
+    public List<Square> squares() {
+        return Collections.unmodifiableList(squares);
+    }
 
     public King whiteKing() {
         return whiteKing;
@@ -173,8 +177,8 @@ public final class Board {
 
     private List<Square> createSquares(BoardBuilder builder) {
         return IntStream.range(MIN_SQUARES, MAX_SQUARES)
-                .mapToObj(Coordinate::of)
-                .map(coordinate -> Square.create(coordinate, builder.configuration.get(coordinate)))
+                .mapToObj(
+                        index -> Square.create(AlgebraicConverter.toAlgebraic(index), builder.configuration.get(index)))
                 .toList();
     }
 
@@ -196,7 +200,7 @@ public final class Board {
      */
     public static class BoardBuilder {
 
-        private final Map<Coordinate, Piece> configuration = new HashMap<>();
+        private final Map<Integer, Piece> configuration = new HashMap<>();
         private final King whiteKing;
         private final King blackKing;
         private @Nullable Pawn enPassantPawn;
@@ -214,7 +218,7 @@ public final class Board {
                 return this;
             }
 
-            configuration.put(piece.position(), piece);
+            configuration.put(piece.position().index(), piece);
             return this;
         }
 
@@ -229,7 +233,7 @@ public final class Board {
                 return this;
             }
 
-            configuration.remove(piece.position(), piece);
+            configuration.remove(piece.position().index(), piece);
             return this;
         }
 

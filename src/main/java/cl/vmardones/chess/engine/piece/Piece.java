@@ -80,7 +80,7 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
      * @param destination The destination to move the piece to.
      * @return The piece after the move is completed.
      */
-    public abstract Piece moveTo(Coordinate destination);
+    public abstract Piece moveTo(String destination);
 
     /**
      * Calculates all the legal moves that this piece can do.
@@ -135,8 +135,8 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
         return String.format("%s [%s, %s, %s]", getClass().getSimpleName(), position, alliance, firstMove);
     }
 
-    protected Piece(Coordinate position, Alliance alliance, boolean firstMove) {
-        this.position = position;
+    protected Piece(String position, Alliance alliance, boolean firstMove) {
+        this.position = Coordinate.of(position);
         this.alliance = alliance;
         this.firstMove = firstMove;
     }

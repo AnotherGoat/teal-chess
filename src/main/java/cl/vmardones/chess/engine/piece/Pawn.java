@@ -11,7 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.move.*;
 import cl.vmardones.chess.engine.player.Alliance;
@@ -26,7 +25,7 @@ public final class Pawn extends JumpingPiece {
 
     private static final Logger LOG = LogManager.getLogger(Pawn.class);
 
-    public Pawn(Coordinate position, Alliance alliance) {
+    public Pawn(String position, Alliance alliance) {
         this(position, alliance, true);
     }
 
@@ -115,11 +114,11 @@ public final class Pawn extends JumpingPiece {
     }
 
     @Override
-    public Pawn moveTo(Coordinate destination) {
+    public Pawn moveTo(String destination) {
         return new Pawn(destination, alliance, false);
     }
 
-    private Pawn(Coordinate position, Alliance alliance, boolean firstMove) {
+    private Pawn(String position, Alliance alliance, boolean firstMove) {
         super(position, alliance, firstMove, generateMoveOffsets(alliance, firstMove));
     }
 

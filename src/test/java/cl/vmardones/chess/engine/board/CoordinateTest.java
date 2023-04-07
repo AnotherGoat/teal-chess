@@ -8,7 +8,6 @@ package cl.vmardones.chess.engine.board;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import cl.vmardones.chess.engine.player.Alliance;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +15,7 @@ class CoordinateTest {
 
     @Test
     void cache() {
-        assertThat(Coordinate.of("c7")).isEqualTo(Coordinate.of("c7"));
+        assertThat(Coordinate.of("c7")).isSameAs(Coordinate.of("c7"));
     }
 
     @Test
@@ -36,18 +35,6 @@ class CoordinateTest {
         assertThatThrownBy(() -> Coordinate.of(64))
                 .isInstanceOf(InvalidCoordinateException.class)
                 .hasMessageContaining("64");
-    }
-
-    @Test
-    void validAlgebraicNotation() {
-        assertThat(Coordinate.of("a8")).isEqualTo(Coordinate.of(0));
-    }
-
-    @Test
-    void invalidAlgebraicNotation() {
-        assertThatThrownBy(() -> Coordinate.of("x4"))
-                .isInstanceOf(InvalidCoordinateException.class)
-                .hasMessageContaining("x4");
     }
 
     @Test
@@ -93,26 +80,6 @@ class CoordinateTest {
     @Test
     void asString() {
         assertThat(Coordinate.of("e5")).hasToString("e5");
-    }
-
-    @Test
-    void getWhiteColor() {
-        assertThat(Coordinate.of("a8").color()).isEqualTo(Alliance.WHITE);
-    }
-
-    @Test
-    void getBlackColor() {
-        assertThat(Coordinate.of("b8").color()).isEqualTo(Alliance.BLACK);
-    }
-
-    @Test
-    void sameColor() {
-        assertThat(Coordinate.of("a8").sameColorAs(Coordinate.of("h1"))).isTrue();
-    }
-
-    @Test
-    void differentColor() {
-        assertThat(Coordinate.of("a8").sameColorAs(Coordinate.of("h8"))).isFalse();
     }
 
     @Test

@@ -20,7 +20,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveFinder;
@@ -43,13 +42,13 @@ class SquarePanel extends JPanel {
 
     private final transient Table table;
     private JLayeredPane layeredPane;
-    private final transient Coordinate coordinate;
+    private final transient Square square;
 
-    SquarePanel(Table table, Coordinate coordinate) {
+    SquarePanel(Table table, Square square) {
         super(new BorderLayout());
 
         this.table = table;
-        this.coordinate = coordinate;
+        this.square = square;
 
         setOpaque(true);
         setPreferredSize(INITIAL_SIZE);
@@ -57,7 +56,7 @@ class SquarePanel extends JPanel {
         layeredPane = createLayeredPane();
 
         assignSquareColor();
-        assignPieceIcon(table.squareAt(coordinate));
+        assignPieceIcon();
         add(layeredPane, BorderLayout.CENTER);
 
         validate();
@@ -116,8 +115,8 @@ class SquarePanel extends JPanel {
     }
 
     private void firstLeftClick() {
-        LOG.debug("Selected the square {}", coordinate);
-        table.setSourceSquare(table.squareAt(coordinate));
+        LOG.debug("Selected the square {}", square);
+        table.setSourceSquare(square);
 
         if (getSelectedPiece() != null) {
             table.setSelectedPiece(getSelectedPiece());
@@ -135,8 +134,8 @@ class SquarePanel extends JPanel {
 
     private void secondLeftClick() {
         // TODO: Replace all these long method calls with forwarding methods
-        LOG.debug("Selected the destination {}", coordinate);
-        table.setDestinationSquare(table.squareAt(coordinate));
+        LOG.debug("Selected the destination {}", square.coordinate());
+        table.setDestinationSquare(square);
 
         var move = MoveFinder.choose(
                 table.getGame().getCurrentPlayer().legals(),
@@ -159,7 +158,7 @@ class SquarePanel extends JPanel {
 
     void drawSquare(Board board) {
         layeredPane = createLayeredPane();
-        assignPieceIcon(table.squareAt(coordinate));
+        assignPieceIcon();
         highlightLegals(board);
         add(layeredPane, BorderLayout.CENTER);
         validate();
@@ -167,10 +166,10 @@ class SquarePanel extends JPanel {
     }
 
     private void assignSquareColor() {
-        setBackground(coordinate.color() == Alliance.WHITE ? LIGHT_COLOR : DARK_COLOR);
+        setBackground(square.color() == Alliance.WHITE ? LIGHT_COLOR : DARK_COLOR);
     }
 
-    private void assignPieceIcon(Square square) {
+    private void assignPieceIcon() {
         removeAll();
 
         if (square.piece() != null) {
@@ -191,7 +190,7 @@ class SquarePanel extends JPanel {
     private void highlightLegals(Board board) {
         if (table.isHighlightLegals()) {
             selectedPieceLegals(board).stream()
-                    .filter(move -> move.destination().equals(coordinate))
+                    .filter(move -> move.destination().equals(square.coordinate()))
                     .forEach(move -> {
                         var greenDot = SvgLoader.load(
                                 "art/misc/green_dot.svg", INITIAL_SIZE.width / 2, INITIAL_SIZE.height / 2);

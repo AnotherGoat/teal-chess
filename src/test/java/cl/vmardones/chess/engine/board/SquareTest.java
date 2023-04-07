@@ -14,57 +14,70 @@ import cl.vmardones.chess.engine.player.Alliance;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class SquareTest {
 
-    @Mock
-    Coordinate anywhere;
-
     @Test
     void createOccupied() {
-        var piece = new Knight(anywhere, Alliance.BLACK);
-        assertThat(Square.create(anywhere, piece).piece()).isNotNull().isEqualTo(piece);
+        var piece = new Knight("a1", Alliance.BLACK);
+        assertThat(Square.create("a1", piece).piece()).isNotNull().isEqualTo(piece);
     }
 
     @Test
     void createEmpty() {
-        assertThat(Square.create(anywhere, null).piece()).isNull();
+        assertThat(Square.create("a1", null).piece()).isNull();
     }
 
     @Test
     void cache() {
-        assertThat(Square.create(Coordinate.of("g5"), null)).isEqualTo(Square.create(Coordinate.of("g5"), null));
+        assertThat(Square.create("g5", null)).isEqualTo(Square.create("g5", null));
+    }
+
+    @Test
+    void getWhiteColor() {
+        assertThat(Square.create("a8", null).color()).isEqualTo(Alliance.WHITE);
+    }
+
+    @Test
+    void getBlackColor() {
+        assertThat(Square.create("b8", null).color()).isEqualTo(Alliance.BLACK);
+    }
+
+    @Test
+    void sameColor() {
+        assertThat(Square.create("a8", null).sameColorAs(Square.create("h1", null)))
+                .isTrue();
+    }
+
+    @Test
+    void differentColor() {
+        assertThat(Square.create("a8", null).sameColorAs(Square.create("h8", null)))
+                .isFalse();
     }
 
     @Test
     void whitePieceToString() {
-        var piece = new Pawn(anywhere, Alliance.WHITE);
-        assertThat(Square.create(anywhere, piece)).hasToString("P");
+        var piece = new Pawn("a1", Alliance.WHITE);
+        assertThat(Square.create("a1", piece)).hasToString("P");
     }
 
     @Test
     void blackPieceToString() {
-        var piece = new Rook(anywhere, Alliance.BLACK);
-        assertThat(Square.create(anywhere, piece)).hasToString("r");
+        var piece = new Rook("a1", Alliance.BLACK);
+        assertThat(Square.create("a1", piece)).hasToString("r");
     }
 
     @Test
     void emptyToString() {
-        assertThat(Square.create(anywhere, null)).hasToString("-");
-    }
-
-    @Test
-    void getCoordinate() {
-        assertThat(Square.create(Coordinate.of("c7"), null).coordinate())
-                .isNotNull()
-                .isEqualTo(Coordinate.of("c7"));
+        assertThat(Square.create("a1", null)).hasToString("-");
     }
 
     @Test
     void equalsContract() {
-        EqualsVerifier.forClass(Square.class).withNonnullFields("coordinate").verify();
+        EqualsVerifier.forClass(Square.class)
+                .withNonnullFields("coordinate", "color")
+                .verify();
     }
 }

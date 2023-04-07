@@ -8,38 +8,39 @@ package cl.vmardones.chess.gui;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 import javax.swing.*;
 
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.board.Coordinate;
 
 class BoardPanel extends JPanel {
 
     public static final Dimension INITIAL_SIZE = new Dimension(500, 500);
 
+    private Board board;
     private final transient Table table;
     private final List<SquarePanel> squares;
 
-    BoardPanel(Table table) {
+    BoardPanel(Table table, Board board) {
         super(new GridLayout(8, 8));
         this.table = table;
+        this.board = board;
 
         squares = new ArrayList<>();
 
-        IntStream.range(Board.MIN_SQUARES, Board.MAX_SQUARES)
-                .mapToObj(Coordinate::of)
-                .map(coordinate -> new SquarePanel(table, coordinate))
-                .forEach(squarePanel -> {
-                    squares.add(squarePanel);
-                    add(squarePanel);
-                });
+        board.squares().stream().map(square -> new SquarePanel(table, square)).forEach(squarePanel -> {
+            squares.add(squarePanel);
+            add(squarePanel);
+        });
 
         setPreferredSize(INITIAL_SIZE);
         validate();
     }
 
-    void drawBoard(Board board) {
+    void setBoard(Board board) {
+        this.board = board;
+    }
+
+    void draw() {
         removeAll();
 
         table.getBoardDirection().traverse(squares).forEach(squarePanel -> {

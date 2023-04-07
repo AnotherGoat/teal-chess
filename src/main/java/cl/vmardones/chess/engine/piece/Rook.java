@@ -5,22 +5,21 @@
 
 package cl.vmardones.chess.engine.piece;
 
-import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.player.Alliance;
 
 /** The rook piece. It can move horizontally and vertically. */
 public final class Rook extends SlidingPiece {
 
-    public Rook(Coordinate position, Alliance alliance) {
+    public Rook(String position, Alliance alliance) {
         this(position, alliance, true);
     }
 
     @Override
-    public Rook moveTo(Coordinate destination) {
+    public Rook moveTo(String destination) {
         return new Rook(destination, alliance, false);
     }
 
-    private Rook(Coordinate position, Alliance alliance, boolean firstMove) {
+    private Rook(String position, Alliance alliance, boolean firstMove) {
         super(position, alliance, firstMove, ORTHOGONALS);
     }
 }

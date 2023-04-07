@@ -28,7 +28,7 @@ class MoveTest {
 
     @Test
     void normalToString() {
-        var piece = new Pawn(Coordinate.of("a1"), Alliance.WHITE);
+        var piece = new Pawn("a1", Alliance.WHITE);
         var move = new Move(MoveType.NORMAL, board, piece, Coordinate.of("e5"));
 
         assertThat(move).hasToString("e5");
@@ -36,8 +36,8 @@ class MoveTest {
 
     @Test
     void captureToString() {
-        var piece = new Bishop(Coordinate.of("b1"), Alliance.WHITE);
-        var capturedPiece = new Bishop(Coordinate.of("c2"), Alliance.BLACK);
+        var piece = new Bishop("b1", Alliance.WHITE);
+        var capturedPiece = new Bishop("c2", Alliance.BLACK);
         var move = new Move(MoveType.CAPTURE, board, piece, Coordinate.of("c2"), capturedPiece);
 
         assertThat(move).hasToString("Bc2");
@@ -45,8 +45,8 @@ class MoveTest {
 
     @Test
     void pawnCaptureToString() {
-        var pawn = new Pawn(Coordinate.of("a8"), Alliance.BLACK);
-        var capturedPawn = new Pawn(Coordinate.of("b7"), Alliance.WHITE);
+        var pawn = new Pawn("a8", Alliance.BLACK);
+        var capturedPawn = new Pawn("b7", Alliance.WHITE);
         var move = new Move(MoveType.PAWN_CAPTURE, board, pawn, Coordinate.of("b7"), capturedPawn);
 
         assertThat(move).hasToString("axb7");
@@ -54,8 +54,8 @@ class MoveTest {
 
     @Test
     void kingCastleToString() {
-        var piece = new King(Coordinate.of("e5"), Alliance.WHITE);
-        var rook = new Rook(Coordinate.of("e8"), Alliance.WHITE);
+        var piece = new King("e5", Alliance.WHITE);
+        var rook = new Rook("e8", Alliance.WHITE);
         var move = new Move(MoveType.KING_CASTLE, board, piece, Coordinate.of("e7"), rook, Coordinate.of("e6"));
 
         assertThat(move).hasToString("0-0");
@@ -63,8 +63,8 @@ class MoveTest {
 
     @Test
     void queenCastleToString() {
-        var piece = new King(Coordinate.of("e5"), Alliance.WHITE);
-        var rook = new Rook(Coordinate.of("e1"), Alliance.WHITE);
+        var piece = new King("e5", Alliance.WHITE);
+        var rook = new Rook("e1", Alliance.WHITE);
         var move = new Move(MoveType.QUEEN_CASTLE, board, piece, Coordinate.of("e3"), rook, Coordinate.of("e4"));
 
         assertThat(move).hasToString("0-0-0");
