@@ -203,3 +203,50 @@ Only the first 5 articles are taken into account for now.
   opponent’s king with any series of legal moves;
 - ✗ (5.4.4) the last 50 moves by each player have been completed without the
   movement of any pawn and without any capture.
+
+## File formats
+
+Another objective of this project is to allow exporting and replaying recorded
+chess games, which is why some standard file formats will be handled by this
+program.
+
+### Portable Game Notation (PGN)
+
+The PGN is a standard plain text format used for recording chess games. An
+archived version of the
+[PGN specification](http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm)
+is used as a reference. The game will only partially support the standard for
+now, and its priority is lower than implementing the actual game.
+
+For the sake of brevity, only the titles of each section will be shown.
+
+#### Movetext section
+
+- ✗ (8.2) Movetext section
+- ✗ (8.2.1) Movetext line justification
+- ✗ (8.2.2.1) Import format move number indications
+- ✗ (8.2.2.2) Export format move number indications
+- ✗ (8.2.3) Movetext SAN (Standard Algebraic Notation)
+- ✓ (8.2.3.1) Square identification
+- ✓ (8.2.3.2) Piece identification
+- ✗ (8.2.3.3) Basic SAN move construction
+- ✗ (8.2.3.4) Disambiguation
+- ✗ (8.2.3.5) Check and checkmate indication characters
+- ✗ (8.2.3.6) SAN move length
+- ✗ (8.2.3.7) Import and export SAN
+- ✗ (8.2.3.8) SAN move suffix annotations
+- ✗ (8.2.6) Game Termination Markers
+
+#### Forsyth-Edwards Notation (FEN)
+
+- ✗ (16.1) FEN
+- ✗ (16.1.1) History
+- ✗ (16.1.2) Uses for a position notation
+- ✗ (16.1.3) Data fields
+- ✗ (16.1.3.1) Piece placement data
+- ✗ (16.1.3.2) Active color
+- ✗ (16.1.3.3) Castling availability
+- ✗ (16.1.3.4) En passant target square
+- ✗ (16.1.3.5) Halfmove clock
+- ✗ (16.1.3.6) Fullmove number
+- ✗ (16.1.4) Examples
