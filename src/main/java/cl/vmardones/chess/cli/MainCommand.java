@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 @Command(name = "chess-game", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
-public class MainCommand implements Runnable {
+public final class MainCommand implements Runnable {
 
     @Option(
             names = {"-d", "--dark-theme"},

@@ -8,7 +8,7 @@ package cl.vmardones.chess.engine.game;
 import java.util.ArrayList;
 import java.util.List;
 
-class GameHistory {
+final class GameHistory {
 
     private final List<TurnMemento> history = new ArrayList<>();
 

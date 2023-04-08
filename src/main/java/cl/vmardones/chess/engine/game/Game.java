@@ -19,20 +19,18 @@ import cl.vmardones.chess.engine.player.Alliance;
 import cl.vmardones.chess.engine.player.HumanPlayer;
 import cl.vmardones.chess.engine.player.Player;
 
-public class Game {
+public final class Game {
 
     private static final Logger LOG = LogManager.getLogger(Game.class);
 
     private final GameState gameState;
     private final GameHistory gameHistory;
-    private final BoardService boardService;
 
     public Game() {
         LOG.info("Game started!");
 
         gameState = new GameState();
         gameHistory = new GameHistory();
-        boardService = new BoardService();
 
         registerTurn(createFirstTurn());
     }
@@ -43,7 +41,7 @@ public class Game {
     }
 
     private Turn createFirstTurn() {
-        return createTurn(boardService.createStandardBoard(), Alliance.WHITE);
+        return createTurn(BoardService.createStandardBoard(), Alliance.WHITE);
     }
 
     private Turn createTurn(Board board, Alliance nextMoveMaker) {
@@ -70,11 +68,11 @@ public class Game {
     }
 
     private List<Move> calculateWhiteLegals(Board board) {
-        return boardService.calculateLegals(board, board.whitePieces());
+        return BoardService.calculateLegals(board, board.whitePieces());
     }
 
     private List<Move> calculateBlackLegals(Board board) {
-        return boardService.calculateLegals(board, board.blackPieces());
+        return BoardService.calculateLegals(board, board.blackPieces());
     }
 
     public Turn createNextTurn(Move move) {

@@ -9,3 +9,4 @@ This is a list of known bugs that will be fixed before the first release:
 - Pawn promotion hasn't been implemented yet.
 - When a move leaves the player itself in check, it doesn't happen, but a null
   pointer exception is thrown.
+- En passant moves are generated many times instead of just once.

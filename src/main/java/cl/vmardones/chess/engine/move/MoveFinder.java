@@ -11,16 +11,13 @@ import java.util.function.Predicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import cl.vmardones.chess.ExcludeFromGeneratedReport;
 import cl.vmardones.chess.engine.board.Position;
 import org.eclipse.jdt.annotation.Nullable;
 
 public final class MoveFinder {
 
     private static final Logger LOG = LogManager.getLogger(MoveFinder.class);
-
-    private MoveFinder() {
-        throw new UnsupportedOperationException("You cannot instantiate me!");
-    }
 
     /**
      * Given a list of legal moves, choose the first one that goes from the source to the destination.
@@ -40,6 +37,11 @@ public final class MoveFinder {
                 legalMoves.stream().filter(move -> move.source().equals(from)).toList());
 
         return legalMoves.stream().filter(isMovePossible(from, to)).findFirst().orElse(null);
+    }
+
+    @ExcludeFromGeneratedReport
+    private MoveFinder() {
+        throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
     }
 
     private static Predicate<Move> isMovePossible(Position source, Position destination) {

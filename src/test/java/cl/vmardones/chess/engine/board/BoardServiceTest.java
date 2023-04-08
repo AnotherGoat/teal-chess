@@ -16,7 +16,7 @@ class BoardServiceTest {
 
     @Test
     void createStandardBoard() {
-        var board = new BoardService().createStandardBoard();
+        var board = BoardService.createStandardBoard();
 
         assertThat(board.toString())
                 .containsOnlyOnce("r  n  b  q  k  b  n  r")
@@ -29,8 +29,8 @@ class BoardServiceTest {
 
     @Test
     void cache() {
-        var firstBoard = new BoardService().createStandardBoard();
-        var secondBoard = new BoardService().createStandardBoard();
+        var firstBoard = BoardService.createStandardBoard();
+        var secondBoard = BoardService.createStandardBoard();
 
         assertThat(firstBoard).isSameAs(secondBoard);
     }

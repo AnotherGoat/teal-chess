@@ -76,15 +76,45 @@ public final class Board {
     }
 
     /**
-     * Check whether the specified square contains a type of piece or not.
+     * Get the square located at a specific position.
+     *
+     * @param position The position to search, in algebraic notation.
+     * @return The square found.
+     */
+    public Square squareAt(String position) {
+        return squareAt(Position.of(position));
+    }
+
+    /**
+     * Get the piece located at a specific position.
      *
      * @param position The position to search.
+     * @return The piece found.
+     */
+    public @Nullable Piece pieceAt(Position position) {
+        return squares.get(position.index()).piece();
+    }
+
+    /**
+     * Get the piece located at a specific position.
+     *
+     * @param position The position to search, in algebraic notation.
+     * @return The piece found.
+     */
+    public @Nullable Piece pieceAt(String position) {
+        return pieceAt(Position.of(position));
+    }
+
+    /**
+     * Check whether the specified square contains a type of piece or not.
+     *
+     * @param position The position to search, in algebraic notation.
      * @param pieceType The type of piece to search.
      * @return True if the square has a piece of the specified type. Always returns false if the square is
      *     empty.
      */
     public boolean contains(String position, Class<? extends Piece> pieceType) {
-        var piece = squareAt(Position.of(position)).piece();
+        var piece = pieceAt(position);
 
         return pieceType.isInstance(piece);
     }
@@ -110,7 +140,7 @@ public final class Board {
     }
 
     public List<Piece> whitePieces() {
-        return whitePieces;
+        return Collections.unmodifiableList(whitePieces);
     }
 
     public King blackKing() {
@@ -118,7 +148,7 @@ public final class Board {
     }
 
     public List<Piece> blackPieces() {
-        return blackPieces;
+        return Collections.unmodifiableList(blackPieces);
     }
 
     public @Nullable Pawn enPassantPawn() {

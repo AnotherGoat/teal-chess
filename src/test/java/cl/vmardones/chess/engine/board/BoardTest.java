@@ -6,6 +6,7 @@
 package cl.vmardones.chess.engine.board;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cl.vmardones.chess.engine.piece.*;
 import cl.vmardones.chess.engine.player.Alliance;
@@ -129,5 +130,26 @@ class BoardTest {
         var board = Board.builder(whiteKing, newBlackKing).with(impostorQueen).build();
 
         assertThat(board.blackPieces()).doesNotContain(impostorQueen).containsOnlyOnce(newBlackKing);
+    }
+
+    @Test
+    void unmodifiableSquares() {
+        var board = BoardService.createStandardBoard();
+
+        assertThatThrownBy(() -> board.squares().clear()).isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    @Test
+    void unmodifiableWhitePieces() {
+        var board = BoardService.createStandardBoard();
+
+        assertThatThrownBy(() -> board.whitePieces().clear()).isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    @Test
+    void unmodifiableBlackPieces() {
+        var board = BoardService.createStandardBoard();
+
+        assertThatThrownBy(() -> board.blackPieces().clear()).isInstanceOf(UnsupportedOperationException.class);
     }
 }

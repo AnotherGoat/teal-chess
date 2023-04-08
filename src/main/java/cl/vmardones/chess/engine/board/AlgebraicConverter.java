@@ -7,6 +7,8 @@ package cl.vmardones.chess.engine.board;
 
 import java.util.regex.Pattern;
 
+import cl.vmardones.chess.ExcludeFromGeneratedReport;
+
 final class AlgebraicConverter {
 
     private static final Pattern ALGEBRAIC_PATTERN = Pattern.compile("^[a-h][1-8]$");
@@ -29,7 +31,10 @@ final class AlgebraicConverter {
         return String.valueOf(fileChar) + rank;
     }
 
-    private AlgebraicConverter() {}
+    @ExcludeFromGeneratedReport
+    private AlgebraicConverter() {
+        throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
+    }
 
     private static int calculateIndex(String algebraicNotation) {
 

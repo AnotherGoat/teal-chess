@@ -68,7 +68,7 @@ public final class Pawn extends JumpingPiece {
             return false;
         }
 
-        var pieceAtSide = board.squareAt(side).piece();
+        var pieceAtSide = board.pieceAt(side);
 
         return pieceAtSide != null && pieceAtSide.equals(board.enPassantPawn()) && destination.piece() == null;
     }
@@ -100,7 +100,7 @@ public final class Pawn extends JumpingPiece {
         }
 
         return firstMove()
-                && board.squareAt(forward).piece() == null
+                && board.pieceAt(forward) == null
                 && destination.piece() == null
                 && !destination.equals(board.squareAt(forward));
     }

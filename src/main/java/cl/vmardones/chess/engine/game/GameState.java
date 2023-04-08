@@ -7,7 +7,7 @@ package cl.vmardones.chess.engine.game;
 
 // TODO: See if this class can be immutable
 /** A mutable class that holds the current state of the game. */
-class GameState {
+final class GameState {
 
     private Turn currentTurn;
 

@@ -67,11 +67,11 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
     }
 
     public List<Piece> pieces() {
-        return pieces;
+        return Collections.unmodifiableList(pieces);
     }
 
     public List<Move> legals() {
-        return legals;
+        return Collections.unmodifiableList(legals);
     }
 
     /* Checking state */
@@ -200,7 +200,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
         var kingPosition = king.position();
 
         var rookOffset = kingSide ? 3 : -4;
-        var rook = (Rook) board.squareAt(kingPosition.right(rookOffset)).piece();
+        var rook = (Rook) board.pieceAt(kingPosition.right(rookOffset));
 
         if (rook == null || !rook.firstMove()) {
             return null;

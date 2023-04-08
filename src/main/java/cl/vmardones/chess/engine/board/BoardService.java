@@ -8,6 +8,7 @@ package cl.vmardones.chess.engine.board;
 import java.util.*;
 import java.util.stream.IntStream;
 
+import cl.vmardones.chess.ExcludeFromGeneratedReport;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.*;
 import cl.vmardones.chess.engine.player.Alliance;
@@ -25,7 +26,7 @@ public final class BoardService {
      *
      * @return The standard chessboard.
      */
-    public Board createStandardBoard() {
+    public static Board createStandardBoard() {
         return CACHED_STANDARD_BOARD;
     }
 
@@ -36,11 +37,16 @@ public final class BoardService {
      * @param pieces The pieces to search legal moves for.
      * @return All the legal moves.
      */
-    public List<Move> calculateLegals(Board board, List<Piece> pieces) {
+    public static List<Move> calculateLegals(Board board, List<Piece> pieces) {
         return pieces.stream()
                 .map(piece -> piece.calculateLegals(board))
                 .flatMap(Collection::stream)
                 .toList();
+    }
+
+    @ExcludeFromGeneratedReport
+    private BoardService() {
+        throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
     }
 
     private static Board generateStandardBoard() {

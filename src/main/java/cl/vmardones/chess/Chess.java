@@ -11,10 +11,6 @@ import picocli.CommandLine;
 /** The chess game launcher. */
 public final class Chess {
 
-    private Chess() {
-        throw new UnsupportedOperationException("You cannot instantiate me!");
-    }
-
     /**
      * Launch the game.
      *
@@ -22,5 +18,10 @@ public final class Chess {
      */
     public static void main(String... args) {
         new CommandLine(new MainCommand()).execute(args);
+    }
+
+    @ExcludeFromGeneratedReport
+    private Chess() {
+        throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
     }
 }

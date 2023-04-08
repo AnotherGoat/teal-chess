@@ -9,7 +9,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.board.Position;
 import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.move.MoveType;
 import cl.vmardones.chess.engine.player.Alliance;
@@ -85,7 +84,7 @@ class PieceTest {
 
         var board = Board.builder(whiteKing, blackKing).with(piece).build();
 
-        var destination = board.squareAt(Position.of("a7"));
+        var destination = board.squareAt("a7");
 
         assertThat(piece.createMove(destination, board).type()).isEqualTo(MoveType.NORMAL);
     }
@@ -103,7 +102,7 @@ class PieceTest {
                 .with(capturablePiece)
                 .build();
 
-        var destination = board.squareAt(Position.of("a7"));
+        var destination = board.squareAt("a7");
 
         assertThat(piece.createMove(destination, board).type()).isEqualTo(MoveType.CAPTURE);
     }
@@ -121,7 +120,7 @@ class PieceTest {
                 .with(blockingPiece)
                 .build();
 
-        var destination = board.squareAt(Position.of("a7"));
+        var destination = board.squareAt("a7");
 
         assertThat(piece.createMove(destination, board)).isNull();
     }

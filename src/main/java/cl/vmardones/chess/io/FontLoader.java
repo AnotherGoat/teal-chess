@@ -12,6 +12,8 @@ import javax.swing.plaf.FontUIResource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import cl.vmardones.chess.ExcludeFromGeneratedReport;
+
 public final class FontLoader {
 
     public static final int FONT_SIZE = 16;
@@ -19,10 +21,6 @@ public final class FontLoader {
 
     private static final Logger LOG = LogManager.getLogger(FontLoader.class);
     private static final String FONT_PATH = "fonts/";
-
-    private FontLoader() {
-        throw new UnsupportedOperationException("You cannot instantiate me!");
-    }
 
     public static Font load(String fontName) {
         try {
@@ -39,5 +37,10 @@ public final class FontLoader {
             LOG.warn("Could not load the font {}, defaulting to system font", fontName);
             return SYSTEM_FONT;
         }
+    }
+
+    @ExcludeFromGeneratedReport
+    private FontLoader() {
+        throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
     }
 }

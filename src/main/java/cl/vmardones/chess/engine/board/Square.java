@@ -28,16 +28,16 @@ public final class Square {
     /**
      * Static factory method for creating a new square.
      *
-     * @param algebraicNotation Algebraic notaiton for the position of the square.
+     * @param position Position of the square, in algebraic notation.
      * @param piece The piece on the square.
      * @return A new square.
      */
-    public static Square create(String algebraicNotation, @Nullable Piece piece) {
+    public static Square create(String position, @Nullable Piece piece) {
         if (piece == null) {
-            return CACHED_EMPTY_SQUARES.get(algebraicNotation);
+            return CACHED_EMPTY_SQUARES.get(position);
         }
 
-        return new Square(algebraicNotation, piece);
+        return new Square(position, piece);
     }
 
     /* Getters */
@@ -102,20 +102,20 @@ public final class Square {
     }
 
     private static Map<String, Square> fillEmptySquareCache() {
-        record Entry(String algebraicNotation, Square square) {}
+        record Entry(String position, Square square) {}
 
         return IntStream.range(Board.MIN_SQUARES, Board.MAX_SQUARES)
                 .mapToObj(AlgebraicConverter::toAlgebraic)
-                .map(algebraicNotation -> new Entry(algebraicNotation, new Square(algebraicNotation, null)))
-                .collect(Collectors.toMap(Entry::algebraicNotation, Entry::square));
+                .map(position -> new Entry(position, new Square(position)))
+                .collect(Collectors.toMap(Entry::position, Entry::square));
     }
 
-    private Square(Position position) {
+    private Square(String position) {
         this(position, null);
     }
 
-    private Square(String algebraicNotation, @Nullable Piece piece) {
-        this(Position.of(algebraicNotation), piece);
+    private Square(String position, @Nullable Piece piece) {
+        this(Position.of(position), piece);
     }
 
     private Square(Position position, @Nullable Piece piece) {

@@ -11,15 +11,12 @@ import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import cl.vmardones.chess.ExcludeFromGeneratedReport;
 import org.eclipse.jdt.annotation.Nullable;
 
 public final class SvgLoader {
 
     private static final Logger LOG = LogManager.getLogger(SvgLoader.class);
-
-    private SvgLoader() {
-        throw new UnsupportedOperationException("You cannot instantiate me!");
-    }
 
     public static @Nullable BufferedImage load(String path, int width, int height) {
 
@@ -36,5 +33,10 @@ public final class SvgLoader {
             LOG.warn("Could not load the SVG file {}", path);
             return null;
         }
+    }
+
+    @ExcludeFromGeneratedReport
+    private SvgLoader() {
+        throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
     }
 }

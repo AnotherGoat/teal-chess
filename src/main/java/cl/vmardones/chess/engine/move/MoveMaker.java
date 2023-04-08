@@ -5,6 +5,7 @@
 
 package cl.vmardones.chess.engine.move;
 
+import cl.vmardones.chess.ExcludeFromGeneratedReport;
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.piece.Pawn;
 
@@ -37,5 +38,8 @@ public final class MoveMaker {
         return builder.build();
     }
 
-    private MoveMaker() {}
+    @ExcludeFromGeneratedReport
+    private MoveMaker() {
+        throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
+    }
 }

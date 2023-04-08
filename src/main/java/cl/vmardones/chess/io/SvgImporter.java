@@ -20,15 +20,12 @@ import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import cl.vmardones.chess.ExcludeFromGeneratedReport;
 import org.eclipse.jdt.annotation.Nullable;
 
 final class SvgImporter {
 
     private static final Logger LOG = LogManager.getLogger(SvgImporter.class);
-
-    private SvgImporter() {
-        throw new UnsupportedOperationException("You cannot instantiate me!");
-    }
 
     static @Nullable BufferedImage get(InputStream inputStream, int width, int height) throws IOException {
 
@@ -54,5 +51,10 @@ final class SvgImporter {
             LOG.error("Failed to transcode the SVG image!", e);
             return null;
         }
+    }
+
+    @ExcludeFromGeneratedReport
+    private SvgImporter() {
+        throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
     }
 }
