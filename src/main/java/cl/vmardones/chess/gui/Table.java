@@ -38,15 +38,13 @@ public class Table {
 
     private final JFrame frame;
     private final BoardPanel boardPanel;
-
     private final CapturedPiecesPanel capturedPiecesPanel;
-
     private final GameHistoryPanel gameHistoryPanel;
 
     private Game game;
 
     // TODO: Replace move log with game history
-    private final MoveLog moveLog;
+    private MoveLog moveLog;
 
     // TODO: Group these 3 in a "PlayerSelection" class
     @Nullable private Square sourceSquare;
@@ -69,18 +67,16 @@ public class Table {
         reloadTheme();
         setUIFont(FontLoader.load(UI_FONT));
 
-        game = new Game();
-
         frame = new JFrame("Chess game, made in Java");
         frame.setLayout(new BorderLayout());
         frame.setSize(INITIAL_SIZE);
 
         frame.setJMenuBar(createMenuBar());
 
+        game = new Game();
         boardPanel = new BoardPanel(this, game.getBoard());
         capturedPiecesPanel = new CapturedPiecesPanel();
         gameHistoryPanel = new GameHistoryPanel();
-
         moveLog = new MoveLog();
 
         frame.add(new ContainerPanel<>(boardPanel), BorderLayout.CENTER);
@@ -136,6 +132,13 @@ public class Table {
     private JMenu createFileMenu() {
         var fileMenu = new JMenu("File");
 
+        var newGame = new JMenuItem("New Game");
+        newGame.addActionListener(e -> {
+            LOG.info("Starting new game!");
+            startNewGame();
+        });
+        fileMenu.add(newGame);
+
         var openPgn = new JMenuItem("Load PGN file");
         openPgn.addActionListener(e -> LOG.debug("Open PGN file!"));
         fileMenu.add(openPgn);
@@ -145,6 +148,16 @@ public class Table {
         fileMenu.add(exit);
 
         return fileMenu;
+    }
+
+    private void startNewGame() {
+        game = new Game();
+        boardPanel.setBoard(game.getBoard());
+        boardPanel.draw();
+        moveLog = new MoveLog();
+        capturedPiecesPanel.redo(moveLog);
+        gameHistoryPanel.reset();
+        gameHistoryPanel.redo(moveLog);
     }
 
     private JMenu createPreferencesMenu() {

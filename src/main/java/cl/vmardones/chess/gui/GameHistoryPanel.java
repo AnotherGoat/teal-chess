@@ -44,6 +44,10 @@ class GameHistoryPanel extends JPanel {
         return centeredRenderer;
     }
 
+    void reset() {
+        model.clear();
+    }
+
     void redo(MoveLog moveLog) {
 
         var lastMove = moveLog.getLastMove();
