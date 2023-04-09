@@ -9,6 +9,7 @@ import static java.awt.Frame.MAXIMIZED_BOTH;
 import static java.awt.Frame.NORMAL;
 
 import java.awt.*;
+import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,7 +72,7 @@ public class Table {
         frame.setLayout(new BorderLayout());
         frame.setSize(INITIAL_SIZE);
 
-        frame.setJMenuBar(createMenuBar());
+        frame.setJMenuBar(new MenuBar());
 
         game = new Game();
         boardPanel = new BoardPanel(this, game.getBoard());
@@ -80,110 +81,16 @@ public class Table {
         moveLog = new MoveLog();
 
         frame.add(new ContainerPanel<>(boardPanel), BorderLayout.CENTER);
-
         frame.add(capturedPiecesPanel, BorderLayout.WEST);
         frame.add(gameHistoryPanel, BorderLayout.EAST);
 
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        frame.addWindowStateListener(maximizeListener());
+        frame.addWindowStateListener(new MaximizeListener());
 
         frame.setVisible(true);
         frame.pack();
-    }
-
-    private WindowStateListener maximizeListener() {
-        return e -> {
-            if (e.getOldState() == MAXIMIZED_BOTH && e.getNewState() == NORMAL) {
-                boardPanel.setPreferredSize(BoardPanel.INITIAL_SIZE);
-                frame.pack();
-            }
-        };
-    }
-
-    private void setUIFont(Font font) {
-        UIManager.getLookAndFeel().getDefaults().keys().asIterator().forEachRemaining(key -> {
-            if (UIManager.get(key) instanceof Font) {
-                UIManager.put(key, font);
-            }
-        });
-    }
-
-    private void reloadTheme() {
-        if (darkTheme) {
-            FlatDarkLaf.setup();
-        } else {
-            FlatLightLaf.setup();
-        }
-
-        if (frame != null) {
-            SwingUtilities.updateComponentTreeUI(frame);
-        }
-    }
-
-    private JMenuBar createMenuBar() {
-        var menuBar = new JMenuBar();
-        menuBar.add(createFileMenu());
-        menuBar.add(createPreferencesMenu());
-        return menuBar;
-    }
-
-    private JMenu createFileMenu() {
-        var fileMenu = new JMenu("File");
-
-        var newGame = new JMenuItem("New Game");
-        newGame.addActionListener(e -> {
-            LOG.info("Starting new game!");
-            startNewGame();
-        });
-        fileMenu.add(newGame);
-
-        var openPgn = new JMenuItem("Load PGN file");
-        openPgn.addActionListener(e -> LOG.debug("Open PGN file!"));
-        fileMenu.add(openPgn);
-
-        var exit = new JMenuItem("Exit");
-        exit.addActionListener(e -> System.exit(0));
-        fileMenu.add(exit);
-
-        return fileMenu;
-    }
-
-    private void startNewGame() {
-        game = new Game();
-        boardPanel.setBoard(game.getBoard());
-        boardPanel.draw();
-        moveLog = new MoveLog();
-        capturedPiecesPanel.redo(moveLog);
-        gameHistoryPanel.reset();
-        gameHistoryPanel.redo(moveLog);
-    }
-
-    private JMenu createPreferencesMenu() {
-        var preferencesMenu = new JMenu("Preferences");
-
-        var flipBoard = new JMenuItem("Flip Board");
-        flipBoard.addActionListener(e -> {
-            boardDirection = boardDirection.getOpposite();
-
-            boardPanel.setBoard(game.getBoard());
-            boardPanel.draw();
-        });
-
-        var highlightCheckbox = new JCheckBoxMenuItem("Highlight Legal Moves", highlightLegals);
-        highlightCheckbox.addActionListener(e -> highlightLegals = highlightCheckbox.isSelected());
-
-        var darkThemeCheckbox = new JCheckBoxMenuItem("Dark Theme", darkTheme);
-        darkThemeCheckbox.addActionListener(e -> {
-            darkTheme = darkThemeCheckbox.isSelected();
-            reloadTheme();
-        });
-
-        preferencesMenu.add(flipBoard);
-        preferencesMenu.add(highlightCheckbox);
-        preferencesMenu.add(darkThemeCheckbox);
-        return preferencesMenu;
     }
 
     void resetSelection() {
@@ -210,44 +117,64 @@ public class Table {
 
     /* Getters and setters */
 
-    public Game getGame() {
+    Game getGame() {
         return game;
     }
 
-    public void setGame(Game game) {
+    void setGame(Game game) {
         this.game = game;
     }
 
-    public @Nullable Square getSourceSquare() {
+    @Nullable Square getSourceSquare() {
         return sourceSquare;
     }
 
-    public void setSourceSquare(Square sourceSquare) {
+    void setSourceSquare(Square sourceSquare) {
         this.sourceSquare = sourceSquare;
     }
 
-    public @Nullable Square getDestinationSquare() {
+    @Nullable Square getDestinationSquare() {
         return destinationSquare;
     }
 
-    public void setDestinationSquare(Square destinationSquare) {
+    void setDestinationSquare(Square destinationSquare) {
         this.destinationSquare = destinationSquare;
     }
 
-    public @Nullable Piece getSelectedPiece() {
+    @Nullable Piece getSelectedPiece() {
         return selectedPiece;
     }
 
-    public void setSelectedPiece(Piece selectedPiece) {
+    void setSelectedPiece(Piece selectedPiece) {
         this.selectedPiece = selectedPiece;
     }
 
-    public boolean isHighlightLegals() {
+    boolean isHighlightLegals() {
         return highlightLegals;
     }
 
-    public BoardDirection getBoardDirection() {
+    BoardDirection getBoardDirection() {
         return boardDirection;
+    }
+
+    private void setUIFont(Font font) {
+        UIManager.getLookAndFeel().getDefaults().keySet().forEach(key -> {
+            if (UIManager.get(key) instanceof Font) {
+                UIManager.put(key, font);
+            }
+        });
+    }
+
+    private void reloadTheme() {
+        if (darkTheme) {
+            FlatDarkLaf.setup();
+        } else {
+            FlatLightLaf.setup();
+        }
+
+        if (frame != null) {
+            SwingUtilities.updateComponentTreeUI(frame);
+        }
     }
 
     enum BoardDirection {
@@ -265,11 +192,88 @@ public class Table {
             };
         }
 
-        BoardDirection getOpposite() {
+        BoardDirection opposite() {
             return switch (this) {
                 case NORMAL -> FLIPPED;
                 case FLIPPED -> NORMAL;
             };
+        }
+    }
+
+    private final class MenuBar extends JMenuBar {
+        private MenuBar() {
+            add(new FileMenu());
+            add(new PreferencesMenu());
+        }
+    }
+
+    private final class FileMenu extends JMenu {
+        private FileMenu() {
+            super("File");
+
+            var newGame = new JMenuItem("New Game");
+            newGame.addActionListener(e -> {
+                LOG.info("Starting new game!");
+                startNewGame();
+            });
+            add(newGame);
+
+            var loadPgn = new JMenuItem("Load PGN file");
+            loadPgn.addActionListener(e -> LOG.debug("Open PGN file!"));
+            add(loadPgn);
+
+            var exit = new JMenuItem("Exit");
+            exit.addActionListener(e -> {
+                var closeEvent = new WindowEvent(frame, WindowEvent.WINDOW_CLOSING);
+                Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(closeEvent);
+            });
+            add(exit);
+        }
+
+        private void startNewGame() {
+            game = new Game();
+            boardPanel.setBoard(game.getBoard());
+            boardPanel.draw();
+            moveLog = new MoveLog();
+            capturedPiecesPanel.redo(moveLog);
+            gameHistoryPanel.reset();
+            gameHistoryPanel.redo(moveLog);
+        }
+    }
+
+    private final class PreferencesMenu extends JMenu {
+        private PreferencesMenu() {
+            super("Preferences");
+
+            var flipBoard = new JMenuItem("Flip Board");
+            flipBoard.addActionListener(e -> {
+                boardDirection = boardDirection.opposite();
+
+                boardPanel.setBoard(game.getBoard());
+                boardPanel.draw();
+            });
+            add(flipBoard);
+
+            var highlightCheckbox = new JCheckBoxMenuItem("Highlight Legal Moves", highlightLegals);
+            highlightCheckbox.addActionListener(e -> highlightLegals = highlightCheckbox.isSelected());
+            add(highlightCheckbox);
+
+            var darkThemeCheckbox = new JCheckBoxMenuItem("Dark Theme", darkTheme);
+            darkThemeCheckbox.addActionListener(e -> {
+                darkTheme = darkThemeCheckbox.isSelected();
+                reloadTheme();
+            });
+            add(darkThemeCheckbox);
+        }
+    }
+
+    private final class MaximizeListener implements WindowStateListener {
+        @Override
+        public void windowStateChanged(WindowEvent e) {
+            if (e.getOldState() == MAXIMIZED_BOTH && e.getNewState() == NORMAL) {
+                boardPanel.setPreferredSize(BoardPanel.INITIAL_SIZE);
+                frame.pack();
+            }
         }
     }
 }

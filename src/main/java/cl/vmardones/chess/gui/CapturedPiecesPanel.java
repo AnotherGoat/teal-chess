@@ -7,7 +7,6 @@ package cl.vmardones.chess.gui;
 
 import java.awt.*;
 import java.util.List;
-import java.util.Objects;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
@@ -30,9 +29,9 @@ class CapturedPiecesPanel extends JPanel {
         setBorder(BORDER);
 
         northPanel = new JPanel(new GridLayout(8, 2));
-        southPanel = new JPanel(new GridLayout(8, 2));
-
         add(northPanel, BorderLayout.NORTH);
+
+        southPanel = new JPanel(new GridLayout(8, 2));
         add(southPanel, BorderLayout.SOUTH);
 
         setPreferredSize(INITIAL_SIZE);
@@ -42,16 +41,15 @@ class CapturedPiecesPanel extends JPanel {
         northPanel.removeAll();
         southPanel.removeAll();
 
-        // TODO: Do this process on a single loop
-        getTakenPieces(moveLog, Alliance.WHITE).stream()
-                .map(piece -> PieceIconLoader.load(piece, INITIAL_SIZE.width / 2, INITIAL_SIZE.width / 2))
-                .filter(Objects::nonNull)
-                .forEach(icon -> southPanel.add(new JLabel(icon)));
+        for (var alliance : Alliance.values()) {
+            var panel = alliance == Alliance.WHITE ? southPanel : northPanel;
+            var takenPieces = getTakenPieces(moveLog, alliance);
 
-        getTakenPieces(moveLog, Alliance.BLACK).stream()
-                .map(piece -> PieceIconLoader.load(piece, INITIAL_SIZE.width / 2, INITIAL_SIZE.width / 2))
-                .filter(Objects::nonNull)
-                .forEach(icon -> northPanel.add(new JLabel(icon)));
+            for (var piece : takenPieces) {
+                var icon = PieceIconLoader.load(piece, INITIAL_SIZE.width / 2, INITIAL_SIZE.width / 2);
+                panel.add(new JLabel(icon));
+            }
+        }
 
         validate();
     }
