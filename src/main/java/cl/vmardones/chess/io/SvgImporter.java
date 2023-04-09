@@ -26,13 +26,12 @@ import org.eclipse.jdt.annotation.Nullable;
 final class SvgImporter {
 
     private static final Logger LOG = LogManager.getLogger(SvgImporter.class);
+    private static final PNGTranscoder TRANSCODER = new PNGTranscoder();
 
     static @Nullable BufferedImage get(InputStream inputStream, int width, int height) throws IOException {
 
-        var transcoder = new PNGTranscoder();
-
-        transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_WIDTH, (float) width);
-        transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, (float) height);
+        TRANSCODER.addTranscodingHint(SVGAbstractTranscoder.KEY_WIDTH, (float) width);
+        TRANSCODER.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, (float) height);
 
         try (inputStream;
                 var outputStream = new ByteArrayOutputStream()) {
@@ -40,8 +39,7 @@ final class SvgImporter {
             var input = new TranscoderInput(inputStream);
             var output = new TranscoderOutput(outputStream);
 
-            transcoder.transcode(input, output);
-
+            TRANSCODER.transcode(input, output);
             outputStream.flush();
 
             var imageData = outputStream.toByteArray();

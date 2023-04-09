@@ -48,7 +48,7 @@ class GameHistoryPanel extends JPanel {
         model.clear();
     }
 
-    void redo(MoveLog moveLog) {
+    void draw(MoveLog moveLog) {
 
         var lastMove = moveLog.getLastMove();
 

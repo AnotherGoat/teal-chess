@@ -9,8 +9,7 @@ import static javax.swing.SwingUtilities.isLeftMouseButton;
 import static javax.swing.SwingUtilities.isRightMouseButton;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
@@ -32,7 +31,7 @@ import org.eclipse.jdt.annotation.Nullable;
 class SquarePanel extends JPanel {
 
     private static final Logger LOG = LogManager.getLogger(SquarePanel.class);
-    private static final Dimension INITIAL_SIZE = new Dimension(60, 60);
+    private static final Dimension INITIAL_SIZE = new Dimension(63, 63);
     private static final Color LIGHT_COLOR = Color.decode("#FFCE9E");
     private static final Color DARK_COLOR = Color.decode("#D18B47");
 
@@ -65,13 +64,14 @@ class SquarePanel extends JPanel {
 
         validate();
 
+        addComponentListener(new ResizeListener());
         addMouseListener(new ClickListener());
     }
 
     void drawSquare(Board board) {
         square = board.squareAt(square.position());
-        assignPieceIcon();
-        highlightLegals(board);
+        assignPieceIcon(getWidth(), getHeight());
+        highlightLegals(board, getWidth(), getHeight());
         validate();
         repaint();
     }
@@ -81,12 +81,16 @@ class SquarePanel extends JPanel {
     }
 
     private void assignPieceIcon() {
+        assignPieceIcon(INITIAL_SIZE.width, INITIAL_SIZE.height);
+    }
+
+    private void assignPieceIcon(int width, int height) {
         pieceIconLabel.setIcon(null);
 
         var piece = square.piece();
 
         if (piece != null) {
-            var icon = PieceIconLoader.load(piece, INITIAL_SIZE.width, INITIAL_SIZE.height);
+            var icon = PieceIconLoader.load(piece, width, height);
 
             if (icon != null) {
                 pieceIconLabel.setIcon(icon);
@@ -94,20 +98,21 @@ class SquarePanel extends JPanel {
         }
     }
 
-    private void highlightLegals(Board board) {
+    private void highlightLegals(Board board, int width, int height) {
         highlightIconLabel.setIcon(null);
 
         if (table.isHighlightLegals()) {
             selectedPieceLegals(board).stream()
                     .filter(move -> move.destination().equals(square.position()))
-                    .forEach(move -> {
-                        var greenDot = SvgLoader.load(
-                                "art/misc/green_dot.svg", INITIAL_SIZE.width / 2, INITIAL_SIZE.height / 2);
+                    .forEach(move -> addGreenDot(width, height));
+        }
+    }
 
-                        if (greenDot != null) {
-                            highlightIconLabel.setIcon(new ImageIcon(greenDot));
-                        }
-                    });
+    private void addGreenDot(int width, int height) {
+        var greenDot = SvgLoader.load("art/misc/green_dot.svg", width / 2, height / 2);
+
+        if (greenDot != null) {
+            highlightIconLabel.setIcon(new ImageIcon(greenDot));
         }
     }
 
@@ -131,18 +136,23 @@ class SquarePanel extends JPanel {
         return selectedPiece.alliance() != table.getGame().getCurrentPlayer().alliance();
     }
 
-    private static final class IconLabel extends JLabel {
-        private IconLabel(@Nullable Icon icon) {
-            setIcon(icon);
-        }
-
+    private final class ResizeListener extends ComponentAdapter {
+        // TODO: Resizing works, but the icons reload slowly
+        // TODO: Find a way to make the resizing faster, either by using batik-swing, a cache or both
         @Override
-        public void setIcon(@Nullable Icon icon) {
-            super.setIcon(icon);
-
-            if (icon != null) {
-                setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());
+        public void componentResized(ComponentEvent e) {
+            if (pieceIconLabel.getIcon() != null) {
+                pieceIconLabel.setBounds(0, 0, getWidth(), getHeight());
+                assignPieceIcon(getWidth(), getHeight());
             }
+
+            if (highlightIconLabel.getIcon() != null) {
+                highlightIconLabel.setBounds(0, 0, getWidth(), getHeight());
+                addGreenDot(getWidth(), getHeight());
+            }
+
+            setPreferredSize(getSize());
+            revalidate();
         }
     }
 

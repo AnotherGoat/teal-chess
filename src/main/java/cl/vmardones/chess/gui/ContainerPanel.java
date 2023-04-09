@@ -17,8 +17,8 @@ class ContainerPanel<T extends JPanel> extends JPanel {
     ContainerPanel(T squarePanel) {
         this.squarePanel = squarePanel;
 
-        addComponentListener(new ResizeListener());
         add(this.squarePanel);
+        addComponentListener(new ResizeListener());
     }
 
     private static final class SquareDimension extends Dimension {
@@ -30,13 +30,8 @@ class ContainerPanel<T extends JPanel> extends JPanel {
     private final class ResizeListener extends ComponentAdapter {
         @Override
         public void componentResized(ComponentEvent e) {
-            resize();
-            revalidate();
-        }
-
-        // TODO: Resize every component along with the panel
-        private void resize() {
             squarePanel.setPreferredSize(new SquareDimension(Math.min(getHeight(), getWidth())));
+            revalidate();
         }
     }
 }

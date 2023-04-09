@@ -76,13 +76,15 @@ public class Table {
 
         game = new Game();
         boardPanel = new BoardPanel(this, game.getBoard());
-        capturedPiecesPanel = new CapturedPiecesPanel();
-        gameHistoryPanel = new GameHistoryPanel();
-        moveLog = new MoveLog();
-
         frame.add(new ContainerPanel<>(boardPanel), BorderLayout.CENTER);
+
+        capturedPiecesPanel = new CapturedPiecesPanel();
         frame.add(capturedPiecesPanel, BorderLayout.WEST);
+
+        gameHistoryPanel = new GameHistoryPanel();
         frame.add(gameHistoryPanel, BorderLayout.EAST);
+
+        moveLog = new MoveLog();
 
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -100,8 +102,8 @@ public class Table {
     }
 
     void update() {
-        gameHistoryPanel.redo(moveLog);
-        capturedPiecesPanel.redo(moveLog);
+        gameHistoryPanel.draw(moveLog);
+        capturedPiecesPanel.draw(moveLog);
 
         boardPanel.setBoard(game.getBoard());
         boardPanel.draw();
@@ -235,9 +237,9 @@ public class Table {
             boardPanel.setBoard(game.getBoard());
             boardPanel.draw();
             moveLog = new MoveLog();
-            capturedPiecesPanel.redo(moveLog);
+            capturedPiecesPanel.draw(moveLog);
             gameHistoryPanel.reset();
-            gameHistoryPanel.redo(moveLog);
+            gameHistoryPanel.draw(moveLog);
         }
     }
 

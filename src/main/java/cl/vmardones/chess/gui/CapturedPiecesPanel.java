@@ -37,7 +37,7 @@ class CapturedPiecesPanel extends JPanel {
         setPreferredSize(INITIAL_SIZE);
     }
 
-    void redo(MoveLog moveLog) {
+    void draw(MoveLog moveLog) {
         northPanel.removeAll();
         southPanel.removeAll();
 
