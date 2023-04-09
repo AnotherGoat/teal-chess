@@ -12,7 +12,7 @@ import cl.vmardones.chess.ExcludeFromGeneratedReport;
 final class AlgebraicConverter {
 
     private static final Pattern ALGEBRAIC_PATTERN = Pattern.compile("^[a-h][1-8]$");
-    private static final String files = "abcdefgh";
+    private static final String FILES = "abcdefgh";
 
     static int toIndex(String algebraicNotation) {
         if (!ALGEBRAIC_PATTERN.matcher(algebraicNotation).matches()) {
@@ -25,7 +25,7 @@ final class AlgebraicConverter {
     static String toAlgebraic(int index) {
 
         var fileIndex = index % Board.SIDE_LENGTH;
-        var fileChar = files.charAt(fileIndex);
+        var fileChar = FILES.charAt(fileIndex);
         var rank = Board.SIDE_LENGTH - index / Board.SIDE_LENGTH;
 
         return String.valueOf(fileChar) + rank;

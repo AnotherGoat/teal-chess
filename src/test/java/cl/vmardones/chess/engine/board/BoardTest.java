@@ -95,7 +95,7 @@ class BoardTest {
         var piece = new Pawn("a5", Alliance.BLACK);
         var board = builder.with(piece).without(piece).build();
 
-        assertThat(board.blackPieces()).doesNotContain(piece);
+        assertThat(board.blackPieces()).isNotEmpty().doesNotContain(piece);
     }
 
     @Test
@@ -134,22 +134,22 @@ class BoardTest {
 
     @Test
     void unmodifiableSquares() {
-        var board = BoardService.createStandardBoard();
+        var squares = BoardService.createStandardBoard().squares();
 
-        assertThatThrownBy(() -> board.squares().clear()).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(squares::clear).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void unmodifiableWhitePieces() {
-        var board = BoardService.createStandardBoard();
+        var whitePieces = BoardService.createStandardBoard().whitePieces();
 
-        assertThatThrownBy(() -> board.whitePieces().clear()).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(whitePieces::clear).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void unmodifiableBlackPieces() {
-        var board = BoardService.createStandardBoard();
+        var blackPieces = BoardService.createStandardBoard().blackPieces();
 
-        assertThatThrownBy(() -> board.blackPieces().clear()).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(blackPieces::clear).isInstanceOf(UnsupportedOperationException.class);
     }
 }

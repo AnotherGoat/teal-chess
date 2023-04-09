@@ -42,7 +42,7 @@ class RookTest {
     @Test
     void illegalMove() {
         var rook = new Rook("a1", Alliance.BLACK);
-        assertThat(rook.moveVectors()).doesNotContain(new int[] {1, -1});
+        assertThat(rook.moveVectors()).isNotEmpty().doesNotContain(new int[] {1, -1});
     }
 
     @Test

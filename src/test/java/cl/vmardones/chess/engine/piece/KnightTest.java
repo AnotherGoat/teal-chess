@@ -36,7 +36,7 @@ class KnightTest {
     @Test
     void illegalMove() {
         var knight = new Knight("a1", Alliance.WHITE);
-        assertThat(knight.moveOffsets()).doesNotContain(new int[] {0, 1});
+        assertThat(knight.moveOffsets()).isNotEmpty().doesNotContain(new int[] {0, 1});
     }
 
     @Test

@@ -23,15 +23,17 @@ public final class MoveMaker {
         var piece = move.piece();
         var otherPiece = move.otherPiece();
         var destination = move.destination().toString();
+        var movedPiece = piece.moveTo(destination);
 
-        builder.without(piece).without(otherPiece).with(piece.moveTo(destination));
+        builder.without(piece).without(otherPiece).with(movedPiece);
 
         if (move.type() == MoveType.PAWN_JUMP) {
-            builder.enPassantPawn((Pawn) piece.moveTo(destination));
+            builder.enPassantPawn((Pawn) movedPiece);
         }
 
-        if (move.isCastle()) {
-            var rookDestination = move.destination().toString();
+        var rookDestination = move.rookDestination();
+
+        if (otherPiece != null && rookDestination != null) {
             builder.with(otherPiece.moveTo(rookDestination.toString()));
         }
 

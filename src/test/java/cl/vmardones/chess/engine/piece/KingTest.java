@@ -48,7 +48,7 @@ class KingTest {
     @Test
     void illegalMove() {
         var king = new King("a1", Alliance.WHITE);
-        assertThat(king.moveOffsets()).doesNotContain(new int[] {-1, 2});
+        assertThat(king.moveOffsets()).isNotEmpty().doesNotContain(new int[] {-1, 2});
     }
 
     @Test

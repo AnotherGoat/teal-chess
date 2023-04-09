@@ -6,9 +6,6 @@
 package cl.vmardones.chess.engine.player;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,25 +52,5 @@ class AllianceTest {
     @Test
     void blackOppositeDirection() {
         assertThat(black.oppositeDirection()).isPositive().isEqualTo(1);
-    }
-
-    @Test
-    void chooseWhitePlayer() {
-        when(whitePlayer.alliance()).thenReturn(white);
-        when(blackPlayer.alliance()).thenReturn(black);
-
-        List<Player> players = List.of(blackPlayer, whitePlayer);
-
-        assertThat(white.choosePlayer(players)).isEqualTo(whitePlayer);
-    }
-
-    @Test
-    void chooseBlackPlayer() {
-        when(whitePlayer.alliance()).thenReturn(white);
-        when(blackPlayer.alliance()).thenReturn(black);
-
-        List<Player> players = List.of(whitePlayer, blackPlayer);
-
-        assertThat(black.choosePlayer(players)).isEqualTo(blackPlayer);
     }
 }

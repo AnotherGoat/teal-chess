@@ -75,12 +75,12 @@ public final class Move {
         return otherPiece;
     }
 
-    public boolean isCapture() {
-        return otherPiece != null && rookDestination == null;
+    public @Nullable Position rookDestination() {
+        return rookDestination;
     }
 
-    public boolean isCastle() {
-        return otherPiece != null && rookDestination != null;
+    public boolean isCapture() {
+        return otherPiece != null && rookDestination == null;
     }
 
     public boolean isNone() {

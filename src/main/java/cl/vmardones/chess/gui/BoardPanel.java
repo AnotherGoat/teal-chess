@@ -16,7 +16,7 @@ class BoardPanel extends JPanel {
 
     public static final Dimension INITIAL_SIZE = new Dimension(500, 500);
 
-    private Board board;
+    private transient Board board;
     private final transient Table table;
     private final List<SquarePanel> squares;
 

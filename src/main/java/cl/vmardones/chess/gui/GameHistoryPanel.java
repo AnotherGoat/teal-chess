@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
-import cl.vmardones.chess.engine.player.Player;
+import cl.vmardones.chess.engine.player.Alliance;
 
 class GameHistoryPanel extends JPanel {
 
@@ -44,16 +44,17 @@ class GameHistoryPanel extends JPanel {
         return centeredRenderer;
     }
 
-    void redo(Player currentPlayer, MoveLog moveLog) {
+    void redo(MoveLog moveLog) {
 
         var lastMove = moveLog.getLastMove();
 
         if (lastMove != null) {
             var moveText = lastMove.toString();
 
-            switch (lastMove.piece().alliance()) {
-                case WHITE -> model.setValueAt(moveText, model.getLastRowIndex() + 1, 0);
-                case BLACK -> model.setValueAt(moveText, model.getLastRowIndex(), 1);
+            if (lastMove.piece().alliance() == Alliance.WHITE) {
+                model.setValueAt(moveText, model.getLastRowIndex() + 1, 0);
+            } else {
+                model.setValueAt(moveText, model.getLastRowIndex(), 1);
             }
         }
 

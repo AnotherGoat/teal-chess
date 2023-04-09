@@ -5,8 +5,6 @@
 
 package cl.vmardones.chess.engine.player;
 
-import java.util.List;
-
 /** Represents a chess piece's color, which can be white or black. */
 public enum Alliance {
     /** The white side, at the bottom of the board. */
@@ -15,20 +13,6 @@ public enum Alliance {
     BLACK(-1);
 
     private final int direction;
-
-    // TODO: This method should be moved somewhere else
-    /**
-     * Chooses the first player of this alliance.
-     *
-     * @param players Players to choose from
-     * @return The chosen player
-     */
-    public Player choosePlayer(List<Player> players) {
-        return players.stream()
-                .filter(player -> player.alliance() == this)
-                .findFirst()
-                .orElse(players.get(0));
-    }
 
     /* Getters */
 

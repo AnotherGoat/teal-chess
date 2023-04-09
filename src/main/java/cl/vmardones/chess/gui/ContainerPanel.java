@@ -24,6 +24,7 @@ class ContainerPanel<T extends JPanel> extends JPanel {
 
     private ComponentListener resizeListener() {
         return new ComponentAdapter() {
+            @Override
             public void componentResized(ComponentEvent e) {
                 resize();
                 revalidate();

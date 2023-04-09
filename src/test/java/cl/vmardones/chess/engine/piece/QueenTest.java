@@ -48,7 +48,7 @@ class QueenTest {
     @Test
     void illegalMove() {
         var queen = new Queen("a1", Alliance.BLACK);
-        assertThat(queen.moveVectors()).doesNotContain(new int[] {-1, 2});
+        assertThat(queen.moveVectors()).isNotEmpty().doesNotContain(new int[] {-1, 2});
     }
 
     @Test

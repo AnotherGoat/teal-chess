@@ -65,12 +65,12 @@ class SquarePanel extends JPanel {
     }
 
     private JLayeredPane createLayeredPane() {
-        var layeredPane = new JLayeredPane();
+        var newLayeredPane = new JLayeredPane();
 
-        layeredPane.setLayout(new BorderLayout());
-        layeredPane.setOpaque(true);
+        newLayeredPane.setLayout(new BorderLayout());
+        newLayeredPane.setOpaque(true);
 
-        return layeredPane;
+        return newLayeredPane;
     }
 
     private MouseListener clickListener() {
@@ -96,9 +96,10 @@ class SquarePanel extends JPanel {
     private void firstLeftClick() {
         LOG.debug("Selected the square {}", square);
         table.setSourceSquare(square);
+        var selectedPiece = getSelectedPiece();
 
-        if (getSelectedPiece() != null) {
-            table.setSelectedPiece(getSelectedPiece());
+        if (selectedPiece != null) {
+            table.setSelectedPiece(selectedPiece);
             LOG.debug("The square contains {}", table.getSelectedPiece());
             LOG.debug("Highlighting legal moves");
         } else {
@@ -108,18 +109,31 @@ class SquarePanel extends JPanel {
     }
 
     private @Nullable Piece getSelectedPiece() {
-        return table.getSourceSquare().piece();
+        var sourceSquare = table.getSourceSquare();
+
+        return sourceSquare != null ? sourceSquare.piece() : null;
     }
 
     private void secondLeftClick() {
-        // TODO: Replace all these long method calls with forwarding methods
+        var sourceSquare = table.getSourceSquare();
+
+        if (sourceSquare == null) {
+            LOG.debug("Source square is null, stopping second left click");
+            return;
+        }
+
         LOG.debug("Selected the destination {}", square.position());
         table.setDestinationSquare(square);
 
+        var destinationSquare = table.getDestinationSquare();
+
+        if (destinationSquare == null) {
+            LOG.debug("Destination square is null, stopping second left click");
+            return;
+        }
+
         var move = MoveFinder.choose(
-                table.getGame().getCurrentPlayer().legals(),
-                table.getSourceSquare().position(),
-                table.getDestinationSquare().position());
+                table.getGame().getCurrentPlayer().legals(), sourceSquare.position(), destinationSquare.position());
 
         LOG.debug("Is there a move that can get to the destination? {}", move != null);
 
@@ -151,9 +165,10 @@ class SquarePanel extends JPanel {
 
     private void assignPieceIcon() {
         removeAll();
+        var piece = square.piece();
 
-        if (square.piece() != null) {
-            var icon = PieceIconLoader.load(square.piece(), INITIAL_SIZE.width, INITIAL_SIZE.height);
+        if (piece != null) {
+            var icon = PieceIconLoader.load(piece, INITIAL_SIZE.width, INITIAL_SIZE.height);
 
             if (icon != null) {
                 addImage(icon, PIECE_LAYER);
@@ -183,15 +198,22 @@ class SquarePanel extends JPanel {
     }
 
     private List<Move> selectedPieceLegals(Board board) {
-        if (table.getSelectedPiece() == null || isOpponentPieceSelected()) {
+        var selectedPiece = table.getSelectedPiece();
+
+        if (selectedPiece == null || isOpponentPieceSelected()) {
             return Collections.emptyList();
         }
 
-        return table.getSelectedPiece().calculateLegals(board);
+        return selectedPiece.calculateLegals(board);
     }
 
     private boolean isOpponentPieceSelected() {
-        return table.getSelectedPiece().alliance()
-                != table.getGame().getCurrentPlayer().alliance();
+        var selectedPiece = table.getSelectedPiece();
+
+        if (selectedPiece == null) {
+            return true;
+        }
+
+        return selectedPiece.alliance() != table.getGame().getCurrentPlayer().alliance();
     }
 }

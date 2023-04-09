@@ -14,7 +14,7 @@ class AlgebraicConverterTest {
 
     @Test
     void validAlgebraicNotation() {
-        assertThat(AlgebraicConverter.toIndex("a8")).isEqualTo(0);
+        assertThat(AlgebraicConverter.toIndex("a8")).isZero();
         assertThat(AlgebraicConverter.toIndex("a1")).isEqualTo(56);
         assertThat(AlgebraicConverter.toIndex("h8")).isEqualTo(7);
         assertThat(AlgebraicConverter.toIndex("h1")).isEqualTo(63);

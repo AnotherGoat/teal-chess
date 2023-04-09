@@ -45,7 +45,7 @@ class PawnTest {
     @Test
     void illegalMove() {
         var pawn = new Pawn("a1", Alliance.WHITE);
-        assertThat(pawn.moveOffsets()).doesNotContain(new int[] {1, 0});
+        assertThat(pawn.moveOffsets()).isNotEmpty().doesNotContain(new int[] {1, 0});
     }
 
     @Test

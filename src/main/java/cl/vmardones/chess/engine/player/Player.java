@@ -200,7 +200,13 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
         var kingPosition = king.position();
 
         var rookOffset = kingSide ? 3 : -4;
-        var rook = (Rook) board.pieceAt(kingPosition.right(rookOffset));
+        var rookPosition = kingPosition.right(rookOffset);
+
+        if (rookPosition == null) {
+            return null;
+        }
+
+        var rook = (Rook) board.pieceAt(rookPosition);
 
         if (rook == null || !rook.firstMove()) {
             return null;
@@ -209,6 +215,10 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
         var direction = kingSide ? 1 : -1;
         var kingDestination = kingPosition.right(2 * direction);
         var rookDestination = kingPosition.right(direction);
+
+        if (kingDestination == null || rookDestination == null) {
+            return null;
+        }
 
         return Move.createCastle(kingSide, king, kingDestination, rook, rookDestination);
     }

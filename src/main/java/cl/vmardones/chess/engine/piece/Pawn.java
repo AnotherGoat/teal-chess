@@ -49,11 +49,18 @@ public final class Pawn extends JumpingPiece {
         return createCaptureMove(destination);
     }
 
-    private Move createEnPassantMove(Board board, Square destination) {
-        var enPassantMove = Move.createEnPassant(this, destination.position(), board.enPassantPawn());
+    private @Nullable Move createEnPassantMove(Board board, Square destination) {
+        var enPassantPawn = board.enPassantPawn();
 
-        LOG.debug("Created en passant move: {}", enPassantMove);
-        return enPassantMove;
+        if (enPassantPawn != null) {
+            var enPassantMove = Move.createEnPassant(this, destination.position(), enPassantPawn);
+
+            LOG.debug("Created en passant move: {}", enPassantMove);
+            return enPassantMove;
+        }
+
+        LOG.debug("Not creating en passant move, en passant pawn is null");
+        return null;
     }
 
     private boolean isEnPassantPossible(Board board, Square destination) {

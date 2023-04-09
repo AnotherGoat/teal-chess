@@ -36,7 +36,7 @@ class BishopTest {
     @Test
     void illegalMove() {
         var bishop = new Bishop("a1", Alliance.BLACK);
-        assertThat(bishop.moveVectors()).doesNotContain(new int[] {0, 1});
+        assertThat(bishop.moveVectors()).isNotEmpty().doesNotContain(new int[] {0, 1});
     }
 
     @Test

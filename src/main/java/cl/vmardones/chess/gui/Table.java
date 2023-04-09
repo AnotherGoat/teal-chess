@@ -180,7 +180,7 @@ public class Table {
     }
 
     void update() {
-        gameHistoryPanel.redo(game.getCurrentPlayer(), moveLog);
+        gameHistoryPanel.redo(moveLog);
         capturedPiecesPanel.redo(moveLog);
 
         boardPanel.setBoard(game.getBoard());

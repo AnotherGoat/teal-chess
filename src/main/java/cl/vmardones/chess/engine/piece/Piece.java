@@ -150,23 +150,16 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
      * @return A move, selected depending on the source and destination.
      */
     protected @Nullable Move createMove(Square destination, Board board) {
-        if (destination.piece() == null) {
+        var destinationPiece = destination.piece();
+
+        if (destinationPiece == null) {
             return Move.createNormal(this, destination.position());
         }
 
-        var capturablePiece = destination.piece();
-
-        if (isEnemyOf(capturablePiece)) {
-            return Move.createCapture(this, destination.position(), capturablePiece);
+        if (isEnemyOf(destinationPiece)) {
+            return Move.createCapture(this, destination.position(), destinationPiece);
         }
 
         return null;
-    }
-
-    // TODO: Check if this method is still needed or not
-    private boolean isInMoveRange(Board board, Position position) {
-        return calculateLegals(board).stream()
-                .map(Move::destination)
-                .anyMatch(destination -> destination.equals(position));
     }
 }
