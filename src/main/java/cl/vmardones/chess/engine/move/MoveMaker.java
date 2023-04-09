@@ -7,7 +7,11 @@ package cl.vmardones.chess.engine.move;
 
 import cl.vmardones.chess.ExcludeFromGeneratedReport;
 import cl.vmardones.chess.engine.board.Board;
+import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Pawn;
+import cl.vmardones.chess.engine.piece.Piece;
+import cl.vmardones.chess.engine.player.Alliance;
+import org.eclipse.jdt.annotation.Nullable;
 
 public final class MoveMaker {
 
@@ -19,11 +23,12 @@ public final class MoveMaker {
      * @return The new board, after the move is made.
      */
     public static Board make(Board board, Move move) {
-        var builder = board.nextTurnBuilder();
         var piece = move.piece();
         var otherPiece = move.otherPiece();
         var destination = move.destination().toString();
         var movedPiece = piece.moveTo(destination);
+
+        var builder = configureNextTurn(board, movedPiece);
 
         builder.without(piece).without(otherPiece).with(movedPiece);
 
@@ -43,5 +48,18 @@ public final class MoveMaker {
     @ExcludeFromGeneratedReport
     private MoveMaker() {
         throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
+    }
+
+    // TODO: Check if this code can be cleaned somehow
+    private static Board.BoardBuilder configureNextTurn(Board board, @Nullable Piece movedPiece) {
+        if (!(movedPiece instanceof King)) {
+            return board.nextTurnBuilder();
+        }
+
+        if (movedPiece.alliance() == Alliance.WHITE) {
+            return board.nextTurnBuilder((King) movedPiece, board.blackKing());
+        }
+
+        return board.nextTurnBuilder(board.whiteKing(), (King) movedPiece);
     }
 }

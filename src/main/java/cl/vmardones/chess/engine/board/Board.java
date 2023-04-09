@@ -56,11 +56,26 @@ public final class Board {
      * A special builder intended to be used when players make a move. This can only be used after the
      * board has been initialized at least once. It keeps the current state of the board and lets you
      * specify only the differences from the previous turn.
+     * Only use this version if none of the kings weren't moved in the previous turn.
      *
      * @return The next turn builder.
      */
     public BoardBuilder nextTurnBuilder() {
-        return new BoardBuilder(this);
+        return new BoardBuilder(this, whiteKing, blackKing);
+    }
+
+    /**
+     * A special builder intended to be used when players make a move. This can only be used after the
+     * board has been initialized at least once. It keeps the current state of the board and lets you
+     * specify only the differences from the previous turn.
+     * Use this version if any of the kings were moved in the previous turn.
+     *
+     * @param whiteKing The white king in the new board.
+     * @param blackKing The black king in the new board.
+     * @return The next turn builder.
+     */
+    public BoardBuilder nextTurnBuilder(King whiteKing, King blackKing) {
+        return new BoardBuilder(this, whiteKing, blackKing);
     }
 
     /* Checking the board */
@@ -197,14 +212,15 @@ public final class Board {
         squares = createSquares(builder);
 
         whiteKing = builder.whiteKing;
-        whitePieces = calculateActivePieces(squares, Alliance.WHITE);
+        whitePieces = findPieces(squares, Alliance.WHITE);
 
         blackKing = builder.blackKing;
-        blackPieces = calculateActivePieces(squares, Alliance.BLACK);
+        blackPieces = findPieces(squares, Alliance.BLACK);
 
         enPassantPawn = builder.enPassantPawn;
     }
 
+    // TODO: Cache all possible algebraic coordinates
     private List<Square> createSquares(BoardBuilder builder) {
         return IntStream.range(MIN_SQUARES, MAX_SQUARES)
                 .mapToObj(
@@ -212,7 +228,7 @@ public final class Board {
                 .toList();
     }
 
-    private List<Piece> calculateActivePieces(List<Square> gameBoard, Alliance alliance) {
+    private List<Piece> findPieces(List<Square> gameBoard, Alliance alliance) {
         return gameBoard.stream()
                 .map(Square::piece)
                 .filter(piece -> piece != null && piece.alliance() == alliance)
@@ -285,22 +301,30 @@ public final class Board {
          * @return The finished, unmodifiable board.
          */
         public Board build() {
-            with(whiteKing);
-            with(blackKing);
+            if (!configuration.get(whiteKing.position().index()).equals(whiteKing)) {
+                with(whiteKing);
+            }
+
+            if (!configuration.get(blackKing.position().index()).equals(blackKing)) {
+                with(blackKing);
+            }
 
             return new Board(this);
         }
 
-        private BoardBuilder(King whiteKing, King blackKing) {
-            this.whiteKing = whiteKing;
-            this.blackKing = blackKing;
-        }
-
-        private BoardBuilder(Board board) {
-            this(board.whiteKing, board.blackKing);
+        private BoardBuilder(Board board, King whiteKing, King blackKing) {
+            this(whiteKing, blackKing);
 
             board.whitePieces().forEach(this::with);
             board.blackPieces().forEach(this::with);
+        }
+
+        private BoardBuilder(King whiteKing, King blackKing) {
+            this.whiteKing = whiteKing;
+            with(whiteKing);
+
+            this.blackKing = blackKing;
+            with(blackKing);
         }
     }
 }
