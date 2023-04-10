@@ -23,23 +23,18 @@ import org.eclipse.jdt.annotation.Nullable;
 public final class Game {
 
     private static final Logger LOG = LogManager.getLogger(Game.class);
-
+    private final MoveMaker moveMaker;
     private final GameState state;
     private GameHistory history;
 
     public Game() {
         LOG.info("Game started!");
 
+        moveMaker = new MoveMaker();
         state = new GameState();
         history = new GameHistory();
 
         registerTurn(createFirstTurn());
-    }
-
-    public void addTurn(Move move) {
-        var nextTurnBoard = MoveMaker.make(board(), move);
-        var nextTurn = createTurn(nextTurnBoard, currentOpponent().alliance(), move);
-        registerTurn(nextTurn);
     }
 
     /* Getters */
@@ -57,6 +52,12 @@ public final class Game {
 
     public GameHistory history() {
         return history;
+    }
+
+    public void addTurn(Move move) {
+        var nextTurnBoard = moveMaker.make(board(), move);
+        var nextTurn = createTurn(nextTurnBoard, currentOpponent().alliance(), move);
+        registerTurn(nextTurn);
     }
 
     public MoveTransition makeMove(Move move) {

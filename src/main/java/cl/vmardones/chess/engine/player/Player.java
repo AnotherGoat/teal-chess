@@ -22,7 +22,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * The entity that controls the pieces in one side of the board. It can be controlled either by a
  * human or an AI.
  */
-public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
+public abstract sealed class Player permits HumanPlayer {
 
     protected final Alliance alliance;
     protected final Board board;
@@ -122,7 +122,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
             return new MoveTransition(board, move, MoveStatus.CHECKS);
         }
 
-        return new MoveTransition(MoveMaker.make(board, move), move, MoveStatus.NORMAL);
+        return new MoveTransition(new MoveMaker().make(board, move), move, MoveStatus.NORMAL);
     }
 
     /* toString */

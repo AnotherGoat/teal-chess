@@ -95,7 +95,7 @@ class PawnTest {
         var initialBoard = Board.builder(whiteKing, blackKing).with(initialPawn).build();
         var firstMove = initialPawn.createMove(initialBoard.squareAt("a3"), initialBoard);
 
-        var newBoard = MoveMaker.make(initialBoard, firstMove);
+        var newBoard = new MoveMaker().make(initialBoard, firstMove);
         var pawn = newBoard.pieceAt("a3");
         var destination = newBoard.squareAt("a5");
 
@@ -126,16 +126,53 @@ class PawnTest {
         var blackKing = new King("e8", Alliance.BLACK);
 
         var pawn = new Pawn("a5", Alliance.WHITE);
-        var capturablePiece = new Pawn("b7", Alliance.BLACK);
-        var initialBoard = Board.builder(whiteKing, blackKing)
+        var enPassantPawn = new Pawn("b5", Alliance.BLACK);
+
+        var board = Board.builder(whiteKing, blackKing)
                 .with(pawn)
-                .with(capturablePiece)
+                .with(enPassantPawn)
+                .enPassantPawn(enPassantPawn)
                 .build();
 
-        var jumpMove = capturablePiece.createMove(initialBoard.squareAt("b5"), initialBoard);
-        var newBoard = MoveMaker.make(initialBoard, jumpMove);
-        var destination = newBoard.squareAt("b6");
+        var destination = board.squareAt("b6");
 
-        assertThat(pawn.createMove(destination, newBoard).type()).isEqualTo(MoveType.EN_PASSANT);
+        assertThat(pawn.createMove(destination, board).type()).isEqualTo(MoveType.EN_PASSANT);
+    }
+
+    @Test
+    void noEnPassantPawn() {
+        var whiteKing = new King("e1", Alliance.WHITE);
+        var blackKing = new King("e8", Alliance.BLACK);
+
+        var pawn = new Pawn("a5", Alliance.WHITE);
+        var capturablePawn = new Pawn("b5", Alliance.BLACK);
+
+        var board = Board.builder(whiteKing, blackKing)
+                .with(pawn)
+                .with(capturablePawn)
+                .build();
+
+        var destination = board.squareAt("b6");
+
+        assertThat(pawn.createMove(destination, board)).isNull();
+    }
+
+    @Test
+    void cantReachEnPassantPawn() {
+        var whiteKing = new King("e1", Alliance.WHITE);
+        var blackKing = new King("e8", Alliance.BLACK);
+
+        var pawn = new Pawn("a5", Alliance.WHITE);
+        var enPassantPawn = new Pawn("c5", Alliance.BLACK);
+
+        var board = Board.builder(whiteKing, blackKing)
+                .with(pawn)
+                .with(enPassantPawn)
+                .enPassantPawn(enPassantPawn)
+                .build();
+
+        var destination = board.squareAt("b6");
+
+        assertThat(pawn.createMove(destination, board)).isNull();
     }
 }

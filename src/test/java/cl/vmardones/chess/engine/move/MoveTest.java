@@ -6,20 +6,86 @@
 package cl.vmardones.chess.engine.move;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import cl.vmardones.chess.engine.board.Position;
-import cl.vmardones.chess.engine.piece.Bishop;
-import cl.vmardones.chess.engine.piece.King;
-import cl.vmardones.chess.engine.piece.Pawn;
-import cl.vmardones.chess.engine.piece.Rook;
+import cl.vmardones.chess.engine.piece.*;
 import cl.vmardones.chess.engine.player.Alliance;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
 class MoveTest {
+
+    @Test
+    void source() {
+        var source = mock(Position.class);
+        var piece = mock(Knight.class);
+        when(piece.position()).thenReturn(source);
+
+        var destination = mock(Position.class);
+        var move = Move.createNormal(piece, destination);
+
+        assertThat(move.source()).isEqualTo(source);
+    }
+
+    @Test
+    void isCapture() {
+        var piece = mock(Knight.class);
+        var destination = mock(Position.class);
+        var capturedPiece = mock(Knight.class);
+
+        var move = Move.createCapture(piece, destination, capturedPiece);
+
+        assertThat(move.isCapture()).isTrue();
+    }
+
+    @Test
+    void normalIsNotCapture() {
+        var piece = mock(Knight.class);
+        var destination = mock(Position.class);
+
+        var move = Move.createNormal(piece, destination);
+
+        assertThat(move.isCapture()).isFalse();
+    }
+
+    @Test
+    void castleIsNotCapture() {
+        var king = mock(King.class);
+        var rook = mock(Rook.class);
+
+        var move = Move.createCastle(true, king, mock(Position.class), rook, mock(Position.class));
+
+        assertThat(move.isCapture()).isFalse();
+    }
+
+    @Test
+    void isNone() {
+        var source = mock(Position.class);
+        var piece = mock(Knight.class);
+        when(piece.position()).thenReturn(source);
+
+        var capturedPiece = mock(Knight.class);
+
+        var move = Move.createCapture(piece, source, capturedPiece);
+
+        assertThat(move.isNone()).isTrue();
+    }
+
+    @Test
+    void isNotNone() {
+        var source = mock(Position.class);
+        var piece = mock(Knight.class);
+        when(piece.position()).thenReturn(source);
+
+        var capturedPiece = mock(Knight.class);
+
+        var destination = mock(Position.class);
+        var move = Move.createCapture(piece, destination, capturedPiece);
+
+        assertThat(move.isNone()).isFalse();
+    }
 
     @Test
     void normalToString() {

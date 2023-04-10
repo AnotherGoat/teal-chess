@@ -123,7 +123,17 @@ class BoardTest {
     }
 
     @Test
-    void alwaysAddsKings() {
+    void alwaysAddsWhiteKing() {
+        var newWhiteKing = new King("h8", Alliance.WHITE);
+        var impostorQueen = new Queen("h8", Alliance.WHITE);
+
+        var board = Board.builder(newWhiteKing, blackKing).with(impostorQueen).build();
+
+        assertThat(board.whitePieces()).doesNotContain(impostorQueen).containsOnlyOnce(newWhiteKing);
+    }
+
+    @Test
+    void alwaysAddsBlackKing() {
         var newBlackKing = new King("a1", Alliance.BLACK);
         var impostorQueen = new Queen("a1", Alliance.BLACK);
 

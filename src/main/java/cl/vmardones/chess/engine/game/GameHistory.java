@@ -27,6 +27,10 @@ public final class GameHistory {
     }
 
     public @Nullable Move lastMove() {
+        if (history.isEmpty()) {
+            return null;
+        }
+
         return history.get(history.size() - 1).state().lastMove();
     }
 

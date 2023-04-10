@@ -5,7 +5,6 @@
 
 package cl.vmardones.chess.engine.move;
 
-import cl.vmardones.chess.ExcludeFromGeneratedReport;
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Pawn;
@@ -13,6 +12,7 @@ import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Alliance;
 import org.eclipse.jdt.annotation.Nullable;
 
+/** The class responsible for realizing moves and building a new post-move board. */
 public final class MoveMaker {
 
     /**
@@ -22,7 +22,7 @@ public final class MoveMaker {
      * @param move The move to make.
      * @return The new board, after the move is made.
      */
-    public static Board make(Board board, Move move) {
+    public Board make(Board board, Move move) {
         var piece = move.piece();
         var otherPiece = move.otherPiece();
         var destination = move.destination().toString();
@@ -45,13 +45,8 @@ public final class MoveMaker {
         return builder.build();
     }
 
-    @ExcludeFromGeneratedReport
-    private MoveMaker() {
-        throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
-    }
-
     // TODO: Check if this code can be cleaned somehow
-    private static Board.BoardBuilder configureNextTurn(Board board, @Nullable Piece movedPiece) {
+    private Board.BoardBuilder configureNextTurn(Board board, @Nullable Piece movedPiece) {
         if (!(movedPiece instanceof King)) {
             return board.nextTurnBuilder();
         }

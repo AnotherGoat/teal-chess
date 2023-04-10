@@ -84,7 +84,7 @@ public final class Move {
     }
 
     public boolean isNone() {
-        return piece.position() == destination;
+        return piece.position().equals(destination);
     }
 
     /* equals, hashCode and toString */
