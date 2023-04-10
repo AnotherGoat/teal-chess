@@ -9,7 +9,6 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 import cl.vmardones.chess.ExcludeFromGeneratedReport;
-import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.*;
 import cl.vmardones.chess.engine.player.Alliance;
 
@@ -28,20 +27,6 @@ public final class BoardService {
      */
     public static Board createStandardBoard() {
         return STANDARD_BOARD;
-    }
-
-    /**
-     * Given a chessboard, calculate the legal moves for every piece.
-     *
-     * @param board The board in its current state.
-     * @param pieces The pieces to search legal moves for.
-     * @return All the legal moves.
-     */
-    public static List<Move> calculateLegals(Board board, List<Piece> pieces) {
-        return pieces.stream()
-                .map(piece -> piece.calculateLegals(board))
-                .flatMap(Collection::stream)
-                .toList();
     }
 
     @ExcludeFromGeneratedReport

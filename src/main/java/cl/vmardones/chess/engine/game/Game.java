@@ -5,12 +5,11 @@
 
 package cl.vmardones.chess.engine.game;
 
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import cl.vmardones.chess.engine.board.Board;
+import cl.vmardones.chess.engine.board.BoardChecker;
 import cl.vmardones.chess.engine.board.BoardService;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveMaker;
@@ -77,29 +76,24 @@ public final class Game {
 
     private Turn createTurn(Board board, Alliance nextMoveMaker, @Nullable Move lastMove) {
         LOG.debug("Current gameboard:\n{}", board);
-        LOG.debug("White king: {}", board.whiteKing());
-        LOG.debug("White pieces: {}", board.whitePieces());
-        LOG.debug("Black king: {}", board.blackKing());
-        LOG.debug("Black pieces: {}", board.blackPieces());
+        LOG.debug("White king: {}", board.king(Alliance.WHITE));
+        LOG.debug("White pieces: {}", board.pieces(Alliance.WHITE));
+        LOG.debug("Black king: {}", board.king(Alliance.BLACK));
+        LOG.debug("Black pieces: {}", board.pieces(Alliance.BLACK));
         LOG.debug("En passant pawn: {}\n", board.enPassantPawn());
 
-        var whiteLegals = calculateWhiteLegals(board);
-        var blackLegals = calculateBlackLegals(board);
-        var whitePlayer = new HumanPlayer(Alliance.WHITE, board, whiteLegals, blackLegals);
-        var blackPlayer = new HumanPlayer(Alliance.BLACK, board, blackLegals, whiteLegals);
+        var whiteLegals = BoardChecker.calculateLegals(board, Alliance.WHITE);
+        var blackLegals = BoardChecker.calculateLegals(board, Alliance.BLACK);
+
+        var whitePlayer = new HumanPlayer(
+                Alliance.WHITE, board.king(Alliance.WHITE), board.pieces(Alliance.WHITE), whiteLegals, blackLegals);
+        var blackPlayer = new HumanPlayer(
+                Alliance.BLACK, board.king(Alliance.BLACK), board.pieces(Alliance.BLACK), blackLegals, whiteLegals);
 
         LOG.debug("Players: {} vs. {}", whitePlayer, blackPlayer);
         LOG.debug("White legals: {}", whitePlayer.legals());
         LOG.debug("Black legals: {}", blackPlayer.legals());
 
         return new Turn(board, nextMoveMaker, whitePlayer, blackPlayer, lastMove);
-    }
-
-    private List<Move> calculateWhiteLegals(Board board) {
-        return BoardService.calculateLegals(board, board.whitePieces());
-    }
-
-    private List<Move> calculateBlackLegals(Board board) {
-        return BoardService.calculateLegals(board, board.blackPieces());
     }
 }

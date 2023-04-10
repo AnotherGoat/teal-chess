@@ -52,9 +52,9 @@ public final class MoveMaker {
         }
 
         if (movedPiece.alliance() == Alliance.WHITE) {
-            return board.nextTurnBuilder((King) movedPiece, board.blackKing());
+            return board.nextTurnBuilder((King) movedPiece, board.king(Alliance.BLACK));
         }
 
-        return board.nextTurnBuilder(board.whiteKing(), (King) movedPiece);
+        return board.nextTurnBuilder(board.king(Alliance.WHITE), (King) movedPiece);
     }
 }

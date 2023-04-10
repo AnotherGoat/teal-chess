@@ -37,8 +37,8 @@ class MoveMakerTest {
 
         var boardAfterMove = moveMaker.make(initialBoard, move);
 
-        assertThat(boardAfterMove.whiteKing()).isNotEqualTo(initialBoard.whiteKing());
-        assertThat(boardAfterMove.whitePieces())
+        assertThat(boardAfterMove.king(Alliance.WHITE)).isNotEqualTo(initialBoard.king(Alliance.WHITE));
+        assertThat(boardAfterMove.pieces(Alliance.WHITE))
                 .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(King.class));
     }
 
@@ -49,8 +49,8 @@ class MoveMakerTest {
 
         var boardAfterMove = moveMaker.make(initialBoard, move);
 
-        assertThat(boardAfterMove.blackKing()).isNotEqualTo(initialBoard.blackKing());
-        assertThat(boardAfterMove.blackPieces())
+        assertThat(boardAfterMove.king(Alliance.BLACK)).isNotEqualTo(initialBoard.king(Alliance.BLACK));
+        assertThat(boardAfterMove.pieces(Alliance.BLACK))
                 .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(King.class));
     }
 
@@ -68,8 +68,8 @@ class MoveMakerTest {
         var boardAfterMove = moveMaker.make(initialBoard, move);
 
         assertThat(boardAfterMove.pieceAt("a1")).isInstanceOf(Rook.class);
-        assertThat(boardAfterMove.whitePieces()).doesNotContain(capturablePiece);
-        assertThat(boardAfterMove.blackPieces())
+        assertThat(boardAfterMove.pieces(Alliance.WHITE)).doesNotContain(capturablePiece);
+        assertThat(boardAfterMove.pieces(Alliance.BLACK))
                 .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(Rook.class));
     }
 
@@ -84,7 +84,7 @@ class MoveMakerTest {
 
         assertThat(boardAfterMove.pieceAt("c1")).isInstanceOf(King.class);
         assertThat(boardAfterMove.pieceAt("d1")).isInstanceOf(Rook.class);
-        assertThat(boardAfterMove.whitePieces())
+        assertThat(boardAfterMove.pieces(Alliance.WHITE))
                 .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(King.class))
                 .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(Rook.class));
     }
@@ -100,7 +100,7 @@ class MoveMakerTest {
 
         assertThat(boardAfterMove.pieceAt("a5")).isInstanceOf(Pawn.class);
         assertThat(boardAfterMove.enPassantPawn().position()).isEqualTo(Position.of("a5"));
-        assertThat(boardAfterMove.blackPieces())
+        assertThat(boardAfterMove.pieces(Alliance.BLACK))
                 .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(Pawn.class));
     }
 }

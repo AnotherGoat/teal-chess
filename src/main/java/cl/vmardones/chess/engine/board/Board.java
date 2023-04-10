@@ -150,20 +150,14 @@ public final class Board {
         return Collections.unmodifiableList(squares);
     }
 
-    public King whiteKing() {
-        return whiteKing;
+    public King king(Alliance alliance) {
+        return alliance == Alliance.WHITE ? whiteKing : blackKing;
     }
 
-    public List<Piece> whitePieces() {
-        return Collections.unmodifiableList(whitePieces);
-    }
+    public List<Piece> pieces(Alliance alliance) {
+        var pieces = alliance == Alliance.WHITE ? whitePieces : blackPieces;
 
-    public King blackKing() {
-        return blackKing;
-    }
-
-    public List<Piece> blackPieces() {
-        return Collections.unmodifiableList(blackPieces);
+        return Collections.unmodifiableList(pieces);
     }
 
     public @Nullable Pawn enPassantPawn() {
@@ -315,8 +309,9 @@ public final class Board {
         private BoardBuilder(Board board, King whiteKing, King blackKing) {
             this(whiteKing, blackKing);
 
-            board.whitePieces().forEach(this::with);
-            board.blackPieces().forEach(this::with);
+            for (var alliance : Alliance.values()) {
+                board.pieces(alliance).forEach(this::with);
+            }
         }
 
         private BoardBuilder(King whiteKing, King blackKing) {
