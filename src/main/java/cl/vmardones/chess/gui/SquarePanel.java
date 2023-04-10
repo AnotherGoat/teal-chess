@@ -138,7 +138,7 @@ class SquarePanel extends JPanel {
             return true;
         }
 
-        return selectedPiece.alliance() != table.getGame().getCurrentPlayer().alliance();
+        return selectedPiece.alliance() != table.getGame().currentPlayer().alliance();
     }
 
     private final class ResizeListener extends ComponentAdapter {
@@ -218,7 +218,7 @@ class SquarePanel extends JPanel {
             }
 
             var move = MoveFinder.choose(
-                    table.getGame().getCurrentPlayer().legals(), sourceSquare.position(), destinationSquare.position());
+                    table.getGame().currentPlayer().legals(), sourceSquare.position(), destinationSquare.position());
 
             LOG.debug("Is there a move that can get to the destination? {}", move != null);
 

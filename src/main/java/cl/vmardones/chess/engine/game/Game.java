@@ -23,21 +23,49 @@ public final class Game {
 
     private static final Logger LOG = LogManager.getLogger(Game.class);
 
-    private final GameState gameState;
-    private final GameHistory gameHistory;
+    private final GameState state;
+    private GameHistory history;
 
     public Game() {
         LOG.info("Game started!");
 
-        gameState = new GameState();
-        gameHistory = new GameHistory();
+        state = new GameState();
+        history = new GameHistory();
 
         registerTurn(createFirstTurn());
     }
 
+    // TODO: Check if this method is actually needed, because its return value is never used and it doesn't modify
+    // internal state
+    public Turn createNextTurn(Move move) {
+        var nextTurnBoard = MoveMaker.make(board(), move);
+        return createTurn(nextTurnBoard, currentOpponent().alliance());
+    }
+
+    /* Getters */
+    public Board board() {
+        return state.currentTurn().board();
+    }
+
+    public Player currentPlayer() {
+        return state.currentTurn().player();
+    }
+
+    public Player currentOpponent() {
+        return state.currentTurn().opponent();
+    }
+
+    public GameHistory history() {
+        return history;
+    }
+
+    public MoveTransition makeMove(Move move) {
+        return currentPlayer().makeMove(currentPlayer(), move);
+    }
+
     private void registerTurn(Turn turn) {
-        gameState.currentTurn(turn);
-        gameHistory.add(gameState.save());
+        state.currentTurn(turn);
+        history = history.add(state.save());
     }
 
     private Turn createFirstTurn() {
@@ -73,39 +101,5 @@ public final class Game {
 
     private List<Move> calculateBlackLegals(Board board) {
         return BoardService.calculateLegals(board, board.blackPieces());
-    }
-
-    public Turn createNextTurn(Move move) {
-        var nextTurnBoard = MoveMaker.make(getBoard(), move);
-        return createTurn(nextTurnBoard, getOpponent().alliance());
-    }
-
-    public Board getBoard() {
-        return gameState.currentTurn().board();
-    }
-
-    public Player getCurrentPlayer() {
-        return gameState.currentTurn().getPlayer();
-    }
-
-    /**
-     * Obtains the player in the other side of the board.
-     *
-     * @return The opponent
-     */
-    public Player getOpponent() {
-        return gameState.currentTurn().getOpponent();
-    }
-
-    public Player getWhitePlayer() {
-        return gameState.currentTurn().whitePlayer();
-    }
-
-    public Player getBlackPlayer() {
-        return gameState.currentTurn().blackPlayer();
-    }
-
-    public MoveTransition makeMove(Move move) {
-        return getCurrentPlayer().makeMove(getCurrentPlayer(), move);
     }
 }

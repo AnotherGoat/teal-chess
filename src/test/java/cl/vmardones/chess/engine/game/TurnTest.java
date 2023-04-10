@@ -6,7 +6,6 @@
 package cl.vmardones.chess.engine.game;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.player.Alliance;
@@ -40,21 +39,21 @@ class TurnTest {
 
     @Test
     void getWhitePlayer() {
-        assertThat(whiteTurn.getPlayer()).isEqualTo(whitePlayer);
+        assertThat(whiteTurn.player()).isEqualTo(whitePlayer);
     }
 
     @Test
     void getBlackPlayer() {
-        assertThat(blackTurn.getPlayer()).isEqualTo(blackPlayer);
+        assertThat(blackTurn.player()).isEqualTo(blackPlayer);
     }
 
     @Test
     void getWhiteOpponent() {
-        assertThat(whiteTurn.getOpponent()).isEqualTo(blackPlayer);
+        assertThat(whiteTurn.opponent()).isEqualTo(blackPlayer);
     }
 
     @Test
     void getBlackOpponent() {
-        assertThat(blackTurn.getOpponent()).isEqualTo(whitePlayer);
+        assertThat(blackTurn.opponent()).isEqualTo(whitePlayer);
     }
 }

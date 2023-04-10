@@ -24,12 +24,12 @@ public final class FontLoader {
 
     public static Font load(String fontName) {
 
-            var fontResource = ResourceImporter.get(FONT_PATH + fontName);
+        var fontResource = ResourceImporter.get(FONT_PATH + fontName);
 
-            if (fontResource == null) {
-                LOG.warn("Could not load the font {}, defaulting to system font", fontName);
-                return SYSTEM_FONT;
-            }
+        if (fontResource == null) {
+            LOG.warn("Could not load the font {}, defaulting to system font", fontName);
+            return SYSTEM_FONT;
+        }
 
         try {
             return Font.createFont(Font.TRUETYPE_FONT, fontResource).deriveFont(Font.PLAIN, FONT_SIZE);

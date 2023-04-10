@@ -6,12 +6,19 @@
 package cl.vmardones.chess.engine.game;
 
 // TODO: See if this class can be immutable
+
+import org.eclipse.jdt.annotation.Nullable;
+
 /** A mutable class that holds the current state of the game. */
 final class GameState {
 
-    private Turn currentTurn;
+    private @Nullable Turn currentTurn;
 
     TurnMemento save() {
+        if (currentTurn == null) {
+            throw new IllegalSaveException();
+        }
+
         return new TurnMemento(currentTurn);
     }
 
@@ -19,7 +26,7 @@ final class GameState {
         currentTurn = turnMemento.state();
     }
 
-    Turn currentTurn() {
+    @Nullable Turn currentTurn() {
         return currentTurn;
     }
 

@@ -75,7 +75,7 @@ public class Table {
         frame.setJMenuBar(new MenuBar());
 
         game = new Game();
-        boardPanel = new BoardPanel(this, game.getBoard());
+        boardPanel = new BoardPanel(this, game.board());
         frame.add(new ContainerPanel<>(boardPanel), BorderLayout.CENTER);
 
         moveLog = new MoveLog();
@@ -104,7 +104,7 @@ public class Table {
         gameHistoryPanel.draw(moveLog);
         capturedPiecesPanel.draw(moveLog);
 
-        boardPanel.setBoard(game.getBoard());
+        boardPanel.setBoard(game.board());
         boardPanel.draw();
     }
 
@@ -233,7 +233,7 @@ public class Table {
 
         private void startNewGame() {
             game = new Game();
-            boardPanel.setBoard(game.getBoard());
+            boardPanel.setBoard(game.board());
             boardPanel.draw();
             moveLog = new MoveLog();
             capturedPiecesPanel.draw(moveLog);
@@ -250,7 +250,7 @@ public class Table {
             flipBoard.addActionListener(e -> {
                 boardDirection = boardDirection.opposite();
 
-                boardPanel.setBoard(game.getBoard());
+                boardPanel.setBoard(game.board());
                 boardPanel.draw();
             });
             add(flipBoard);

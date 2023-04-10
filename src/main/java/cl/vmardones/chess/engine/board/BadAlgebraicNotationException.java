@@ -7,7 +7,7 @@ package cl.vmardones.chess.engine.board;
 
 final class BadAlgebraicNotationException extends RuntimeException {
 
-    BadAlgebraicNotationException(String message) {
-        super(message);
+    BadAlgebraicNotationException(String algebraicNotation) {
+        super("Invalid algebraic notation: " + algebraicNotation);
     }
 }

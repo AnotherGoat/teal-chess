@@ -16,25 +16,25 @@ import cl.vmardones.chess.engine.player.Player;
 // TODO: Check if we only need to store each player's legal moves
 record Turn(Board board, Alliance moveMaker, Player whitePlayer, Player blackPlayer) {
 
-    Player getPlayer() {
+    Player player() {
         return switch (moveMaker) {
             case WHITE -> whitePlayer;
             case BLACK -> blackPlayer;
         };
     }
 
-    List<Move> getPlayerLegals() {
-        return Collections.unmodifiableList(getPlayer().legals());
+    List<Move> playerLegals() {
+        return Collections.unmodifiableList(player().legals());
     }
 
-    Player getOpponent() {
+    Player opponent() {
         return switch (moveMaker) {
             case WHITE -> blackPlayer;
             case BLACK -> whitePlayer;
         };
     }
 
-    List<Move> getOpponentLegals() {
-        return Collections.unmodifiableList(getOpponent().legals());
+    List<Move> opponentLegals() {
+        return Collections.unmodifiableList(opponent().legals());
     }
 }

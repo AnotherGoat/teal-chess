@@ -16,7 +16,7 @@ import cl.vmardones.chess.engine.player.Alliance;
 /** Provides utility functions to create and do calculations over the chessboard. */
 public final class BoardService {
 
-    private static final Board CACHED_STANDARD_BOARD = generateStandardBoard();
+    private static final Board STANDARD_BOARD = generateStandardBoard();
 
     /* Board creation */
 
@@ -27,7 +27,7 @@ public final class BoardService {
      * @return The standard chessboard.
      */
     public static Board createStandardBoard() {
-        return CACHED_STANDARD_BOARD;
+        return STANDARD_BOARD;
     }
 
     /**

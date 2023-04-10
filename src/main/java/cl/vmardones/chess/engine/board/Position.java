@@ -178,7 +178,7 @@ public final class Position {
 
     static Position of(int index) {
         if (isOutsideBoard(index)) {
-            throw new OutsidePositionException("Index is outside chessboard: " + index);
+            throw new OutsidePositionException(index);
         }
 
         return POSITION_CACHE.get(index);
