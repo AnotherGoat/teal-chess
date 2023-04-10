@@ -122,7 +122,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
             return new MoveTransition(board, move, MoveStatus.CHECKS);
         }
 
-        return new MoveTransition(MoveMaker.make(board, move), move, MoveStatus.DONE);
+        return new MoveTransition(MoveMaker.make(board, move), move, MoveStatus.NORMAL);
     }
 
     /* toString */
@@ -166,7 +166,7 @@ public abstract sealed class Player permits ComputerPlayer, HumanPlayer {
     private boolean calculateEscapeMoves() {
         return legals.stream()
                 .map(move -> makeMove(this, move))
-                .noneMatch(transition -> transition.moveStatus() == MoveStatus.DONE);
+                .noneMatch(transition -> transition.moveStatus() == MoveStatus.NORMAL);
     }
 
     private boolean isIllegal(Move move) {

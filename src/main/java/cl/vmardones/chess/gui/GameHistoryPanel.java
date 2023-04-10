@@ -7,13 +7,15 @@ package cl.vmardones.chess.gui;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 
+import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.player.Alliance;
+import org.eclipse.jdt.annotation.Nullable;
 
 class GameHistoryPanel extends JPanel {
 
@@ -21,6 +23,7 @@ class GameHistoryPanel extends JPanel {
     public static final int ROW_HEIGHT = 25;
     private final DataModel model;
     private final JScrollPane scrollPane;
+    private @Nullable Move lastMove;
 
     GameHistoryPanel() {
         super(new BorderLayout());
@@ -28,7 +31,7 @@ class GameHistoryPanel extends JPanel {
 
         var table = new JTable(model);
         table.setRowHeight(ROW_HEIGHT);
-        table.setDefaultRenderer(Object.class, createCenteredRenderer());
+        table.setDefaultRenderer(Object.class, new CenteredRenderer());
 
         scrollPane = new JScrollPane(table);
         scrollPane.setColumnHeaderView(table.getTableHeader());
@@ -38,21 +41,11 @@ class GameHistoryPanel extends JPanel {
         setVisible(true);
     }
 
-    private TableCellRenderer createCenteredRenderer() {
-        var centeredRenderer = new DefaultTableCellRenderer();
-        centeredRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-        return centeredRenderer;
-    }
+    void draw(@Nullable Move newLastMove) {
 
-    void reset() {
-        model.clear();
-    }
+        if (newLastMove != null && !Objects.equals(lastMove, newLastMove)) {
+            lastMove = newLastMove;
 
-    void draw(MoveLog moveLog) {
-
-        var lastMove = moveLog.getLastMove();
-
-        if (lastMove != null) {
             var moveText = lastMove.toString();
 
             if (lastMove.piece().alliance() == Alliance.WHITE) {
@@ -60,21 +53,17 @@ class GameHistoryPanel extends JPanel {
             } else {
                 model.setValueAt(moveText, model.getLastRowIndex(), 1);
             }
-        }
 
-        var vertical = scrollPane.getVerticalScrollBar();
-        vertical.setValue(vertical.getMaximum());
+            var vertical = scrollPane.getVerticalScrollBar();
+            vertical.setValue(vertical.getMaximum());
+        }
     }
 
-    private static class DataModel extends DefaultTableModel {
+    void reset() {
+        model.clear();
+    }
 
-        private DataModel() {
-            super(new Vector<>(List.of("White", "Black")), 0);
-        }
-
-        void clear() {
-            dataVector = new Vector<>();
-        }
+    private static final class DataModel extends DefaultTableModel {
 
         @Override
         public void setValueAt(Object aValue, int row, int column) {
@@ -85,8 +74,27 @@ class GameHistoryPanel extends JPanel {
             }
         }
 
-        int getLastRowIndex() {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+
+        private DataModel() {
+            super(new Vector<>(List.of("White", "Black")), 0);
+        }
+
+        private void clear() {
+            dataVector = new Vector<>();
+        }
+
+        private int getLastRowIndex() {
             return getRowCount() - 1;
+        }
+    }
+
+    private static final class CenteredRenderer extends DefaultTableCellRenderer {
+        private CenteredRenderer() {
+            setHorizontalAlignment(SwingConstants.CENTER);
         }
     }
 }

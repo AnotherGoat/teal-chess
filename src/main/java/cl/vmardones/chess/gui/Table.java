@@ -44,10 +44,7 @@ public class Table {
 
     private Game game;
 
-    // TODO: Replace move log with game history
-    private MoveLog moveLog;
-
-    // TODO: Group these 3 in a "PlayerSelection" class
+    // TODO: Group these 3 in a "PieceSelection" class
     @Nullable private Square sourceSquare;
 
     @Nullable private Square destinationSquare;
@@ -78,8 +75,7 @@ public class Table {
         boardPanel = new BoardPanel(this, game.board());
         frame.add(new ContainerPanel<>(boardPanel), BorderLayout.CENTER);
 
-        moveLog = new MoveLog();
-        capturedPiecesPanel = new CapturedPiecesPanel(moveLog);
+        capturedPiecesPanel = new CapturedPiecesPanel(game.history());
         frame.add(capturedPiecesPanel, BorderLayout.WEST);
 
         gameHistoryPanel = new GameHistoryPanel();
@@ -101,60 +97,56 @@ public class Table {
     }
 
     void update() {
-        gameHistoryPanel.draw(moveLog);
-        capturedPiecesPanel.draw(moveLog);
+        gameHistoryPanel.draw(game.history().lastMove());
+        capturedPiecesPanel.draw(game.history());
 
         boardPanel.setBoard(game.board());
         boardPanel.draw();
     }
 
-    void addToLog(Move move) {
-        moveLog.add(move);
-    }
-
     MoveTransition makeMove(Move move) {
-        return getGame().makeMove(move);
+        return game().makeMove(move);
     }
 
     /* Getters and setters */
 
-    Game getGame() {
+    Game game() {
         return game;
     }
 
-    void setGame(Game game) {
-        this.game = game;
+    void game(Game value) {
+        game = value;
     }
 
-    @Nullable Square getSourceSquare() {
+    @Nullable Square sourceSquare() {
         return sourceSquare;
     }
 
-    void setSourceSquare(Square sourceSquare) {
-        this.sourceSquare = sourceSquare;
+    void sourceSquare(Square value) {
+        sourceSquare = value;
     }
 
-    @Nullable Square getDestinationSquare() {
+    @Nullable Square destinationSquare() {
         return destinationSquare;
     }
 
-    void setDestinationSquare(Square destinationSquare) {
-        this.destinationSquare = destinationSquare;
+    void destinationSquare(Square value) {
+        destinationSquare = value;
     }
 
-    @Nullable Piece getSelectedPiece() {
+    @Nullable Piece selectedPiece() {
         return selectedPiece;
     }
 
-    void setSelectedPiece(Piece selectedPiece) {
-        this.selectedPiece = selectedPiece;
+    void selectedPiece(Piece value) {
+        selectedPiece = value;
     }
 
     boolean isHighlightLegals() {
         return highlightLegals;
     }
 
-    BoardDirection getBoardDirection() {
+    BoardDirection boardDirection() {
         return boardDirection;
     }
 
@@ -235,10 +227,8 @@ public class Table {
             game = new Game();
             boardPanel.setBoard(game.board());
             boardPanel.draw();
-            moveLog = new MoveLog();
-            capturedPiecesPanel.draw(moveLog);
+            capturedPiecesPanel.reset(game.history());
             gameHistoryPanel.reset();
-            gameHistoryPanel.draw(moveLog);
         }
     }
 

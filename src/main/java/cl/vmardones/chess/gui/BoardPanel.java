@@ -43,7 +43,7 @@ class BoardPanel extends JPanel {
     void draw() {
         removeAll();
 
-        table.getBoardDirection().traverse(squares).forEach(squarePanel -> {
+        table.boardDirection().traverse(squares).forEach(squarePanel -> {
             squarePanel.drawSquare(board);
             add(squarePanel);
         });

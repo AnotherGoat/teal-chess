@@ -33,8 +33,8 @@ class TurnTest {
 
     @BeforeEach
     void setUp() {
-        whiteTurn = new Turn(board, Alliance.WHITE, whitePlayer, blackPlayer);
-        blackTurn = new Turn(board, Alliance.BLACK, whitePlayer, blackPlayer);
+        whiteTurn = new Turn(board, Alliance.WHITE, whitePlayer, blackPlayer, null);
+        blackTurn = new Turn(board, Alliance.BLACK, whitePlayer, blackPlayer, null);
     }
 
     @Test

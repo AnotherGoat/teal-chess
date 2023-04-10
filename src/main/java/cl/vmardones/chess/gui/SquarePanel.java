@@ -122,7 +122,7 @@ class SquarePanel extends JPanel {
     }
 
     private List<Move> selectedPieceLegals(Board board) {
-        var selectedPiece = table.getSelectedPiece();
+        var selectedPiece = table.selectedPiece();
 
         if (selectedPiece == null || isOpponentPieceSelected()) {
             return Collections.emptyList();
@@ -132,13 +132,13 @@ class SquarePanel extends JPanel {
     }
 
     private boolean isOpponentPieceSelected() {
-        var selectedPiece = table.getSelectedPiece();
+        var selectedPiece = table.selectedPiece();
 
         if (selectedPiece == null) {
             return true;
         }
 
-        return selectedPiece.alliance() != table.getGame().currentPlayer().alliance();
+        return selectedPiece.alliance() != table.game().currentPlayer().alliance();
     }
 
     private final class ResizeListener extends ComponentAdapter {
@@ -165,7 +165,7 @@ class SquarePanel extends JPanel {
         @Override
         public void mouseClicked(MouseEvent e) {
             if (isLeftMouseButton(e)) {
-                if (table.getSourceSquare() == null) {
+                if (table.sourceSquare() == null) {
                     firstLeftClick();
                 } else {
                     secondLeftClick();
@@ -180,12 +180,12 @@ class SquarePanel extends JPanel {
 
         private void firstLeftClick() {
             LOG.debug("Selected the square {}", square);
-            table.setSourceSquare(square);
+            table.sourceSquare(square);
             var selectedPiece = getSelectedPiece();
 
             if (selectedPiece != null) {
-                table.setSelectedPiece(selectedPiece);
-                LOG.debug("The square contains {}", table.getSelectedPiece());
+                table.selectedPiece(selectedPiece);
+                LOG.debug("The square contains {}", table.selectedPiece());
                 LOG.debug("Highlighting legal moves");
             } else {
                 LOG.debug("The square is unoccupied, unselecting");
@@ -194,13 +194,13 @@ class SquarePanel extends JPanel {
         }
 
         private @Nullable Piece getSelectedPiece() {
-            var sourceSquare = table.getSourceSquare();
+            var sourceSquare = table.sourceSquare();
 
             return sourceSquare != null ? sourceSquare.piece() : null;
         }
 
         private void secondLeftClick() {
-            var sourceSquare = table.getSourceSquare();
+            var sourceSquare = table.sourceSquare();
 
             if (sourceSquare == null) {
                 LOG.debug("Source square is null, stopping second left click");
@@ -208,9 +208,9 @@ class SquarePanel extends JPanel {
             }
 
             LOG.debug("Selected the destination {}", square.position());
-            table.setDestinationSquare(square);
+            table.destinationSquare(square);
 
-            var destinationSquare = table.getDestinationSquare();
+            var destinationSquare = table.destinationSquare();
 
             if (destinationSquare == null) {
                 LOG.debug("Destination square is null, stopping second left click");
@@ -218,16 +218,15 @@ class SquarePanel extends JPanel {
             }
 
             var move = MoveFinder.choose(
-                    table.getGame().currentPlayer().legals(), sourceSquare.position(), destinationSquare.position());
+                    table.game().currentPlayer().legals(), sourceSquare.position(), destinationSquare.position());
 
             LOG.debug("Is there a move that can get to the destination? {}", move != null);
 
             if (move != null) {
                 var moveTransition = table.makeMove(move);
 
-                if (moveTransition.moveStatus() == MoveStatus.DONE) {
-                    table.getGame().createNextTurn(move);
-                    table.addToLog(move);
+                if (moveTransition.moveStatus() == MoveStatus.NORMAL) {
+                    table.game().addTurn(move);
                 }
             }
 

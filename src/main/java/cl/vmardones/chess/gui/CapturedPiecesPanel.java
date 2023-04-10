@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
+import cl.vmardones.chess.engine.game.GameHistory;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Alliance;
@@ -22,11 +23,11 @@ class CapturedPiecesPanel extends JPanel {
 
     private final JPanel northPanel;
     private final JPanel southPanel;
-    private MoveLog moveLog;
+    private transient GameHistory gameHistory;
 
-    CapturedPiecesPanel(MoveLog moveLog) {
+    CapturedPiecesPanel(GameHistory gameHistory) {
         super(new BorderLayout());
-        this.moveLog = moveLog;
+        this.gameHistory = gameHistory;
 
         setBorder(BORDER);
 
@@ -39,28 +40,37 @@ class CapturedPiecesPanel extends JPanel {
         setPreferredSize(INITIAL_SIZE);
     }
 
-    // TODO: Replace MoveLog with an immutable class, which allows using equals to avoid redrawing the panel
-    void draw(MoveLog newMoveLog) {
-        moveLog = newMoveLog;
+    void draw(GameHistory newGameHistory) {
 
+        if (!gameHistory.equals(newGameHistory)) {
+            gameHistory = newGameHistory;
+
+            northPanel.removeAll();
+            southPanel.removeAll();
+
+            for (var alliance : Alliance.values()) {
+                var panel = alliance == Alliance.WHITE ? southPanel : northPanel;
+                var takenPieces = getTakenPieces(gameHistory, alliance);
+
+                for (var piece : takenPieces) {
+                    var icon = PieceIconLoader.load(piece, INITIAL_SIZE.width / 2, INITIAL_SIZE.width / 2);
+                    panel.add(new JLabel(icon));
+                }
+            }
+
+            validate();
+        }
+    }
+
+    void reset(GameHistory emptyHistory) {
+        gameHistory = emptyHistory;
         northPanel.removeAll();
         southPanel.removeAll();
-
-        for (var alliance : Alliance.values()) {
-            var panel = alliance == Alliance.WHITE ? southPanel : northPanel;
-            var takenPieces = getTakenPieces(moveLog, alliance);
-
-            for (var piece : takenPieces) {
-                var icon = PieceIconLoader.load(piece, INITIAL_SIZE.width / 2, INITIAL_SIZE.width / 2);
-                panel.add(new JLabel(icon));
-            }
-        }
-
         validate();
     }
 
-    private List<Piece> getTakenPieces(MoveLog moveLog, Alliance alliance) {
-        return moveLog.moves().stream()
+    private List<Piece> getTakenPieces(GameHistory gameHistory, Alliance alliance) {
+        return gameHistory.moves().stream()
                 .filter(Move::isCapture)
                 .map(Move::otherPiece)
                 .filter(capturedPiece -> capturedPiece != null && capturedPiece.alliance() == alliance)

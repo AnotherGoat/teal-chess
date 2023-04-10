@@ -8,7 +8,7 @@ package cl.vmardones.chess.engine.move;
 /** Tells whether the move is possible or not, including the reason. */
 public enum MoveStatus {
     /** Can be made and the game continues normally. */
-    DONE,
+    NORMAL,
     /** Leaves the opponent in check. */
     CHECKS,
     /** Violates the game's rules, cannot be made. */

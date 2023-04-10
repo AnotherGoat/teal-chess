@@ -18,6 +18,7 @@ import cl.vmardones.chess.engine.move.MoveTransition;
 import cl.vmardones.chess.engine.player.Alliance;
 import cl.vmardones.chess.engine.player.HumanPlayer;
 import cl.vmardones.chess.engine.player.Player;
+import org.eclipse.jdt.annotation.Nullable;
 
 public final class Game {
 
@@ -35,11 +36,10 @@ public final class Game {
         registerTurn(createFirstTurn());
     }
 
-    // TODO: Check if this method is actually needed, because its return value is never used and it doesn't modify
-    // internal state
-    public Turn createNextTurn(Move move) {
+    public void addTurn(Move move) {
         var nextTurnBoard = MoveMaker.make(board(), move);
-        return createTurn(nextTurnBoard, currentOpponent().alliance());
+        var nextTurn = createTurn(nextTurnBoard, currentOpponent().alliance(), move);
+        registerTurn(nextTurn);
     }
 
     /* Getters */
@@ -65,14 +65,16 @@ public final class Game {
 
     private void registerTurn(Turn turn) {
         state.currentTurn(turn);
-        history = history.add(state.save());
+        var memento = state.save();
+        history = history.add(memento);
+        LOG.debug("Move saved: {}", memento.state().lastMove());
     }
 
     private Turn createFirstTurn() {
-        return createTurn(BoardService.createStandardBoard(), Alliance.WHITE);
+        return createTurn(BoardService.createStandardBoard(), Alliance.WHITE, null);
     }
 
-    private Turn createTurn(Board board, Alliance nextMoveMaker) {
+    private Turn createTurn(Board board, Alliance nextMoveMaker, @Nullable Move lastMove) {
         LOG.debug("Current gameboard:\n{}", board);
         LOG.debug("White king: {}", board.whiteKing());
         LOG.debug("White pieces: {}", board.whitePieces());
@@ -89,10 +91,7 @@ public final class Game {
         LOG.debug("White legals: {}", whitePlayer.legals());
         LOG.debug("Black legals: {}", blackPlayer.legals());
 
-        var turn = new Turn(board, nextMoveMaker, whitePlayer, blackPlayer);
-        registerTurn(turn);
-
-        return turn;
+        return new Turn(board, nextMoveMaker, whitePlayer, blackPlayer, lastMove);
     }
 
     private List<Move> calculateWhiteLegals(Board board) {

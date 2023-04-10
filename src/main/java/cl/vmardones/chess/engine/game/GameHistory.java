@@ -9,18 +9,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-final class GameHistory {
+import cl.vmardones.chess.engine.move.Move;
+import org.eclipse.jdt.annotation.Nullable;
+
+public final class GameHistory {
 
     private final List<TurnMemento> history;
 
     /* Getters */
 
-    public List<TurnMemento> history() {
-        return history;
+    public List<Move> moves() {
+        return history.stream()
+                .map(TurnMemento::state)
+                .map(Turn::lastMove)
+                .filter(Objects::nonNull)
+                .toList();
     }
 
-    public TurnMemento get(int index) {
-        return history.get(index);
+    public @Nullable Move lastMove() {
+        return history.get(history.size() - 1).state().lastMove();
     }
 
     /* equals and hashCode */
@@ -45,7 +52,7 @@ final class GameHistory {
     }
 
     GameHistory() {
-        history = new ArrayList<>();
+        this(new ArrayList<>());
     }
 
     GameHistory add(TurnMemento state) {
