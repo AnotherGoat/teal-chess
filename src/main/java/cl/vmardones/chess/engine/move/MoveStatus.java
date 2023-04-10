@@ -5,7 +5,7 @@
 
 package cl.vmardones.chess.engine.move;
 
-/** Tells whether the move is possible or not, including the reason. */
+/** Tells whether a move is possible or not, including the reason. This is meant to be used when testing moves. */
 public enum MoveStatus {
     /** Can be made and the game continues normally. */
     NORMAL,

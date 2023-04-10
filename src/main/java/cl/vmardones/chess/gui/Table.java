@@ -22,7 +22,7 @@ import org.apache.logging.log4j.Logger;
 import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.game.Game;
 import cl.vmardones.chess.engine.move.Move;
-import cl.vmardones.chess.engine.move.MoveTransition;
+import cl.vmardones.chess.engine.move.MoveStatus;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.io.FontLoader;
 import com.formdev.flatlaf.FlatDarkLaf;
@@ -104,8 +104,8 @@ public class Table {
         boardPanel.draw();
     }
 
-    MoveTransition makeMove(Move move) {
-        return game().makeMove(move);
+    MoveStatus testMove(Move move) {
+        return game().testMove(move);
     }
 
     /* Getters and setters */

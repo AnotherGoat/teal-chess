@@ -107,22 +107,22 @@ public abstract sealed class Player permits HumanPlayer {
 
     /* Making moves */
 
-    public MoveTransition makeMove(Player currentPlayer, Move move) {
+    public MoveStatus testMove(Player currentPlayer, Move move) {
         if (move.isNone()) {
-            return new MoveTransition(board, move, MoveStatus.NONE);
+            return MoveStatus.NONE;
         }
 
         if (isIllegal(move)) {
-            return new MoveTransition(board, move, MoveStatus.ILLEGAL);
+            return MoveStatus.ILLEGAL;
         }
 
         var kingAttacks = Player.calculateAttacksOnSquare(currentPlayer.king().position(), opponentLegals);
 
         if (!kingAttacks.isEmpty()) {
-            return new MoveTransition(board, move, MoveStatus.CHECKS);
+            return MoveStatus.CHECKS;
         }
 
-        return new MoveTransition(new MoveMaker().make(board, move), move, MoveStatus.NORMAL);
+        return MoveStatus.NORMAL;
     }
 
     /* toString */
@@ -164,9 +164,7 @@ public abstract sealed class Player permits HumanPlayer {
     }
 
     private boolean calculateEscapeMoves() {
-        return legals.stream()
-                .map(move -> makeMove(this, move))
-                .noneMatch(transition -> transition.moveStatus() == MoveStatus.NORMAL);
+        return legals.stream().map(move -> testMove(this, move)).noneMatch(status -> status == MoveStatus.NORMAL);
     }
 
     private boolean isIllegal(Move move) {

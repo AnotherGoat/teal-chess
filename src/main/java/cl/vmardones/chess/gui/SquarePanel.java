@@ -223,9 +223,9 @@ class SquarePanel extends JPanel {
             LOG.debug("Is there a move that can get to the destination? {}", move != null);
 
             if (move != null) {
-                var moveTransition = table.makeMove(move);
+                var status = table.testMove(move);
 
-                if (moveTransition.moveStatus() == MoveStatus.NORMAL) {
+                if (status == MoveStatus.NORMAL) {
                     table.game().addTurn(move);
                 }
             }

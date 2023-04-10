@@ -14,7 +14,7 @@ import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.BoardService;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveMaker;
-import cl.vmardones.chess.engine.move.MoveTransition;
+import cl.vmardones.chess.engine.move.MoveStatus;
 import cl.vmardones.chess.engine.player.Alliance;
 import cl.vmardones.chess.engine.player.HumanPlayer;
 import cl.vmardones.chess.engine.player.Player;
@@ -60,8 +60,8 @@ public final class Game {
         registerTurn(nextTurn);
     }
 
-    public MoveTransition makeMove(Move move) {
-        return currentPlayer().makeMove(currentPlayer(), move);
+    public MoveStatus testMove(Move move) {
+        return currentPlayer().testMove(currentPlayer(), move);
     }
 
     private void registerTurn(Turn turn) {
