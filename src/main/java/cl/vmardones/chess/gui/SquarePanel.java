@@ -69,8 +69,13 @@ class SquarePanel extends JPanel {
     }
 
     void drawSquare(Board board) {
+        var previousSquare = square;
         square = board.squareAt(square.position());
-        assignPieceIcon(getWidth(), getHeight());
+
+        if (!square.equals(previousSquare)) {
+            assignPieceIcon(getWidth(), getHeight());
+        }
+
         highlightLegals(board, getWidth(), getHeight());
         validate();
         repaint();
@@ -112,7 +117,7 @@ class SquarePanel extends JPanel {
         var greenDot = SvgLoader.load("art/misc/green_dot.svg", width / 2, height / 2);
 
         if (greenDot != null) {
-            highlightIconLabel.setIcon(new ImageIcon(greenDot));
+            highlightIconLabel.setIcon(greenDot);
         }
     }
 

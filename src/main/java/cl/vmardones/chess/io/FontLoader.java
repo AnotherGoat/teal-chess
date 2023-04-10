@@ -23,7 +23,7 @@ public final class FontLoader {
     private static final String FONT_PATH = "fonts/";
 
     public static Font load(String fontName) {
-        try {
+
             var fontResource = ResourceImporter.get(FONT_PATH + fontName);
 
             if (fontResource == null) {
@@ -31,8 +31,8 @@ public final class FontLoader {
                 return SYSTEM_FONT;
             }
 
+        try {
             return Font.createFont(Font.TRUETYPE_FONT, fontResource).deriveFont(Font.PLAIN, FONT_SIZE);
-
         } catch (FontFormatException | IOException e) {
             LOG.warn("Could not load the font {}, defaulting to system font", fontName);
             return SYSTEM_FONT;

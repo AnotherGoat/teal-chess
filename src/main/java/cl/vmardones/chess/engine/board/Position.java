@@ -18,7 +18,7 @@ import org.eclipse.jdt.annotation.Nullable;
  */
 public final class Position {
 
-    private static final List<Position> CACHED_POSITIONS = fillPositionCache();
+    private static final List<Position> POSITION_CACHE = fillPositionCache();
 
     private final int index;
 
@@ -33,7 +33,7 @@ public final class Position {
      * @throws OutsidePositionException If the position is outside the chessboard.
      */
     public static Position of(String algebraicNotation) {
-        return CACHED_POSITIONS.get(AlgebraicConverter.toIndex(algebraicNotation));
+        return POSITION_CACHE.get(AlgebraicConverter.toIndex(algebraicNotation));
     }
 
     /* Getters */
@@ -91,7 +91,7 @@ public final class Position {
      */
     public @Nullable Position to(int x, int y) {
         try {
-            var destination = CACHED_POSITIONS.get(index + horizontalClamp(x) - y * Board.SIDE_LENGTH);
+            var destination = POSITION_CACHE.get(index + horizontalClamp(x) - y * Board.SIDE_LENGTH);
 
             if (illegalJump(x, destination)) {
                 return null;
@@ -181,7 +181,7 @@ public final class Position {
             throw new OutsidePositionException("Index is outside chessboard: " + index);
         }
 
-        return CACHED_POSITIONS.get(index);
+        return POSITION_CACHE.get(index);
     }
 
     int index() {

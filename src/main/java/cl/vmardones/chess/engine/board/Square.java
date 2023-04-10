@@ -17,7 +17,7 @@ import org.eclipse.jdt.annotation.Nullable;
 /** A single chess square, which may or may not contain a piece. */
 public final class Square {
 
-    private static final Map<String, Square> CACHED_EMPTY_SQUARES = fillEmptySquareCache();
+    private static final Map<String, Square> EMPTY_SQUARE_CACHE = fillEmptySquareCache();
 
     private final Position position;
     private final Alliance color;
@@ -34,7 +34,7 @@ public final class Square {
      */
     public static Square create(String position, @Nullable Piece piece) {
         if (piece == null) {
-            return CACHED_EMPTY_SQUARES.get(position);
+            return EMPTY_SQUARE_CACHE.get(position);
         }
 
         return new Square(position, piece);

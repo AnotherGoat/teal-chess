@@ -78,13 +78,12 @@ public class Table {
         boardPanel = new BoardPanel(this, game.getBoard());
         frame.add(new ContainerPanel<>(boardPanel), BorderLayout.CENTER);
 
-        capturedPiecesPanel = new CapturedPiecesPanel();
+        moveLog = new MoveLog();
+        capturedPiecesPanel = new CapturedPiecesPanel(moveLog);
         frame.add(capturedPiecesPanel, BorderLayout.WEST);
 
         gameHistoryPanel = new GameHistoryPanel();
         frame.add(gameHistoryPanel, BorderLayout.EAST);
-
-        moveLog = new MoveLog();
 
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

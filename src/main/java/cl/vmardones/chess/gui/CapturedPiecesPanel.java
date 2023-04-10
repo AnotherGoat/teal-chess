@@ -22,9 +22,11 @@ class CapturedPiecesPanel extends JPanel {
 
     private final JPanel northPanel;
     private final JPanel southPanel;
+    private MoveLog moveLog;
 
-    CapturedPiecesPanel() {
+    CapturedPiecesPanel(MoveLog moveLog) {
         super(new BorderLayout());
+        this.moveLog = moveLog;
 
         setBorder(BORDER);
 
@@ -37,7 +39,10 @@ class CapturedPiecesPanel extends JPanel {
         setPreferredSize(INITIAL_SIZE);
     }
 
-    void draw(MoveLog moveLog) {
+    // TODO: Replace MoveLog with an immutable class, which allows using equals to avoid redrawing the panel
+    void draw(MoveLog newMoveLog) {
+        moveLog = newMoveLog;
+
         northPanel.removeAll();
         southPanel.removeAll();
 

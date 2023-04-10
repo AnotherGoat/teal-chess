@@ -29,7 +29,7 @@ spotless {
 }
 
 application {
-    mainClass = "cl.vmardones.chess.Chess"
+    mainClass = 'cl.vmardones.chess.Chess'
     applicationName = 'teal-chess'
 }
 
@@ -44,7 +44,7 @@ runtime {
         noConsole = true
     }
     jpackage {
-        installerType = "rpm"
+        installerType = 'rpm'
     }
 }
 
@@ -59,8 +59,8 @@ dependencies {
 
     // Transcoding SVG files
     def batikVersion = '1.16'
-    implementation "org.apache.xmlgraphics:batik-all:$batikVersion"
-    implementation "org.apache.xmlgraphics:batik-swing:$batikVersion"
+    implementation "org.apache.xmlgraphics:batik-transcoder:$batikVersion"
+    implementation "org.apache.xmlgraphics:batik-codec:$batikVersion"
 
     // CLI
     def picocliVersion = '4.7.1'
