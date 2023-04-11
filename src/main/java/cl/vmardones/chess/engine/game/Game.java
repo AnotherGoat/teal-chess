@@ -9,14 +9,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.board.BoardChecker;
 import cl.vmardones.chess.engine.board.BoardService;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveMaker;
 import cl.vmardones.chess.engine.move.MoveStatus;
+import cl.vmardones.chess.engine.move.MoveTester;
 import cl.vmardones.chess.engine.player.Alliance;
-import cl.vmardones.chess.engine.player.HumanPlayer;
 import cl.vmardones.chess.engine.player.Player;
+import cl.vmardones.chess.engine.player.PlayerFactory;
 import org.eclipse.jdt.annotation.Nullable;
 
 public final class Game {
@@ -60,7 +60,11 @@ public final class Game {
     }
 
     public MoveStatus testMove(Move move) {
-        return currentPlayer().testMove(currentPlayer(), move);
+        return MoveTester.testMove(
+                move,
+                currentPlayer().king(),
+                currentPlayer().legals(),
+                currentOpponent().legals());
     }
 
     private void registerTurn(Turn turn) {
@@ -82,13 +86,8 @@ public final class Game {
         LOG.debug("Black pieces: {}", board.pieces(Alliance.BLACK));
         LOG.debug("En passant pawn: {}\n", board.enPassantPawn());
 
-        var whiteLegals = BoardChecker.calculateLegals(board, Alliance.WHITE);
-        var blackLegals = BoardChecker.calculateLegals(board, Alliance.BLACK);
-
-        var whitePlayer = new HumanPlayer(
-                Alliance.WHITE, board.king(Alliance.WHITE), board.pieces(Alliance.WHITE), whiteLegals, blackLegals);
-        var blackPlayer = new HumanPlayer(
-                Alliance.BLACK, board.king(Alliance.BLACK), board.pieces(Alliance.BLACK), blackLegals, whiteLegals);
+        var whitePlayer = new PlayerFactory(board, Alliance.WHITE).create();
+        var blackPlayer = new PlayerFactory(board, Alliance.BLACK).create();
 
         LOG.debug("Players: {} vs. {}", whitePlayer, blackPlayer);
         LOG.debug("White legals: {}", whitePlayer.legals());

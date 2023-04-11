@@ -8,7 +8,6 @@ package cl.vmardones.chess.engine.player;
 import java.util.Collections;
 import java.util.List;
 
-import cl.vmardones.chess.engine.board.BoardChecker;
 import cl.vmardones.chess.engine.move.*;
 import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Piece;
@@ -23,10 +22,7 @@ public abstract sealed class Player permits HumanPlayer {
     protected final King king;
     protected final List<Piece> pieces;
     protected final List<Move> legals;
-    protected final List<Move> opponentLegals;
-
-    private final boolean inCheck;
-    private final boolean noEscapeMoves;
+    protected final PlayerStatus status;
 
     /* Player creation */
 
@@ -37,17 +33,14 @@ public abstract sealed class Player permits HumanPlayer {
      * @param king The player's king.
      * @param pieces The player's pieces (including the king).
      * @param legals The legal moves of the player.
-     * @param opponentLegals The legal moves of the player on the opposite side..
+     * @param status The state of the player, which may limit their moves.
      */
-    protected Player(Alliance alliance, King king, List<Piece> pieces, List<Move> legals, List<Move> opponentLegals) {
+    protected Player(Alliance alliance, King king, List<Piece> pieces, List<Move> legals, PlayerStatus status) {
         this.alliance = alliance;
         this.king = king;
         this.pieces = pieces;
         this.legals = legals;
-        this.opponentLegals = opponentLegals;
-        // TODO: Instead of making the player calculate whether they are in check or not, pass a PlayerStatus enum
-        inCheck = !BoardChecker.isUnderAttack(king.position(), opponentLegals).isEmpty();
-        noEscapeMoves = calculateEscapeMoves();
+        this.status = status;
     }
 
     /* Getters */
@@ -68,81 +61,18 @@ public abstract sealed class Player permits HumanPlayer {
         return Collections.unmodifiableList(legals);
     }
 
-    /* Checking state */
-
-    /**
-     * Checks if the player is in check, which means that the king must be protected.
-     *
-     * @return True if the player is in check
-     */
-    public boolean inCheck() {
-        return inCheck;
-    }
-
-    /**
-     * Checks if the player is checkmated, which means they lost the game. This happens when the king
-     * is in check and there are no escape moves.
-     *
-     * @return True if the player is in checkmate
-     */
-    public boolean isCheckmated() {
-        return inCheck() && noEscapeMoves;
-    }
-
-    /**
-     * Checks if the player is in stalemate, which means that game ends in a tie. This happens when
-     * the king isn't in check and there are no escape moves.
-     *
-     * @return True if the player is in stalemate
-     */
-    public boolean inInStalemate() {
-        return !inCheck() && noEscapeMoves;
-    }
-
-    /* Making moves */
-
-    public MoveStatus testMove(Player currentPlayer, Move move) {
-        if (move.isNone()) {
-            return MoveStatus.NONE;
-        }
-
-        if (isIllegal(move)) {
-            return MoveStatus.ILLEGAL;
-        }
-
-        var kingAttacks = BoardChecker.isUnderAttack(currentPlayer.king().position(), opponentLegals);
-
-        if (!kingAttacks.isEmpty()) {
-            return MoveStatus.CHECKS;
-        }
-
-        return MoveStatus.NORMAL;
-    }
-
     /* toString */
 
     @Override
     public String toString() {
-        if (isCheckmated()) {
-            return String.format("%s Player, in checkmate!", alliance.name());
-        }
+        var template =
+                switch (status) {
+                    case CHECKMATED -> "%s Player, in checkmate!";
+                    case STALEMATED -> "%s Player, in stalemate!";
+                    case CHECKED -> "%s Player, in check!";
+                    case NORMAL -> "%s Player";
+                };
 
-        if (inCheck()) {
-            return String.format("%s Player, in check!", alliance.name());
-        }
-
-        if (inInStalemate()) {
-            return String.format("%s Player, in stalemate!", alliance.name());
-        }
-
-        return String.format("%s Player", alliance.name());
-    }
-
-    private boolean calculateEscapeMoves() {
-        return legals.stream().map(move -> testMove(this, move)).noneMatch(status -> status == MoveStatus.NORMAL);
-    }
-
-    private boolean isIllegal(Move move) {
-        return !legals.contains(move);
+        return String.format(template, alliance.name());
     }
 }

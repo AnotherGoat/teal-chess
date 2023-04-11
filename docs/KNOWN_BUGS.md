@@ -8,6 +8,5 @@ This is a list of known bugs that will be fixed before the first release:
 - The game freezes when a king is in check and the only option is to restart
   the game.
 - Pawn promotion hasn't been implemented yet.
-- When a move leaves the player itself in check, it doesn't happen, but a null
-  pointer exception is thrown.
+- The player can do moves that leave them in check.
 - En passant moves are generated many times instead of just once.
