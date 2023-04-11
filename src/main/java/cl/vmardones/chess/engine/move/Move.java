@@ -25,7 +25,7 @@ public final class Move {
 
     @Nullable private final Position rookDestination;
     // TODO: Actually implement this, it should be used for PGN notation hash (+ for check, # for checkmate)
-    private final MoveResult result = MoveResult.CONTINUE;
+    private final MoveResult result = MoveResult.NORMAL;
 
     /* Creating moves */
 

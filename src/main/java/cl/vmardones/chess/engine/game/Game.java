@@ -12,7 +12,7 @@ import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.BoardService;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveMaker;
-import cl.vmardones.chess.engine.move.MoveStatus;
+import cl.vmardones.chess.engine.move.MoveResult;
 import cl.vmardones.chess.engine.move.MoveTester;
 import cl.vmardones.chess.engine.player.Alliance;
 import cl.vmardones.chess.engine.player.Player;
@@ -59,7 +59,7 @@ public final class Game {
         registerTurn(nextTurn);
     }
 
-    public MoveStatus testMove(Move move) {
+    public MoveResult testMove(Move move) {
         return MoveTester.testMove(
                 move,
                 currentPlayer().king(),

@@ -10,7 +10,7 @@ import java.util.List;
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.BoardChecker;
 import cl.vmardones.chess.engine.move.Move;
-import cl.vmardones.chess.engine.move.MoveStatus;
+import cl.vmardones.chess.engine.move.MoveResult;
 import cl.vmardones.chess.engine.move.MoveTester;
 import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Piece;
@@ -60,6 +60,6 @@ public final class PlayerFactory {
     private boolean calculateEscapeMoves() {
         return legals.stream()
                 .map(move -> MoveTester.testMove(move, king, legals, opponentLegals))
-                .noneMatch(status -> status == MoveStatus.NORMAL);
+                .noneMatch(result -> result == MoveResult.NORMAL);
     }
 }

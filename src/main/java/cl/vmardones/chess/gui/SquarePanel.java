@@ -65,8 +65,6 @@ class SquarePanel extends JPanel {
             assignPieceIcon(getWidth(), getHeight());
         }
 
-        // TODO: CHeck if neeed to replace or not
-        // highlightLegals(board, getWidth(), getHeight());
         validate();
         repaint();
     }
@@ -114,8 +112,6 @@ class SquarePanel extends JPanel {
     }
 
     private final class ResizeListener extends ComponentAdapter {
-        // TODO: Resizing works, but the icons reload slowly
-        // TODO: Find a way to make the resizing faster, either by using batik-swing, a cache or both
         @Override
         public void componentResized(ComponentEvent e) {
             if (pieceIconLabel.getIcon() != null) {

@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 import cl.vmardones.chess.engine.board.Position;
 import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.move.MoveFinder;
-import cl.vmardones.chess.engine.move.MoveStatus;
+import cl.vmardones.chess.engine.move.MoveResult;
 
 interface SelectionState {
     void onLeftClick(Table table, Square pressedSquare);
@@ -82,7 +82,7 @@ interface SelectionState {
 
             var status = table.testMove(move);
 
-            if (status == MoveStatus.NORMAL) {
+            if (status == MoveResult.NORMAL) {
                 table.game().addTurn(move);
             }
 

@@ -1,21 +1,22 @@
 /*
- * Copyright (C) 2023  Víctor Mardones
+ * Copyright (C) 2022  Víctor Mardones
  * The full notice can be found at README.md in the root directory.
  */
 
 package cl.vmardones.chess.engine.move;
 
-/**
- * What happens after a move is completed.
- * Useful for saving move logs.
- */
+/** Tells what happens after a move is made and whether that move is possible or not. Because illegal moves are never saved, the ILLEGAL and NONE results are only used when testing moves. */
 public enum MoveResult {
-    /** After a move is made, the game continues normally. */
-    CONTINUE(""),
-    /** After a move is made, the other player is checked. */
-    CHECK("+"),
-    /** After a move is made, the other player is checkmated. */
-    CHECKMATE("#");
+    /** The move can be made and the game continues normally. */
+    NORMAL,
+    /** Leaves the opponent in check. */
+    CHECKS("+"),
+    /** Checkmates the opponent. The game finishes. */
+    CHECKMATES("#"),
+    /** Violates the game's rules, cannot be made. */
+    ILLEGAL,
+    /** Both the source and destination are the same, which means this isn't a move. */
+    NONE;
 
     private final String endHash;
 
@@ -25,6 +26,10 @@ public enum MoveResult {
      */
     public String endHash() {
         return endHash;
+    }
+
+    MoveResult() {
+        endHash = "";
     }
 
     MoveResult(String endHash) {

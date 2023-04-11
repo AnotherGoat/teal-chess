@@ -13,22 +13,22 @@ import cl.vmardones.chess.engine.piece.King;
 
 public final class MoveTester {
 
-    public static MoveStatus testMove(Move move, King king, List<Move> legals, List<Move> opponentLegals) {
+    public static MoveResult testMove(Move move, King king, List<Move> legals, List<Move> opponentLegals) {
         if (move.isNone()) {
-            return MoveStatus.NONE;
+            return MoveResult.NONE;
         }
 
         if (!legals.contains(move)) {
-            return MoveStatus.ILLEGAL;
+            return MoveResult.ILLEGAL;
         }
 
         var kingAttacks = BoardChecker.isUnderAttack(king.position(), opponentLegals);
 
         if (!kingAttacks.isEmpty()) {
-            return MoveStatus.CHECKS;
+            return MoveResult.CHECKS;
         }
 
-        return MoveStatus.NORMAL;
+        return MoveResult.NORMAL;
     }
 
     @ExcludeFromGeneratedReport
