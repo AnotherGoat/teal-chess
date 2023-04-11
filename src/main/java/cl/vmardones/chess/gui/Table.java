@@ -19,7 +19,6 @@ import javax.swing.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.game.Game;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveStatus;
@@ -27,7 +26,6 @@ import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.io.FontLoader;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
-import org.eclipse.jdt.annotation.Nullable;
 
 // TODO: Many methods used in the GUI should be moved to the game
 // TODO: Many methods can take simpler arguments and not every class needs access to the board
@@ -43,18 +41,9 @@ public class Table {
     private final GameHistoryPanel gameHistoryPanel;
 
     private Game game;
-
-    // TODO: Group these 3 in a "PieceSelection" class
-    @Nullable private Square sourceSquare;
-
-    @Nullable private Square destinationSquare;
-
-    @Nullable private Piece selectedPiece;
-
+    private SelectionState selectionState = new SelectionState.NoSelectionState();
     private boolean highlightLegals;
-
     private boolean darkTheme;
-
     private BoardDirection boardDirection;
 
     public Table(boolean darkTheme, boolean highlightLegals, boolean flipBoard) {
@@ -62,7 +51,6 @@ public class Table {
         this.highlightLegals = highlightLegals;
         boardDirection = flipBoard ? BoardDirection.FLIPPED : BoardDirection.NORMAL;
 
-        reloadTheme();
         setUIFont(FontLoader.load(UI_FONT));
 
         frame = new JFrame("Chess game, made in Java");
@@ -86,14 +74,9 @@ public class Table {
 
         frame.addWindowStateListener(new MaximizeListener());
 
+        reloadTheme();
         frame.setVisible(true);
         frame.pack();
-    }
-
-    void resetSelection() {
-        sourceSquare = null;
-        destinationSquare = null;
-        selectedPiece = null;
     }
 
     void update() {
@@ -114,32 +97,12 @@ public class Table {
         return game;
     }
 
-    void game(Game value) {
-        game = value;
+    SelectionState selectionState() {
+        return selectionState;
     }
 
-    @Nullable Square sourceSquare() {
-        return sourceSquare;
-    }
-
-    void sourceSquare(Square value) {
-        sourceSquare = value;
-    }
-
-    @Nullable Square destinationSquare() {
-        return destinationSquare;
-    }
-
-    void destinationSquare(Square value) {
-        destinationSquare = value;
-    }
-
-    @Nullable Piece selectedPiece() {
-        return selectedPiece;
-    }
-
-    void selectedPiece(Piece value) {
-        selectedPiece = value;
+    void selectionState(SelectionState value) {
+        selectionState = value;
     }
 
     boolean isHighlightLegals() {
@@ -165,9 +128,19 @@ public class Table {
             FlatLightLaf.setup();
         }
 
-        if (frame != null) {
-            SwingUtilities.updateComponentTreeUI(frame);
-        }
+        SwingUtilities.updateComponentTreeUI(frame);
+    }
+
+    void drawLegals(Piece selectedPiece) {
+        var legals = selectedPiece.calculateLegals(game.board());
+
+        var legalDestinations = legals.stream().map(Move::destination).toList();
+
+        boardPanel.highlightSquares(legalDestinations);
+    }
+
+    void hideHighlights() {
+        boardPanel.hideHighlights();
     }
 
     enum BoardDirection {
@@ -229,6 +202,7 @@ public class Table {
             boardPanel.draw();
             capturedPiecesPanel.reset(game.history());
             gameHistoryPanel.reset();
+            selectionState = new SelectionState.NoSelectionState();
         }
     }
 

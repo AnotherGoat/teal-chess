@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.*;
 
 import cl.vmardones.chess.engine.board.Board;
+import cl.vmardones.chess.engine.board.Position;
 
 class BoardPanel extends JPanel {
 
@@ -50,5 +51,19 @@ class BoardPanel extends JPanel {
 
         validate();
         repaint();
+    }
+
+    void highlightSquares(List<Position> positions) {
+        squares.forEach(square -> {
+            if (positions.contains(square.position())) {
+                square.showGreenDot();
+            } else {
+                square.hideGreenDot();
+            }
+        });
+    }
+
+    void hideHighlights() {
+        squares.forEach(SquarePanel::hideGreenDot);
     }
 }

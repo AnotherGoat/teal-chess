@@ -81,6 +81,7 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
      */
     public abstract Piece moveTo(String destination);
 
+    // TODO: This method probably shouldn't be on the piece class
     /**
      * Calculates all the legal moves that this piece can do.
      *

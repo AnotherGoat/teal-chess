@@ -5,6 +5,7 @@
 
 package cl.vmardones.chess.engine.move;
 
+// TODO: Merge MoveStatus and MoveResult
 /** Tells whether a move is possible or not, including the reason. This is meant to be used when testing moves. */
 public enum MoveStatus {
     /** Can be made and the game continues normally. */

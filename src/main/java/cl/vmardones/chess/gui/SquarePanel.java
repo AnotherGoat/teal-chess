@@ -10,34 +10,23 @@ import static javax.swing.SwingUtilities.isRightMouseButton;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Collections;
-import java.util.List;
 import javax.swing.*;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import cl.vmardones.chess.engine.board.Board;
+import cl.vmardones.chess.engine.board.Position;
 import cl.vmardones.chess.engine.board.Square;
-import cl.vmardones.chess.engine.move.Move;
-import cl.vmardones.chess.engine.move.MoveFinder;
-import cl.vmardones.chess.engine.move.MoveStatus;
-import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Alliance;
 import cl.vmardones.chess.io.PieceIconLoader;
 import cl.vmardones.chess.io.SvgLoader;
-import org.eclipse.jdt.annotation.Nullable;
 
 class SquarePanel extends JPanel {
 
-    private static final Logger LOG = LogManager.getLogger(SquarePanel.class);
     private static final Dimension INITIAL_SIZE = new Dimension(63, 63);
     private static final Color LIGHT_COLOR = Color.decode("#FFCE9E");
     private static final Color DARK_COLOR = Color.decode("#D18B47");
 
     private final transient Table table;
     private transient Square square;
-    private final JLayeredPane layeredPane;
     private final JLabel pieceIconLabel;
     private final JLabel highlightIconLabel;
 
@@ -50,7 +39,7 @@ class SquarePanel extends JPanel {
         setOpaque(true);
         setPreferredSize(INITIAL_SIZE);
 
-        layeredPane = new JLayeredPane();
+        var layeredPane = new JLayeredPane();
 
         pieceIconLabel = new IconLabel(null);
         layeredPane.add(pieceIconLabel, JLayeredPane.DEFAULT_LAYER);
@@ -76,9 +65,30 @@ class SquarePanel extends JPanel {
             assignPieceIcon(getWidth(), getHeight());
         }
 
-        highlightLegals(board, getWidth(), getHeight());
+        // TODO: CHeck if neeed to replace or not
+        // highlightLegals(board, getWidth(), getHeight());
         validate();
         repaint();
+    }
+
+    /* Getters */
+
+    Position position() {
+        return square.position();
+    }
+
+    /* Highlighting squares */
+
+    void hideGreenDot() {
+        highlightIconLabel.setIcon(null);
+    }
+
+    void showGreenDot() {
+        var greenDot = SvgLoader.load("art/misc/green_dot.svg", getWidth() / 2, getHeight() / 2);
+
+        if (greenDot != null) {
+            highlightIconLabel.setIcon(greenDot);
+        }
     }
 
     private void assignSquareColor() {
@@ -103,44 +113,6 @@ class SquarePanel extends JPanel {
         }
     }
 
-    private void highlightLegals(Board board, int width, int height) {
-        highlightIconLabel.setIcon(null);
-
-        if (table.isHighlightLegals()) {
-            selectedPieceLegals(board).stream()
-                    .filter(move -> move.destination().equals(square.position()))
-                    .forEach(move -> addGreenDot(width, height));
-        }
-    }
-
-    private void addGreenDot(int width, int height) {
-        var greenDot = SvgLoader.load("art/misc/green_dot.svg", width / 2, height / 2);
-
-        if (greenDot != null) {
-            highlightIconLabel.setIcon(greenDot);
-        }
-    }
-
-    private List<Move> selectedPieceLegals(Board board) {
-        var selectedPiece = table.selectedPiece();
-
-        if (selectedPiece == null || isOpponentPieceSelected()) {
-            return Collections.emptyList();
-        }
-
-        return selectedPiece.calculateLegals(board);
-    }
-
-    private boolean isOpponentPieceSelected() {
-        var selectedPiece = table.selectedPiece();
-
-        if (selectedPiece == null) {
-            return true;
-        }
-
-        return selectedPiece.alliance() != table.game().currentPlayer().alliance();
-    }
-
     private final class ResizeListener extends ComponentAdapter {
         // TODO: Resizing works, but the icons reload slowly
         // TODO: Find a way to make the resizing faster, either by using batik-swing, a cache or both
@@ -153,7 +125,7 @@ class SquarePanel extends JPanel {
 
             if (highlightIconLabel.getIcon() != null) {
                 highlightIconLabel.setBounds(0, 0, getWidth(), getHeight());
-                addGreenDot(getWidth(), getHeight());
+                showGreenDot();
             }
 
             setPreferredSize(getSize());
@@ -165,72 +137,12 @@ class SquarePanel extends JPanel {
         @Override
         public void mouseClicked(MouseEvent e) {
             if (isLeftMouseButton(e)) {
-                if (table.sourceSquare() == null) {
-                    firstLeftClick();
-                } else {
-                    secondLeftClick();
-                }
+                table.selectionState().onLeftClick(table, square);
             } else if (isRightMouseButton(e)) {
-                table.resetSelection();
-                LOG.debug("Pressed right click, unselecting");
+                table.selectionState().onRightClick(table);
             }
 
             SwingUtilities.invokeLater(table::update);
-        }
-
-        private void firstLeftClick() {
-            LOG.debug("Selected the square {}", square);
-            table.sourceSquare(square);
-            var selectedPiece = getSelectedPiece();
-
-            if (selectedPiece != null) {
-                table.selectedPiece(selectedPiece);
-                LOG.debug("The square contains {}", table.selectedPiece());
-                LOG.debug("Highlighting legal moves");
-            } else {
-                LOG.debug("The square is unoccupied, unselecting");
-                table.resetSelection();
-            }
-        }
-
-        private @Nullable Piece getSelectedPiece() {
-            var sourceSquare = table.sourceSquare();
-
-            return sourceSquare != null ? sourceSquare.piece() : null;
-        }
-
-        private void secondLeftClick() {
-            var sourceSquare = table.sourceSquare();
-
-            if (sourceSquare == null) {
-                LOG.debug("Source square is null, stopping second left click");
-                return;
-            }
-
-            LOG.debug("Selected the destination {}", square.position());
-            table.destinationSquare(square);
-
-            var destinationSquare = table.destinationSquare();
-
-            if (destinationSquare == null) {
-                LOG.debug("Destination square is null, stopping second left click");
-                return;
-            }
-
-            var move = MoveFinder.choose(
-                    table.game().currentPlayer().legals(), sourceSquare.position(), destinationSquare.position());
-
-            LOG.debug("Is there a move that can get to the destination? {}", move != null);
-
-            if (move != null) {
-                var status = table.testMove(move);
-
-                if (status == MoveStatus.NORMAL) {
-                    table.game().addTurn(move);
-                }
-            }
-
-            table.resetSelection();
         }
     }
 }
