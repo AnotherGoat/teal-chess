@@ -5,10 +5,11 @@
 
 package cl.vmardones.chess.engine.move;
 
+// TODO: Add illegal states: SELF_CHECKS and SELF_CHECKMATES
 /** Tells what happens after a move is made and whether that move is possible or not. Because illegal moves are never saved, the ILLEGAL and NONE results are only used when testing moves. */
 public enum MoveResult {
     /** The move can be made and the game continues normally. */
-    NORMAL,
+    CONTINUE,
     /** Leaves the opponent in check. */
     CHECKS("+"),
     /** Checkmates the opponent. The game finishes. */

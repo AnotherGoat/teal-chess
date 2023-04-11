@@ -5,10 +5,15 @@
 
 package cl.vmardones.chess.engine.piece;
 
+import java.util.List;
+
 import cl.vmardones.chess.engine.player.Alliance;
 
 /** The bishop piece. It can move diagonally. */
 public final class Bishop extends SlidingPiece {
+
+    private static final List<int[]> MOVES =
+            List.of(new int[] {-1, 1}, new int[] {1, 1}, new int[] {-1, -1}, new int[] {1, -1});
 
     public Bishop(String position, Alliance alliance) {
         this(position, alliance, true);
@@ -20,6 +25,6 @@ public final class Bishop extends SlidingPiece {
     }
 
     private Bishop(String position, Alliance alliance, boolean firstMove) {
-        super(position, alliance, firstMove, DIAGONALS);
+        super(position, alliance, firstMove, MOVES);
     }
 }

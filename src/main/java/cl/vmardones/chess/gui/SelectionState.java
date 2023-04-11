@@ -82,7 +82,7 @@ interface SelectionState {
 
             var status = table.testMove(move);
 
-            if (status == MoveResult.NORMAL) {
+            if (status == MoveResult.CONTINUE) {
                 table.game().addTurn(move);
             }
 

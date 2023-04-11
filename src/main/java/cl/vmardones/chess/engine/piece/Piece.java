@@ -15,26 +15,8 @@ import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.player.Alliance;
 import org.eclipse.jdt.annotation.Nullable;
 
-/** A chess piece. */
+/** A chess piece, which players can move in the board. */
 public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
-
-    protected static final List<int[]> ORTHOGONALS =
-            List.of(new int[] {-1, 0}, new int[] {0, 1}, new int[] {1, 0}, new int[] {0, -1});
-    protected static final List<int[]> DIAGONALS =
-            List.of(new int[] {-1, 1}, new int[] {1, 1}, new int[] {-1, -1}, new int[] {1, -1});
-    protected static final List<int[]> KNIGHT_JUMPS = List.of(
-            new int[] {-1, 2},
-            new int[] {1, 2},
-            new int[] {-2, 1},
-            new int[] {2, 1},
-            new int[] {-1, -2},
-            new int[] {1, -2},
-            new int[] {-2, -1},
-            new int[] {2, -1});
-    protected static final List<int[]> WHITE_PAWN_MOVES =
-            List.of(new int[] {-1, 1}, new int[] {0, 1}, new int[] {1, 1}, new int[] {0, 2});
-    protected static final List<int[]> BLACK_PAWN_MOVES =
-            List.of(new int[] {-1, -1}, new int[] {0, -1}, new int[] {1, -1}, new int[] {0, -2});
 
     protected final Position position;
     protected final Alliance alliance;

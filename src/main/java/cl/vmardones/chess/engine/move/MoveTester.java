@@ -28,7 +28,7 @@ public final class MoveTester {
             return MoveResult.CHECKS;
         }
 
-        return MoveResult.NORMAL;
+        return MoveResult.CONTINUE;
     }
 
     @ExcludeFromGeneratedReport

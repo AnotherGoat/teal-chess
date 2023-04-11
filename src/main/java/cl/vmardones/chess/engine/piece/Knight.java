@@ -5,10 +5,22 @@
 
 package cl.vmardones.chess.engine.piece;
 
+import java.util.List;
+
 import cl.vmardones.chess.engine.player.Alliance;
 
 /** The knight piece. It moves in an L shape. */
 public final class Knight extends JumpingPiece {
+
+    private static final List<int[]> MOVES = List.of(
+            new int[] {-1, 2},
+            new int[] {1, 2},
+            new int[] {-2, 1},
+            new int[] {2, 1},
+            new int[] {-2, -1},
+            new int[] {2, -1},
+            new int[] {-1, -2},
+            new int[] {1, -2});
 
     public Knight(String position, Alliance alliance) {
         this(position, alliance, true);
@@ -25,6 +37,6 @@ public final class Knight extends JumpingPiece {
     }
 
     private Knight(String position, Alliance alliance, boolean firstMove) {
-        super(position, alliance, firstMove, KNIGHT_JUMPS);
+        super(position, alliance, firstMove, MOVES);
     }
 }

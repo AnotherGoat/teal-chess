@@ -24,6 +24,10 @@ import org.eclipse.jdt.annotation.Nullable;
 public final class Pawn extends JumpingPiece {
 
     private static final Logger LOG = LogManager.getLogger(Pawn.class);
+    private static final List<int[]> WHITE_MOVES =
+            List.of(new int[] {0, 2}, new int[] {-1, 1}, new int[] {0, 1}, new int[] {1, 1});
+    private static final List<int[]> BLACK_MOVES =
+            List.of(new int[] {-1, -1}, new int[] {0, -1}, new int[] {1, -1}, new int[] {0, -2});
 
     public Pawn(String position, Alliance alliance) {
         this(position, alliance, true);
@@ -49,6 +53,7 @@ public final class Pawn extends JumpingPiece {
         return createCaptureMove(destination);
     }
 
+    // TODO: Move some of this logic to an "EnPassantChecker"
     private @Nullable Move createEnPassantMove(Board board, Square destination) {
         var enPassantPawn = board.enPassantPawn();
 
@@ -132,16 +137,8 @@ public final class Pawn extends JumpingPiece {
 
     private static List<int[]> generateMoveOffsets(Alliance alliance, boolean firstMove) {
         return switch (alliance) {
-            case WHITE -> calculateWhiteOffsets(firstMove);
-            case BLACK -> calculateBlackOffsets(firstMove);
+            case WHITE -> firstMove ? WHITE_MOVES : WHITE_MOVES.subList(1, 4);
+            case BLACK -> firstMove ? BLACK_MOVES : BLACK_MOVES.subList(0, 3);
         };
-    }
-
-    private static List<int[]> calculateWhiteOffsets(boolean firstMove) {
-        return firstMove ? WHITE_PAWN_MOVES : WHITE_PAWN_MOVES.subList(0, 3);
-    }
-
-    private static List<int[]> calculateBlackOffsets(boolean firstMove) {
-        return firstMove ? BLACK_PAWN_MOVES : BLACK_PAWN_MOVES.subList(0, 3);
     }
 }

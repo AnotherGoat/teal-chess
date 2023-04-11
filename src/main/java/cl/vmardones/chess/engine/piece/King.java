@@ -5,7 +5,7 @@
 
 package cl.vmardones.chess.engine.piece;
 
-import java.util.stream.Stream;
+import java.util.List;
 
 import cl.vmardones.chess.engine.player.Alliance;
 
@@ -15,6 +15,16 @@ import cl.vmardones.chess.engine.player.Alliance;
  * be captured.
  */
 public final class King extends JumpingPiece {
+
+    private static final List<int[]> MOVES = List.of(
+            new int[] {-1, 1},
+            new int[] {0, 1},
+            new int[] {1, 1},
+            new int[] {-1, 0},
+            new int[] {1, 0},
+            new int[] {-1, -1},
+            new int[] {0, -1},
+            new int[] {1, -1});
 
     public King(String position, Alliance alliance) {
         this(position, alliance, true);
@@ -26,10 +36,6 @@ public final class King extends JumpingPiece {
     }
 
     private King(String position, Alliance alliance, boolean firstMove) {
-        super(
-                position,
-                alliance,
-                firstMove,
-                Stream.concat(ORTHOGONALS.stream(), DIAGONALS.stream()).toList());
+        super(position, alliance, firstMove, MOVES);
     }
 }

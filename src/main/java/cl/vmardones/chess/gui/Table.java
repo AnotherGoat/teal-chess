@@ -200,6 +200,11 @@ public class Table {
             game = new Game();
             boardPanel.setBoard(game.board());
             boardPanel.draw();
+
+            if (isHighlightLegals()) {
+                boardPanel.hideHighlights();
+            }
+
             capturedPiecesPanel.reset(game.history());
             gameHistoryPanel.reset();
             selectionState = new SelectionState.NoSelectionState();

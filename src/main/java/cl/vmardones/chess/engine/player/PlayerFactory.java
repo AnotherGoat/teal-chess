@@ -60,6 +60,8 @@ public final class PlayerFactory {
     private boolean calculateEscapeMoves() {
         return legals.stream()
                 .map(move -> MoveTester.testMove(move, king, legals, opponentLegals))
-                .noneMatch(result -> result == MoveResult.NORMAL);
+                .noneMatch(result -> result == MoveResult.CONTINUE
+                        || result == MoveResult.CHECKS
+                        || result == MoveResult.CHECKMATES);
     }
 }
