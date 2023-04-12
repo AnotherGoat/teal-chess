@@ -16,11 +16,6 @@ import cl.vmardones.chess.engine.player.Alliance;
  */
 public final class Pawn extends JumpingPiece {
 
-    private static final List<int[]> WHITE_MOVES =
-            List.of(new int[] {-1, 1}, new int[] {0, 1}, new int[] {1, 1});
-    private static final List<int[]> BLACK_MOVES =
-            List.of(new int[] {-1, -1}, new int[] {0, -1}, new int[] {1, -1});
-
     public Pawn(String position, Alliance alliance) {
         this(position, alliance, true);
     }
@@ -31,6 +26,6 @@ public final class Pawn extends JumpingPiece {
     }
 
     private Pawn(String position, Alliance alliance, boolean firstMove) {
-        super(position, alliance, firstMove, alliance == Alliance.WHITE ? WHITE_MOVES : BLACK_MOVES);
+        super(position, alliance, firstMove, List.of(new int[] {0, alliance.direction()}));
     }
 }

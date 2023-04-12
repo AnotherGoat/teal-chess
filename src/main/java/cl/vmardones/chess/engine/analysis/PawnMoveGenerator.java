@@ -35,7 +35,6 @@ final class PawnMoveGenerator {
     }
 
     Stream<Move> calculatePawnMoves() {
-
         var moves = new ArrayList<@Nullable Move>();
 
         for (var piece : pieces) {
@@ -95,12 +94,11 @@ final class PawnMoveGenerator {
 
         var sidePiece = board.pieceAt(side);
 
-        if (!(sidePiece instanceof Pawn)) {
+        if (!(sidePiece instanceof Pawn) || !sidePiece.equals(enPassantPawn)) {
             return null;
         }
 
         var enPassantMove = Move.createEnPassant(pawn, destination, enPassantPawn);
-
         LOG.debug("Created en passant move: {}", enPassantMove);
         return enPassantMove;
     }

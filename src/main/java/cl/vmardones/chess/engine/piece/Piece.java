@@ -10,7 +10,6 @@ import java.util.Objects;
 
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Position;
-import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.player.Alliance;
 
 /** A chess piece, which players can move in the board. */
@@ -62,18 +61,6 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
      * @return The piece after the move is completed.
      */
     public abstract Piece moveTo(String destination);
-
-    /**
-     * Checks if this piece can get to the given destination. This happens only if the destination is
-     * free or has a piece that can be captured.
-     *
-     * @param destination The target destination
-     * @return True if the piece can get to the destination
-     */
-    public boolean canAccess(Square destination) {
-        var pieceAtDestination = destination.piece();
-        return pieceAtDestination == null || isEnemyOf(pieceAtDestination);
-    }
 
     /* equals, hashCode and toString */
 

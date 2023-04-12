@@ -26,10 +26,10 @@ public final class BoardAnalyzer {
         var pieces = board.pieces(nextMoveMaker);
 
         var opponentKing = board.king(nextMoveMaker.opposite());
-        List<Piece> opponentPieces = board.pieces(nextMoveMaker.opposite());
+        var opponentPieces = board.pieces(nextMoveMaker.opposite());
 
         var attackGenerator = new AttackGenerator(board, nextMoveMaker, pieces, opponentPieces);
-        List<Move> opponentAttacks =
+        var opponentAttacks =
                 attackGenerator.calculateAttacks(nextMoveMaker.opposite()).toList();
         var attacks = attackGenerator.calculateAttacks(nextMoveMaker);
 

@@ -93,8 +93,8 @@ public final class Game {
         LOG.debug("En passant pawn: {}\n", board.enPassantPawn());
 
         boardAnalyzer = new BoardAnalyzer(board, nextMoveMaker);
-        var blackPlayer = boardAnalyzer.createPlayer(Alliance.WHITE);
-        var whitePlayer = boardAnalyzer.createPlayer(Alliance.BLACK);
+        var whitePlayer = boardAnalyzer.createPlayer(Alliance.WHITE);
+        var blackPlayer = boardAnalyzer.createPlayer(Alliance.BLACK);
 
         LOG.debug("Players: {} vs. {}", whitePlayer, blackPlayer);
         LOG.debug("White legals: {}", whitePlayer.legals());

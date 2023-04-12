@@ -32,7 +32,6 @@ final class MoveGenerator {
     private Stream<Move> calculatePieceMoves(Piece piece) {
         return piece.calculatePossibleDestinations(board).stream()
                 .map(board::squareAt)
-                .filter(piece::canAccess)
                 .map(square -> createMove(piece, square))
                 .filter(Objects::nonNull);
     }

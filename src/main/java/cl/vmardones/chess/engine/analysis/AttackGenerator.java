@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.move.Move;
+import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Alliance;
 import org.eclipse.jdt.annotation.Nullable;
@@ -33,18 +34,23 @@ final class AttackGenerator {
     Stream<Move> calculateAttacks(Alliance alliance) {
         var attackingPieces = alliance == nextMoveMaker ? pieces : opponentPieces;
 
-        return attackingPieces.stream().flatMap(piece -> calculatePieceAttacks(piece, board));
+        return attackingPieces.stream().flatMap(this::calculatePieceAttacks);
     }
 
-    private Stream<Move> calculatePieceAttacks(Piece piece, Board board) {
+    private Stream<Move> calculatePieceAttacks(Piece piece) {
+
+        if (piece instanceof Pawn pawn) {
+            return Stream.of(generatePawnAttack(pawn, true), generatePawnAttack(pawn, false))
+                    .filter(Objects::nonNull);
+        }
+
         return piece.calculatePossibleDestinations(board).stream()
                 .map(board::squareAt)
-                .filter(piece::canAccess)
-                .map(square -> createAttack(piece, square))
+                .map(square -> generateAttack(piece, square))
                 .filter(Objects::nonNull);
     }
 
-    private @Nullable Move createAttack(Piece piece, Square destination) {
+    private @Nullable Move generateAttack(Piece piece, Square destination) {
 
         var destinationPiece = destination.piece();
 
@@ -53,5 +59,24 @@ final class AttackGenerator {
         }
 
         return Move.createCapture(piece, destination.position(), destinationPiece);
+    }
+
+    private @Nullable Move generatePawnAttack(Pawn pawn, boolean leftSide) {
+
+        var direction = leftSide ? -1 : 1;
+
+        var destination = pawn.position().to(direction, nextMoveMaker.direction());
+
+        if (destination == null) {
+            return null;
+        }
+
+        var destinationPiece = board.pieceAt(destination);
+
+        if (destinationPiece == null || pawn.isAllyOf(destinationPiece)) {
+            return null;
+        }
+
+        return Move.createCapture(pawn, destination, destinationPiece);
     }
 }
