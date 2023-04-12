@@ -12,11 +12,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class BoardServiceTest {
+class BoardDirectorTest {
 
     @Test
     void createStandardBoard() {
-        var board = BoardService.createStandardBoard();
+        var board = BoardDirector.createStandardBoard();
 
         assertThat(board.toString())
                 .containsOnlyOnce("r  n  b  q  k  b  n  r")
@@ -29,8 +29,8 @@ class BoardServiceTest {
 
     @Test
     void cache() {
-        var firstBoard = BoardService.createStandardBoard();
-        var secondBoard = BoardService.createStandardBoard();
+        var firstBoard = BoardDirector.createStandardBoard();
+        var secondBoard = BoardDirector.createStandardBoard();
 
         assertThat(firstBoard).isSameAs(secondBoard);
     }

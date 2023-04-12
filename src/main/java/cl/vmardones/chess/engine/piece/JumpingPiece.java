@@ -30,7 +30,7 @@ abstract sealed class JumpingPiece extends Piece permits King, Knight, Pawn {
     }
 
     @Override
-    protected List<Position> calculatePossibleDestinations(Board board) {
+    public List<Position> calculatePossibleDestinations(Board board) {
         return moveOffsets.stream()
                 .map(offset -> position().to(offset[0], offset[1]))
                 .filter(Objects::nonNull)

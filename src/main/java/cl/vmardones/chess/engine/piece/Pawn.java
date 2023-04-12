@@ -23,9 +23,8 @@ import org.eclipse.jdt.annotation.Nullable;
  */
 public final class Pawn extends JumpingPiece {
 
-    private static final Logger LOG = LogManager.getLogger(Pawn.class);
     private static final List<int[]> WHITE_MOVES =
-            List.of(new int[] {0, 2}, new int[] {-1, 1}, new int[] {0, 1}, new int[] {1, 1});
+            List.of(new int[] {-1, 1}, new int[] {0, 1}, new int[] {1, 1}, new int[] {0, 2});
     private static final List<int[]> BLACK_MOVES =
             List.of(new int[] {-1, -1}, new int[] {0, -1}, new int[] {1, -1}, new int[] {0, -2});
 
@@ -34,110 +33,17 @@ public final class Pawn extends JumpingPiece {
     }
 
     @Override
-    public @Nullable Move createMove(Square destination, Board board) {
-
-        if (isNotCapture(destination)) {
-            if (isJumpPossible(board, destination)) {
-                return createJumpMove(destination);
-            }
-
-            return createForwardMove(destination);
-        }
-
-        if (isEnPassantPossible(board, destination)) {
-            LOG.debug("En passant is possible!");
-
-            return createEnPassantMove(board, destination);
-        }
-
-        return createCaptureMove(destination);
-    }
-
-    // TODO: Move some of this logic to an "EnPassantChecker"
-    private @Nullable Move createEnPassantMove(Board board, Square destination) {
-        var enPassantPawn = board.enPassantPawn();
-
-        if (enPassantPawn != null) {
-            var enPassantMove = Move.createEnPassant(this, destination.position(), enPassantPawn);
-
-            LOG.debug("Created en passant move: {}", enPassantMove);
-            return enPassantMove;
-        }
-
-        LOG.debug("Not creating en passant move, en passant pawn is null");
-        return null;
-    }
-
-    private boolean isEnPassantPossible(Board board, Square destination) {
-
-        if (board.enPassantPawn() == null) {
-            return false;
-        }
-
-        var side = destination.position().up(alliance.oppositeDirection());
-
-        if (side == null) {
-            return false;
-        }
-
-        var pieceAtSide = board.pieceAt(side);
-
-        return pieceAtSide != null && pieceAtSide.equals(board.enPassantPawn()) && destination.piece() == null;
-    }
-
-    private boolean isNotCapture(Square destination) {
-        return position().sameFileAs(destination.position());
-    }
-
-    private @Nullable Move createCaptureMove(Square destination) {
-        var capturablePiece = destination.piece();
-
-        if (capturablePiece != null && isEnemyOf(capturablePiece)) {
-            return Move.createCapture(this, destination.position(), capturablePiece);
-        }
-
-        return null;
-    }
-
-    private Move createJumpMove(Square destination) {
-        return Move.createPawnJump(this, destination.position());
-    }
-
-    private boolean isJumpPossible(Board board, Square destination) {
-
-        var forward = position.up(alliance.direction());
-
-        if (forward == null) {
-            return false;
-        }
-
-        return firstMove()
-                && board.pieceAt(forward) == null
-                && destination.piece() == null
-                && !destination.equals(board.squareAt(forward));
-    }
-
-    private @Nullable Move createForwardMove(Square destination) {
-        if (destination.piece() != null) {
-            return null;
-        }
-
-        // TODO: Deal with promotions
-        return Move.createNormal(this, destination.position());
-    }
-
-    @Override
     public Pawn moveTo(String destination) {
         return new Pawn(destination, alliance, false);
     }
 
     private Pawn(String position, Alliance alliance, boolean firstMove) {
-        super(position, alliance, firstMove, generateMoveOffsets(alliance, firstMove));
+        super(position, alliance, firstMove, calculateMoves(alliance, firstMove));
     }
 
-    private static List<int[]> generateMoveOffsets(Alliance alliance, boolean firstMove) {
+    private static List<int[]> calculateMoves(Alliance alliance, boolean firstMove) {
         return switch (alliance) {
-            case WHITE -> firstMove ? WHITE_MOVES : WHITE_MOVES.subList(1, 4);
+            case WHITE -> firstMove ? WHITE_MOVES : WHITE_MOVES.subList(0, 3);
             case BLACK -> firstMove ? BLACK_MOVES : BLACK_MOVES.subList(0, 3);
         };
     }

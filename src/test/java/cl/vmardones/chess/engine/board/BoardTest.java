@@ -144,21 +144,21 @@ class BoardTest {
 
     @Test
     void unmodifiableSquares() {
-        var squares = BoardService.createStandardBoard().squares();
+        var squares = BoardDirector.createStandardBoard().squares();
 
         assertThatThrownBy(squares::clear).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void unmodifiableWhitePieces() {
-        var whitePieces = BoardService.createStandardBoard().pieces(Alliance.WHITE);
+        var whitePieces = BoardDirector.createStandardBoard().pieces(Alliance.WHITE);
 
         assertThatThrownBy(whitePieces::clear).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void unmodifiableBlackPieces() {
-        var blackPieces = BoardService.createStandardBoard().pieces(Alliance.BLACK);
+        var blackPieces = BoardDirector.createStandardBoard().pieces(Alliance.BLACK);
 
         assertThatThrownBy(blackPieces::clear).isInstanceOf(UnsupportedOperationException.class);
     }

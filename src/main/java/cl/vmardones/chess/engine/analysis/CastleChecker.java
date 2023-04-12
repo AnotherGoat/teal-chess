@@ -3,12 +3,13 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package cl.vmardones.chess.engine.board;
+package cl.vmardones.chess.engine.analysis;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Rook;
@@ -27,7 +28,7 @@ final class CastleChecker {
         king = board.king(alliance);
         this.opponentLegals = opponentLegals;
         this.inCheck =
-                !BoardChecker.isUnderAttack(king.position(), opponentLegals).isEmpty();
+                !MoveChecker.isUnderAttack(king.position(), opponentLegals).isEmpty();
     }
 
     Stream<Move> calculateCastles() {
@@ -43,15 +44,13 @@ final class CastleChecker {
         return !king.firstMove() || inCheck || king.position().file() != 'e';
     }
 
-    private @Nullable Move generateCastleMove(boolean kingSide) {
+    @Nullable Move generateCastleMove(boolean kingSide) {
 
         if (kingSide && !isKingSideCastlePossible() || !kingSide && !isQueenSideCastlePossible()) {
             return null;
         }
 
-        // TODO: Only use the king's file
         var kingPosition = king.position();
-
         var rookOffset = kingSide ? 3 : -4;
         var rookPosition = kingPosition.right(rookOffset);
 
@@ -110,6 +109,6 @@ final class CastleChecker {
         var destination = king.position().right(offset);
 
         return destination != null
-                && BoardChecker.isUnderAttack(destination, opponentLegals).isEmpty();
+                && MoveChecker.isUnderAttack(destination, opponentLegals).isEmpty();
     }
 }

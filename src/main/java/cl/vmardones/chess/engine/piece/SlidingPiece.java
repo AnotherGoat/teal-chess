@@ -27,7 +27,7 @@ abstract sealed class SlidingPiece extends Piece permits Bishop, Queen, Rook {
     }
 
     @Override
-    protected List<Position> calculatePossibleDestinations(Board board) {
+    public List<Position> calculatePossibleDestinations(Board board) {
         return moveVectors.stream()
                 .map(vector -> calculateOffsets(vector, board))
                 .flatMap(Collection::stream)

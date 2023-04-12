@@ -5,23 +5,23 @@
 
 package cl.vmardones.chess.engine.game;
 
+import cl.vmardones.chess.engine.analysis.BoardAnalyzer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.board.BoardService;
+import cl.vmardones.chess.engine.board.BoardDirector;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveMaker;
 import cl.vmardones.chess.engine.move.MoveResult;
-import cl.vmardones.chess.engine.move.MoveTester;
 import cl.vmardones.chess.engine.player.Alliance;
 import cl.vmardones.chess.engine.player.Player;
-import cl.vmardones.chess.engine.player.PlayerFactory;
 import org.eclipse.jdt.annotation.Nullable;
 
 public final class Game {
 
     private static final Logger LOG = LogManager.getLogger(Game.class);
+    private BoardAnalyzer boardAnalyzer;
     private final MoveMaker moveMaker;
     private final GameState state;
     private GameHistory history;
@@ -60,11 +60,7 @@ public final class Game {
     }
 
     public MoveResult testMove(Move move) {
-        return MoveTester.testMove(
-                move,
-                currentPlayer().king(),
-                currentPlayer().legals(),
-                currentOpponent().legals());
+        return boardAnalyzer.testMove(move);
     }
 
     private void registerTurn(Turn turn) {
@@ -75,7 +71,7 @@ public final class Game {
     }
 
     private Turn createFirstTurn() {
-        return createTurn(BoardService.createStandardBoard(), Alliance.WHITE, null);
+        return createTurn(BoardDirector.createStandardBoard(), Alliance.WHITE, null);
     }
 
     private Turn createTurn(Board board, Alliance nextMoveMaker, @Nullable Move lastMove) {
@@ -86,8 +82,9 @@ public final class Game {
         LOG.debug("Black pieces: {}", board.pieces(Alliance.BLACK));
         LOG.debug("En passant pawn: {}\n", board.enPassantPawn());
 
-        var whitePlayer = new PlayerFactory(board, Alliance.WHITE).create();
-        var blackPlayer = new PlayerFactory(board, Alliance.BLACK).create();
+        boardAnalyzer = new BoardAnalyzer(board, nextMoveMaker);
+        var blackPlayer = boardAnalyzer.createPlayer(Alliance.WHITE);
+        var whitePlayer = boardAnalyzer.createPlayer(Alliance.BLACK);
 
         LOG.debug("Players: {} vs. {}", whitePlayer, blackPlayer);
         LOG.debug("White legals: {}", whitePlayer.legals());

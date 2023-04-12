@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import cl.vmardones.chess.engine.board.BoardService;
+import cl.vmardones.chess.engine.board.BoardDirector;
 import cl.vmardones.chess.engine.board.Position;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.Pawn;
@@ -28,7 +28,7 @@ class GameTest {
 
     @Test
     void firstTurn() {
-        assertThat(game.board()).isEqualTo(BoardService.createStandardBoard());
+        assertThat(game.board()).isEqualTo(BoardDirector.createStandardBoard());
         assertThat(game.currentPlayer().alliance()).isEqualTo(Alliance.WHITE);
         assertThat(game.currentOpponent().alliance()).isEqualTo(Alliance.BLACK);
         assertThat(game.history().lastMove()).isNull();

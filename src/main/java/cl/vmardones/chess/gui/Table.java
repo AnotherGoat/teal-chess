@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 
 import cl.vmardones.chess.engine.game.Game;
 import cl.vmardones.chess.engine.move.Move;
+import cl.vmardones.chess.engine.analysis.MoveChecker;
 import cl.vmardones.chess.engine.move.MoveResult;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.io.FontLoader;
@@ -132,7 +133,7 @@ public class Table {
     }
 
     void drawLegals(Piece selectedPiece) {
-        var legals = selectedPiece.calculateLegals(game.board());
+        var legals = MoveChecker.calculatePieceLegals(selectedPiece, game.board());
 
         var legalDestinations = legals.stream().map(Move::destination).toList();
 

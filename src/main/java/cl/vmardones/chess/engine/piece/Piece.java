@@ -54,6 +54,8 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
 
     /* Movement */
 
+    public abstract List<Position> calculatePossibleDestinations(Board board);
+
     /**
      * Move this piece to another square. No checks of any kind are done to check whether the move is
      * legal or not.
@@ -62,22 +64,6 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
      * @return The piece after the move is completed.
      */
     public abstract Piece moveTo(String destination);
-
-    // TODO: This method probably shouldn't be on the piece class
-    /**
-     * Calculates all the legal moves that this piece can do.
-     *
-     * @param board Current state of the game board.
-     * @return List of possible legal moves.
-     */
-    public List<Move> calculateLegals(Board board) {
-        return calculatePossibleDestinations(board).stream()
-                .map(board::squareAt)
-                .filter(this::canAccess)
-                .map(square -> createMove(square, board))
-                .filter(Objects::nonNull)
-                .toList();
-    }
 
     /**
      * Checks if this piece can get to the given destination. This happens only if the destination is
@@ -121,28 +107,5 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
         this.position = Position.of(position);
         this.alliance = alliance;
         this.firstMove = firstMove;
-    }
-
-    protected abstract List<Position> calculatePossibleDestinations(Board board);
-
-    /**
-     * Creates a move, based on the piece and the destination.
-     *
-     * @param destination The destination square.
-     * @param board The current game board.
-     * @return A move, selected depending on the source and destination.
-     */
-    protected @Nullable Move createMove(Square destination, Board board) {
-        var destinationPiece = destination.piece();
-
-        if (destinationPiece == null) {
-            return Move.createNormal(this, destination.position());
-        }
-
-        if (isEnemyOf(destinationPiece)) {
-            return Move.createCapture(this, destination.position(), destinationPiece);
-        }
-
-        return null;
     }
 }

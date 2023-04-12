@@ -5,15 +5,14 @@
 
 package cl.vmardones.chess.engine.board;
 
-import java.util.*;
 import java.util.stream.IntStream;
 
 import cl.vmardones.chess.ExcludeFromGeneratedReport;
 import cl.vmardones.chess.engine.piece.*;
 import cl.vmardones.chess.engine.player.Alliance;
 
-/** Provides utility functions to create and do calculations over the chessboard. */
-public final class BoardService {
+/** Provides utility functions to create chessboards quickly. */
+public final class BoardDirector {
 
     private static final Board STANDARD_BOARD = generateStandardBoard();
 
@@ -30,7 +29,7 @@ public final class BoardService {
     }
 
     @ExcludeFromGeneratedReport
-    private BoardService() {
+    private BoardDirector() {
         throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
     }
 
