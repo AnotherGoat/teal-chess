@@ -141,7 +141,7 @@ public final class Board {
      * @return True if the square doesn't have a piece.
      */
     public boolean isEmpty(Position position) {
-        return squareAt(position).piece() == null;
+        return pieceAt(position) == null;
     }
 
     /* Getters */

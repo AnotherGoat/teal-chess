@@ -45,7 +45,7 @@ abstract sealed class SlidingPiece extends Piece permits Bishop, Queen, Rook {
         return filterAccessible(squares).stream().map(Square::position).toList();
     }
 
-    // TODO: Replace this method with something more stream-friendly
+    // TODO: Remove this method, and check accesible squares somewhere else
     private List<Square> filterAccessible(Iterator<Square> squares) {
 
         List<Square> accessibleSquares = new ArrayList<>();

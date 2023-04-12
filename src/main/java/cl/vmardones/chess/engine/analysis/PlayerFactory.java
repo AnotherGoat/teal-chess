@@ -19,6 +19,7 @@ import cl.vmardones.chess.engine.player.PlayerStatus;
 
 final class PlayerFactory {
 
+    private final MoveTester moveTester;
     private final Alliance nextMoveMaker;
     private final King king;
     private final List<Piece> pieces;
@@ -26,9 +27,15 @@ final class PlayerFactory {
     private final King opponentKing;
     private final List<Piece> opponentPieces;
 
-    private final MoveTester moveTester;
-
-    PlayerFactory(Alliance nextMoveMaker, King king, List<Piece> pieces, List<Move> legals, King opponentKing, List<Piece> opponentPieces, MoveTester moveTester) {
+    PlayerFactory(
+            MoveTester moveTester,
+            Alliance nextMoveMaker,
+            King king,
+            List<Piece> pieces,
+            List<Move> legals,
+            King opponentKing,
+            List<Piece> opponentPieces) {
+        this.moveTester = moveTester;
         this.nextMoveMaker = nextMoveMaker;
 
         this.king = king;
@@ -37,8 +44,6 @@ final class PlayerFactory {
 
         this.opponentKing = opponentKing;
         this.opponentPieces = opponentPieces;
-
-        this.moveTester = moveTester;
     }
 
     Player create(Alliance alliance) {
@@ -51,8 +56,7 @@ final class PlayerFactory {
 
     private PlayerStatus calculateStatus() {
 
-        var checked =
-                !moveTester.attacksOnKing().isEmpty();
+        var checked = !moveTester.attacksOnKing().isEmpty();
         var noEscape = calculateEscapeMoves();
 
         if (checked && noEscape) {
@@ -72,7 +76,7 @@ final class PlayerFactory {
 
     private boolean calculateEscapeMoves() {
         return legals.stream()
-                .map(moveTester::testMove)
+                .map(move -> moveTester.testMove(move, legals))
                 .noneMatch(result -> result == MoveResult.CONTINUE
                         || result == MoveResult.CHECKS
                         || result == MoveResult.CHECKMATES);

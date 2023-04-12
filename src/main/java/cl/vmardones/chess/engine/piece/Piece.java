@@ -11,9 +11,7 @@ import java.util.Objects;
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Position;
 import cl.vmardones.chess.engine.board.Square;
-import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.player.Alliance;
-import org.eclipse.jdt.annotation.Nullable;
 
 /** A chess piece, which players can move in the board. */
 public abstract sealed class Piece permits JumpingPiece, SlidingPiece {

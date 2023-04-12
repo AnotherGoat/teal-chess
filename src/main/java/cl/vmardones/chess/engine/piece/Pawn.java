@@ -7,14 +7,7 @@ package cl.vmardones.chess.engine.piece;
 
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.board.Square;
-import cl.vmardones.chess.engine.move.*;
 import cl.vmardones.chess.engine.player.Alliance;
-import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * The pawn piece. It only moves forward (depending on the side) and can eat other pieces
@@ -24,9 +17,9 @@ import org.eclipse.jdt.annotation.Nullable;
 public final class Pawn extends JumpingPiece {
 
     private static final List<int[]> WHITE_MOVES =
-            List.of(new int[] {-1, 1}, new int[] {0, 1}, new int[] {1, 1}, new int[] {0, 2});
+            List.of(new int[] {-1, 1}, new int[] {0, 1}, new int[] {1, 1});
     private static final List<int[]> BLACK_MOVES =
-            List.of(new int[] {-1, -1}, new int[] {0, -1}, new int[] {1, -1}, new int[] {0, -2});
+            List.of(new int[] {-1, -1}, new int[] {0, -1}, new int[] {1, -1});
 
     public Pawn(String position, Alliance alliance) {
         this(position, alliance, true);
@@ -38,13 +31,6 @@ public final class Pawn extends JumpingPiece {
     }
 
     private Pawn(String position, Alliance alliance, boolean firstMove) {
-        super(position, alliance, firstMove, calculateMoves(alliance, firstMove));
-    }
-
-    private static List<int[]> calculateMoves(Alliance alliance, boolean firstMove) {
-        return switch (alliance) {
-            case WHITE -> firstMove ? WHITE_MOVES : WHITE_MOVES.subList(0, 3);
-            case BLACK -> firstMove ? BLACK_MOVES : BLACK_MOVES.subList(0, 3);
-        };
+        super(position, alliance, firstMove, alliance == Alliance.WHITE ? WHITE_MOVES : BLACK_MOVES);
     }
 }

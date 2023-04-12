@@ -15,13 +15,11 @@ import cl.vmardones.chess.engine.piece.King;
 final class MoveTester {
 
     private final King king;
-    private final List<Move> legals;
-    private final List<Move> opponentLegals;
+    private final List<Move> opponentAttacks;
 
-    MoveTester(King king, List<Move> legals, List<Move> opponentLegals) {
+    MoveTester(King king, List<Move> opponentAttacks) {
         this.king = king;
-        this.legals = legals;
-        this.opponentLegals = opponentLegals;
+        this.opponentAttacks = opponentAttacks;
     }
 
     List<Move> attacksOnKing() {
@@ -29,10 +27,22 @@ final class MoveTester {
     }
 
     List<Move> attacksOn(Position target) {
-        return opponentLegals.stream().filter(move -> target.equals(move.destination())).toList();
+        return opponentAttacks.stream()
+                .filter(move -> target.equals(move.destination()))
+                .toList();
     }
 
-    MoveResult testMove(Move move) {
+    // TODO: Use the move parameter to check what would happen if the move is done
+    // For example, the player could SELF_CHECK
+    MoveResult testLegalMove(Move move) {
+        if (!attacksOnKing().isEmpty()) {
+            return MoveResult.CHECKS;
+        }
+
+        return MoveResult.CONTINUE;
+    }
+
+    MoveResult testMove(Move move, List<Move> legals) {
         if (move.isNone()) {
             return MoveResult.NONE;
         }

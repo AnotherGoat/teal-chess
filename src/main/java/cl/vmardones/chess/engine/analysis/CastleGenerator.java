@@ -5,7 +5,6 @@
 
 package cl.vmardones.chess.engine.analysis;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -13,22 +12,20 @@ import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Rook;
-import cl.vmardones.chess.engine.player.Alliance;
 import org.eclipse.jdt.annotation.Nullable;
 
-final class CastleChecker {
+final class CastleGenerator {
 
+    private final MoveTester moveTester;
     private final Board board;
     private final King king;
-    private final List<Move> opponentLegals;
     private final boolean inCheck;
 
-    CastleChecker(Board board, Alliance alliance, List<Move> opponentLegals) {
+    CastleGenerator(MoveTester moveTester, Board board, King king) {
+        this.moveTester = moveTester;
         this.board = board;
-        king = board.king(alliance);
-        this.opponentLegals = opponentLegals;
-        this.inCheck =
-                !MoveChecker.isUnderAttack(king.position(), opponentLegals).isEmpty();
+        this.king = king;
+        this.inCheck = !moveTester.attacksOnKing().isEmpty();
     }
 
     Stream<Move> calculateCastles() {
@@ -44,7 +41,7 @@ final class CastleChecker {
         return !king.firstMove() || inCheck || king.position().file() != 'e';
     }
 
-    @Nullable Move generateCastleMove(boolean kingSide) {
+    private @Nullable Move generateCastleMove(boolean kingSide) {
 
         if (kingSide && !isKingSideCastlePossible() || !kingSide && !isQueenSideCastlePossible()) {
             return null;
@@ -108,7 +105,6 @@ final class CastleChecker {
     private boolean isUnreachableByEnemy(int offset) {
         var destination = king.position().right(offset);
 
-        return destination != null
-                && MoveChecker.isUnderAttack(destination, opponentLegals).isEmpty();
+        return destination != null && moveTester.attacksOn(destination).isEmpty();
     }
 }

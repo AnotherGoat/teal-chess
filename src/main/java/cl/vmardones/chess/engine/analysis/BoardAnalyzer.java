@@ -1,40 +1,52 @@
+/*
+ * Copyright (C) 2023  Víctor Mardones
+ * The full notice can be found at README.md in the root directory.
+ */
+
 package cl.vmardones.chess.engine.analysis;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveResult;
-import cl.vmardones.chess.engine.move.MoveType;
-import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Alliance;
 import cl.vmardones.chess.engine.player.Player;
 
-import java.util.List;
-
 public final class BoardAnalyzer {
 
-    private final King king;
-    private final List<Piece> pieces;
     private final List<Move> legals;
-    private final King opponentKing;
-    private final List<Piece> opponentPieces;
-    private final List<Move> opponentLegals;
-
-    /* Dependencies */
     private final MoveTester moveTester;
     private final PlayerFactory playerFactory;
 
     public BoardAnalyzer(Board board, Alliance nextMoveMaker) {
-        king = board.king(nextMoveMaker);
-        pieces = board.pieces(nextMoveMaker);
-        legals = MoveChecker.calculateLegals(board, nextMoveMaker);
+        var king = board.king(nextMoveMaker);
+        var pieces = board.pieces(nextMoveMaker);
 
-        opponentKing = board.king(nextMoveMaker.opposite());
-        opponentPieces = board.pieces(nextMoveMaker.opposite());
-        opponentLegals = MoveChecker.calculateLegals(board, nextMoveMaker.opposite());
+        var opponentKing = board.king(nextMoveMaker.opposite());
+        List<Piece> opponentPieces = board.pieces(nextMoveMaker.opposite());
 
-        moveTester = new MoveTester(king, legals, opponentLegals);
-        playerFactory = new PlayerFactory(nextMoveMaker, king, pieces, legals, opponentKing, opponentPieces, moveTester);
+        var attackGenerator = new AttackGenerator(board, nextMoveMaker, pieces, opponentPieces);
+        List<Move> opponentAttacks =
+                attackGenerator.calculateAttacks(nextMoveMaker.opposite()).toList();
+        var attacks = attackGenerator.calculateAttacks(nextMoveMaker);
+
+        var moveGenerator = new MoveGenerator(board, pieces);
+        var moves = moveGenerator.calculateMoves();
+
+        var pawnMoveGenerator = new PawnMoveGenerator(board, nextMoveMaker, pieces);
+        var pawnMoves = pawnMoveGenerator.calculatePawnMoves();
+
+        moveTester = new MoveTester(king, opponentAttacks);
+        var castleGenerator = new CastleGenerator(moveTester, board, king);
+        var castles = castleGenerator.calculateCastles();
+
+        legals = Stream.concat(Stream.concat(attacks, moves), Stream.concat(pawnMoves, castles))
+                .toList();
+        playerFactory =
+                new PlayerFactory(moveTester, nextMoveMaker, king, pieces, legals, opponentKing, opponentPieces);
     }
 
     public Player createPlayer(Alliance alliance) {
@@ -42,6 +54,10 @@ public final class BoardAnalyzer {
     }
 
     public MoveResult testMove(Move move) {
-        return moveTester.testMove(move);
+        return moveTester.testLegalMove(move);
+    }
+
+    public List<Move> findLegalMoves(Piece piece) {
+        return legals.stream().filter(move -> move.piece().equals(piece)).toList();
     }
 }

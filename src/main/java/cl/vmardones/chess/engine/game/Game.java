@@ -5,15 +5,18 @@
 
 package cl.vmardones.chess.engine.game;
 
-import cl.vmardones.chess.engine.analysis.BoardAnalyzer;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import cl.vmardones.chess.engine.analysis.BoardAnalyzer;
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.BoardDirector;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveMaker;
 import cl.vmardones.chess.engine.move.MoveResult;
+import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Alliance;
 import cl.vmardones.chess.engine.player.Player;
 import org.eclipse.jdt.annotation.Nullable;
@@ -37,6 +40,7 @@ public final class Game {
     }
 
     /* Getters */
+
     public Board board() {
         return state.currentTurn().board();
     }
@@ -59,8 +63,14 @@ public final class Game {
         registerTurn(nextTurn);
     }
 
+    /* Analysis methods */
+
     public MoveResult testMove(Move move) {
         return boardAnalyzer.testMove(move);
+    }
+
+    public List<Move> findLegalMoves(Piece piece) {
+        return boardAnalyzer.findLegalMoves(piece);
     }
 
     private void registerTurn(Turn turn) {
