@@ -6,6 +6,7 @@
 package cl.vmardones.chess.engine.player;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +14,23 @@ class AllianceTest {
 
     Alliance white = Alliance.WHITE;
     Alliance black = Alliance.BLACK;
+
+    @Test
+    void whiteSymbol() {
+        assertThat(Alliance.fromSymbol("w")).isEqualTo(white);
+    }
+
+    @Test
+    void blackSymbol() {
+        assertThat(Alliance.fromSymbol("b")).isEqualTo(black);
+    }
+
+    @Test
+    void unknownSymbol() {
+        assertThatThrownBy(() -> Alliance.fromSymbol("+"))
+                .isInstanceOf(UnknownSymbolException.class)
+                .hasMessageContaining("+");
+    }
 
     @Test
     void whiteOpposite() {

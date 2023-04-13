@@ -5,8 +5,10 @@
 
 package cl.vmardones.chess.engine.board;
 
-final class AlgebraicNotationException extends RuntimeException {
-
+/**
+ * Exception thrown when invalid position algebraic notation is used.
+ */
+public final class AlgebraicNotationException extends RuntimeException {
     AlgebraicNotationException(String algebraicNotation) {
         super("Invalid algebraic notation: " + algebraicNotation);
     }

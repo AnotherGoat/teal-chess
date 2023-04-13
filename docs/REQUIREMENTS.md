@@ -279,22 +279,22 @@ testing a lot easier.
 
 - ✓ FEN is "Forsyth-Edwards Notation"; it is a standard for describing chess
   positions using the ASCII character set.
-- ✗ A single FEN record uses one text line of variable length composed of six
+- ✓ A single FEN record uses one text line of variable length composed of six
   data fields.
 - ✗ The first four fields of the FEN specification are the same as the first
   four fields of the EPD specification.
 - ✗ A text file composed exclusively of FEN data records should have a file name
   with the suffix ".fen".
 - ✓ (16.1.3) Data fields
-  - ✗ FEN specifies the piece placement, the active color, the castling
+  - ✓ FEN specifies the piece placement, the active color, the castling
     availability, the en passant target square, the halfmove clock, and the
     fullmove number.
-  - ✗ These can all fit on a single text line in an easily read format.
-  - ✗ A FEN description has six fields.
-  - ✗ Each field is composed only of non-blank printing ASCII characters.
-  - ✗ Adjacent fields are separated by a single ASCII space character.
+  - ✓ These can all fit on a single text line in an easily read format.
+  - ✓ A FEN description has six fields.
+  - ✓ Each field is composed only of non-blank printing ASCII characters.
+  - ✓ Adjacent fields are separated by a single ASCII space character.
   - ✗ (16.1.3.1) Piece placement data
-    - ✗ The first field represents the placement of the pieces on the board.
+    - ✓ The first field represents the placement of the pieces on the board.
     - ✗ The board contents are specified starting with the eighth rank and
       ending with the first rank.
     - ✗ For each rank, the squares are specified from file a to file h.
@@ -303,12 +303,12 @@ testing a lot easier.
     - ✗ Empty squares are represented by the digits one through eight; the digit
       used represents the count of contiguous empty squares along a rank.
     - ✗ A solidus character "/" is used to separate data of adjacent ranks.
-  - ✗ (16.1.3.2) Active color
-    - ✗ The second field represents the active color.
-    - ✗ A lower case "w" is used if White is to move; a lower case "b" is used
+  - ✓ (16.1.3.2) Active color
+    - ✓ The second field represents the active color.
+    - ✓ A lower case "w" is used if White is to move; a lower case "b" is used
       if Black is the active player.
   - ✗ (16.1.3.3) Castling availability
-    - ✗ The third field represents castling availability.
+    - ✓ The third field represents castling availability.
     - ✗ This indicates potential future castling that may of may not be possible
       at the moment due to blocking pieces or enemy attacks.
     - ✗ If there is no castling availability for either side, the single
@@ -322,31 +322,31 @@ testing a lot easier.
       appears.
     - ✗ If Black has queenside castling availability, then the lowercase letter
       "q" appears.
-    - ✗ Those letters which appear will be ordered first uppercase before
+    - ✓ Those letters which appear will be ordered first uppercase before
       lowercase and second kingside before queenside.
-    - ✗ There is no white space between the letters.
-  - ✗ (16.1.3.4) En passant target square
-    - ✗ The fourth field is the en passant target square.
-    - ✗ If there is no en passant target square then the single character symbol
+    - ✓ There is no white space between the letters.
+  - ✓ (16.1.3.4) En passant target square
+    - ✓ The fourth field is the en passant target square.
+    - ✓ If there is no en passant target square then the single character symbol
       "-" appears.
-    - ✗ If there is an en passant target square then is represented by a
+    - ✓ If there is an en passant target square then is represented by a
       lowercase file character immediately followed by a rank digit.
-    - ✗ Obviously, the rank digit will be "3" following a white pawn double
+    - ✓ Obviously, the rank digit will be "3" following a white pawn double
       advance (Black is the active color) or else be the digit "6" after a black
       pawn double advance (White being the active color).
-    - ✗ An en passant target square is given if and only if the last move was a
+    - ✓ An en passant target square is given if and only if the last move was a
       pawn advance of two squares.
-    - ✗ Therefore, an en passant target square field may have a square name even
+    - ✓ Therefore, an en passant target square field may have a square name even
       if there is no pawn of the opposing side that may immediately execute the
       en passant capture.
   - ✗ (16.1.3.5) Halfmove clock
-    - ✗ The fifth field is a nonnegative integer representing the halfmove
+    - ✓ The fifth field is a nonnegative integer representing the halfmove
       clock.
     - ✗ This number is the count of halfmoves (or ply) since the last pawn
       advance or capturing move.
     - ✗ This value is used for the fifty move draw rule.
   - ✗ (16.1.3.6) Fullmove number
-    - ✗ The sixth and last field is a positive integer that gives the fullmove
+    - ✓ The sixth and last field is a positive integer that gives the fullmove
       number.
     - ✗ This will have the value "1" for the first move of a game for both White
       and Black.

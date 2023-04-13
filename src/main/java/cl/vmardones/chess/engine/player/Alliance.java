@@ -14,6 +14,23 @@ public enum Alliance {
 
     private final int direction;
 
+    /* Alternate alliance construction */
+
+    /**
+     * Alternative method to get an alliance, useful for parsing.
+     * Only valid options are "w" for white and "b" for black.
+     *
+     * @param symbol The alliance symbol.
+     * @return The alliance with the asked symbol.
+     */
+    public static Alliance fromSymbol(String symbol) {
+        return switch (symbol) {
+            case "w" -> Alliance.WHITE;
+            case "b" -> Alliance.BLACK;
+            default -> throw new UnknownSymbolException(symbol);
+        };
+    }
+
     /* Getters */
 
     public int direction() {
