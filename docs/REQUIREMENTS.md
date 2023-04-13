@@ -275,9 +275,9 @@ testing a lot easier.
     - ✗ (8.2.3.8) SAN move suffix annotations
   - ✗ (8.2.6) Game Termination Markers
 
-### Forsyth-Edwards Notation (FEN)
+#### ✗ Forsyth-Edwards Notation (FEN)
 
-- ✗ FEN is "Forsyth-Edwards Notation"; it is a standard for describing chess
+- ✓ FEN is "Forsyth-Edwards Notation"; it is a standard for describing chess
   positions using the ASCII character set.
 - ✗ A single FEN record uses one text line of variable length composed of six
   data fields.
@@ -285,7 +285,7 @@ testing a lot easier.
   four fields of the EPD specification.
 - ✗ A text file composed exclusively of FEN data records should have a file name
   with the suffix ".fen".
-- ✗ (16.1.3) Data fields
+- ✓ (16.1.3) Data fields
   - ✗ FEN specifies the piece placement, the active color, the castling
     availability, the en passant target square, the halfmove clock, and the
     fullmove number.

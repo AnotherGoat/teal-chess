@@ -16,7 +16,7 @@ final class AlgebraicConverter {
 
     static int toIndex(String algebraicNotation) {
         if (!ALGEBRAIC_PATTERN.matcher(algebraicNotation).matches()) {
-            throw new BadAlgebraicNotationException(algebraicNotation);
+            throw new AlgebraicNotationException(algebraicNotation);
         }
 
         return calculateIndex(algebraicNotation);

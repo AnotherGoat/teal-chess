@@ -30,7 +30,7 @@ public final class Position {
      *
      * @param algebraicNotation The algebraic notation of the position.
      * @return The created position.
-     * @throws OutsidePositionException If the position is outside the chessboard.
+     * @throws PositionException If the position is outside the chessboard.
      */
     public static Position of(String algebraicNotation) {
         return POSITION_CACHE.get(AlgebraicConverter.toIndex(algebraicNotation));
@@ -178,7 +178,7 @@ public final class Position {
 
     static Position of(int index) {
         if (isOutsideBoard(index)) {
-            throw new OutsidePositionException(index);
+            throw new PositionException(index);
         }
 
         return POSITION_CACHE.get(index);

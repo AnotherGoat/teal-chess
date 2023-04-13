@@ -26,14 +26,14 @@ class PositionTest {
     @Test
     void tooLowIndex() {
         assertThatThrownBy(() -> Position.of(-1))
-                .isInstanceOf(OutsidePositionException.class)
+                .isInstanceOf(PositionException.class)
                 .hasMessageContaining("-1");
     }
 
     @Test
     void tooHighIndex() {
         assertThatThrownBy(() -> Position.of(64))
-                .isInstanceOf(OutsidePositionException.class)
+                .isInstanceOf(PositionException.class)
                 .hasMessageContaining("64");
     }
 

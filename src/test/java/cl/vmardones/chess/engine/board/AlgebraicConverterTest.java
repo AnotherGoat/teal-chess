@@ -23,7 +23,7 @@ class AlgebraicConverterTest {
     @Test
     void invalidAlgebraicNotation() {
         assertThatThrownBy(() -> AlgebraicConverter.toIndex("x4"))
-                .isInstanceOf(BadAlgebraicNotationException.class)
+                .isInstanceOf(AlgebraicNotationException.class)
                 .hasMessageContaining("x4");
     }
 

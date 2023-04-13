@@ -5,9 +5,9 @@
 
 package cl.vmardones.chess.engine.board;
 
-final class OutsidePositionException extends RuntimeException {
+final class PositionException extends RuntimeException {
 
-    OutsidePositionException(int index) {
+    PositionException(int index) {
         super("Index is outside chessboard: " + index);
     }
 }
