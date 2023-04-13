@@ -5,14 +5,18 @@
 
 package cl.vmardones.chess.engine.parser;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import cl.vmardones.chess.ExcludeFromGeneratedReport;
 import cl.vmardones.chess.engine.board.AlgebraicNotationException;
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.piece.Pawn;
+import cl.vmardones.chess.engine.piece.*;
 import cl.vmardones.chess.engine.player.Alliance;
-import cl.vmardones.chess.engine.player.UnknownSymbolException;
+import cl.vmardones.chess.engine.player.AllianceSymbolException;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
@@ -20,7 +24,10 @@ import org.eclipse.jdt.annotation.Nullable;
  */
 public final class FenParser {
 
+    private static final Pattern PIECES_PATTERN = Pattern.compile("[/PNBRQKpnbrqk1-8]*");
     private static final Pattern CASTLING_PATTERN = Pattern.compile("-|K?Q?k?q?");
+    private static final int DATA_FIELDS_LENGTH = 6;
+    private static final String FILES = "abcdefgh";
 
     public static Board parse(String fen) {
 
@@ -30,18 +37,18 @@ public final class FenParser {
 
         var parts = fen.split(" ");
 
-        if (parts.length != 6) {
+        if (parts.length != DATA_FIELDS_LENGTH) {
             throw new FenParseException("FEN string doesn't have exactly 6 data fields: " + fen);
         }
 
-        var piecePlacement = parts[0];
+        var ranks = parseRanks(parts[0]);
         var activeColor = parseActiveColor(parts[1]);
         var castles = parseCastles(parts[2]);
-        var pawn = parseEnPassantTarget(parts[3], activeColor);
+        var enPassantPawn = parseEnPassantTarget(parts[3], activeColor);
         var halfmove = parseHalfmove(parts[4]);
         int fullmove = parseFullmove(parts[5]);
 
-        return null;
+        return buildBoard(ranks, activeColor, castles, enPassantPawn, halfmove, fullmove);
     }
 
     @ExcludeFromGeneratedReport
@@ -53,12 +60,48 @@ public final class FenParser {
         return text.chars().allMatch(character -> character >= 0x20 && character < 0x7F);
     }
 
+    private static List<String> parseRanks(String data) {
+        if (!PIECES_PATTERN.matcher(data).matches()) {
+            throw new FenParseException("Piece placement data contains invalid characters: " + data);
+        }
+
+        if (!data.contains("K") || !data.contains("k")) {
+            throw new FenParseException("At least one of the kings is missing: " + data);
+        }
+
+        if (containsMultiple(data, 'K') || containsMultiple(data, 'k')) {
+            throw new FenParseException("The board has more than 2 kings: " + data);
+        }
+
+        var ranks = data.split("/");
+
+        if (ranks.length != Board.SIDE_LENGTH) {
+            throw new FenParseException("Piece placement data doesn't have exactly 8 ranks: " + data);
+        }
+
+        return Arrays.asList(ranks);
+    }
+
+    private static boolean containsMultiple(String text, char character) {
+        var index = text.indexOf(character);
+
+        while (index >= 0) {
+            if (text.indexOf(character, index + 1) > 0) {
+                return true;
+            }
+
+            index = text.indexOf(character, index + 1);
+        }
+
+        return false;
+    }
+
     // TODO: Replace nextTurnMaker with activeColor everywhere
     // TODO: Replace Alliance with Color everywhere
     private static Alliance parseActiveColor(String data) {
         try {
             return Alliance.fromSymbol(data);
-        } catch (UnknownSymbolException e) {
+        } catch (AllianceSymbolException e) {
             throw new FenParseException("Illegal alliance symbol: " + data);
         }
     }
@@ -113,5 +156,57 @@ public final class FenParser {
         }
 
         return fullmove;
+    }
+
+    // TODO: The data for active color, castles, halmove and fullmove isn't used yet
+    // TODO: A similar method will probably be used to build a turn instead of a board
+    private static Board buildBoard(
+            List<String> ranks, Alliance activeColor, String castles, Pawn enPassantPawn, int halfmove, int fullmove) {
+
+        var pieces = generatePieces(ranks);
+        var whiteKing = findKing(pieces, Alliance.WHITE);
+        var blackKing = findKing(pieces, Alliance.BLACK);
+
+        var builder = Board.builder(whiteKing, blackKing);
+
+        builder.withAll(pieces);
+        builder.enPassantPawn(enPassantPawn);
+
+        return builder.build();
+    }
+
+    private static List<Piece> generatePieces(List<String> ranks) {
+
+        List<Piece> pieces = new ArrayList<>();
+
+        for (int i = 0; i < ranks.size(); i++) {
+            var rank = ranks.get(i);
+            var fileCounter = 0;
+
+            for (int j = 0; j < rank.length(); j++) {
+                var data = rank.charAt(j);
+
+                if (Character.isDigit(data)) {
+                    fileCounter += Character.getNumericValue(data);
+                } else {
+                    var file = String.valueOf(FILES.charAt(fileCounter));
+                    var rankIndex = Board.SIDE_LENGTH - i;
+                    var position = file + rankIndex;
+
+                    pieces.add(Piece.fromSymbol(String.valueOf(data), position));
+                    fileCounter++;
+                }
+            }
+        }
+
+        return Collections.unmodifiableList(pieces);
+    }
+
+    private static King findKing(List<Piece> pieces, Alliance alliance) {
+        return pieces.stream()
+                .filter(piece -> piece instanceof King && piece.alliance() == alliance)
+                .map(King.class::cast)
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("Unreachable statement"));
     }
 }

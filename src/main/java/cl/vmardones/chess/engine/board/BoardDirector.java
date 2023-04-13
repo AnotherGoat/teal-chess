@@ -5,11 +5,9 @@
 
 package cl.vmardones.chess.engine.board;
 
-import java.util.stream.IntStream;
-
 import cl.vmardones.chess.ExcludeFromGeneratedReport;
+import cl.vmardones.chess.engine.parser.FenParser;
 import cl.vmardones.chess.engine.piece.*;
-import cl.vmardones.chess.engine.player.Alliance;
 
 /** Provides utility functions to create chessboards quickly. */
 public final class BoardDirector {
@@ -34,37 +32,6 @@ public final class BoardDirector {
     }
 
     private static Board generateStandardBoard() {
-        var whiteKing = new King("e1", Alliance.WHITE);
-        var blackKing = new King("e8", Alliance.BLACK);
-
-        var builder = Board.builder(whiteKing, blackKing);
-
-        builder.with(new Rook("a8", Alliance.BLACK))
-                .with(new Knight("b8", Alliance.BLACK))
-                .with(new Bishop("c8", Alliance.BLACK))
-                .with(new Queen("d8", Alliance.BLACK))
-                .with(new Bishop("f8", Alliance.BLACK))
-                .with(new Knight("g8", Alliance.BLACK))
-                .with(new Rook("h8", Alliance.BLACK));
-
-        IntStream.range(8, 16)
-                .mapToObj(AlgebraicConverter::toAlgebraic)
-                .map(position -> new Pawn(position, Alliance.BLACK))
-                .forEach(builder::with);
-
-        IntStream.range(48, 56)
-                .mapToObj(AlgebraicConverter::toAlgebraic)
-                .map(position -> new Pawn(position, Alliance.WHITE))
-                .forEach(builder::with);
-
-        builder.with(new Rook("a1", Alliance.WHITE))
-                .with(new Knight("b1", Alliance.WHITE))
-                .with(new Bishop("c1", Alliance.WHITE))
-                .with(new Queen("d1", Alliance.WHITE))
-                .with(new Bishop("f1", Alliance.WHITE))
-                .with(new Knight("g1", Alliance.WHITE))
-                .with(new Rook("h1", Alliance.WHITE));
-
-        return builder.build();
+        return FenParser.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     }
 }

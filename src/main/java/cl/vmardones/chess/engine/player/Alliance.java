@@ -27,7 +27,7 @@ public enum Alliance {
         return switch (symbol) {
             case "w" -> Alliance.WHITE;
             case "b" -> Alliance.BLACK;
-            default -> throw new UnknownSymbolException(symbol);
+            default -> throw new AllianceSymbolException(symbol);
         };
     }
 

@@ -293,16 +293,16 @@ testing a lot easier.
   - ✓ A FEN description has six fields.
   - ✓ Each field is composed only of non-blank printing ASCII characters.
   - ✓ Adjacent fields are separated by a single ASCII space character.
-  - ✗ (16.1.3.1) Piece placement data
+  - ✓ (16.1.3.1) Piece placement data
     - ✓ The first field represents the placement of the pieces on the board.
-    - ✗ The board contents are specified starting with the eighth rank and
+    - ✓ The board contents are specified starting with the eighth rank and
       ending with the first rank.
-    - ✗ For each rank, the squares are specified from file a to file h.
-    - ✗ White pieces are identified by uppercase SAN piece letters ("PNBRQK")
+    - ✓ For each rank, the squares are specified from file a to file h.
+    - ✓ White pieces are identified by uppercase SAN piece letters ("PNBRQK")
       and black pieces are identified by lowercase SAN piece letters ("pnbrqk").
-    - ✗ Empty squares are represented by the digits one through eight; the digit
+    - ✓ Empty squares are represented by the digits one through eight; the digit
       used represents the count of contiguous empty squares along a rank.
-    - ✗ A solidus character "/" is used to separate data of adjacent ranks.
+    - ✓ A solidus character "/" is used to separate data of adjacent ranks.
   - ✓ (16.1.3.2) Active color
     - ✓ The second field represents the active color.
     - ✓ A lower case "w" is used if White is to move; a lower case "b" is used

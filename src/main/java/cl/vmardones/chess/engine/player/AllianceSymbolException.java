@@ -8,8 +8,8 @@ package cl.vmardones.chess.engine.player;
 /**
  * Exception thrown when someone tries to get an alliance by passing an unknown symbol.
  */
-public final class UnknownSymbolException extends RuntimeException {
-    UnknownSymbolException(String symbol) {
+public final class AllianceSymbolException extends RuntimeException {
+    AllianceSymbolException(String symbol) {
         super("Unknown alliance symbol: " + symbol);
     }
 }

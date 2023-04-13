@@ -263,6 +263,16 @@ public final class Board {
         }
 
         /**
+         * Add multiple pieces to the board. Null pieces are silently ignored. If multiple pieces are put in the sample, the last one takes precedence.
+         * @param pieces The pieces to add.
+         * @return The same instance of this builder, to continue the building process.
+         */
+        public BoardBuilder withAll(List<@Nullable Piece> pieces) {
+            pieces.forEach(this::with);
+            return this;
+        }
+
+        /**
          * Remove a piece from the board. This action is silently ignored if the piece is null.
          *
          * @param piece The piece to remove.

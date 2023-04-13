@@ -28,7 +28,7 @@ class AllianceTest {
     @Test
     void unknownSymbol() {
         assertThatThrownBy(() -> Alliance.fromSymbol("+"))
-                .isInstanceOf(UnknownSymbolException.class)
+                .isInstanceOf(AllianceSymbolException.class)
                 .hasMessageContaining("+");
     }
 

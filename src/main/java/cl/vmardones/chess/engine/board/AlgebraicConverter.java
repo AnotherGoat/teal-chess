@@ -12,7 +12,7 @@ import cl.vmardones.chess.ExcludeFromGeneratedReport;
 final class AlgebraicConverter {
 
     private static final Pattern ALGEBRAIC_PATTERN = Pattern.compile("^[a-h][1-8]$");
-    private static final String FILES = "abcdefgh";
+    public static final String FILES = "abcdefgh";
 
     static int toIndex(String algebraicNotation) {
         if (!ALGEBRAIC_PATTERN.matcher(algebraicNotation).matches()) {

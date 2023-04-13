@@ -19,6 +19,32 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
     protected final Alliance alliance;
     protected final boolean firstMove;
 
+    /* Alternate piece construction */
+
+    /**
+     * Alternative method to build a piece, useful for parsing.
+     * Only valid symbols are "PNBRQK" for white pieces and "pnbrqk" for black pieces;
+     * The alliance is inferred from the symbol being uppercase (white) or lowercase (black).
+     *
+     * @param symbol The piece symbol.
+     * @param position The position to put the piece in.
+     * @return The piece with the asked symbol.
+     */
+    public static Piece fromSymbol(String symbol, String position) {
+        var alliance = Character.isUpperCase(symbol.charAt(0)) ? Alliance.WHITE : Alliance.BLACK;
+        var upperCaseSymbol = symbol.toUpperCase();
+
+        return switch (upperCaseSymbol) {
+            case "P" -> new Pawn(position, alliance);
+            case "N" -> new Knight(position, alliance);
+            case "B" -> new Bishop(position, alliance);
+            case "R" -> new Rook(position, alliance);
+            case "Q" -> new Queen(position, alliance);
+            case "K" -> new King(position, alliance);
+            default -> throw new PieceSymbolException(symbol);
+        };
+    }
+
     /* Getters */
 
     public Position position() {
@@ -33,6 +59,7 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
         return firstMove;
     }
 
+    // TODO: Make this method static and use it in the FEN parser
     public String singleChar() {
         var singleChar = getClass().getSimpleName().substring(0, 1);
 
