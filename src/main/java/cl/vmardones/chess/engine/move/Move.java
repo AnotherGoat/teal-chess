@@ -14,6 +14,8 @@ import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.piece.Rook;
 import org.eclipse.jdt.annotation.Nullable;
 
+// TODO: Refactor this class after it works, use either a builder and/or a class hierarchy to avoid telescoping
+// constructors
 /** The action of moving a piece. */
 public final class Move {
 
@@ -24,6 +26,9 @@ public final class Move {
     @Nullable private final Piece otherPiece;
 
     @Nullable private final Position rookDestination;
+
+    @Nullable private final boolean promotion;
+
     // TODO: Actually implement this, it should be used for PGN notation hash (+ for check, # for checkmate)
     private final MoveResult result = MoveResult.CONTINUE;
 
@@ -53,6 +58,10 @@ public final class Move {
                 kingSide ? MoveType.KING_CASTLE : MoveType.QUEEN_CASTLE, king, kingDestination, rook, rookDestination);
     }
 
+    public static Move makePromotion(Move move) {
+        return new Move(move.type, move.piece, move.destination, move.otherPiece, null, true);
+    }
+
     /* Getters */
 
     public MoveType type() {
@@ -77,6 +86,10 @@ public final class Move {
 
     public @Nullable Position rookDestination() {
         return rookDestination;
+    }
+
+    public boolean promotion() {
+        return promotion;
     }
 
     public boolean isCapture() {
@@ -105,12 +118,13 @@ public final class Move {
                 && destination.equals(other.destination)
                 && Objects.equals(otherPiece, other.otherPiece)
                 && Objects.equals(rookDestination, other.rookDestination)
-                && result.equals(other.result);
+                && result.equals(other.result)
+                && promotion == other.promotion;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, piece, destination, otherPiece, rookDestination, result);
+        return Objects.hash(type, piece, destination, otherPiece, rookDestination, result, promotion);
     }
 
     /**
@@ -136,11 +150,22 @@ public final class Move {
             Position destination,
             @Nullable Piece otherPiece,
             @Nullable Position rookDestination) {
+        this(type, piece, destination, otherPiece, rookDestination, false);
+    }
+
+    private Move(
+            MoveType type,
+            Piece piece,
+            Position destination,
+            @Nullable Piece otherPiece,
+            @Nullable Position rookDestination,
+            boolean promotion) {
         this.type = type;
         this.piece = piece;
         this.destination = destination;
         this.otherPiece = otherPiece;
         this.rookDestination = rookDestination;
+        this.promotion = promotion;
     }
 
     private String simpleToString() {

@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.move.Move;
+import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -42,6 +43,10 @@ final class MoveGenerator {
 
         if (destinationPiece != null) {
             return null;
+        }
+
+        if (piece instanceof Pawn pawn && pawn.position().rank() == pawn.rankBeforePromotion()) {
+            return Move.makePromotion(Move.createNormal(piece, destination.position()));
         }
 
         return Move.createNormal(piece, destination.position());

@@ -8,11 +8,12 @@ package cl.vmardones.chess.engine.player;
 /** Represents a chess piece's color, which can be white or black. */
 public enum Color {
     /** The white side, at the bottom of the board. */
-    WHITE(1),
+    WHITE(1, 8),
     /** The black side, at the top of the board. */
-    BLACK(-1);
+    BLACK(-1, 1);
 
     private final int direction;
+    private final int promotionRank;
 
     /* Alternate color construction */
 
@@ -48,6 +49,10 @@ public enum Color {
         return opposite().direction();
     }
 
+    public int promotionRank() {
+        return promotionRank;
+    }
+
     /* toString */
 
     @Override
@@ -55,7 +60,8 @@ public enum Color {
         return String.valueOf(super.toString().toLowerCase().charAt(0));
     }
 
-    Color(int direction) {
+    Color(int direction, int promotionRank) {
         this.direction = direction;
+        this.promotionRank = promotionRank;
     }
 }

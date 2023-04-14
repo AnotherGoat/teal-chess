@@ -30,6 +30,14 @@ public final class Pawn extends JumpingPiece {
         return color == Color.WHITE ? "♙" : "♟";
     }
 
+    public int rankBeforePromotion() {
+        return color.promotionRank() - color.direction();
+    }
+
+    public Piece promote() {
+        return new Queen(position.toString(), color);
+    }
+
     private Pawn(String position, Color color, boolean firstMove) {
         super(position, color, firstMove, List.of(new int[] {0, color.direction()}));
     }

@@ -77,6 +77,10 @@ final class AttackGenerator {
             return null;
         }
 
+        if (pawn.position().rank() == pawn.rankBeforePromotion()) {
+            return Move.makePromotion(Move.createCapture(pawn, destination, destinationPiece));
+        }
+
         return Move.createCapture(pawn, destination, destinationPiece);
     }
 }
