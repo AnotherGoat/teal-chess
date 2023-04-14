@@ -30,7 +30,6 @@ public final class Position {
      *
      * @param algebraicNotation The algebraic notation of the position.
      * @return The created position.
-     * @throws PositionException If the position is outside the chessboard.
      */
     public static Position of(String algebraicNotation) {
         return POSITION_CACHE.get(AlgebraicConverter.toIndex(algebraicNotation));
@@ -174,16 +173,6 @@ public final class Position {
         return AlgebraicConverter.toAlgebraic(index);
     }
 
-    /* Position creation (package-private) */
-
-    static Position of(int index) {
-        if (isOutsideBoard(index)) {
-            throw new PositionException(index);
-        }
-
-        return POSITION_CACHE.get(index);
-    }
-
     int index() {
         return index;
     }
@@ -196,10 +185,6 @@ public final class Position {
 
     private Position(int index) {
         this.index = index;
-    }
-
-    private static boolean isOutsideBoard(int index) {
-        return index < Board.MIN_SQUARES || index >= Board.MAX_SQUARES;
     }
 
     private boolean illegalJump(int x, Position destination) {

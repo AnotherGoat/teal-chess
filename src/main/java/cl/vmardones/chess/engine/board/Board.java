@@ -194,10 +194,13 @@ public final class Board {
     public String toString() {
         var builder = new StringBuilder();
 
-        IntStream.range(MIN_SQUARES, MAX_SQUARES)
-                .mapToObj(Position::of)
-                .map(position -> String.format(getFormat(position), squareAt(position)))
-                .forEach(builder::append);
+        for (Square square : squares) {
+            builder.append(square).append("  ");
+
+            if ((square.position().index() + 1) % Board.SIDE_LENGTH == 0) {
+                builder.append("\n");
+            }
+        }
 
         return builder.toString();
     }
@@ -227,10 +230,6 @@ public final class Board {
                 .map(Square::piece)
                 .filter(piece -> piece != null && piece.alliance() == alliance)
                 .toList();
-    }
-
-    private String getFormat(Position position) {
-        return (position.index() + 1) % Board.SIDE_LENGTH == 0 ? "%s  \n" : "%s  ";
     }
 
     /**

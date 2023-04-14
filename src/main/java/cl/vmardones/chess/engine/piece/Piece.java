@@ -45,6 +45,13 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
         };
     }
 
+    // TODO: Make this method static and use it in the FEN parser
+    public String singleChar() {
+        var singleChar = getClass().getSimpleName().substring(0, 1);
+
+        return alliance == Alliance.BLACK ? singleChar.toLowerCase() : singleChar;
+    }
+
     /* Getters */
 
     public Position position() {
@@ -57,13 +64,6 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
 
     public boolean firstMove() {
         return firstMove;
-    }
-
-    // TODO: Make this method static and use it in the FEN parser
-    public String singleChar() {
-        var singleChar = getClass().getSimpleName().substring(0, 1);
-
-        return alliance == Alliance.BLACK ? singleChar.toLowerCase() : singleChar;
     }
 
     /* Comparing pieces */
