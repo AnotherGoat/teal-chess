@@ -10,13 +10,13 @@ import java.util.Objects;
 
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Position;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 
 /** A chess piece, which players can move in the board. */
 public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
 
     protected final Position position;
-    protected final Alliance alliance;
+    protected final Color color;
     protected final boolean firstMove;
 
     /* Alternate piece construction */
@@ -24,23 +24,23 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
     /**
      * Alternative method to build a piece, useful for parsing.
      * Only valid symbols are "PNBRQK" for white pieces and "pnbrqk" for black pieces;
-     * The alliance is inferred from the symbol being uppercase (white) or lowercase (black).
+     * The color is inferred from the symbol being uppercase (white) or lowercase (black).
      *
      * @param symbol The piece symbol.
      * @param position The position to put the piece in.
      * @return The piece with the asked symbol.
      */
     public static Piece fromSymbol(String symbol, String position) {
-        var alliance = Character.isUpperCase(symbol.charAt(0)) ? Alliance.WHITE : Alliance.BLACK;
+        var color = Character.isUpperCase(symbol.charAt(0)) ? Color.WHITE : Color.BLACK;
         var upperCaseSymbol = symbol.toUpperCase();
 
         return switch (upperCaseSymbol) {
-            case "P" -> new Pawn(position, alliance);
-            case "N" -> new Knight(position, alliance);
-            case "B" -> new Bishop(position, alliance);
-            case "R" -> new Rook(position, alliance);
-            case "Q" -> new Queen(position, alliance);
-            case "K" -> new King(position, alliance);
+            case "P" -> new Pawn(position, color);
+            case "N" -> new Knight(position, color);
+            case "B" -> new Bishop(position, color);
+            case "R" -> new Rook(position, color);
+            case "Q" -> new Queen(position, color);
+            case "K" -> new King(position, color);
             default -> throw new PieceSymbolException(symbol);
         };
     }
@@ -51,8 +51,8 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
         return position;
     }
 
-    public Alliance alliance() {
-        return alliance;
+    public Color color() {
+        return color;
     }
 
     public boolean firstMove() {
@@ -62,7 +62,7 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
     public String singleChar() {
         var singleChar = getClass().getSimpleName().substring(0, 1);
 
-        return alliance == Alliance.BLACK ? singleChar.toLowerCase() : singleChar;
+        return color == Color.BLACK ? singleChar.toLowerCase() : singleChar;
     }
 
     public abstract String unicodeChar();
@@ -70,7 +70,7 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
     /* Comparing pieces */
 
     public boolean isAllyOf(Piece other) {
-        return alliance() == other.alliance();
+        return color() == other.color();
     }
 
     public boolean isEnemyOf(Piece other) {
@@ -103,12 +103,12 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
         }
 
         var other = (Piece) o;
-        return position.equals(other.position) && alliance == other.alliance && firstMove == other.firstMove;
+        return position.equals(other.position) && color == other.color && firstMove == other.firstMove;
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hash(position, alliance, firstMove);
+        return Objects.hash(position, color, firstMove);
     }
 
     @Override
@@ -116,9 +116,9 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
         return String.format("%s%s", unicodeChar(), position);
     }
 
-    protected Piece(String position, Alliance alliance, boolean firstMove) {
+    protected Piece(String position, Color color, boolean firstMove) {
         this.position = Position.of(position);
-        this.alliance = alliance;
+        this.color = color;
         this.firstMove = firstMove;
     }
 }

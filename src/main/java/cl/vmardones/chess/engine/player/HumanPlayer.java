@@ -13,7 +13,7 @@ import cl.vmardones.chess.engine.piece.Piece;
 
 /** A human player, that plays using the mouse. */
 public final class HumanPlayer extends Player {
-    public HumanPlayer(Alliance alliance, King king, List<Piece> pieces, List<Move> legals, PlayerStatus playerStatus) {
-        super(alliance, king, pieces, legals, playerStatus);
+    public HumanPlayer(Color color, King king, List<Piece> pieces, List<Move> legals, PlayerStatus playerStatus) {
+        super(color, king, pieces, legals, playerStatus);
     }
 }

@@ -11,14 +11,14 @@ import java.util.stream.IntStream;
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Position;
 import cl.vmardones.chess.engine.board.Square;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 
 abstract sealed class SlidingPiece extends Piece permits Bishop, Queen, Rook {
 
     protected final List<int[]> moveVectors;
 
-    protected SlidingPiece(String position, Alliance alliance, boolean firstMove, List<int[]> moveVectors) {
-        super(position, alliance, firstMove);
+    protected SlidingPiece(String position, Color color, boolean firstMove, List<int[]> moveVectors) {
+        super(position, color, firstMove);
         this.moveVectors = moveVectors;
     }
 

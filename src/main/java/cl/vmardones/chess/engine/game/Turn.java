@@ -10,15 +10,15 @@ import java.util.List;
 
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.move.Move;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 import cl.vmardones.chess.engine.player.Player;
 import org.eclipse.jdt.annotation.Nullable;
 
 // TODO: Check if we only need to store each player's legal moves
-record Turn(Board board, Alliance moveMaker, Player whitePlayer, Player blackPlayer, @Nullable Move lastMove) {
+record Turn(Board board, Color activeColor, Player whitePlayer, Player blackPlayer, @Nullable Move lastMove) {
 
     Player player() {
-        return switch (moveMaker) {
+        return switch (activeColor) {
             case WHITE -> whitePlayer;
             case BLACK -> blackPlayer;
         };
@@ -29,7 +29,7 @@ record Turn(Board board, Alliance moveMaker, Player whitePlayer, Player blackPla
     }
 
     Player opponent() {
-        return switch (moveMaker) {
+        return switch (activeColor) {
             case WHITE -> blackPlayer;
             case BLACK -> whitePlayer;
         };

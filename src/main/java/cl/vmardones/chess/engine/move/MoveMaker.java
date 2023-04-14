@@ -9,7 +9,7 @@ import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
 /** The class responsible for realizing moves and building a new post-move board. */
@@ -51,10 +51,10 @@ public final class MoveMaker {
             return board.nextTurnBuilder();
         }
 
-        if (movedPiece.alliance() == Alliance.WHITE) {
-            return board.nextTurnBuilder((King) movedPiece, board.king(Alliance.BLACK));
+        if (movedPiece.color() == Color.WHITE) {
+            return board.nextTurnBuilder((King) movedPiece, board.king(Color.BLACK));
         }
 
-        return board.nextTurnBuilder(board.king(Alliance.WHITE), (King) movedPiece);
+        return board.nextTurnBuilder(board.king(Color.WHITE), (King) movedPiece);
     }
 }

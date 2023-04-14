@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 
 import cl.vmardones.chess.engine.board.Position;
 import cl.vmardones.chess.engine.piece.*;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -89,7 +89,7 @@ class MoveTest {
 
     @Test
     void normalToString() {
-        var piece = new Rook("a1", Alliance.WHITE);
+        var piece = new Rook("a1", Color.WHITE);
         var move = Move.createNormal(piece, Position.of("e1"));
 
         assertThat(move).hasToString("e1");
@@ -97,8 +97,8 @@ class MoveTest {
 
     @Test
     void captureToString() {
-        var piece = new Bishop("b1", Alliance.WHITE);
-        var capturedPiece = new Bishop("c2", Alliance.BLACK);
+        var piece = new Bishop("b1", Color.WHITE);
+        var capturedPiece = new Bishop("c2", Color.BLACK);
         var move = Move.createCapture(piece, Position.of("c2"), capturedPiece);
 
         assertThat(move).hasToString("Bc2");
@@ -106,8 +106,8 @@ class MoveTest {
 
     @Test
     void pawnCaptureToString() {
-        var pawn = new Pawn("a8", Alliance.BLACK);
-        var capturedPawn = new Pawn("b7", Alliance.WHITE);
+        var pawn = new Pawn("a8", Color.BLACK);
+        var capturedPawn = new Pawn("b7", Color.WHITE);
         var move = Move.createCapture(pawn, Position.of("b7"), capturedPawn);
 
         assertThat(move).hasToString("axb7");
@@ -115,8 +115,8 @@ class MoveTest {
 
     @Test
     void kingCastleToString() {
-        var king = new King("e5", Alliance.WHITE);
-        var rook = new Rook("e8", Alliance.WHITE);
+        var king = new King("e5", Color.WHITE);
+        var rook = new Rook("e8", Color.WHITE);
         var move = Move.createCastle(true, king, Position.of("e7"), rook, Position.of("e6"));
 
         assertThat(move).hasToString("0-0");
@@ -124,8 +124,8 @@ class MoveTest {
 
     @Test
     void queenCastleToString() {
-        var king = new King("e5", Alliance.WHITE);
-        var rook = new Rook("e1", Alliance.WHITE);
+        var king = new King("e5", Color.WHITE);
+        var rook = new Rook("e1", Color.WHITE);
         var move = Move.createCastle(false, king, Position.of("e3"), rook, Position.of("e4"));
 
         assertThat(move).hasToString("0-0-0");

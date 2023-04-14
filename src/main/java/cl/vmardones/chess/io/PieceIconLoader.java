@@ -30,7 +30,7 @@ public final class PieceIconLoader {
 
     private static String formatIconPath(Piece piece) {
         return "%s/%s%s.svg"
-                .formatted(PIECE_ICON_PATH, piece.alliance(), piece.singleChar().toLowerCase());
+                .formatted(PIECE_ICON_PATH, piece.color(), piece.singleChar().toLowerCase());
     }
 
     @ExcludeFromGeneratedReport

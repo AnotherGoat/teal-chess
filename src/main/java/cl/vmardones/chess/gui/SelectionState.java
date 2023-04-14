@@ -32,7 +32,7 @@ interface SelectionState {
 
             LOG.debug("The source contains {}", selectedPiece);
 
-            if (selectedPiece.alliance() == table.game().currentOpponent().alliance()) {
+            if (selectedPiece.color() == table.game().currentOpponent().color()) {
                 LOG.warn("The selected piece belongs to the opponent\n");
                 return;
             }
@@ -76,9 +76,8 @@ interface SelectionState {
             var move =
                     MoveFinder.choose(table.game().currentPlayer().legals(), sourcePosition, pressedSquare.position());
 
-            LOG.debug("Is the move possible? {}\n", move != null);
-
             if (move == null) {
+                LOG.warn("The selected move is illegal\n");
                 table.selectionState(new NoSelectionState(table));
                 return;
             }

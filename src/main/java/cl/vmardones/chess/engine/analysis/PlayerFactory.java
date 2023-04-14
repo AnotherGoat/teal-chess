@@ -12,7 +12,7 @@ import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveResult;
 import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Piece;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 import cl.vmardones.chess.engine.player.HumanPlayer;
 import cl.vmardones.chess.engine.player.Player;
 import cl.vmardones.chess.engine.player.PlayerStatus;
@@ -20,7 +20,7 @@ import cl.vmardones.chess.engine.player.PlayerStatus;
 final class PlayerFactory {
 
     private final MoveTester moveTester;
-    private final Alliance nextMoveMaker;
+    private final Color activeColor;
     private final King king;
     private final List<Piece> pieces;
     private final List<Move> legals;
@@ -29,14 +29,14 @@ final class PlayerFactory {
 
     PlayerFactory(
             MoveTester moveTester,
-            Alliance nextMoveMaker,
+            Color activeColor,
             King king,
             List<Piece> pieces,
             List<Move> legals,
             King opponentKing,
             List<Piece> opponentPieces) {
         this.moveTester = moveTester;
-        this.nextMoveMaker = nextMoveMaker;
+        this.activeColor = activeColor;
 
         this.king = king;
         this.pieces = pieces;
@@ -46,12 +46,12 @@ final class PlayerFactory {
         this.opponentPieces = opponentPieces;
     }
 
-    Player create(Alliance alliance) {
-        if (alliance == nextMoveMaker) {
-            return new HumanPlayer(alliance, king, pieces, legals, calculateStatus());
+    Player create(Color color) {
+        if (color == activeColor) {
+            return new HumanPlayer(color, king, pieces, legals, calculateStatus());
         }
 
-        return new HumanPlayer(alliance, opponentKing, opponentPieces, Collections.emptyList(), PlayerStatus.NORMAL);
+        return new HumanPlayer(color, opponentKing, opponentPieces, Collections.emptyList(), PlayerStatus.NORMAL);
     }
 
     private PlayerStatus calculateStatus() {

@@ -17,7 +17,7 @@ import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveMaker;
 import cl.vmardones.chess.engine.move.MoveResult;
 import cl.vmardones.chess.engine.piece.Piece;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 import cl.vmardones.chess.engine.player.Player;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -59,7 +59,7 @@ public final class Game {
 
     public void addTurn(Move move) {
         var nextTurnBoard = moveMaker.make(board(), move);
-        var nextTurn = createTurn(nextTurnBoard, currentOpponent().alliance(), move);
+        var nextTurn = createTurn(nextTurnBoard, currentOpponent().color(), move);
         registerTurn(nextTurn);
     }
 
@@ -81,25 +81,25 @@ public final class Game {
     }
 
     private Turn createFirstTurn() {
-        return createTurn(BoardDirector.createStandardBoard(), Alliance.WHITE, null);
+        return createTurn(BoardDirector.createStandardBoard(), Color.WHITE, null);
     }
 
-    private Turn createTurn(Board board, Alliance nextMoveMaker, @Nullable Move lastMove) {
+    private Turn createTurn(Board board, Color activeColor, @Nullable Move lastMove) {
         LOG.debug("Current gameboard:\n{}", board);
-        LOG.debug("White king: {}", board.king(Alliance.WHITE));
-        LOG.debug("White pieces: {}", board.pieces(Alliance.WHITE));
-        LOG.debug("Black king: {}", board.king(Alliance.BLACK));
-        LOG.debug("Black pieces: {}", board.pieces(Alliance.BLACK));
+        LOG.debug("White king: {}", board.king(Color.WHITE));
+        LOG.debug("White pieces: {}", board.pieces(Color.WHITE));
+        LOG.debug("Black king: {}", board.king(Color.BLACK));
+        LOG.debug("Black pieces: {}", board.pieces(Color.BLACK));
         LOG.debug("En passant pawn: {}\n", board.enPassantPawn());
 
-        boardAnalyzer = new BoardAnalyzer(board, nextMoveMaker);
-        var whitePlayer = boardAnalyzer.createPlayer(Alliance.WHITE);
-        var blackPlayer = boardAnalyzer.createPlayer(Alliance.BLACK);
+        boardAnalyzer = new BoardAnalyzer(board, activeColor);
+        var whitePlayer = boardAnalyzer.createPlayer(Color.WHITE);
+        var blackPlayer = boardAnalyzer.createPlayer(Color.BLACK);
 
         LOG.debug("Players: {} vs. {}", whitePlayer, blackPlayer);
         LOG.debug("White legals: {}", whitePlayer.legals());
         LOG.debug("Black legals: {}", blackPlayer.legals());
 
-        return new Turn(board, nextMoveMaker, whitePlayer, blackPlayer, lastMove);
+        return new Turn(board, activeColor, whitePlayer, blackPlayer, lastMove);
     }
 }

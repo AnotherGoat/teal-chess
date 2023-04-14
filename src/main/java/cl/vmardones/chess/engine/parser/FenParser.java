@@ -15,8 +15,8 @@ import cl.vmardones.chess.ExcludeFromGeneratedReport;
 import cl.vmardones.chess.engine.board.AlgebraicNotationException;
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.piece.*;
-import cl.vmardones.chess.engine.player.Alliance;
-import cl.vmardones.chess.engine.player.AllianceSymbolException;
+import cl.vmardones.chess.engine.player.Color;
+import cl.vmardones.chess.engine.player.ColorSymbolException;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
@@ -96,13 +96,11 @@ public final class FenParser {
         return false;
     }
 
-    // TODO: Replace nextTurnMaker with activeColor everywhere
-    // TODO: Replace Alliance with Color everywhere
-    private static Alliance parseActiveColor(String data) {
+    private static Color parseActiveColor(String data) {
         try {
-            return Alliance.fromSymbol(data);
-        } catch (AllianceSymbolException e) {
-            throw new FenParseException("Illegal alliance symbol: " + data);
+            return Color.fromSymbol(data);
+        } catch (ColorSymbolException e) {
+            throw new FenParseException("Illegal color symbol: " + data);
         }
     }
 
@@ -114,7 +112,7 @@ public final class FenParser {
         return data;
     }
 
-    private static @Nullable Pawn parseEnPassantTarget(String data, Alliance activeColor) {
+    private static @Nullable Pawn parseEnPassantTarget(String data, Color activeColor) {
         if (data.equals("-")) {
             return null;
         }
@@ -158,14 +156,14 @@ public final class FenParser {
         return fullmove;
     }
 
-    // TODO: The data for active color, castles, halmove and fullmove isn't used yet
+    // TODO: The data for active color, castles, halfmove and fullmove isn't used yet
     // TODO: A similar method will probably be used to build a turn instead of a board
     private static Board buildBoard(
-            List<String> ranks, Alliance activeColor, String castles, Pawn enPassantPawn, int halfmove, int fullmove) {
+            List<String> ranks, Color activeColor, String castles, Pawn enPassantPawn, int halfmove, int fullmove) {
 
         var pieces = generatePieces(ranks);
-        var whiteKing = findKing(pieces, Alliance.WHITE);
-        var blackKing = findKing(pieces, Alliance.BLACK);
+        var whiteKing = findKing(pieces, Color.WHITE);
+        var blackKing = findKing(pieces, Color.BLACK);
 
         var builder = Board.builder(whiteKing, blackKing);
 
@@ -202,9 +200,9 @@ public final class FenParser {
         return Collections.unmodifiableList(pieces);
     }
 
-    private static King findKing(List<Piece> pieces, Alliance alliance) {
+    private static King findKing(List<Piece> pieces, Color color) {
         return pieces.stream()
-                .filter(piece -> piece instanceof King && piece.alliance() == alliance)
+                .filter(piece -> piece instanceof King && piece.color() == color)
                 .map(King.class::cast)
                 .findFirst()
                 .orElseThrow(() -> new AssertionError("Unreachable statement"));

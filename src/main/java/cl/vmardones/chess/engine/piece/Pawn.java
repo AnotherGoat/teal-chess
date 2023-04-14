@@ -7,7 +7,7 @@ package cl.vmardones.chess.engine.piece;
 
 import java.util.List;
 
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 
 /**
  * The pawn piece. It only moves forward (depending on the side) and can eat other pieces
@@ -16,21 +16,21 @@ import cl.vmardones.chess.engine.player.Alliance;
  */
 public final class Pawn extends JumpingPiece {
 
-    public Pawn(String position, Alliance alliance) {
-        this(position, alliance, true);
+    public Pawn(String position, Color color) {
+        this(position, color, true);
     }
 
     @Override
     public Pawn moveTo(String destination) {
-        return new Pawn(destination, alliance, false);
+        return new Pawn(destination, color, false);
     }
 
     @Override
     public String unicodeChar() {
-        return alliance == Alliance.WHITE ? "♙" : "♟";
+        return color == Color.WHITE ? "♙" : "♟";
     }
 
-    private Pawn(String position, Alliance alliance, boolean firstMove) {
-        super(position, alliance, firstMove, List.of(new int[] {0, alliance.direction()}));
+    private Pawn(String position, Color color, boolean firstMove) {
+        super(position, color, firstMove, List.of(new int[] {0, color.direction()}));
     }
 }

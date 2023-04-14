@@ -7,7 +7,7 @@ package cl.vmardones.chess.engine.piece;
 
 import java.util.List;
 
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 
 /**
  * The king piece. The most important piece in the game, must be defended at all costs. It moves
@@ -26,21 +26,21 @@ public final class King extends JumpingPiece {
             new int[] {0, -1},
             new int[] {1, -1});
 
-    public King(String position, Alliance alliance) {
-        this(position, alliance, true);
+    public King(String position, Color color) {
+        this(position, color, true);
     }
 
     @Override
     public King moveTo(String destination) {
-        return new King(destination, alliance, false);
+        return new King(destination, color, false);
     }
 
     @Override
     public String unicodeChar() {
-        return alliance == Alliance.WHITE ? "♔" : "♚";
+        return color == Color.WHITE ? "♔" : "♚";
     }
 
-    private King(String position, Alliance alliance, boolean firstMove) {
-        super(position, alliance, firstMove, MOVES);
+    private King(String position, Color color, boolean firstMove) {
+        super(position, color, firstMove, MOVES);
     }
 }

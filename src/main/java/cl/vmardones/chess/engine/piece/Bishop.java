@@ -7,7 +7,7 @@ package cl.vmardones.chess.engine.piece;
 
 import java.util.List;
 
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 
 /** The bishop piece. It can move diagonally. */
 public final class Bishop extends SlidingPiece {
@@ -15,21 +15,21 @@ public final class Bishop extends SlidingPiece {
     private static final List<int[]> MOVES =
             List.of(new int[] {-1, 1}, new int[] {1, 1}, new int[] {-1, -1}, new int[] {1, -1});
 
-    public Bishop(String position, Alliance alliance) {
-        this(position, alliance, true);
+    public Bishop(String position, Color color) {
+        this(position, color, true);
     }
 
     @Override
     public Bishop moveTo(String destination) {
-        return new Bishop(destination, alliance, false);
+        return new Bishop(destination, color, false);
     }
 
     @Override
     public String unicodeChar() {
-        return alliance == Alliance.WHITE ? "♗" : "♝";
+        return color == Color.WHITE ? "♗" : "♝";
     }
 
-    private Bishop(String position, Alliance alliance, boolean firstMove) {
-        super(position, alliance, firstMove, MOVES);
+    private Bishop(String position, Color color, boolean firstMove) {
+        super(position, color, firstMove, MOVES);
     }
 }

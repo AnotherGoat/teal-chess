@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
 /** The chessboard, made of 8x8 squares. */
@@ -146,12 +146,12 @@ public final class Board {
         return Collections.unmodifiableList(squares);
     }
 
-    public King king(Alliance alliance) {
-        return alliance == Alliance.WHITE ? whiteKing : blackKing;
+    public King king(Color color) {
+        return color == Color.WHITE ? whiteKing : blackKing;
     }
 
-    public List<Piece> pieces(Alliance alliance) {
-        var pieces = alliance == Alliance.WHITE ? whitePieces : blackPieces;
+    public List<Piece> pieces(Color color) {
+        var pieces = color == Color.WHITE ? whitePieces : blackPieces;
 
         return Collections.unmodifiableList(pieces);
     }
@@ -205,10 +205,10 @@ public final class Board {
         squares = createSquares(builder);
 
         whiteKing = builder.whiteKing;
-        whitePieces = findPieces(squares, Alliance.WHITE);
+        whitePieces = findPieces(squares, Color.WHITE);
 
         blackKing = builder.blackKing;
-        blackPieces = findPieces(squares, Alliance.BLACK);
+        blackPieces = findPieces(squares, Color.BLACK);
 
         enPassantPawn = builder.enPassantPawn;
     }
@@ -221,10 +221,10 @@ public final class Board {
                 .toList();
     }
 
-    private List<Piece> findPieces(List<Square> gameBoard, Alliance alliance) {
+    private List<Piece> findPieces(List<Square> gameBoard, Color color) {
         return gameBoard.stream()
                 .map(Square::piece)
-                .filter(piece -> piece != null && piece.alliance() == alliance)
+                .filter(piece -> piece != null && piece.color() == color)
                 .toList();
     }
 
@@ -314,8 +314,8 @@ public final class Board {
         private BoardBuilder(Board board, King whiteKing, King blackKing) {
             this(whiteKing, blackKing);
 
-            for (var alliance : Alliance.values()) {
-                board.pieces(alliance).forEach(this::with);
+            for (var color : Color.values()) {
+                board.pieces(color).forEach(this::with);
             }
         }
 

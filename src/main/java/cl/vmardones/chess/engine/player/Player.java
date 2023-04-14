@@ -18,7 +18,7 @@ import cl.vmardones.chess.engine.piece.Piece;
  */
 public abstract sealed class Player permits HumanPlayer {
 
-    protected final Alliance alliance;
+    protected final Color color;
     protected final King king;
     protected final List<Piece> pieces;
     protected final List<Move> legals;
@@ -29,14 +29,14 @@ public abstract sealed class Player permits HumanPlayer {
     /**
      * Create a new player.
      *
-     * @param alliance The player's side of the board.
+     * @param color The player's side of the board.
      * @param king The player's king.
      * @param pieces The player's pieces (including the king).
      * @param legals The legal moves of the player.
      * @param status The state of the player, which may limit their moves.
      */
-    protected Player(Alliance alliance, King king, List<Piece> pieces, List<Move> legals, PlayerStatus status) {
-        this.alliance = alliance;
+    protected Player(Color color, King king, List<Piece> pieces, List<Move> legals, PlayerStatus status) {
+        this.color = color;
         this.king = king;
         this.pieces = pieces;
         this.legals = legals;
@@ -45,8 +45,8 @@ public abstract sealed class Player permits HumanPlayer {
 
     /* Getters */
 
-    public Alliance alliance() {
-        return alliance;
+    public Color color() {
+        return color;
     }
 
     public King king() {
@@ -73,6 +73,6 @@ public abstract sealed class Player permits HumanPlayer {
                     case NORMAL -> "%s Player";
                 };
 
-        return String.format(template, alliance.name());
+        return String.format(template, color.name());
     }
 }

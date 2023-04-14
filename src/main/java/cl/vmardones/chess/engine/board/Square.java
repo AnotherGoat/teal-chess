@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import cl.vmardones.chess.engine.piece.Piece;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
 /** A single chess square, which may or may not contain a piece. */
@@ -20,7 +20,7 @@ public final class Square {
     private static final Map<String, Square> EMPTY_SQUARE_CACHE = fillEmptySquareCache();
 
     private final Position position;
-    private final Alliance color;
+    private final Color color;
     private final @Nullable Piece piece;
 
     /* Square creation */
@@ -46,7 +46,7 @@ public final class Square {
         return position;
     }
 
-    public Alliance color() {
+    public Color color() {
         return color;
     }
 
@@ -95,7 +95,7 @@ public final class Square {
     @Override
     public String toString() {
         if (piece == null) {
-            return color == Alliance.WHITE ? "□" : "■";
+            return color == Color.WHITE ? "□" : "■";
         }
 
         return piece.unicodeChar();
@@ -124,11 +124,11 @@ public final class Square {
         color = assignColor();
     }
 
-    private Alliance assignColor() {
+    private Color assignColor() {
         if ((position.index() + position.index() / Board.SIDE_LENGTH) % 2 == 0) {
-            return Alliance.WHITE;
+            return Color.WHITE;
         }
 
-        return Alliance.BLACK;
+        return Color.BLACK;
     }
 }

@@ -10,7 +10,7 @@ import java.util.Objects;
 
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Position;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 
 /**
  * A piece that can move to a specific set of positions. It usually doesn't matter if there are
@@ -24,8 +24,8 @@ abstract sealed class JumpingPiece extends Piece permits King, Knight, Pawn {
         return moveOffsets;
     }
 
-    protected JumpingPiece(String position, Alliance alliance, boolean firstMove, List<int[]> moveOffsets) {
-        super(position, alliance, firstMove);
+    protected JumpingPiece(String position, Color color, boolean firstMove, List<int[]> moveOffsets) {
+        super(position, color, firstMove);
         this.moveOffsets = moveOffsets;
     }
 

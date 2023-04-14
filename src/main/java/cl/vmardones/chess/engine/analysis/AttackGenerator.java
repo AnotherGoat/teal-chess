@@ -14,25 +14,25 @@ import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
 final class AttackGenerator {
 
     private final Board board;
-    private final Alliance nextMoveMaker;
+    private final Color activeColor;
     private final List<Piece> pieces;
     private final List<Piece> opponentPieces;
 
-    AttackGenerator(Board board, Alliance nextMoveMaker, List<Piece> pieces, List<Piece> opponentPieces) {
+    AttackGenerator(Board board, Color activeColor, List<Piece> pieces, List<Piece> opponentPieces) {
         this.board = board;
-        this.nextMoveMaker = nextMoveMaker;
+        this.activeColor = activeColor;
         this.pieces = pieces;
         this.opponentPieces = opponentPieces;
     }
 
-    Stream<Move> calculateAttacks(Alliance alliance) {
-        var attackingPieces = alliance == nextMoveMaker ? pieces : opponentPieces;
+    Stream<Move> calculateAttacks(Color color) {
+        var attackingPieces = color == activeColor ? pieces : opponentPieces;
 
         return attackingPieces.stream().flatMap(this::calculatePieceAttacks);
     }
@@ -65,7 +65,7 @@ final class AttackGenerator {
 
         var direction = leftSide ? -1 : 1;
 
-        var destination = pawn.position().to(direction, nextMoveMaker.direction());
+        var destination = pawn.position().to(direction, activeColor.direction());
 
         if (destination == null) {
             return null;

@@ -10,25 +10,25 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
 
-class AllianceTest {
+class ColorTest {
 
-    Alliance white = Alliance.WHITE;
-    Alliance black = Alliance.BLACK;
+    Color white = Color.WHITE;
+    Color black = Color.BLACK;
 
     @Test
     void whiteSymbol() {
-        assertThat(Alliance.fromSymbol("w")).isEqualTo(white);
+        assertThat(Color.fromSymbol("w")).isEqualTo(white);
     }
 
     @Test
     void blackSymbol() {
-        assertThat(Alliance.fromSymbol("b")).isEqualTo(black);
+        assertThat(Color.fromSymbol("b")).isEqualTo(black);
     }
 
     @Test
     void unknownSymbol() {
-        assertThatThrownBy(() -> Alliance.fromSymbol("+"))
-                .isInstanceOf(AllianceSymbolException.class)
+        assertThatThrownBy(() -> Color.fromSymbol("+"))
+                .isInstanceOf(ColorSymbolException.class)
                 .hasMessageContaining("+");
     }
 

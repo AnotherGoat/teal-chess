@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import cl.vmardones.chess.engine.piece.Knight;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Rook;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +21,7 @@ class SquareTest {
 
     @Test
     void createOccupied() {
-        var piece = new Knight("a1", Alliance.BLACK);
+        var piece = new Knight("a1", Color.BLACK);
         assertThat(Square.create("a1", piece).piece()).isNotNull().isEqualTo(piece);
     }
 
@@ -37,12 +37,12 @@ class SquareTest {
 
     @Test
     void getWhiteColor() {
-        assertThat(Square.create("a8", null).color()).isEqualTo(Alliance.WHITE);
+        assertThat(Square.create("a8", null).color()).isEqualTo(Color.WHITE);
     }
 
     @Test
     void getBlackColor() {
-        assertThat(Square.create("b8", null).color()).isEqualTo(Alliance.BLACK);
+        assertThat(Square.create("b8", null).color()).isEqualTo(Color.BLACK);
     }
 
     @Test
@@ -59,13 +59,13 @@ class SquareTest {
 
     @Test
     void whitePieceToString() {
-        var piece = new Pawn("a1", Alliance.WHITE);
+        var piece = new Pawn("a1", Color.WHITE);
         assertThat(Square.create("a1", piece)).hasToString("♙");
     }
 
     @Test
     void blackPieceToString() {
-        var piece = new Rook("a1", Alliance.BLACK);
+        var piece = new Rook("a1", Color.BLACK);
         assertThat(Square.create("a1", piece)).hasToString("♜");
     }
 

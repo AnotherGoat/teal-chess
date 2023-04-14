@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 import cl.vmardones.chess.engine.player.HumanPlayer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,31 +33,31 @@ class TurnTest {
 
     @Test
     void getWhitePlayer() {
-        var whiteTurn = new Turn(board, Alliance.WHITE, whitePlayer, blackPlayer, null);
+        var whiteTurn = new Turn(board, Color.WHITE, whitePlayer, blackPlayer, null);
         assertThat(whiteTurn.player()).isEqualTo(whitePlayer);
     }
 
     @Test
     void getBlackPlayer() {
-        var blackTurn = new Turn(board, Alliance.BLACK, whitePlayer, blackPlayer, null);
+        var blackTurn = new Turn(board, Color.BLACK, whitePlayer, blackPlayer, null);
         assertThat(blackTurn.player()).isEqualTo(blackPlayer);
     }
 
     @Test
     void getWhiteOpponent() {
-        var whiteTurn = new Turn(board, Alliance.WHITE, whitePlayer, blackPlayer, null);
+        var whiteTurn = new Turn(board, Color.WHITE, whitePlayer, blackPlayer, null);
         assertThat(whiteTurn.opponent()).isEqualTo(blackPlayer);
     }
 
     @Test
     void getBlackOpponent() {
-        var blackTurn = new Turn(board, Alliance.BLACK, whitePlayer, blackPlayer, null);
+        var blackTurn = new Turn(board, Color.BLACK, whitePlayer, blackPlayer, null);
         assertThat(blackTurn.opponent()).isEqualTo(whitePlayer);
     }
 
     @Test
     void unmodifiablePlayerLegals() {
-        var turn = new Turn(board, Alliance.WHITE, whitePlayer, blackPlayer, null);
+        var turn = new Turn(board, Color.WHITE, whitePlayer, blackPlayer, null);
 
         when(whitePlayer.legals()).thenReturn(new ArrayList<>());
         var playerLegals = turn.playerLegals();
@@ -67,7 +67,7 @@ class TurnTest {
 
     @Test
     void unmodifiableOpponentLegals() {
-        var turn = new Turn(board, Alliance.WHITE, whitePlayer, blackPlayer, null);
+        var turn = new Turn(board, Color.WHITE, whitePlayer, blackPlayer, null);
 
         when(blackPlayer.legals()).thenReturn(new ArrayList<>());
         var opponentLegals = turn.opponentLegals();

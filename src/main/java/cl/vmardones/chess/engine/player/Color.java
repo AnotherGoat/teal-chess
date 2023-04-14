@@ -6,7 +6,7 @@
 package cl.vmardones.chess.engine.player;
 
 /** Represents a chess piece's color, which can be white or black. */
-public enum Alliance {
+public enum Color {
     /** The white side, at the bottom of the board. */
     WHITE(1),
     /** The black side, at the top of the board. */
@@ -14,20 +14,20 @@ public enum Alliance {
 
     private final int direction;
 
-    /* Alternate alliance construction */
+    /* Alternate color construction */
 
     /**
-     * Alternative method to get an alliance, useful for parsing.
+     * Alternative method to get a color, useful for parsing.
      * Only valid options are "w" for white and "b" for black.
      *
-     * @param symbol The alliance symbol.
-     * @return The alliance with the asked symbol.
+     * @param symbol The color symbol.
+     * @return The color with the asked symbol.
      */
-    public static Alliance fromSymbol(String symbol) {
+    public static Color fromSymbol(String symbol) {
         return switch (symbol) {
-            case "w" -> Alliance.WHITE;
-            case "b" -> Alliance.BLACK;
-            default -> throw new AllianceSymbolException(symbol);
+            case "w" -> Color.WHITE;
+            case "b" -> Color.BLACK;
+            default -> throw new ColorSymbolException(symbol);
         };
     }
 
@@ -37,7 +37,7 @@ public enum Alliance {
         return direction;
     }
 
-    public Alliance opposite() {
+    public Color opposite() {
         return switch (this) {
             case WHITE -> BLACK;
             case BLACK -> WHITE;
@@ -55,7 +55,7 @@ public enum Alliance {
         return String.valueOf(super.toString().toLowerCase().charAt(0));
     }
 
-    Alliance(int direction) {
+    Color(int direction) {
         this.direction = direction;
     }
 }

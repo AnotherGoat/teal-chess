@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cl.vmardones.chess.engine.piece.*;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,8 +22,8 @@ class BoardTest {
 
     Board.BoardBuilder builder;
 
-    King whiteKing = new King("e1", Alliance.WHITE);
-    King blackKing = new King("e8", Alliance.BLACK);
+    King whiteKing = new King("e1", Color.WHITE);
+    King blackKing = new King("e8", Color.BLACK);
 
     @Mock
     Pawn enPassantPawn;
@@ -35,7 +35,7 @@ class BoardTest {
 
     @Test
     void contains() {
-        var piece = new Bishop("e2", Alliance.WHITE);
+        var piece = new Bishop("e2", Color.WHITE);
         var board = builder.with(piece).build();
 
         assertThat(board.contains("e2", Bishop.class)).isTrue();
@@ -54,8 +54,8 @@ class BoardTest {
         var board = builder.build();
         var nextTurnBoard = board.nextTurnBuilder().build();
 
-        assertThat(board.king(Alliance.WHITE)).isEqualTo(nextTurnBoard.king(Alliance.WHITE));
-        assertThat(board.king(Alliance.BLACK)).isEqualTo(nextTurnBoard.king(Alliance.BLACK));
+        assertThat(board.king(Color.WHITE)).isEqualTo(nextTurnBoard.king(Color.WHITE));
+        assertThat(board.king(Color.BLACK)).isEqualTo(nextTurnBoard.king(Color.BLACK));
     }
 
     @Test
@@ -67,10 +67,10 @@ class BoardTest {
 
     @Test
     void addPiece() {
-        var piece = new Queen("d7", Alliance.WHITE);
+        var piece = new Queen("d7", Color.WHITE);
         var board = builder.with(piece).build();
 
-        assertThat(board.pieces(Alliance.WHITE)).containsOnlyOnce(piece);
+        assertThat(board.pieces(Color.WHITE)).containsOnlyOnce(piece);
     }
 
     @Test
@@ -83,19 +83,19 @@ class BoardTest {
 
     @Test
     void lastPieceTakesPrecedence() {
-        var firstPiece = new Pawn("a1", Alliance.WHITE);
-        var secondPiece = new Rook("a1", Alliance.WHITE);
+        var firstPiece = new Pawn("a1", Color.WHITE);
+        var secondPiece = new Rook("a1", Color.WHITE);
         var board = builder.with(firstPiece).with(secondPiece).build();
 
-        assertThat(board.pieces(Alliance.WHITE)).doesNotContain(firstPiece).containsOnlyOnce(secondPiece);
+        assertThat(board.pieces(Color.WHITE)).doesNotContain(firstPiece).containsOnlyOnce(secondPiece);
     }
 
     @Test
     void withoutPiece() {
-        var piece = new Pawn("a5", Alliance.BLACK);
+        var piece = new Pawn("a5", Color.BLACK);
         var board = builder.with(piece).without(piece).build();
 
-        assertThat(board.pieces(Alliance.BLACK)).isNotEmpty().doesNotContain(piece);
+        assertThat(board.pieces(Color.BLACK)).isNotEmpty().doesNotContain(piece);
     }
 
     @Test
@@ -124,22 +124,22 @@ class BoardTest {
 
     @Test
     void alwaysAddsWhiteKing() {
-        var newWhiteKing = new King("h8", Alliance.WHITE);
-        var impostorQueen = new Queen("h8", Alliance.WHITE);
+        var newWhiteKing = new King("h8", Color.WHITE);
+        var impostorQueen = new Queen("h8", Color.WHITE);
 
         var board = Board.builder(newWhiteKing, blackKing).with(impostorQueen).build();
 
-        assertThat(board.pieces(Alliance.WHITE)).doesNotContain(impostorQueen).containsOnlyOnce(newWhiteKing);
+        assertThat(board.pieces(Color.WHITE)).doesNotContain(impostorQueen).containsOnlyOnce(newWhiteKing);
     }
 
     @Test
     void alwaysAddsBlackKing() {
-        var newBlackKing = new King("a1", Alliance.BLACK);
-        var impostorQueen = new Queen("a1", Alliance.BLACK);
+        var newBlackKing = new King("a1", Color.BLACK);
+        var impostorQueen = new Queen("a1", Color.BLACK);
 
         var board = Board.builder(whiteKing, newBlackKing).with(impostorQueen).build();
 
-        assertThat(board.pieces(Alliance.BLACK)).doesNotContain(impostorQueen).containsOnlyOnce(newBlackKing);
+        assertThat(board.pieces(Color.BLACK)).doesNotContain(impostorQueen).containsOnlyOnce(newBlackKing);
     }
 
     @Test
@@ -151,14 +151,14 @@ class BoardTest {
 
     @Test
     void unmodifiableWhitePieces() {
-        var whitePieces = BoardDirector.createStandardBoard().pieces(Alliance.WHITE);
+        var whitePieces = BoardDirector.createStandardBoard().pieces(Color.WHITE);
 
         assertThatThrownBy(whitePieces::clear).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void unmodifiableBlackPieces() {
-        var blackPieces = BoardDirector.createStandardBoard().pieces(Alliance.BLACK);
+        var blackPieces = BoardDirector.createStandardBoard().pieces(Color.BLACK);
 
         assertThatThrownBy(blackPieces::clear).isInstanceOf(UnsupportedOperationException.class);
     }

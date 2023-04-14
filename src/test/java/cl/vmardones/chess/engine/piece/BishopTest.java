@@ -8,7 +8,7 @@ package cl.vmardones.chess.engine.piece;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cl.vmardones.chess.engine.board.Position;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -18,30 +18,30 @@ class BishopTest {
 
     @Test
     void constructor() {
-        assertThat(new Bishop("a1", Alliance.BLACK)).matches(Bishop::firstMove);
+        assertThat(new Bishop("a1", Color.BLACK)).matches(Bishop::firstMove);
     }
 
     @Test
     void toSingleChar() {
-        assertThat(new Bishop("a1", Alliance.WHITE).singleChar()).isEqualTo("B");
-        assertThat(new Bishop("a1", Alliance.BLACK).singleChar()).isEqualTo("b");
+        assertThat(new Bishop("a1", Color.WHITE).singleChar()).isEqualTo("B");
+        assertThat(new Bishop("a1", Color.BLACK).singleChar()).isEqualTo("b");
     }
 
     @Test
     void diagonalMove() {
-        var bishop = new Bishop("a1", Alliance.BLACK);
+        var bishop = new Bishop("a1", Color.BLACK);
         assertThat(bishop.moveVectors()).containsOnlyOnce(new int[] {1, 1});
     }
 
     @Test
     void illegalMove() {
-        var bishop = new Bishop("a1", Alliance.BLACK);
+        var bishop = new Bishop("a1", Color.BLACK);
         assertThat(bishop.moveVectors()).isNotEmpty().doesNotContain(new int[] {0, 1});
     }
 
     @Test
     void moveTo() {
-        var bishopToMove = new Bishop("a1", Alliance.BLACK);
+        var bishopToMove = new Bishop("a1", Color.BLACK);
 
         assertThat(bishopToMove.moveTo("a2"))
                 .isInstanceOf(Bishop.class)

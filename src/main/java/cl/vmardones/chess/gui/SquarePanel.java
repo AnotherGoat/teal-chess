@@ -15,15 +15,15 @@ import javax.swing.*;
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Position;
 import cl.vmardones.chess.engine.board.Square;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 import cl.vmardones.chess.io.PieceIconLoader;
 import cl.vmardones.chess.io.SvgLoader;
 
 class SquarePanel extends JPanel {
 
     private static final Dimension INITIAL_SIZE = new Dimension(63, 63);
-    private static final Color LIGHT_COLOR = Color.decode("#FFCE9E");
-    private static final Color DARK_COLOR = Color.decode("#D18B47");
+    private static final java.awt.Color LIGHT_COLOR = java.awt.Color.decode("#FFCE9E");
+    private static final java.awt.Color DARK_COLOR = java.awt.Color.decode("#D18B47");
 
     private final transient Table table;
     private transient Square square;
@@ -90,7 +90,7 @@ class SquarePanel extends JPanel {
     }
 
     private void assignSquareColor() {
-        setBackground(square.color() == Alliance.WHITE ? LIGHT_COLOR : DARK_COLOR);
+        setBackground(square.color() == Color.WHITE ? LIGHT_COLOR : DARK_COLOR);
     }
 
     private void assignPieceIcon() {

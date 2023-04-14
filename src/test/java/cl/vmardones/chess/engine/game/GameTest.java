@@ -13,7 +13,7 @@ import cl.vmardones.chess.engine.board.BoardDirector;
 import cl.vmardones.chess.engine.board.Position;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.Pawn;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,8 +29,8 @@ class GameTest {
     @Test
     void firstTurn() {
         assertThat(game.board()).isEqualTo(BoardDirector.createStandardBoard());
-        assertThat(game.currentPlayer().alliance()).isEqualTo(Alliance.WHITE);
-        assertThat(game.currentOpponent().alliance()).isEqualTo(Alliance.BLACK);
+        assertThat(game.currentPlayer().color()).isEqualTo(Color.WHITE);
+        assertThat(game.currentOpponent().color()).isEqualTo(Color.BLACK);
         assertThat(game.history().lastMove()).isNull();
     }
 
@@ -39,15 +39,15 @@ class GameTest {
         var initialBoard = game.board();
         var move = mock(Move.class);
 
-        var piece = new Pawn("d5", Alliance.WHITE);
+        var piece = new Pawn("d5", Color.WHITE);
         when(move.piece()).thenReturn(piece);
         when(move.destination()).thenReturn(Position.of("d4"));
 
         game.addTurn(move);
 
         assertThat(game.board()).isNotEqualTo(initialBoard);
-        assertThat(game.currentPlayer().alliance()).isEqualTo(Alliance.BLACK);
-        assertThat(game.currentOpponent().alliance()).isEqualTo(Alliance.WHITE);
+        assertThat(game.currentPlayer().color()).isEqualTo(Color.BLACK);
+        assertThat(game.currentOpponent().color()).isEqualTo(Color.WHITE);
         assertThat(game.history().lastMove()).isEqualTo(move);
     }
 }

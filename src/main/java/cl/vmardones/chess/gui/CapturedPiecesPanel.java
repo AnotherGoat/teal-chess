@@ -13,7 +13,7 @@ import javax.swing.border.EtchedBorder;
 import cl.vmardones.chess.engine.game.GameHistory;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.Piece;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 import cl.vmardones.chess.io.PieceIconLoader;
 
 class CapturedPiecesPanel extends JPanel {
@@ -48,9 +48,9 @@ class CapturedPiecesPanel extends JPanel {
             northPanel.removeAll();
             southPanel.removeAll();
 
-            for (var alliance : Alliance.values()) {
-                var panel = alliance == Alliance.WHITE ? southPanel : northPanel;
-                var takenPieces = getTakenPieces(gameHistory, alliance);
+            for (var color : Color.values()) {
+                var panel = color == Color.WHITE ? southPanel : northPanel;
+                var takenPieces = getTakenPieces(gameHistory, color);
 
                 for (var piece : takenPieces) {
                     var icon = PieceIconLoader.load(piece, INITIAL_SIZE.width / 2, INITIAL_SIZE.width / 2);
@@ -69,11 +69,11 @@ class CapturedPiecesPanel extends JPanel {
         validate();
     }
 
-    private List<Piece> getTakenPieces(GameHistory gameHistory, Alliance alliance) {
+    private List<Piece> getTakenPieces(GameHistory gameHistory, Color color) {
         return gameHistory.moves().stream()
                 .filter(Move::isCapture)
                 .map(Move::otherPiece)
-                .filter(capturedPiece -> capturedPiece != null && capturedPiece.alliance() == alliance)
+                .filter(capturedPiece -> capturedPiece != null && capturedPiece.color() == color)
                 .toList();
     }
 }

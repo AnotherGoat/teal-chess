@@ -7,7 +7,7 @@ package cl.vmardones.chess.engine.piece;
 
 import java.util.List;
 
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 
 /** The knight piece. It moves in an L shape. */
 public final class Knight extends JumpingPiece {
@@ -22,26 +22,26 @@ public final class Knight extends JumpingPiece {
             new int[] {-1, -2},
             new int[] {1, -2});
 
-    public Knight(String position, Alliance alliance) {
-        this(position, alliance, true);
+    public Knight(String position, Color color) {
+        this(position, color, true);
     }
 
     @Override
     public String singleChar() {
-        return alliance == Alliance.BLACK ? "n" : "N";
+        return color == Color.BLACK ? "n" : "N";
     }
 
     @Override
     public Knight moveTo(String destination) {
-        return new Knight(destination, alliance, false);
+        return new Knight(destination, color, false);
     }
 
     @Override
     public String unicodeChar() {
-        return alliance == Alliance.WHITE ? "♘" : "♞";
+        return color == Color.WHITE ? "♘" : "♞";
     }
 
-    private Knight(String position, Alliance alliance, boolean firstMove) {
-        super(position, alliance, firstMove, MOVES);
+    private Knight(String position, Color color, boolean firstMove) {
+        super(position, color, firstMove, MOVES);
     }
 }

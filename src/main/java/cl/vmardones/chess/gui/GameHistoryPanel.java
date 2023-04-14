@@ -14,7 +14,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import cl.vmardones.chess.engine.move.Move;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
 class GameHistoryPanel extends JPanel {
@@ -48,7 +48,7 @@ class GameHistoryPanel extends JPanel {
 
             var moveText = lastMove.toString();
 
-            if (lastMove.piece().alliance() == Alliance.WHITE) {
+            if (lastMove.piece().color() == Color.WHITE) {
                 model.setValueAt(moveText, model.getLastRowIndex() + 1, 0);
             } else {
                 model.setValueAt(moveText, model.getLastRowIndex(), 1);

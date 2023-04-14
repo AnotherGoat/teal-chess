@@ -17,7 +17,7 @@ import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
-import cl.vmardones.chess.engine.player.Alliance;
+import cl.vmardones.chess.engine.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
 final class PawnMoveGenerator {
@@ -25,13 +25,13 @@ final class PawnMoveGenerator {
     private static final Logger LOG = LogManager.getLogger(PawnMoveGenerator.class);
 
     private final Board board;
-    private final Alliance nextMoveMaker;
+    private final Color activeColor;
     private final List<Piece> pieces;
 
-    PawnMoveGenerator(Board board, Alliance nextMoveMaker, List<Piece> pieces) {
+    PawnMoveGenerator(Board board, Color activeColor, List<Piece> pieces) {
         this.board = board;
         this.pieces = pieces;
-        this.nextMoveMaker = nextMoveMaker;
+        this.activeColor = activeColor;
     }
 
     Stream<Move> calculatePawnMoves() {
@@ -56,13 +56,13 @@ final class PawnMoveGenerator {
             return null;
         }
 
-        var forward = pawn.position().up(nextMoveMaker.direction());
+        var forward = pawn.position().up(activeColor.direction());
 
         if (forward == null || board.pieceAt(forward) != null) {
             return null;
         }
 
-        var destination = forward.up(nextMoveMaker.direction());
+        var destination = forward.up(activeColor.direction());
 
         if (destination == null || board.pieceAt(destination) != null) {
             return null;
@@ -86,7 +86,7 @@ final class PawnMoveGenerator {
             return null;
         }
 
-        var destination = side.up(nextMoveMaker.direction());
+        var destination = side.up(activeColor.direction());
 
         if (destination == null || board.pieceAt(destination) != null) {
             return null;
