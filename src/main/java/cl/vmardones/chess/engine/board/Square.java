@@ -95,16 +95,16 @@ public final class Square {
     @Override
     public String toString() {
         if (piece == null) {
-            return "-";
+            return color == Alliance.WHITE ? "□" : "■";
         }
 
-        return piece.singleChar();
+        return piece.unicodeChar();
     }
 
     private static Map<String, Square> fillEmptySquareCache() {
         record Entry(String position, Square square) {}
 
-        return IntStream.range(Board.MIN_SQUARES, Board.MAX_SQUARES)
+        return IntStream.range(Board.FIRST_SQUARE_INDEX, Board.MAX_SQUARES)
                 .mapToObj(AlgebraicConverter::toAlgebraic)
                 .map(position -> new Entry(position, new Square(position)))
                 .collect(Collectors.toMap(Entry::position, Entry::square));

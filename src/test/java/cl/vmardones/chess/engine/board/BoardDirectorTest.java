@@ -19,11 +19,12 @@ class BoardDirectorTest {
         var board = BoardDirector.createStandardBoard();
 
         assertThat(board.toString())
-                .containsOnlyOnce("r  n  b  q  k  b  n  r")
-                .containsOnlyOnce("p  p  p  p  p  p  p  p")
-                .contains("-  -  -  -  -  -  -  -")
-                .containsOnlyOnce("P  P  P  P  P  P  P  P")
-                .containsOnlyOnce("R  N  B  Q  K  B  N  R")
+                .containsOnlyOnce("♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜")
+                .containsOnlyOnce("♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟")
+                .contains("□ ■ □ ■ □ ■ □ ■")
+                .contains("■ □ ■ □ ■ □ ■ □")
+                .containsOnlyOnce("♙ ♙ ♙ ♙ ♙ ♙ ♙ ♙")
+                .containsOnlyOnce("♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖")
                 .contains("\n");
     }
 

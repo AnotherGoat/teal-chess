@@ -36,6 +36,11 @@ public final class Knight extends JumpingPiece {
         return new Knight(destination, alliance, false);
     }
 
+    @Override
+    public String unicodeChar() {
+        return alliance == Alliance.WHITE ? "♘" : "♞";
+    }
+
     private Knight(String position, Alliance alliance, boolean firstMove) {
         super(position, alliance, firstMove, MOVES);
     }

@@ -25,6 +25,11 @@ public final class Pawn extends JumpingPiece {
         return new Pawn(destination, alliance, false);
     }
 
+    @Override
+    public String unicodeChar() {
+        return alliance == Alliance.WHITE ? "♙" : "♟";
+    }
+
     private Pawn(String position, Alliance alliance, boolean firstMove) {
         super(position, alliance, firstMove, List.of(new int[] {0, alliance.direction()}));
     }

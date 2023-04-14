@@ -30,7 +30,7 @@ public final class Game {
     private GameHistory history;
 
     public Game() {
-        LOG.info("Game started!");
+        LOG.info("Game started!\n");
 
         moveMaker = new MoveMaker();
         state = new GameState();
@@ -77,7 +77,7 @@ public final class Game {
         state.currentTurn(turn);
         var memento = state.save();
         history = history.add(memento);
-        LOG.debug("Move saved: {}", memento.state().lastMove());
+        LOG.debug("Move added to history: {}\n", memento.state().lastMove());
     }
 
     private Turn createFirstTurn() {

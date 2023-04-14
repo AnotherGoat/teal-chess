@@ -20,15 +20,11 @@ public final class Board {
     /** The chessboardd is a square grid composed of squares. This is the number of squares per side. */
     public static final int SIDE_LENGTH = 8;
     /**
-     * The index of the first square in the game board. This is meant to be used along with MAX_SQUARES to
-     * easily fill the game board.
-     */
-    public static final int MIN_SQUARES = 0;
-    /**
-     * The number of squares in the game board. This is meant to be used along with MIN_SQUARES to
-     * easily fill the game board.
+     * The number of squares in the game board.
      */
     public static final int MAX_SQUARES = SIDE_LENGTH * SIDE_LENGTH;
+
+    static final int FIRST_SQUARE_INDEX = 0;
 
     private final List<Square> squares;
     private final King whiteKing;
@@ -195,7 +191,7 @@ public final class Board {
         var builder = new StringBuilder();
 
         for (Square square : squares) {
-            builder.append(square).append("  ");
+            builder.append(square).append(" ");
 
             if ((square.position().index() + 1) % Board.SIDE_LENGTH == 0) {
                 builder.append("\n");
@@ -219,7 +215,7 @@ public final class Board {
 
     // TODO: Cache all possible algebraic coordinates
     private List<Square> createSquares(BoardBuilder builder) {
-        return IntStream.range(MIN_SQUARES, MAX_SQUARES)
+        return IntStream.range(FIRST_SQUARE_INDEX, MAX_SQUARES)
                 .mapToObj(
                         index -> Square.create(AlgebraicConverter.toAlgebraic(index), builder.configuration.get(index)))
                 .toList();

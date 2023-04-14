@@ -38,7 +38,6 @@ public final class SvgLoader {
     static @Nullable ImageIcon load(String path) {
 
         if (SVG_CACHE.containsKey(path)) {
-            LOG.debug("Loaded from SVG cache {}", path);
             return SVG_CACHE.get(path);
         }
 

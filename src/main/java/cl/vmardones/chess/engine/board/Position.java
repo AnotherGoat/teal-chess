@@ -178,7 +178,7 @@ public final class Position {
     }
 
     private static List<Position> fillPositionCache() {
-        return IntStream.range(Board.MIN_SQUARES, Board.MAX_SQUARES)
+        return IntStream.range(Board.FIRST_SQUARE_INDEX, Board.MAX_SQUARES)
                 .mapToObj(Position::new)
                 .toList();
     }

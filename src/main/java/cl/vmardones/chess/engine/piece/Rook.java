@@ -24,6 +24,11 @@ public final class Rook extends SlidingPiece {
         return new Rook(destination, alliance, false);
     }
 
+    @Override
+    public String unicodeChar() {
+        return alliance == Alliance.WHITE ? "♖" : "♜";
+    }
+
     private Rook(String position, Alliance alliance, boolean firstMove) {
         super(position, alliance, firstMove, MOVES);
     }

@@ -24,6 +24,11 @@ public final class Bishop extends SlidingPiece {
         return new Bishop(destination, alliance, false);
     }
 
+    @Override
+    public String unicodeChar() {
+        return alliance == Alliance.WHITE ? "♗" : "♝";
+    }
+
     private Bishop(String position, Alliance alliance, boolean firstMove) {
         super(position, alliance, firstMove, MOVES);
     }

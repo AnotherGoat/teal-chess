@@ -60,18 +60,19 @@ class SquareTest {
     @Test
     void whitePieceToString() {
         var piece = new Pawn("a1", Alliance.WHITE);
-        assertThat(Square.create("a1", piece)).hasToString("P");
+        assertThat(Square.create("a1", piece)).hasToString("♙");
     }
 
     @Test
     void blackPieceToString() {
         var piece = new Rook("a1", Alliance.BLACK);
-        assertThat(Square.create("a1", piece)).hasToString("r");
+        assertThat(Square.create("a1", piece)).hasToString("♜");
     }
 
     @Test
     void emptyToString() {
-        assertThat(Square.create("a1", null)).hasToString("-");
+        assertThat(Square.create("h1", null)).hasToString("□");
+        assertThat(Square.create("g1", null)).hasToString("■");
     }
 
     @Test

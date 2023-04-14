@@ -23,24 +23,21 @@ interface SelectionState {
 
         @Override
         public void onLeftClick(Table table, Square pressedSquare) {
-            LOG.debug("Selected the source {}", pressedSquare.position());
-
             var selectedPiece = pressedSquare.piece();
 
             if (selectedPiece == null) {
-                LOG.debug("The source is unoccupied, unselecting");
+                LOG.warn("The source is empty\n");
                 return;
             }
 
             LOG.debug("The source contains {}", selectedPiece);
 
             if (selectedPiece.alliance() == table.game().currentOpponent().alliance()) {
-                LOG.debug("The selected piece belongs to the opponent, can't make a move");
+                LOG.warn("The selected piece belongs to the opponent\n");
                 return;
             }
 
             if (table.isHighlightLegals()) {
-                LOG.debug("Highlighting legal moves");
                 table.drawLegals(selectedPiece);
             }
 
@@ -67,13 +64,19 @@ interface SelectionState {
 
         @Override
         public void onLeftClick(Table table, Square pressedSquare) {
-            LOG.debug("Selected the destination {}", pressedSquare.position());
+
+            if (sourcePosition.equals(pressedSquare.position())) {
+                LOG.warn("A piece can't be moved to the same position\n");
+                table.selectionState(new NoSelectionState(table));
+                return;
+            }
+
             LOG.debug("The destination contains {}", pressedSquare.piece());
 
             var move =
                     MoveFinder.choose(table.game().currentPlayer().legals(), sourcePosition, pressedSquare.position());
 
-            LOG.debug("Is there a move that can get to the destination? {}", move != null);
+            LOG.debug("Is the move possible? {}\n", move != null);
 
             if (move == null) {
                 table.selectionState(new NoSelectionState(table));
@@ -91,7 +94,7 @@ interface SelectionState {
 
         @Override
         public void onRightClick(Table table) {
-            LOG.debug("Pressed right click, undoing piece selection");
+            LOG.warn("Pressed right click, undoing piece selection\n");
             table.selectionState(new NoSelectionState(table));
         }
 

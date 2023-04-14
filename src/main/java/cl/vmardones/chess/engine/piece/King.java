@@ -35,6 +35,11 @@ public final class King extends JumpingPiece {
         return new King(destination, alliance, false);
     }
 
+    @Override
+    public String unicodeChar() {
+        return alliance == Alliance.WHITE ? "♔" : "♚";
+    }
+
     private King(String position, Alliance alliance, boolean firstMove) {
         super(position, alliance, firstMove, MOVES);
     }

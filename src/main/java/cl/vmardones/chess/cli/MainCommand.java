@@ -33,6 +33,7 @@ public final class MainCommand implements Runnable {
     public void run() {
         System.setProperty("awt.useSystemAAFontSettings", "on");
 
+        // TODO: Add a command line option to choose between ASCII and Unicode chess pieces
         new Table(darkTheme, highlightLegals, flipBoard);
     }
 }

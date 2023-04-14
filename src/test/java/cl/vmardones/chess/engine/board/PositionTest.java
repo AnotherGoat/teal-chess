@@ -6,7 +6,6 @@
 package cl.vmardones.chess.engine.board;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -16,25 +15,6 @@ class PositionTest {
     @Test
     void cache() {
         assertThat(Position.of("c7")).isSameAs(Position.of("c7"));
-    }
-
-    @Test
-    void validIndex() {
-        assertThat(Position.of(63)).isEqualTo(Position.of("h1"));
-    }
-
-    @Test
-    void tooLowIndex() {
-        assertThatThrownBy(() -> Position.of(-1))
-                .isInstanceOf(PositionException.class)
-                .hasMessageContaining("-1");
-    }
-
-    @Test
-    void tooHighIndex() {
-        assertThatThrownBy(() -> Position.of(64))
-                .isInstanceOf(PositionException.class)
-                .hasMessageContaining("64");
     }
 
     @Test

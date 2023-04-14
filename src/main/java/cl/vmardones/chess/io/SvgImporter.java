@@ -46,7 +46,7 @@ final class SvgImporter {
             return ImageIO.read(new ByteArrayInputStream(imageData));
 
         } catch (TranscoderException e) {
-            LOG.error("Failed to transcode the SVG image!", e);
+            LOG.warn("Failed to transcode the SVG image!", e);
             return null;
         }
     }
