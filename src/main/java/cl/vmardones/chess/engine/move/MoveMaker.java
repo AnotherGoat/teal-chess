@@ -52,7 +52,7 @@ public final class MoveMaker {
 
     // TODO: Check if this code can be cleaned somehow
     private Board.BoardBuilder configureNextTurn(Board board, @Nullable Piece movedPiece) {
-        if (!(movedPiece instanceof King)) {
+        if (!movedPiece.isKing()) {
             return board.nextTurnBuilder();
         }
 

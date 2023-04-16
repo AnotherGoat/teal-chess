@@ -57,39 +57,39 @@ class FenParserTest {
 
     @Test
     void missingKings() {
-        assertThatThrownBy(() -> FenParser.parse("7k/8/8/8/8/8/8/8 - - - - -"))
+        assertThatThrownBy(() -> FenParser.parse("4k3/8/8/8/8/8/8/8 - - - - -"))
                 .isInstanceOf(FenParseException.class)
                 .hasMessageContaining("kings")
-                .hasMessageContaining("7k/8/8/8/8/8/8");
-        assertThatThrownBy(() -> FenParser.parse("8/8/8/8/8/8/8/7K - - - - -"))
+                .hasMessageContaining("4k3/8/8/8/8/8/8");
+        assertThatThrownBy(() -> FenParser.parse("8/8/8/8/8/8/8/4K3 - - - - -"))
                 .isInstanceOf(FenParseException.class)
                 .hasMessageContaining("kings")
-                .hasMessageContaining("8/8/8/8/8/8/7K");
+                .hasMessageContaining("8/8/8/8/8/8/4K3");
     }
 
     @Test
     void tooManyKings() {
-        assertThatThrownBy(() -> FenParser.parse("7k/8/7k/8/8/8/8/7K - - - - -"))
+        assertThatThrownBy(() -> FenParser.parse("4k3/8/4k3/8/8/8/8/4K3 - - - - -"))
                 .isInstanceOf(FenParseException.class)
                 .hasMessageContaining("2 kings")
-                .hasMessageContaining("7k/8/7k/8/8/8/8/7K");
+                .hasMessageContaining("4k3/8/4k3/8/8/8/8/4K3");
     }
 
     @Test
     void extraOrMissingRanks() {
-        assertThatThrownBy(() -> FenParser.parse("7k/8/8/8/8/8/7K - - - - -"))
+        assertThatThrownBy(() -> FenParser.parse("4k3/8/8/8/8/8/4K3 - - - - -"))
                 .isInstanceOf(FenParseException.class)
                 .hasMessageContaining("8 ranks")
-                .hasMessageContaining("7k/8/8/8/8/8/7K");
-        assertThatThrownBy(() -> FenParser.parse("7k/8/8/8/8/8/8/8/7K - - - - -"))
+                .hasMessageContaining("4k3/8/8/8/8/8/4K3");
+        assertThatThrownBy(() -> FenParser.parse("4k3/8/8/8/8/8/8/8/4K3 - - - - -"))
                 .isInstanceOf(FenParseException.class)
                 .hasMessageContaining("8 ranks")
-                .hasMessageContaining("7k/8/8/8/8/8/8/8/7K");
+                .hasMessageContaining("4k3/8/8/8/8/8/8/8/4K3");
     }
 
     @Test
     void illegalColorSymbol() {
-        assertThatThrownBy(() -> FenParser.parse("7k/8/8/8/8/8/8/7K x - - - -"))
+        assertThatThrownBy(() -> FenParser.parse("4k3/8/8/8/8/8/8/4K3 x - - - -"))
                 .isInstanceOf(FenParseException.class)
                 .hasMessageContaining("symbol")
                 .hasMessageContaining("x");
@@ -97,14 +97,14 @@ class FenParserTest {
 
     @Test
     void badCasleAvailability() {
-        assertThatThrownBy(() -> FenParser.parse("7k/8/8/8/8/8/8/7K w kqKQ - - -"))
+        assertThatThrownBy(() -> FenParser.parse("4k3/8/8/8/8/8/8/4K3 w kqKQ - - -"))
                 .isInstanceOf(FenParseException.class)
                 .hasMessageContaining("kqKQ");
     }
 
     @Test
     void illegalEnPassantTarget() {
-        assertThatThrownBy(() -> FenParser.parse("7k/8/8/8/8/8/8/7K w - x9 - -"))
+        assertThatThrownBy(() -> FenParser.parse("4k3/8/8/8/8/8/8/4K3 w - x9 - -"))
                 .isInstanceOf(FenParseException.class)
                 .hasMessageContaining("position")
                 .hasMessageContaining("x9");
@@ -112,11 +112,11 @@ class FenParserTest {
 
     @Test
     void nonIntegerHalfmove() {
-        assertThatThrownBy(() -> FenParser.parse("7k/8/8/8/8/8/8/7K w - - x -"))
+        assertThatThrownBy(() -> FenParser.parse("4k3/8/8/8/8/8/8/4K3 w - - x -"))
                 .isInstanceOf(FenParseException.class)
                 .hasMessageContaining("integer")
                 .hasMessageContaining("x");
-        assertThatThrownBy(() -> FenParser.parse("7k/8/8/8/8/8/8/7K w - - 1.0 -"))
+        assertThatThrownBy(() -> FenParser.parse("4k3/8/8/8/8/8/8/4K3 w - - 1.0 -"))
                 .isInstanceOf(FenParseException.class)
                 .hasMessageContaining("integer")
                 .hasMessageContaining("1.0");
@@ -124,7 +124,7 @@ class FenParserTest {
 
     @Test
     void negativeHalfmove() {
-        assertThatThrownBy(() -> FenParser.parse("7k/8/8/8/8/8/8/7K w - - -1 -"))
+        assertThatThrownBy(() -> FenParser.parse("4k3/8/8/8/8/8/8/4K3 w - - -1 -"))
                 .isInstanceOf(FenParseException.class)
                 .hasMessageContaining("negative")
                 .hasMessageContaining("-1");
@@ -132,11 +132,11 @@ class FenParserTest {
 
     @Test
     void nonIntegerFullmove() {
-        assertThatThrownBy(() -> FenParser.parse("7k/8/8/8/8/8/8/7K w - - 4 x"))
+        assertThatThrownBy(() -> FenParser.parse("4k3/8/8/8/8/8/8/4K3 w - - 4 x"))
                 .isInstanceOf(FenParseException.class)
                 .hasMessageContaining("integer")
                 .hasMessageContaining("x");
-        assertThatThrownBy(() -> FenParser.parse("7k/8/8/8/8/8/8/7K w - - 4 3.5"))
+        assertThatThrownBy(() -> FenParser.parse("4k3/8/8/8/8/8/8/4K3 w - - 4 3.5"))
                 .isInstanceOf(FenParseException.class)
                 .hasMessageContaining("integer")
                 .hasMessageContaining("3.5");
@@ -144,7 +144,7 @@ class FenParserTest {
 
     @Test
     void negativeFullmove() {
-        assertThatThrownBy(() -> FenParser.parse("7k/8/8/8/8/8/8/7K w - - 4 -3"))
+        assertThatThrownBy(() -> FenParser.parse("4k3/8/8/8/8/8/8/4K3 w - - 4 -3"))
                 .isInstanceOf(FenParseException.class)
                 .hasMessageContaining("negative")
                 .hasMessageContaining("-3");

@@ -38,7 +38,8 @@ final class PawnMoveGenerator {
         var moves = new ArrayList<@Nullable Move>();
 
         for (var piece : pieces) {
-            if (piece instanceof Pawn pawn) {
+            if (piece.isPawn()) {
+                var pawn = (Pawn) piece;
                 moves.add(generateJump(pawn));
 
                 if (board.enPassantPawn() != null) {
@@ -94,7 +95,7 @@ final class PawnMoveGenerator {
 
         var sidePiece = board.pieceAt(side);
 
-        if (!(sidePiece instanceof Pawn) || !sidePiece.equals(enPassantPawn)) {
+        if (sidePiece == null || !sidePiece.isPawn() || !sidePiece.equals(enPassantPawn)) {
             return null;
         }
 

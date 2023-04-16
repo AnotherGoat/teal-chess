@@ -13,10 +13,7 @@ import cl.vmardones.chess.engine.piece.Rook;
 import cl.vmardones.chess.engine.player.Color;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
 class SquareTest {
 
     @Test

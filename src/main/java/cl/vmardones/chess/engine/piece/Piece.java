@@ -130,12 +130,15 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
         }
 
         var other = (Piece) o;
-        return position.equals(other.position) && color == other.color && firstMove == other.firstMove;
+        return type == other.type
+                && position.equals(other.position)
+                && color == other.color
+                && firstMove == other.firstMove;
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hash(position, color, firstMove);
+        return Objects.hash(type, position, color, firstMove);
     }
 
     @Override

@@ -45,7 +45,7 @@ final class MoveGenerator {
             return null;
         }
 
-        if (piece instanceof Pawn pawn && pawn.position().rank() == pawn.rankBeforePromotion()) {
+        if (piece.isPawn() && piece.position().rank() == ((Pawn) piece).rankBeforePromotion()) {
             return Move.makePromotion(Move.createNormal(piece, destination.position()));
         }
 

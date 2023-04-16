@@ -202,7 +202,7 @@ public final class FenParser {
 
     private static King findKing(List<Piece> pieces, Color color) {
         return pieces.stream()
-                .filter(piece -> piece instanceof King && piece.color() == color)
+                .filter(piece -> piece.isKing() && piece.color() == color)
                 .map(King.class::cast)
                 .findFirst()
                 .orElseThrow(() -> new AssertionError("Unreachable statement"));

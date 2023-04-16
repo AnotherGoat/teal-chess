@@ -10,10 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import cl.vmardones.chess.engine.board.Position;
 import cl.vmardones.chess.engine.player.Color;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
 class RookTest {
 
     @Test
@@ -25,6 +22,12 @@ class RookTest {
     void toSingleChar() {
         assertThat(new Rook("a1", Color.WHITE).singleChar()).isEqualTo("R");
         assertThat(new Rook("a1", Color.BLACK).singleChar()).isEqualTo("r");
+    }
+
+    @Test
+    void numberOfMoves() {
+        var rook = new Rook("a1", Color.BLACK);
+        assertThat(rook.moveVectors()).hasSize(4);
     }
 
     @Test

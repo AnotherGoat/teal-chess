@@ -39,7 +39,8 @@ final class AttackGenerator {
 
     private Stream<Move> calculatePieceAttacks(Piece piece) {
 
-        if (piece instanceof Pawn pawn) {
+        if (piece.isPawn()) {
+            var pawn = (Pawn) piece;
             return Stream.of(generatePawnAttack(pawn, true), generatePawnAttack(pawn, false))
                     .filter(Objects::nonNull);
         }

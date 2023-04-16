@@ -10,10 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import cl.vmardones.chess.engine.board.Position;
 import cl.vmardones.chess.engine.player.Color;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
 class QueenTest {
 
     @Test
@@ -25,6 +22,12 @@ class QueenTest {
     void toSingleChar() {
         assertThat(new Queen("a1", Color.WHITE).singleChar()).isEqualTo("Q");
         assertThat(new Queen("a1", Color.BLACK).singleChar()).isEqualTo("q");
+    }
+
+    @Test
+    void numberOfMoves() {
+        var queen = new Queen("a1", Color.BLACK);
+        assertThat(queen.moveVectors()).hasSize(8);
     }
 
     @Test

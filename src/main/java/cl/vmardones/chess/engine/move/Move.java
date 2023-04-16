@@ -35,12 +35,12 @@ public final class Move {
     /* Creating moves */
 
     public static Move createNormal(Piece piece, Position destination) {
-        var type = piece instanceof Pawn ? MoveType.PAWN_NORMAL : MoveType.NORMAL;
+        var type = piece.isPawn() ? MoveType.PAWN_NORMAL : MoveType.NORMAL;
         return new Move(type, piece, destination);
     }
 
     public static Move createCapture(Piece piece, Position destination, Piece capturedPiece) {
-        var type = piece instanceof Pawn ? MoveType.PAWN_CAPTURE : MoveType.CAPTURE;
+        var type = piece.isPawn() ? MoveType.PAWN_CAPTURE : MoveType.CAPTURE;
         return new Move(type, piece, destination, capturedPiece);
     }
 
