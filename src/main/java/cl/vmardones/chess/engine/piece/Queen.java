@@ -39,6 +39,6 @@ public final class Queen extends SlidingPiece {
     }
 
     private Queen(String position, Color color, boolean firstMove) {
-        super(position, color, firstMove, MOVES);
+        super(PieceType.QUEEN, position, color, firstMove, MOVES);
     }
 }

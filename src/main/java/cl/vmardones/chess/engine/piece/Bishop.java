@@ -30,6 +30,6 @@ public final class Bishop extends SlidingPiece {
     }
 
     private Bishop(String position, Color color, boolean firstMove) {
-        super(position, color, firstMove, MOVES);
+        super(PieceType.BISHOP, position, color, firstMove, MOVES);
     }
 }

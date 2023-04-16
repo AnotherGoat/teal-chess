@@ -15,6 +15,7 @@ import cl.vmardones.chess.engine.player.Color;
 /** A chess piece, which players can move in the board. */
 public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
 
+    protected final PieceType type;
     protected final Position position;
     protected final Color color;
     protected final boolean firstMove;
@@ -67,6 +68,32 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
 
     public abstract String unicodeChar();
 
+    /* Checking piece types */
+
+    public boolean isPawn() {
+        return type == PieceType.PAWN;
+    }
+
+    public boolean isKnight() {
+        return type == PieceType.KNIGHT;
+    }
+
+    public boolean isBishop() {
+        return type == PieceType.BISHOP;
+    }
+
+    public boolean isRook() {
+        return type == PieceType.ROOK;
+    }
+
+    public boolean isQueen() {
+        return type == PieceType.QUEEN;
+    }
+
+    public boolean isKing() {
+        return type == PieceType.KING;
+    }
+
     /* Comparing pieces */
 
     public boolean isAllyOf(Piece other) {
@@ -116,7 +143,8 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
         return String.format("%s%s", unicodeChar(), position);
     }
 
-    protected Piece(String position, Color color, boolean firstMove) {
+    protected Piece(PieceType type, String position, Color color, boolean firstMove) {
+        this.type = type;
         this.position = Position.of(position);
         this.color = color;
         this.firstMove = firstMove;

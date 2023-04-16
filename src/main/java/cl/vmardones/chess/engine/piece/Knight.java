@@ -42,6 +42,6 @@ public final class Knight extends JumpingPiece {
     }
 
     private Knight(String position, Color color, boolean firstMove) {
-        super(position, color, firstMove, MOVES);
+        super(PieceType.KNIGHT, position, color, firstMove, MOVES);
     }
 }

@@ -39,6 +39,6 @@ public final class Pawn extends JumpingPiece {
     }
 
     private Pawn(String position, Color color, boolean firstMove) {
-        super(position, color, firstMove, List.of(new int[] {0, color.direction()}));
+        super(PieceType.PAWN, position, color, firstMove, List.of(new int[] {0, color.direction()}));
     }
 }

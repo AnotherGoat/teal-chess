@@ -41,6 +41,6 @@ public final class King extends JumpingPiece {
     }
 
     private King(String position, Color color, boolean firstMove) {
-        super(position, color, firstMove, MOVES);
+        super(PieceType.KING, position, color, firstMove, MOVES);
     }
 }

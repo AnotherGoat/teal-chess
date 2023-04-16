@@ -17,8 +17,8 @@ abstract sealed class SlidingPiece extends Piece permits Bishop, Queen, Rook {
 
     protected final List<int[]> moveVectors;
 
-    protected SlidingPiece(String position, Color color, boolean firstMove, List<int[]> moveVectors) {
-        super(position, color, firstMove);
+    protected SlidingPiece(PieceType type, String position, Color color, boolean firstMove, List<int[]> moveVectors) {
+        super(type, position, color, firstMove);
         this.moveVectors = moveVectors;
     }
 

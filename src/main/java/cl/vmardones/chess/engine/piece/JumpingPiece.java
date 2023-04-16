@@ -24,8 +24,8 @@ abstract sealed class JumpingPiece extends Piece permits King, Knight, Pawn {
         return moveOffsets;
     }
 
-    protected JumpingPiece(String position, Color color, boolean firstMove, List<int[]> moveOffsets) {
-        super(position, color, firstMove);
+    protected JumpingPiece(PieceType type, String position, Color color, boolean firstMove, List<int[]> moveOffsets) {
+        super(type, position, color, firstMove);
         this.moveOffsets = moveOffsets;
     }
 

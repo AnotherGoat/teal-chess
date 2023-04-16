@@ -230,8 +230,6 @@ public final class Board {
 
     /**
      * Responsible for building the board, a complex object.
-     *
-     * @see Board
      */
     public static class BoardBuilder {
 
@@ -258,7 +256,7 @@ public final class Board {
         }
 
         /**
-         * Add multiple pieces to the board. Null pieces are silently ignored. If multiple pieces are put in the sample, the last one takes precedence.
+         * Add multiple pieces to the board. Null pieces are silently ignored. If multiple pieces are put in the same position, the last one takes precedence.
          * @param pieces The pieces to add.
          * @return The same instance of this builder, to continue the building process.
          */
@@ -290,6 +288,10 @@ public final class Board {
          * @return The same instance of this builder, to continue the building process.
          */
         public BoardBuilder enPassantPawn(Pawn pawn) {
+            if (enPassantPawn != null) {
+                throw new BoardConstructionException("En passant pawn can only be set once");
+            }
+
             this.enPassantPawn = pawn;
             return this;
         }

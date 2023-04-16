@@ -30,6 +30,6 @@ public final class Rook extends SlidingPiece {
     }
 
     private Rook(String position, Color color, boolean firstMove) {
-        super(position, color, firstMove, MOVES);
+        super(PieceType.ROOK, position, color, firstMove, MOVES);
     }
 }
