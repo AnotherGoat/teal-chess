@@ -14,14 +14,14 @@ import org.eclipse.jdt.annotation.Nullable;
 
 public final class GameHistory {
 
-    private final List<TurnMemento> history;
+    private final List<PositionMemento> history;
 
     /* Getters */
 
     public List<Move> moves() {
         return history.stream()
-                .map(TurnMemento::state)
-                .map(Turn::lastMove)
+                .map(PositionMemento::state)
+                .map(Position::lastMove)
                 .filter(Objects::nonNull)
                 .toList();
     }
@@ -59,13 +59,13 @@ public final class GameHistory {
         this(new ArrayList<>());
     }
 
-    GameHistory add(TurnMemento state) {
+    GameHistory add(PositionMemento state) {
         var newHistory = new ArrayList<>(history);
         newHistory.add(state);
         return new GameHistory(newHistory);
     }
 
-    private GameHistory(List<TurnMemento> history) {
+    private GameHistory(List<PositionMemento> history) {
         this.history = history;
     }
 }

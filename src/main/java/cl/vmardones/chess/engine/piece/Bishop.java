@@ -9,14 +9,17 @@ import java.util.List;
 
 import cl.vmardones.chess.engine.player.Color;
 
-/** The bishop piece. It can move diagonally. */
+/**
+ * The bishop piece. It can move diagonally.
+ * @see <a href="https://www.chessprogramming.org/Bishop">Bishop</a>
+ */
 public final class Bishop extends SlidingPiece {
 
     private static final List<int[]> MOVES =
             List.of(new int[] {-1, 1}, new int[] {1, 1}, new int[] {-1, -1}, new int[] {1, -1});
 
-    public Bishop(String position, Color color) {
-        this(position, color, true);
+    public Bishop(String coordinate, Color color) {
+        this(coordinate, color, true);
     }
 
     @Override
@@ -29,7 +32,7 @@ public final class Bishop extends SlidingPiece {
         return color == Color.WHITE ? "♗" : "♝";
     }
 
-    private Bishop(String position, Color color, boolean firstMove) {
-        super(PieceType.BISHOP, position, color, firstMove, MOVES);
+    private Bishop(String coordinate, Color color, boolean firstMove) {
+        super(PieceType.BISHOP, coordinate, color, firstMove, MOVES);
     }
 }

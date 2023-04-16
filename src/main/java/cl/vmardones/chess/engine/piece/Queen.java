@@ -11,6 +11,7 @@ import cl.vmardones.chess.engine.player.Color;
 
 /**
  * The queen, the strongest piece in the game. It can move horizontally, vertically and diagonally.
+ * @see <a href="https://www.chessprogramming.org/Queen">Queen</a>
  */
 public final class Queen extends SlidingPiece {
 
@@ -24,8 +25,8 @@ public final class Queen extends SlidingPiece {
             new int[] {0, -1},
             new int[] {1, -1});
 
-    public Queen(String position, Color color) {
-        this(position, color, true);
+    public Queen(String coordinate, Color color) {
+        this(coordinate, color, true);
     }
 
     @Override
@@ -38,7 +39,7 @@ public final class Queen extends SlidingPiece {
         return color == Color.WHITE ? "♕" : "♛";
     }
 
-    private Queen(String position, Color color, boolean firstMove) {
-        super(PieceType.QUEEN, position, color, firstMove, MOVES);
+    private Queen(String coordinate, Color color, boolean firstMove) {
+        super(PieceType.QUEEN, coordinate, color, firstMove, MOVES);
     }
 }

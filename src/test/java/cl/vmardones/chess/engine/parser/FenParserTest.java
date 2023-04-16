@@ -106,7 +106,7 @@ class FenParserTest {
     void illegalEnPassantTarget() {
         assertThatThrownBy(() -> FenParser.parse("4k3/8/8/8/8/8/8/4K3 w - x9 - -"))
                 .isInstanceOf(FenParseException.class)
-                .hasMessageContaining("position")
+                .hasMessageContaining("coordinate")
                 .hasMessageContaining("x9");
     }
 

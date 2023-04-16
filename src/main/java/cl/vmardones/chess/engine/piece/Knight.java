@@ -9,7 +9,10 @@ import java.util.List;
 
 import cl.vmardones.chess.engine.player.Color;
 
-/** The knight piece. It moves in an L shape. */
+/**
+ * The knight piece. It moves in an L shape.
+ * @see <a href="https://www.chessprogramming.org/Knight">Knight</a>
+ */
 public final class Knight extends JumpingPiece {
 
     private static final List<int[]> MOVES = List.of(
@@ -22,8 +25,8 @@ public final class Knight extends JumpingPiece {
             new int[] {-1, -2},
             new int[] {1, -2});
 
-    public Knight(String position, Color color) {
-        this(position, color, true);
+    public Knight(String coordinate, Color color) {
+        this(coordinate, color, true);
     }
 
     @Override
@@ -41,7 +44,7 @@ public final class Knight extends JumpingPiece {
         return color == Color.WHITE ? "♘" : "♞";
     }
 
-    private Knight(String position, Color color, boolean firstMove) {
-        super(PieceType.KNIGHT, position, color, firstMove, MOVES);
+    private Knight(String coordinate, Color color, boolean firstMove) {
+        super(PieceType.KNIGHT, coordinate, color, firstMove, MOVES);
     }
 }

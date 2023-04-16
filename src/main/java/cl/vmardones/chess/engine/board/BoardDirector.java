@@ -7,7 +7,6 @@ package cl.vmardones.chess.engine.board;
 
 import cl.vmardones.chess.ExcludeFromGeneratedReport;
 import cl.vmardones.chess.engine.parser.FenParser;
-import cl.vmardones.chess.engine.piece.*;
 
 /** Provides utility functions to create chessboards quickly. */
 public final class BoardDirector {

@@ -21,22 +21,22 @@ public final class BoardAnalyzer {
     private final MoveTester moveTester;
     private final PlayerFactory playerFactory;
 
-    public BoardAnalyzer(Board board, Color activeColor) {
-        var king = board.king(activeColor);
-        var pieces = board.pieces(activeColor);
+    public BoardAnalyzer(Board board, Color sideToMove) {
+        var king = board.king(sideToMove);
+        var pieces = board.pieces(sideToMove);
 
-        var opponentKing = board.king(activeColor.opposite());
-        var opponentPieces = board.pieces(activeColor.opposite());
+        var opponentKing = board.king(sideToMove.opposite());
+        var opponentPieces = board.pieces(sideToMove.opposite());
 
-        var attackGenerator = new AttackGenerator(board, activeColor, pieces, opponentPieces);
+        var attackGenerator = new AttackGenerator(board, sideToMove, pieces, opponentPieces);
         var opponentAttacks =
-                attackGenerator.calculateAttacks(activeColor.opposite()).toList();
-        var attacks = attackGenerator.calculateAttacks(activeColor);
+                attackGenerator.calculateAttacks(sideToMove.opposite()).toList();
+        var attacks = attackGenerator.calculateAttacks(sideToMove);
 
         var moveGenerator = new MoveGenerator(board, pieces);
         var moves = moveGenerator.calculateMoves();
 
-        var pawnMoveGenerator = new PawnMoveGenerator(board, activeColor, pieces);
+        var pawnMoveGenerator = new PawnMoveGenerator(board, sideToMove, pieces);
         var pawnMoves = pawnMoveGenerator.calculatePawnMoves();
 
         moveTester = new MoveTester(king, opponentAttacks);
@@ -45,7 +45,7 @@ public final class BoardAnalyzer {
 
         legals = Stream.concat(Stream.concat(attacks, moves), Stream.concat(pawnMoves, castles))
                 .toList();
-        playerFactory = new PlayerFactory(moveTester, activeColor, king, pieces, legals, opponentKing, opponentPieces);
+        playerFactory = new PlayerFactory(moveTester, sideToMove, king, pieces, legals, opponentKing, opponentPieces);
     }
 
     public Player createPlayer(Color color) {

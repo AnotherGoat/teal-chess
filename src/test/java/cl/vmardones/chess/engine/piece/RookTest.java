@@ -7,7 +7,7 @@ package cl.vmardones.chess.engine.piece;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cl.vmardones.chess.engine.board.Position;
+import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.player.Color;
 import org.junit.jupiter.api.Test;
 
@@ -54,7 +54,7 @@ class RookTest {
 
         assertThat(rookToMove.moveTo("a2"))
                 .isInstanceOf(Rook.class)
-                .matches(rook -> rook.position().equals(Position.of("a2")))
+                .matches(rook -> rook.coordinate().equals(Coordinate.of("a2")))
                 .matches(rook -> !rook.firstMove());
     }
 }

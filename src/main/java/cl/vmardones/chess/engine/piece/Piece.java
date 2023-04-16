@@ -9,14 +9,17 @@ import java.util.List;
 import java.util.Objects;
 
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.board.Position;
+import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.player.Color;
 
-/** A chess piece, which players can move in the board. */
+/**
+ * A chess piece, which players can move in the board.
+ * @see <a href="https://www.chessprogramming.org/Pieces">Pieces</a>
+ */
 public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
 
     protected final PieceType type;
-    protected final Position position;
+    protected final Coordinate coordinate;
     protected final Color color;
     protected final boolean firstMove;
 
@@ -28,28 +31,28 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
      * The color is inferred from the symbol being uppercase (white) or lowercase (black).
      *
      * @param symbol The piece symbol.
-     * @param position The position to put the piece in.
+     * @param coordinate The coordinate to put the piece in.
      * @return The piece with the asked symbol.
      */
-    public static Piece fromSymbol(String symbol, String position) {
+    public static Piece fromSymbol(String symbol, String coordinate) {
         var color = Character.isUpperCase(symbol.charAt(0)) ? Color.WHITE : Color.BLACK;
         var upperCaseSymbol = symbol.toUpperCase();
 
         return switch (upperCaseSymbol) {
-            case "P" -> new Pawn(position, color);
-            case "N" -> new Knight(position, color);
-            case "B" -> new Bishop(position, color);
-            case "R" -> new Rook(position, color);
-            case "Q" -> new Queen(position, color);
-            case "K" -> new King(position, color);
+            case "P" -> new Pawn(coordinate, color);
+            case "N" -> new Knight(coordinate, color);
+            case "B" -> new Bishop(coordinate, color);
+            case "R" -> new Rook(coordinate, color);
+            case "Q" -> new Queen(coordinate, color);
+            case "K" -> new King(coordinate, color);
             default -> throw new PieceSymbolException(symbol);
         };
     }
 
     /* Getters */
 
-    public Position position() {
-        return position;
+    public Coordinate coordinate() {
+        return coordinate;
     }
 
     public Color color() {
@@ -106,7 +109,7 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
 
     /* Movement */
 
-    public abstract List<Position> calculatePossibleDestinations(Board board);
+    public abstract List<Coordinate> calculatePossibleDestinations(Board board);
 
     /**
      * Move this piece to another square. No checks of any kind are done to check whether the move is
@@ -131,24 +134,24 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
 
         var other = (Piece) o;
         return type == other.type
-                && position.equals(other.position)
+                && coordinate.equals(other.coordinate)
                 && color == other.color
                 && firstMove == other.firstMove;
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hash(type, position, color, firstMove);
+        return Objects.hash(type, coordinate, color, firstMove);
     }
 
     @Override
     public String toString() {
-        return String.format("%s%s", unicodeChar(), position);
+        return String.format("%s%s", unicodeChar(), coordinate);
     }
 
-    protected Piece(PieceType type, String position, Color color, boolean firstMove) {
+    protected Piece(PieceType type, String coordinate, Color color, boolean firstMove) {
         this.type = type;
-        this.position = Position.of(position);
+        this.coordinate = Coordinate.of(coordinate);
         this.color = color;
         this.firstMove = firstMove;
     }

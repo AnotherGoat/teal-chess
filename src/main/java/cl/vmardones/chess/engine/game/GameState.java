@@ -12,25 +12,25 @@ import org.eclipse.jdt.annotation.Nullable;
 /** A mutable class that holds the current state of the game. */
 final class GameState {
 
-    private @Nullable Turn currentTurn;
+    private @Nullable Position currentPosition;
 
-    TurnMemento save() {
-        if (currentTurn == null) {
+    PositionMemento save() {
+        if (currentPosition == null) {
             throw new IllegalSaveException();
         }
 
-        return new TurnMemento(currentTurn);
+        return new PositionMemento(currentPosition);
     }
 
-    void load(TurnMemento turnMemento) {
-        currentTurn = turnMemento.state();
+    void load(PositionMemento positionMemento) {
+        currentPosition = positionMemento.state();
     }
 
-    @Nullable Turn currentTurn() {
-        return currentTurn;
+    @Nullable Position currentPosition() {
+        return currentPosition;
     }
 
-    void currentTurn(Turn value) {
-        currentTurn = value;
+    void currentPosition(Position value) {
+        currentPosition = value;
     }
 }

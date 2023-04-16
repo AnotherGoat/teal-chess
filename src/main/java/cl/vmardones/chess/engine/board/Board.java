@@ -14,10 +14,13 @@ import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
-/** The chessboard, made of 8x8 squares. */
+/**
+ * The chessboard, made of 8x8 squares.
+ * @see <a href="https://www.chessprogramming.org/Chessboard">Chessboard</a>
+ */
 public final class Board {
 
-    /** The chessboardd is a square grid composed of squares. This is the number of squares per side. */
+    /** The chessboard is a square grid composed of squares. This is the number of squares per side. */
     public static final int SIDE_LENGTH = 8;
     /**
      * The number of squares in the game board.
@@ -51,81 +54,81 @@ public final class Board {
     /**
      * A special builder intended to be used when players make a move. This can only be used after the
      * board has been initialized at least once. It keeps the current state of the board and lets you
-     * specify only the differences from the previous turn.
-     * Only use this version if none of the kings weren't moved in the previous turn.
+     * specify only the differences from the previous position.
+     * Only use this version if none of the kings weren't moved in the previous position.
      *
-     * @return The next turn builder.
+     * @return The next position builder.
      */
-    public BoardBuilder nextTurnBuilder() {
+    public BoardBuilder nextPositionBuilder() {
         return new BoardBuilder(this, whiteKing, blackKing);
     }
 
     /**
      * A special builder intended to be used when players make a move. This can only be used after the
      * board has been initialized at least once. It keeps the current state of the board and lets you
-     * specify only the differences from the previous turn.
-     * Use this version if any of the kings were moved in the previous turn.
+     * specify only the differences from the previous position.
+     * Use this version if any of the kings were moved in the previous position.
      *
      * @param whiteKing The white king in the new board.
      * @param blackKing The black king in the new board.
-     * @return The next turn builder.
+     * @return The next position builder.
      */
-    public BoardBuilder nextTurnBuilder(King whiteKing, King blackKing) {
+    public BoardBuilder nextPositionBuilder(King whiteKing, King blackKing) {
         return new BoardBuilder(this, whiteKing, blackKing);
     }
 
     /* Checking the board */
 
     /**
-     * Get the square located at a specific position.
+     * Get the square located at a specific coordinate.
      *
-     * @param position The position to search.
+     * @param coordinate The coordinate to search.
      * @return The square found.
      */
-    public Square squareAt(Position position) {
-        return squares.get(position.index());
+    public Square squareAt(Coordinate coordinate) {
+        return squares.get(coordinate.index());
     }
 
     /**
-     * Get the square located at a specific position.
+     * Get the square located at a specific coordinate.
      *
-     * @param position The position to search, in algebraic notation.
+     * @param coordinate The coordinate to search, in algebraic notation.
      * @return The square found.
      */
-    public Square squareAt(String position) {
-        return squareAt(Position.of(position));
+    public Square squareAt(String coordinate) {
+        return squareAt(Coordinate.of(coordinate));
     }
 
     /**
-     * Get the piece located at a specific position.
+     * Get the piece located at a specific coordinate.
      *
-     * @param position The position to search.
+     * @param coordinate The coordinate to search.
      * @return The piece found.
      */
-    public @Nullable Piece pieceAt(Position position) {
-        return squares.get(position.index()).piece();
+    public @Nullable Piece pieceAt(Coordinate coordinate) {
+        return squares.get(coordinate.index()).piece();
     }
 
     /**
-     * Get the piece located at a specific position.
+     * Get the piece located at a specific coordinate.
      *
-     * @param position The position to search, in algebraic notation.
+     * @param coordinate The coordinate to search, in algebraic notation.
      * @return The piece found.
      */
-    public @Nullable Piece pieceAt(String position) {
-        return pieceAt(Position.of(position));
+    public @Nullable Piece pieceAt(String coordinate) {
+        return pieceAt(Coordinate.of(coordinate));
     }
 
     /**
      * Check whether the specified square contains a type of piece or not.
      *
-     * @param position The position to search, in algebraic notation.
+     * @param coordinate The coordinate to search, in algebraic notation.
      * @param pieceType The type of piece to search.
      * @return True if the square has a piece of the specified type. Always returns false if the square is
      *     empty.
      */
-    public boolean contains(String position, Class<? extends Piece> pieceType) {
-        var piece = pieceAt(position);
+    public boolean contains(String coordinate, Class<? extends Piece> pieceType) {
+        var piece = pieceAt(coordinate);
 
         return pieceType.isInstance(piece);
     }
@@ -133,11 +136,11 @@ public final class Board {
     /**
      * Check if a specific square is empty.
      *
-     * @param position The position of the square to check.
+     * @param coordinate The coordinate of the square to check.
      * @return True if the square doesn't have a piece.
      */
-    public boolean isEmpty(Position position) {
-        return pieceAt(position) == null;
+    public boolean isEmpty(Coordinate coordinate) {
+        return pieceAt(coordinate) == null;
     }
 
     /* Getters */
@@ -193,7 +196,7 @@ public final class Board {
         for (Square square : squares) {
             builder.append(square).append(" ");
 
-            if ((square.position().index() + 1) % Board.SIDE_LENGTH == 0) {
+            if ((square.coordinate().index() + 1) % Board.SIDE_LENGTH == 0) {
                 builder.append("\n");
             }
         }
@@ -251,12 +254,12 @@ public final class Board {
                 return this;
             }
 
-            configuration.put(piece.position().index(), piece);
+            configuration.put(piece.coordinate().index(), piece);
             return this;
         }
 
         /**
-         * Add multiple pieces to the board. Null pieces are silently ignored. If multiple pieces are put in the same position, the last one takes precedence.
+         * Add multiple pieces to the board. Null pieces are silently ignored. If multiple pieces are put in the same coordinate, the last one takes precedence.
          * @param pieces The pieces to add.
          * @return The same instance of this builder, to continue the building process.
          */
@@ -276,12 +279,12 @@ public final class Board {
                 return this;
             }
 
-            configuration.remove(piece.position().index(), piece);
+            configuration.remove(piece.coordinate().index(), piece);
             return this;
         }
 
         /**
-         * Set the pawn that made a pawn jump in the previous turn, which can be captured by an
+         * Set the pawn that made a pawn jump in the previous position, which can be captured by an
          * enemy pawn's en passant move. By default, no en passant pawn is set.
          *
          * @param pawn The pawn that made the pawn jump.
@@ -302,11 +305,11 @@ public final class Board {
          * @return The finished, unmodifiable board.
          */
         public Board build() {
-            if (!configuration.get(whiteKing.position().index()).equals(whiteKing)) {
+            if (!configuration.get(whiteKing.coordinate().index()).equals(whiteKing)) {
                 with(whiteKing);
             }
 
-            if (!configuration.get(blackKing.position().index()).equals(blackKing)) {
+            if (!configuration.get(blackKing.coordinate().index()).equals(blackKing)) {
                 with(blackKing);
             }
 

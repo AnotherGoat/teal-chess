@@ -12,7 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import cl.vmardones.chess.ExcludeFromGeneratedReport;
-import cl.vmardones.chess.engine.board.Position;
+import cl.vmardones.chess.engine.board.Coordinate;
 import org.eclipse.jdt.annotation.Nullable;
 
 public final class MoveFinder {
@@ -22,11 +22,11 @@ public final class MoveFinder {
     /**
      * Given a list of legal moves, choose the first one that goes from the source to the destination.
      *
-     * @param from Source position.
-     * @param to Destination position.
+     * @param from Source coordinate.
+     * @param to Destination coordinate.
      * @return Move that goes from the source to the destination, if possible.
      */
-    public static @Nullable Move choose(List<Move> legalMoves, Position from, Position to) {
+    public static @Nullable Move choose(List<Move> legalMoves, Coordinate from, Coordinate to) {
 
         if (from.equals(to)) {
             return null;
@@ -44,7 +44,7 @@ public final class MoveFinder {
         throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
     }
 
-    private static Predicate<Move> isMovePossible(Position source, Position destination) {
+    private static Predicate<Move> isMovePossible(Coordinate source, Coordinate destination) {
         return move -> move.source().equals(source) && move.destination().equals(destination);
     }
 }

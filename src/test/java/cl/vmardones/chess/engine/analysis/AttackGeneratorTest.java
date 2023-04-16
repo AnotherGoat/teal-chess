@@ -7,7 +7,7 @@ package cl.vmardones.chess.engine.analysis;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cl.vmardones.chess.engine.board.Position;
+import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.parser.FenParser;
 import cl.vmardones.chess.engine.player.Color;
@@ -24,8 +24,8 @@ class AttackGeneratorTest {
         var pawn = board.pieceAt("c5");
 
         var expectedAttacks = new Move[] {
-            Move.createCapture(pawn, Position.of("b4"), board.pieceAt("b4")),
-            Move.createCapture(pawn, Position.of("d4"), board.pieceAt("d4"))
+            Move.createCapture(pawn, Coordinate.of("b4"), board.pieceAt("b4")),
+            Move.createCapture(pawn, Coordinate.of("d4"), board.pieceAt("d4"))
         };
 
         assertThat(generator.calculateAttacks(Color.BLACK)).hasSize(2).containsOnlyOnce(expectedAttacks);
@@ -40,8 +40,8 @@ class AttackGeneratorTest {
         var rook = board.pieceAt("a4");
 
         var expectedAttacks = new Move[] {
-            Move.createCapture(rook, Position.of("a7"), board.pieceAt("a7")),
-            Move.createCapture(rook, Position.of("a1"), board.pieceAt("a1"))
+            Move.createCapture(rook, Coordinate.of("a7"), board.pieceAt("a7")),
+            Move.createCapture(rook, Coordinate.of("a1"), board.pieceAt("a1"))
         };
 
         assertThat(generator.calculateAttacks(Color.WHITE)).hasSize(2).containsOnlyOnce(expectedAttacks);

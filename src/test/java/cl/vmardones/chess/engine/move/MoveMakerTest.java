@@ -8,7 +8,7 @@ package cl.vmardones.chess.engine.move;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.board.Position;
+import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.piece.Bishop;
 import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Pawn;
@@ -33,7 +33,7 @@ class MoveMakerTest {
     @Test
     void noDuplicateWhiteKings() {
         var initialBoard = Board.builder(whiteKing, blackKing).build();
-        var move = Move.createNormal(whiteKing, whiteKing.position().up(1));
+        var move = Move.createNormal(whiteKing, whiteKing.coordinate().up(1));
 
         var boardAfterMove = moveMaker.make(initialBoard, move);
 
@@ -45,7 +45,7 @@ class MoveMakerTest {
     @Test
     void noDuplicateBlackKings() {
         var initialBoard = Board.builder(whiteKing, blackKing).build();
-        var move = Move.createNormal(blackKing, blackKing.position().down(1));
+        var move = Move.createNormal(blackKing, blackKing.coordinate().down(1));
 
         var boardAfterMove = moveMaker.make(initialBoard, move);
 
@@ -63,7 +63,7 @@ class MoveMakerTest {
                 .with(capturablePiece)
                 .build();
 
-        var move = Move.createCapture(attacker, Position.of("a1"), capturablePiece);
+        var move = Move.createCapture(attacker, Coordinate.of("a1"), capturablePiece);
 
         var boardAfterMove = moveMaker.make(initialBoard, move);
 
@@ -78,7 +78,7 @@ class MoveMakerTest {
         var rook = new Rook("a1", Color.WHITE);
         var initialBoard = Board.builder(whiteKing, blackKing).with(rook).build();
 
-        var move = Move.createCastle(false, whiteKing, Position.of("c1"), rook, Position.of("d1"));
+        var move = Move.createCastle(false, whiteKing, Coordinate.of("c1"), rook, Coordinate.of("d1"));
 
         var boardAfterMove = moveMaker.make(initialBoard, move);
 
@@ -94,12 +94,12 @@ class MoveMakerTest {
         var pawn = new Pawn("a7", Color.BLACK);
         var initialBoard = Board.builder(whiteKing, blackKing).with(pawn).build();
 
-        var move = Move.createPawnJump(pawn, Position.of("a5"));
+        var move = Move.createDoublePush(pawn, Coordinate.of("a5"));
 
         var boardAfterMove = moveMaker.make(initialBoard, move);
 
         assertThat(boardAfterMove.pieceAt("a5")).isInstanceOf(Pawn.class);
-        assertThat(boardAfterMove.enPassantPawn().position()).isEqualTo(Position.of("a5"));
+        assertThat(boardAfterMove.enPassantPawn().coordinate()).isEqualTo(Coordinate.of("a5"));
         assertThat(boardAfterMove.pieces(Color.BLACK))
                 .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(Pawn.class));
     }

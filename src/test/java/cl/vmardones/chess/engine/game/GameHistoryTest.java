@@ -30,11 +30,11 @@ class GameHistoryTest {
     void addToHistory() {
         var history = new GameHistory();
 
-        var turn = mock(Turn.class);
+        var turn = mock(Position.class);
         var move = mock(Move.class);
         when(turn.lastMove()).thenReturn(move);
 
-        var newHistory = history.add(new TurnMemento(turn));
+        var newHistory = history.add(new PositionMemento(turn));
 
         assertThat(newHistory).isNotSameAs(history);
         assertThat(newHistory.moves()).isNotSameAs(history.moves()).hasSize(1);
@@ -44,15 +44,15 @@ class GameHistoryTest {
     void moveHistory() {
         var history = new GameHistory();
 
-        var turn1 = mock(Turn.class);
+        var turn1 = mock(Position.class);
         var move1 = mock(Move.class);
         when(turn1.lastMove()).thenReturn(move1);
 
-        var turn2 = mock(Turn.class);
+        var turn2 = mock(Position.class);
         var move2 = mock(Move.class);
         when(turn2.lastMove()).thenReturn(move2);
 
-        var finalHistory = history.add(new TurnMemento(turn1)).add(new TurnMemento(turn2));
+        var finalHistory = history.add(new PositionMemento(turn1)).add(new PositionMemento(turn2));
 
         var expectedMoves = List.of(move1, move2);
         var actualMoves = finalHistory.moves();
@@ -71,13 +71,13 @@ class GameHistoryTest {
     void lastMove() {
         var history = new GameHistory();
 
-        var turn1 = mock(Turn.class);
+        var turn1 = mock(Position.class);
 
-        var turn2 = mock(Turn.class);
+        var turn2 = mock(Position.class);
         var move2 = mock(Move.class);
         when(turn2.lastMove()).thenReturn(move2);
 
-        var finalHistory = history.add(new TurnMemento(turn1)).add(new TurnMemento(turn2));
+        var finalHistory = history.add(new PositionMemento(turn1)).add(new PositionMemento(turn2));
 
         assertThat(finalHistory.lastMove()).isEqualTo(move2);
     }

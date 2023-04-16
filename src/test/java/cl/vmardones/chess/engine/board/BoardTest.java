@@ -45,17 +45,17 @@ class BoardTest {
     void isEmpty() {
         var board = builder.build();
 
-        assertThat(board.isEmpty(Position.of("a1"))).isTrue();
-        assertThat(board.isEmpty(Position.of("h8"))).isTrue();
+        assertThat(board.isEmpty(Coordinate.of("a1"))).isTrue();
+        assertThat(board.isEmpty(Coordinate.of("h8"))).isTrue();
     }
 
     @Test
-    void nextTurnBuilder() {
+    void nextPositionBuilder() {
         var board = builder.build();
-        var nextTurnBoard = board.nextTurnBuilder().build();
+        var nextPositionBoard = board.nextPositionBuilder().build();
 
-        assertThat(board.king(Color.WHITE)).isEqualTo(nextTurnBoard.king(Color.WHITE));
-        assertThat(board.king(Color.BLACK)).isEqualTo(nextTurnBoard.king(Color.BLACK));
+        assertThat(board.king(Color.WHITE)).isEqualTo(nextPositionBoard.king(Color.WHITE));
+        assertThat(board.king(Color.BLACK)).isEqualTo(nextPositionBoard.king(Color.BLACK));
     }
 
     @Test
@@ -76,9 +76,9 @@ class BoardTest {
     @Test
     void addNullPiece() {
         var board = builder.build();
-        var nextTurnBoard = board.nextTurnBuilder().with(null).build();
+        var nextPositionBoard = board.nextPositionBuilder().with(null).build();
 
-        assertThat(board).isEqualTo(nextTurnBoard);
+        assertThat(board).isEqualTo(nextPositionBoard);
     }
 
     @Test
@@ -101,9 +101,9 @@ class BoardTest {
     @Test
     void withoutNullPiece() {
         var board = builder.build();
-        var nextTurnBoard = board.nextTurnBuilder().without(null).build();
+        var nextPositionBoard = board.nextPositionBuilder().without(null).build();
 
-        assertThat(board).isEqualTo(nextTurnBoard);
+        assertThat(board).isEqualTo(nextPositionBoard);
     }
 
     @Test
@@ -114,12 +114,12 @@ class BoardTest {
     }
 
     @Test
-    void noEnPassantPawnNextTurn() {
+    void noEnPassantPawnNextPosition() {
         var board = builder.enPassantPawn(enPassantPawn).build();
-        var nextTurnBoard = board.nextTurnBuilder().build();
+        var nextPositionBoard = board.nextPositionBuilder().build();
 
         assertThat(board.enPassantPawn()).isEqualTo(enPassantPawn);
-        assertThat(nextTurnBoard.enPassantPawn()).isNull();
+        assertThat(nextPositionBoard.enPassantPawn()).isNull();
     }
 
     @Test

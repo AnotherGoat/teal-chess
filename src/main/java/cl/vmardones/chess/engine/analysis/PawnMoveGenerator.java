@@ -25,13 +25,13 @@ final class PawnMoveGenerator {
     private static final Logger LOG = LogManager.getLogger(PawnMoveGenerator.class);
 
     private final Board board;
-    private final Color activeColor;
+    private final Color sideToMove;
     private final List<Piece> pieces;
 
-    PawnMoveGenerator(Board board, Color activeColor, List<Piece> pieces) {
+    PawnMoveGenerator(Board board, Color sideToMove, List<Piece> pieces) {
         this.board = board;
         this.pieces = pieces;
-        this.activeColor = activeColor;
+        this.sideToMove = sideToMove;
     }
 
     Stream<Move> calculatePawnMoves() {
@@ -40,7 +40,7 @@ final class PawnMoveGenerator {
         for (var piece : pieces) {
             if (piece.isPawn()) {
                 var pawn = (Pawn) piece;
-                moves.add(generateJump(pawn));
+                moves.add(generateDoublePush(pawn));
 
                 if (board.enPassantPawn() != null) {
                     moves.add(generateEnPassant(pawn, true));
@@ -52,24 +52,24 @@ final class PawnMoveGenerator {
         return moves.stream().filter(Objects::nonNull);
     }
 
-    private @Nullable Move generateJump(Pawn pawn) {
+    private @Nullable Move generateDoublePush(Pawn pawn) {
         if (!pawn.firstMove()) {
             return null;
         }
 
-        var forward = pawn.position().up(activeColor.direction());
+        var forward = pawn.coordinate().up(sideToMove.direction());
 
         if (forward == null || board.pieceAt(forward) != null) {
             return null;
         }
 
-        var destination = forward.up(activeColor.direction());
+        var destination = forward.up(sideToMove.direction());
 
         if (destination == null || board.pieceAt(destination) != null) {
             return null;
         }
 
-        return Move.createPawnJump(pawn, destination);
+        return Move.createDoublePush(pawn, destination);
     }
 
     private @Nullable Move generateEnPassant(Pawn pawn, boolean leftSide) {
@@ -81,13 +81,13 @@ final class PawnMoveGenerator {
         }
 
         var direction = leftSide ? -1 : 1;
-        var side = pawn.position().right(direction);
+        var side = pawn.coordinate().right(direction);
 
         if (side == null) {
             return null;
         }
 
-        var destination = side.up(activeColor.direction());
+        var destination = side.up(sideToMove.direction());
 
         if (destination == null || board.pieceAt(destination) != null) {
             return null;

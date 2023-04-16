@@ -20,7 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class TurnTest {
+class PositionTest {
 
     @Mock
     Board board;
@@ -33,44 +33,44 @@ class TurnTest {
 
     @Test
     void getWhitePlayer() {
-        var whiteTurn = new Turn(board, Color.WHITE, whitePlayer, blackPlayer, null);
-        assertThat(whiteTurn.player()).isEqualTo(whitePlayer);
+        var whitePosition = new Position(board, Color.WHITE, whitePlayer, blackPlayer, null);
+        assertThat(whitePosition.player()).isEqualTo(whitePlayer);
     }
 
     @Test
     void getBlackPlayer() {
-        var blackTurn = new Turn(board, Color.BLACK, whitePlayer, blackPlayer, null);
-        assertThat(blackTurn.player()).isEqualTo(blackPlayer);
+        var blackPosition = new Position(board, Color.BLACK, whitePlayer, blackPlayer, null);
+        assertThat(blackPosition.player()).isEqualTo(blackPlayer);
     }
 
     @Test
     void getWhiteOpponent() {
-        var whiteTurn = new Turn(board, Color.WHITE, whitePlayer, blackPlayer, null);
-        assertThat(whiteTurn.opponent()).isEqualTo(blackPlayer);
+        var whitePosition = new Position(board, Color.WHITE, whitePlayer, blackPlayer, null);
+        assertThat(whitePosition.opponent()).isEqualTo(blackPlayer);
     }
 
     @Test
     void getBlackOpponent() {
-        var blackTurn = new Turn(board, Color.BLACK, whitePlayer, blackPlayer, null);
-        assertThat(blackTurn.opponent()).isEqualTo(whitePlayer);
+        var blackPosition = new Position(board, Color.BLACK, whitePlayer, blackPlayer, null);
+        assertThat(blackPosition.opponent()).isEqualTo(whitePlayer);
     }
 
     @Test
     void unmodifiablePlayerLegals() {
-        var turn = new Turn(board, Color.WHITE, whitePlayer, blackPlayer, null);
+        var position = new Position(board, Color.WHITE, whitePlayer, blackPlayer, null);
 
         when(whitePlayer.legals()).thenReturn(new ArrayList<>());
-        var playerLegals = turn.playerLegals();
+        var playerLegals = position.playerLegals();
 
         assertThatThrownBy(playerLegals::clear).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void unmodifiableOpponentLegals() {
-        var turn = new Turn(board, Color.WHITE, whitePlayer, blackPlayer, null);
+        var position = new Position(board, Color.WHITE, whitePlayer, blackPlayer, null);
 
         when(blackPlayer.legals()).thenReturn(new ArrayList<>());
-        var opponentLegals = turn.opponentLegals();
+        var opponentLegals = position.opponentLegals();
 
         assertThatThrownBy(opponentLegals::clear).isInstanceOf(UnsupportedOperationException.class);
     }

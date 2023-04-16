@@ -6,7 +6,7 @@
 package cl.vmardones.chess.engine.board;
 
 /**
- * Exception thrown when invalid position algebraic notation is used.
+ * Exception thrown when invalid algebraic notation is used.
  */
 public final class AlgebraicNotationException extends RuntimeException {
     AlgebraicNotationException(String algebraicNotation) {

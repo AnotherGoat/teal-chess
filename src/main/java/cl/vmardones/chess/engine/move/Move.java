@@ -7,7 +7,7 @@ package cl.vmardones.chess.engine.move;
 
 import java.util.Objects;
 
-import cl.vmardones.chess.engine.board.Position;
+import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
@@ -21,39 +21,39 @@ public final class Move {
 
     private final MoveType type;
     private final Piece piece;
-    private final Position destination;
+    private final Coordinate destination;
 
     @Nullable private final Piece otherPiece;
 
-    @Nullable private final Position rookDestination;
+    @Nullable private final Coordinate rookDestination;
 
-    @Nullable private final boolean promotion;
+    private final boolean promotion;
 
     // TODO: Actually implement this, it should be used for PGN notation hash (+ for check, # for checkmate)
     private final MoveResult result = MoveResult.CONTINUE;
 
     /* Creating moves */
 
-    public static Move createNormal(Piece piece, Position destination) {
-        var type = piece.isPawn() ? MoveType.PAWN_NORMAL : MoveType.NORMAL;
+    public static Move createNormal(Piece piece, Coordinate destination) {
+        var type = piece.isPawn() ? MoveType.PAWN_PUSH : MoveType.NORMAL;
         return new Move(type, piece, destination);
     }
 
-    public static Move createCapture(Piece piece, Position destination, Piece capturedPiece) {
+    public static Move createCapture(Piece piece, Coordinate destination, Piece capturedPiece) {
         var type = piece.isPawn() ? MoveType.PAWN_CAPTURE : MoveType.CAPTURE;
         return new Move(type, piece, destination, capturedPiece);
     }
 
-    public static Move createPawnJump(Pawn pawn, Position destination) {
-        return new Move(MoveType.PAWN_JUMP, pawn, destination);
+    public static Move createDoublePush(Pawn pawn, Coordinate destination) {
+        return new Move(MoveType.DOUBLE_PUSH, pawn, destination);
     }
 
-    public static Move createEnPassant(Pawn pawn, Position destination, Piece capturedPiece) {
+    public static Move createEnPassant(Pawn pawn, Coordinate destination, Piece capturedPiece) {
         return new Move(MoveType.EN_PASSANT, pawn, destination, capturedPiece);
     }
 
     public static Move createCastle(
-            boolean kingSide, King king, Position kingDestination, Rook rook, Position rookDestination) {
+            boolean kingSide, King king, Coordinate kingDestination, Rook rook, Coordinate rookDestination) {
         return new Move(
                 kingSide ? MoveType.KING_CASTLE : MoveType.QUEEN_CASTLE, king, kingDestination, rook, rookDestination);
     }
@@ -72,11 +72,11 @@ public final class Move {
         return piece;
     }
 
-    public Position source() {
-        return piece.position();
+    public Coordinate source() {
+        return piece.coordinate();
     }
 
-    public Position destination() {
+    public Coordinate destination() {
         return destination;
     }
 
@@ -84,7 +84,7 @@ public final class Move {
         return otherPiece;
     }
 
-    public @Nullable Position rookDestination() {
+    public @Nullable Coordinate rookDestination() {
         return rookDestination;
     }
 
@@ -97,7 +97,7 @@ public final class Move {
     }
 
     public boolean isNone() {
-        return piece.position().equals(destination);
+        return piece.coordinate().equals(destination);
     }
 
     /* equals, hashCode and toString */
@@ -136,29 +136,29 @@ public final class Move {
         return simpleToString() + result.endHash();
     }
 
-    private Move(MoveType type, Piece piece, Position destination) {
+    private Move(MoveType type, Piece piece, Coordinate destination) {
         this(type, piece, destination, null);
     }
 
-    private Move(MoveType type, Piece piece, Position destination, @Nullable Piece otherPiece) {
+    private Move(MoveType type, Piece piece, Coordinate destination, @Nullable Piece otherPiece) {
         this(type, piece, destination, otherPiece, null);
     }
 
     private Move(
             MoveType type,
             Piece piece,
-            Position destination,
+            Coordinate destination,
             @Nullable Piece otherPiece,
-            @Nullable Position rookDestination) {
+            @Nullable Coordinate rookDestination) {
         this(type, piece, destination, otherPiece, rookDestination, false);
     }
 
     private Move(
             MoveType type,
             Piece piece,
-            Position destination,
+            Coordinate destination,
             @Nullable Piece otherPiece,
-            @Nullable Position rookDestination,
+            @Nullable Coordinate rookDestination,
             boolean promotion) {
         this.type = type;
         this.piece = piece;
@@ -171,7 +171,7 @@ public final class Move {
     private String simpleToString() {
         return switch (type) {
             case CAPTURE -> piece.singleChar() + destination();
-            case PAWN_CAPTURE -> String.format("%sx%s", piece.position().file(), destination());
+            case PAWN_CAPTURE -> String.format("%sx%s", piece.coordinate().file(), destination());
             case KING_CASTLE -> "0-0";
             case QUEEN_CASTLE -> "0-0-0";
             default -> destination().toString();

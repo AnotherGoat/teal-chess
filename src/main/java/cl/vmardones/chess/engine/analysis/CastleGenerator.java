@@ -38,7 +38,7 @@ final class CastleGenerator {
     }
 
     private boolean castlingIsImpossible() {
-        return !king.firstMove() || inCheck || king.position().file() != 'e';
+        return !king.firstMove() || inCheck || king.coordinate().file() != 'e';
     }
 
     private @Nullable Move generateCastleMove(boolean kingSide) {
@@ -47,23 +47,23 @@ final class CastleGenerator {
             return null;
         }
 
-        var kingPosition = king.position();
+        var kingCoordinate = king.coordinate();
         var rookOffset = kingSide ? 3 : -4;
-        var rookPosition = kingPosition.right(rookOffset);
+        var rookCoordinate = kingCoordinate.right(rookOffset);
 
-        if (rookPosition == null) {
+        if (rookCoordinate == null) {
             return null;
         }
 
-        var rook = (Rook) board.pieceAt(rookPosition);
+        var rook = (Rook) board.pieceAt(rookCoordinate);
 
         if (rook == null || !rook.firstMove()) {
             return null;
         }
 
         var direction = kingSide ? 1 : -1;
-        var kingDestination = kingPosition.right(2 * direction);
-        var rookDestination = kingPosition.right(direction);
+        var kingDestination = kingCoordinate.right(2 * direction);
+        var rookDestination = kingCoordinate.right(direction);
 
         if (kingDestination == null || rookDestination == null) {
             return null;
@@ -91,19 +91,19 @@ final class CastleGenerator {
     }
 
     private boolean isSquareFree(int offset) {
-        var destination = king.position().right(offset);
+        var destination = king.coordinate().right(offset);
 
         return destination != null && board.isEmpty(destination);
     }
 
     private boolean squareHasRook(int offset) {
-        var destination = king.position().right(offset);
+        var destination = king.coordinate().right(offset);
 
         return destination != null && board.contains(destination.toString(), Rook.class);
     }
 
     private boolean isUnreachableByEnemy(int offset) {
-        var destination = king.position().right(offset);
+        var destination = king.coordinate().right(offset);
 
         return destination != null && moveTester.attacksOn(destination).isEmpty();
     }

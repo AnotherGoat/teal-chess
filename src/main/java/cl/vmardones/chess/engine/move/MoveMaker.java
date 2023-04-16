@@ -10,9 +10,11 @@ import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Color;
-import org.eclipse.jdt.annotation.Nullable;
 
-/** The class responsible for realizing moves and building a new post-move board. */
+/**
+ * The class responsible for realizing moves and building a new post-move position.
+ * @see <a href="https://www.chessprogramming.org/Make_Move">Make Move</a>
+ */
 public final class MoveMaker {
 
     /**
@@ -28,11 +30,11 @@ public final class MoveMaker {
         var destination = move.destination().toString();
         var movedPiece = piece.moveTo(destination);
 
-        var builder = configureNextTurn(board, movedPiece);
+        var builder = configureNextPosition(board, movedPiece);
 
         builder.without(piece).without(otherPiece).with(movedPiece);
 
-        if (move.type() == MoveType.PAWN_JUMP) {
+        if (move.type() == MoveType.DOUBLE_PUSH) {
             builder.enPassantPawn((Pawn) movedPiece);
         }
 
@@ -51,15 +53,15 @@ public final class MoveMaker {
     }
 
     // TODO: Check if this code can be cleaned somehow
-    private Board.BoardBuilder configureNextTurn(Board board, @Nullable Piece movedPiece) {
+    private Board.BoardBuilder configureNextPosition(Board board, Piece movedPiece) {
         if (!movedPiece.isKing()) {
-            return board.nextTurnBuilder();
+            return board.nextPositionBuilder();
         }
 
         if (movedPiece.color() == Color.WHITE) {
-            return board.nextTurnBuilder((King) movedPiece, board.king(Color.BLACK));
+            return board.nextPositionBuilder((King) movedPiece, board.king(Color.BLACK));
         }
 
-        return board.nextTurnBuilder(board.king(Color.WHITE), (King) movedPiece);
+        return board.nextPositionBuilder(board.king(Color.WHITE), (King) movedPiece);
     }
 }

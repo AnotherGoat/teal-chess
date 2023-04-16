@@ -11,7 +11,7 @@ import java.util.List;
 import javax.swing.*;
 
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.board.Position;
+import cl.vmardones.chess.engine.board.Coordinate;
 
 class BoardPanel extends JPanel {
 
@@ -53,9 +53,9 @@ class BoardPanel extends JPanel {
         repaint();
     }
 
-    void highlightSquares(List<Position> positions) {
+    void highlightSquares(List<Coordinate> coordinates) {
         squares.forEach(square -> {
-            if (positions.contains(square.position())) {
+            if (coordinates.contains(square.coordinate())) {
                 square.showGreenDot();
             } else {
                 square.hideGreenDot();

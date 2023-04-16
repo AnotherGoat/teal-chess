@@ -7,7 +7,7 @@ package cl.vmardones.chess.engine.piece;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cl.vmardones.chess.engine.board.Position;
+import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.player.Color;
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +48,7 @@ class BishopTest {
 
         assertThat(bishopToMove.moveTo("a2"))
                 .isInstanceOf(Bishop.class)
-                .matches(bishop -> bishop.position().equals(Position.of("a2")))
+                .matches(bishop -> bishop.coordinate().equals(Coordinate.of("a2")))
                 .matches(bishop -> !bishop.firstMove());
     }
 }

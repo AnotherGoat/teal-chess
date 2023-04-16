@@ -20,19 +20,19 @@ import org.eclipse.jdt.annotation.Nullable;
 final class AttackGenerator {
 
     private final Board board;
-    private final Color activeColor;
+    private final Color sideToMove;
     private final List<Piece> pieces;
     private final List<Piece> opponentPieces;
 
-    AttackGenerator(Board board, Color activeColor, List<Piece> pieces, List<Piece> opponentPieces) {
+    AttackGenerator(Board board, Color sideToMove, List<Piece> pieces, List<Piece> opponentPieces) {
         this.board = board;
-        this.activeColor = activeColor;
+        this.sideToMove = sideToMove;
         this.pieces = pieces;
         this.opponentPieces = opponentPieces;
     }
 
     Stream<Move> calculateAttacks(Color color) {
-        var attackingPieces = color == activeColor ? pieces : opponentPieces;
+        var attackingPieces = color == sideToMove ? pieces : opponentPieces;
 
         return attackingPieces.stream().flatMap(this::calculatePieceAttacks);
     }
@@ -59,14 +59,14 @@ final class AttackGenerator {
             return null;
         }
 
-        return Move.createCapture(piece, destination.position(), destinationPiece);
+        return Move.createCapture(piece, destination.coordinate(), destinationPiece);
     }
 
     private @Nullable Move generatePawnAttack(Pawn pawn, boolean leftSide) {
 
         var direction = leftSide ? -1 : 1;
 
-        var destination = pawn.position().to(direction, activeColor.direction());
+        var destination = pawn.coordinate().to(direction, sideToMove.direction());
 
         if (destination == null) {
             return null;
@@ -78,7 +78,7 @@ final class AttackGenerator {
             return null;
         }
 
-        if (pawn.position().rank() == pawn.rankBeforePromotion()) {
+        if (pawn.coordinate().rank() == pawn.rankBeforePromotion()) {
             return Move.makePromotion(Move.createCapture(pawn, destination, destinationPiece));
         }
 

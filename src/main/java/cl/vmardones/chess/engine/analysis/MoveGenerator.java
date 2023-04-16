@@ -45,10 +45,10 @@ final class MoveGenerator {
             return null;
         }
 
-        if (piece.isPawn() && piece.position().rank() == ((Pawn) piece).rankBeforePromotion()) {
-            return Move.makePromotion(Move.createNormal(piece, destination.position()));
+        if (piece.isPawn() && piece.coordinate().rank() == ((Pawn) piece).rankBeforePromotion()) {
+            return Move.makePromotion(Move.createNormal(piece, destination.coordinate()));
         }
 
-        return Move.createNormal(piece, destination.position());
+        return Move.createNormal(piece, destination.coordinate());
     }
 }

@@ -91,6 +91,6 @@ class PieceTest {
 
     @Test
     void equalsContract() {
-        EqualsVerifier.forClass(Piece.class).withNonnullFields("position").verify();
+        EqualsVerifier.forClass(Piece.class).withNonnullFields("coordinate").verify();
     }
 }

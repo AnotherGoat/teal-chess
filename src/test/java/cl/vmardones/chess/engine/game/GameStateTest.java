@@ -23,10 +23,10 @@ class GameStateTest {
 
     @Test
     void save() {
-        var firstTurn = mock(Turn.class);
-        gameState.currentTurn(firstTurn);
+        var initialPosition = mock(Position.class);
+        gameState.currentPosition(initialPosition);
 
-        assertThat(gameState.save().state()).isEqualTo(firstTurn);
+        assertThat(gameState.save().state()).isEqualTo(initialPosition);
     }
 
     @Test
@@ -38,15 +38,15 @@ class GameStateTest {
 
     @Test
     void load() {
-        var firstTurn = mock(Turn.class);
-        gameState.currentTurn(firstTurn);
+        var firstPosition = mock(Position.class);
+        gameState.currentPosition(firstPosition);
         var firstMemento = gameState.save();
 
-        var secondTurn = mock(Turn.class);
-        gameState.currentTurn(secondTurn);
+        var secondPosition = mock(Position.class);
+        gameState.currentPosition(secondPosition);
 
         gameState.load(firstMemento);
 
-        assertThat(gameState.currentTurn()).isEqualTo(firstTurn).isNotEqualTo(secondTurn);
+        assertThat(gameState.currentPosition()).isEqualTo(firstPosition).isNotEqualTo(secondPosition);
     }
 }

@@ -7,7 +7,7 @@ package cl.vmardones.chess.engine.analysis;
 
 import java.util.List;
 
-import cl.vmardones.chess.engine.board.Position;
+import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveResult;
 import cl.vmardones.chess.engine.piece.King;
@@ -23,10 +23,10 @@ final class MoveTester {
     }
 
     List<Move> attacksOnKing() {
-        return attacksOn(king.position());
+        return attacksOn(king.coordinate());
     }
 
-    List<Move> attacksOn(Position target) {
+    List<Move> attacksOn(Coordinate target) {
         return opponentAttacks.stream()
                 .filter(move -> target.equals(move.destination()))
                 .toList();

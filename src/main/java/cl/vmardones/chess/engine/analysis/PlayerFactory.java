@@ -20,7 +20,7 @@ import cl.vmardones.chess.engine.player.PlayerStatus;
 final class PlayerFactory {
 
     private final MoveTester moveTester;
-    private final Color activeColor;
+    private final Color sideToMove;
     private final King king;
     private final List<Piece> pieces;
     private final List<Move> legals;
@@ -29,14 +29,14 @@ final class PlayerFactory {
 
     PlayerFactory(
             MoveTester moveTester,
-            Color activeColor,
+            Color sideToMove,
             King king,
             List<Piece> pieces,
             List<Move> legals,
             King opponentKing,
             List<Piece> opponentPieces) {
         this.moveTester = moveTester;
-        this.activeColor = activeColor;
+        this.sideToMove = sideToMove;
 
         this.king = king;
         this.pieces = pieces;
@@ -47,7 +47,7 @@ final class PlayerFactory {
     }
 
     Player create(Color color) {
-        if (color == activeColor) {
+        if (color == sideToMove) {
             return new HumanPlayer(color, king, pieces, legals, calculateStatus());
         }
 

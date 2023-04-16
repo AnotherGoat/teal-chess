@@ -8,7 +8,7 @@ package cl.vmardones.chess.gui;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import cl.vmardones.chess.engine.board.Position;
+import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.move.MoveFinder;
 import cl.vmardones.chess.engine.move.MoveResult;
@@ -41,7 +41,7 @@ interface SelectionState {
                 table.drawLegals(selectedPiece);
             }
 
-            table.selectionState(new SourceSelectionState(selectedPiece.position()));
+            table.selectionState(new SourceSelectionState(selectedPiece.coordinate()));
         }
 
         @Override
@@ -60,21 +60,21 @@ interface SelectionState {
 
     final class SourceSelectionState implements SelectionState {
         private static final Logger LOG = LogManager.getLogger(SourceSelectionState.class);
-        private final Position sourcePosition;
+        private final Coordinate sourceCoordinate;
 
         @Override
         public void onLeftClick(Table table, Square pressedSquare) {
 
-            if (sourcePosition.equals(pressedSquare.position())) {
-                LOG.warn("A piece can't be moved to the same position\n");
+            if (sourceCoordinate.equals(pressedSquare.coordinate())) {
+                LOG.warn("A piece can't be moved to the same coordinate\n");
                 table.selectionState(new NoSelectionState(table));
                 return;
             }
 
             LOG.debug("The destination contains {}", pressedSquare.piece());
 
-            var move =
-                    MoveFinder.choose(table.game().currentPlayer().legals(), sourcePosition, pressedSquare.position());
+            var move = MoveFinder.choose(
+                    table.game().currentPlayer().legals(), sourceCoordinate, pressedSquare.coordinate());
 
             if (move == null) {
                 LOG.warn("The selected move is illegal\n");
@@ -85,7 +85,7 @@ interface SelectionState {
             var status = table.testMove(move);
 
             if (status == MoveResult.CONTINUE) {
-                table.game().addTurn(move);
+                table.game().addPosition(move);
             }
 
             table.selectionState(new NoSelectionState(table));
@@ -97,8 +97,8 @@ interface SelectionState {
             table.selectionState(new NoSelectionState(table));
         }
 
-        private SourceSelectionState(Position sourcePosition) {
-            this.sourcePosition = sourcePosition;
+        private SourceSelectionState(Coordinate sourceCoordinate) {
+            this.sourceCoordinate = sourceCoordinate;
         }
     }
 }

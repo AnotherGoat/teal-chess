@@ -7,7 +7,7 @@ package cl.vmardones.chess.engine.analysis;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cl.vmardones.chess.engine.board.Position;
+import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.parser.FenParser;
 import cl.vmardones.chess.engine.player.Color;
@@ -22,7 +22,7 @@ class MoveGeneratorTest {
         var generator = new MoveGenerator(board, board.pieces(Color.WHITE));
         var leftPawn = board.pieceAt("b3");
 
-        var expectedMove = Move.createNormal(leftPawn, Position.of("b4"));
+        var expectedMove = Move.createNormal(leftPawn, Coordinate.of("b4"));
 
         assertThat(generator.calculateMoves()).containsOnlyOnce(expectedMove);
     }
@@ -47,11 +47,11 @@ class MoveGeneratorTest {
         var king = board.king(Color.BLACK);
 
         var expectedMoves = new Move[] {
-            Move.createNormal(king, Position.of("d8")),
-            Move.createNormal(king, Position.of("f8")),
-            Move.createNormal(king, Position.of("d7")),
-            Move.createNormal(king, Position.of("e7")),
-            Move.createNormal(king, Position.of("f7"))
+            Move.createNormal(king, Coordinate.of("d8")),
+            Move.createNormal(king, Coordinate.of("f8")),
+            Move.createNormal(king, Coordinate.of("d7")),
+            Move.createNormal(king, Coordinate.of("e7")),
+            Move.createNormal(king, Coordinate.of("f7"))
         };
 
         assertThat(generator.calculateMoves()).hasSize(5).containsOnlyOnce(expectedMoves);
@@ -68,16 +68,16 @@ class MoveGeneratorTest {
         var queen = board.pieceAt("f2");
 
         var unexpectedMoves = new Move[] {
-            Move.createNormal(bishop, Position.of("d4")),
-            Move.createNormal(bishop, Position.of("c3")),
-            Move.createNormal(rook, Position.of("a7")),
-            Move.createNormal(rook, Position.of("a8")),
-            Move.createNormal(queen, Position.of("d4")),
-            Move.createNormal(queen, Position.of("c5")),
-            Move.createNormal(queen, Position.of("f6")),
-            Move.createNormal(queen, Position.of("f7"))
+            Move.createNormal(bishop, Coordinate.of("d4")),
+            Move.createNormal(bishop, Coordinate.of("c3")),
+            Move.createNormal(rook, Coordinate.of("a7")),
+            Move.createNormal(rook, Coordinate.of("a8")),
+            Move.createNormal(queen, Coordinate.of("d4")),
+            Move.createNormal(queen, Coordinate.of("c5")),
+            Move.createNormal(queen, Coordinate.of("f6")),
+            Move.createNormal(queen, Coordinate.of("f7"))
         };
 
-        assertThat(generator.calculateMoves()).doesNotContain(unexpectedMoves);
+        assertThat(generator.calculateMoves()).isNotEmpty().doesNotContain(unexpectedMoves);
     }
 }

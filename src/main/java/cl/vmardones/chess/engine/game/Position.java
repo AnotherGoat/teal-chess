@@ -14,11 +14,15 @@ import cl.vmardones.chess.engine.player.Color;
 import cl.vmardones.chess.engine.player.Player;
 import org.eclipse.jdt.annotation.Nullable;
 
-// TODO: Check if we only need to store each player's legal moves
-record Turn(Board board, Color activeColor, Player whitePlayer, Player blackPlayer, @Nullable Move lastMove) {
+/**
+ * A chess position. The state of the game at a specific point in time.
+ * @see <a href="https://www.chessprogramming.org/Chess_Position">Chess Position</a>
+ * @see <a href="https://www.chessprogramming.org/Side_to_move">Side to move</a>
+ */
+record Position(Board board, Color sideToMove, Player whitePlayer, Player blackPlayer, @Nullable Move lastMove) {
 
     Player player() {
-        return switch (activeColor) {
+        return switch (sideToMove) {
             case WHITE -> whitePlayer;
             case BLACK -> blackPlayer;
         };
@@ -29,7 +33,7 @@ record Turn(Board board, Color activeColor, Player whitePlayer, Player blackPlay
     }
 
     Player opponent() {
-        return switch (activeColor) {
+        return switch (sideToMove) {
             case WHITE -> blackPlayer;
             case BLACK -> whitePlayer;
         };

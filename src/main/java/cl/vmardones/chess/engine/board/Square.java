@@ -14,12 +14,15 @@ import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
-/** A single chess square, which may or may not contain a piece. */
+/**
+ * A single chess square, which may or may not contain a piece.
+ * @see <a href="https://www.chessprogramming.org/Squares">Squares</a>
+ */
 public final class Square {
 
     private static final Map<String, Square> EMPTY_SQUARE_CACHE = fillEmptySquareCache();
 
-    private final Position position;
+    private final Coordinate coordinate;
     private final Color color;
     private final @Nullable Piece piece;
 
@@ -28,22 +31,22 @@ public final class Square {
     /**
      * Static factory method for creating a new square.
      *
-     * @param position Position of the square, in algebraic notation.
+     * @param coordinate Coordinate of the square, in algebraic notation.
      * @param piece The piece on the square.
      * @return A new square.
      */
-    public static Square create(String position, @Nullable Piece piece) {
+    public static Square create(String coordinate, @Nullable Piece piece) {
         if (piece == null) {
-            return EMPTY_SQUARE_CACHE.get(position);
+            return EMPTY_SQUARE_CACHE.get(coordinate);
         }
 
-        return new Square(position, piece);
+        return new Square(coordinate, piece);
     }
 
     /* Getters */
 
-    public Position position() {
-        return position;
+    public Coordinate coordinate() {
+        return coordinate;
     }
 
     public Color color() {
@@ -79,12 +82,12 @@ public final class Square {
         }
 
         var other = (Square) o;
-        return position.equals(other.position) && color.equals(other.color) && Objects.equals(piece, other.piece);
+        return coordinate.equals(other.coordinate) && color.equals(other.color) && Objects.equals(piece, other.piece);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(position, color, piece);
+        return Objects.hash(coordinate, color, piece);
     }
 
     /**
@@ -102,30 +105,30 @@ public final class Square {
     }
 
     private static Map<String, Square> fillEmptySquareCache() {
-        record Entry(String position, Square square) {}
+        record Entry(String coordinate, Square square) {}
 
         return IntStream.range(Board.FIRST_SQUARE_INDEX, Board.MAX_SQUARES)
                 .mapToObj(AlgebraicConverter::toAlgebraic)
-                .map(position -> new Entry(position, new Square(position)))
-                .collect(Collectors.toMap(Entry::position, Entry::square));
+                .map(coordinate -> new Entry(coordinate, new Square(coordinate)))
+                .collect(Collectors.toMap(Entry::coordinate, Entry::square));
     }
 
-    private Square(String position) {
-        this(position, null);
+    private Square(String coordinate) {
+        this(coordinate, null);
     }
 
-    private Square(String position, @Nullable Piece piece) {
-        this(Position.of(position), piece);
+    private Square(String coordinate, @Nullable Piece piece) {
+        this(Coordinate.of(coordinate), piece);
     }
 
-    private Square(Position position, @Nullable Piece piece) {
-        this.position = position;
+    private Square(Coordinate coordinate, @Nullable Piece piece) {
+        this.coordinate = coordinate;
         this.piece = piece;
         color = assignColor();
     }
 
     private Color assignColor() {
-        if ((position.index() + position.index() / Board.SIDE_LENGTH) % 2 == 0) {
+        if ((coordinate.index() + coordinate.index() / Board.SIDE_LENGTH) % 2 == 0) {
             return Color.WHITE;
         }
 

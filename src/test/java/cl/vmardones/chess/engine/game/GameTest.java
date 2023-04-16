@@ -10,7 +10,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import cl.vmardones.chess.engine.board.BoardDirector;
-import cl.vmardones.chess.engine.board.Position;
+import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.player.Color;
@@ -27,7 +27,7 @@ class GameTest {
     }
 
     @Test
-    void firstTurn() {
+    void initialPosition() {
         assertThat(game.board()).isEqualTo(BoardDirector.createStandardBoard());
         assertThat(game.currentPlayer().color()).isEqualTo(Color.WHITE);
         assertThat(game.currentOpponent().color()).isEqualTo(Color.BLACK);
@@ -35,15 +35,15 @@ class GameTest {
     }
 
     @Test
-    void secondTurn() {
+    void secondPosition() {
         var initialBoard = game.board();
         var move = mock(Move.class);
 
         var piece = new Pawn("d5", Color.WHITE);
         when(move.piece()).thenReturn(piece);
-        when(move.destination()).thenReturn(Position.of("d4"));
+        when(move.destination()).thenReturn(Coordinate.of("d4"));
 
-        game.addTurn(move);
+        game.addPosition(move);
 
         assertThat(game.board()).isNotEqualTo(initialBoard);
         assertThat(game.currentPlayer().color()).isEqualTo(Color.BLACK);

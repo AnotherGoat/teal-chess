@@ -13,7 +13,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.board.Position;
+import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.player.Color;
 import cl.vmardones.chess.io.PieceIconLoader;
@@ -59,7 +59,7 @@ class SquarePanel extends JPanel {
 
     void drawSquare(Board board) {
         var previousSquare = square;
-        square = board.squareAt(square.position());
+        square = board.squareAt(square.coordinate());
 
         if (!square.equals(previousSquare)) {
             assignPieceIcon(getWidth(), getHeight());
@@ -71,8 +71,8 @@ class SquarePanel extends JPanel {
 
     /* Getters */
 
-    Position position() {
-        return square.position();
+    Coordinate coordinate() {
+        return square.coordinate();
     }
 
     /* Highlighting squares */

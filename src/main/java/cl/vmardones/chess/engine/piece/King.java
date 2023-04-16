@@ -11,8 +11,9 @@ import cl.vmardones.chess.engine.player.Color;
 
 /**
  * The king piece. The most important piece in the game, must be defended at all costs. It moves
- * like the queen, but only one space at a time. It also cannot move into a position where it could
+ * like the queen, but only one space at a time. It also cannot move into a coordinate where it could
  * be captured.
+ * @see <a href="https://www.chessprogramming.org/King">King</a>
  */
 public final class King extends JumpingPiece {
 
@@ -26,8 +27,8 @@ public final class King extends JumpingPiece {
             new int[] {0, -1},
             new int[] {1, -1});
 
-    public King(String position, Color color) {
-        this(position, color, true);
+    public King(String coordinate, Color color) {
+        this(coordinate, color, true);
     }
 
     @Override
@@ -40,7 +41,7 @@ public final class King extends JumpingPiece {
         return color == Color.WHITE ? "♔" : "♚";
     }
 
-    private King(String position, Color color, boolean firstMove) {
-        super(PieceType.KING, position, color, firstMove, MOVES);
+    private King(String coordinate, Color color, boolean firstMove) {
+        super(PieceType.KING, coordinate, color, firstMove, MOVES);
     }
 }

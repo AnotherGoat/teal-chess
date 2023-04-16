@@ -12,24 +12,24 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import cl.vmardones.chess.engine.board.Position;
+import cl.vmardones.chess.engine.board.Coordinate;
 import org.junit.jupiter.api.Test;
 
 class MoveFinderTest {
 
     @Test
-    void samePosition() {
+    void sameCoordinate() {
         var moves = List.of(mock(Move.class), mock(Move.class), mock(Move.class));
-        var position = mock(Position.class);
+        var coordinate = mock(Coordinate.class);
 
-        assertThat(MoveFinder.choose(moves, position, position)).isNull();
+        assertThat(MoveFinder.choose(moves, coordinate, coordinate)).isNull();
     }
 
     @Test
     void findMove() {
-        var source = mock(Position.class);
-        var destination = mock(Position.class);
-        var otherDestination = mock(Position.class);
+        var source = mock(Coordinate.class);
+        var destination = mock(Coordinate.class);
+        var otherDestination = mock(Coordinate.class);
 
         var move1 = mock(Move.class);
         when(move1.source()).thenReturn(source);
@@ -46,12 +46,12 @@ class MoveFinderTest {
 
     @Test
     void findNoMoves() {
-        var source = mock(Position.class);
-        var destination = mock(Position.class);
+        var source = mock(Coordinate.class);
+        var destination = mock(Coordinate.class);
 
         var move = mock(Move.class);
-        when(move.source()).thenReturn(mock(Position.class));
-        when(move.destination()).thenReturn(mock(Position.class));
+        when(move.source()).thenReturn(mock(Coordinate.class));
+        when(move.destination()).thenReturn(mock(Coordinate.class));
 
         var moves = List.of(move);
 
@@ -60,8 +60,8 @@ class MoveFinderTest {
 
     @Test
     void passEmptyMoves() {
-        var source = mock(Position.class);
-        var destination = mock(Position.class);
+        var source = mock(Coordinate.class);
+        var destination = mock(Coordinate.class);
         var moves = new ArrayList<Move>();
 
         assertThat(MoveFinder.choose(moves, source, destination)).isNull();
@@ -69,8 +69,8 @@ class MoveFinderTest {
 
     @Test
     void findFirstMove() {
-        var source = mock(Position.class);
-        var destination = mock(Position.class);
+        var source = mock(Coordinate.class);
+        var destination = mock(Coordinate.class);
 
         var move1 = mock(Move.class);
         when(move1.source()).thenReturn(source);

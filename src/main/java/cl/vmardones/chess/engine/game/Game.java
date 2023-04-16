@@ -36,31 +36,31 @@ public final class Game {
         state = new GameState();
         history = new GameHistory();
 
-        registerTurn(createFirstTurn());
+        registerPosition(createInitialPosition());
     }
 
     /* Getters */
 
     public Board board() {
-        return state.currentTurn().board();
+        return state.currentPosition().board();
     }
 
     public Player currentPlayer() {
-        return state.currentTurn().player();
+        return state.currentPosition().player();
     }
 
     public Player currentOpponent() {
-        return state.currentTurn().opponent();
+        return state.currentPosition().opponent();
     }
 
     public GameHistory history() {
         return history;
     }
 
-    public void addTurn(Move move) {
-        var nextTurnBoard = moveMaker.make(board(), move);
-        var nextTurn = createTurn(nextTurnBoard, currentOpponent().color(), move);
-        registerTurn(nextTurn);
+    public void addPosition(Move move) {
+        var nextPositionBoard = moveMaker.make(board(), move);
+        var nextPosition = createPosition(nextPositionBoard, currentOpponent().color(), move);
+        registerPosition(nextPosition);
     }
 
     /* Analysis methods */
@@ -73,18 +73,18 @@ public final class Game {
         return boardAnalyzer.findLegalMoves(piece);
     }
 
-    private void registerTurn(Turn turn) {
-        state.currentTurn(turn);
+    private void registerPosition(Position position) {
+        state.currentPosition(position);
         var memento = state.save();
         history = history.add(memento);
         LOG.debug("Move added to history: {}\n", memento.state().lastMove());
     }
 
-    private Turn createFirstTurn() {
-        return createTurn(BoardDirector.createStandardBoard(), Color.WHITE, null);
+    private Position createInitialPosition() {
+        return createPosition(BoardDirector.createStandardBoard(), Color.WHITE, null);
     }
 
-    private Turn createTurn(Board board, Color activeColor, @Nullable Move lastMove) {
+    private Position createPosition(Board board, Color sideToMove, @Nullable Move lastMove) {
         LOG.debug("Current gameboard:\n{}", board);
         LOG.debug("White king: {}", board.king(Color.WHITE));
         LOG.debug("White pieces: {}", board.pieces(Color.WHITE));
@@ -92,7 +92,7 @@ public final class Game {
         LOG.debug("Black pieces: {}", board.pieces(Color.BLACK));
         LOG.debug("En passant pawn: {}\n", board.enPassantPawn());
 
-        boardAnalyzer = new BoardAnalyzer(board, activeColor);
+        boardAnalyzer = new BoardAnalyzer(board, sideToMove);
         var whitePlayer = boardAnalyzer.createPlayer(Color.WHITE);
         var blackPlayer = boardAnalyzer.createPlayer(Color.BLACK);
 
@@ -100,6 +100,6 @@ public final class Game {
         LOG.debug("White legals: {}", whitePlayer.legals());
         LOG.debug("Black legals: {}", blackPlayer.legals());
 
-        return new Turn(board, activeColor, whitePlayer, blackPlayer, lastMove);
+        return new Position(board, sideToMove, whitePlayer, blackPlayer, lastMove);
     }
 }

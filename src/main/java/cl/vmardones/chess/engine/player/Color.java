@@ -5,7 +5,10 @@
 
 package cl.vmardones.chess.engine.player;
 
-/** Represents a chess piece's color, which can be white or black. */
+/**
+ * Represents a chess piece's color, which can be white or black.
+ * @see <a href="https://www.chessprogramming.org/Color">Color</a>
+ */
 public enum Color {
     /** The white side, at the bottom of the board. */
     WHITE(1, 8),

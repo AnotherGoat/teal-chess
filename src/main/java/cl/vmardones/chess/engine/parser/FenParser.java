@@ -21,6 +21,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * FEN (Forsyth-Edwards Notation) string parser.
+ * @see <a href="https://www.chessprogramming.org/Forsyth-Edwards_Notation">Forsyth-Edwards Notation</a>
  */
 public final class FenParser {
 
@@ -42,13 +43,13 @@ public final class FenParser {
         }
 
         var ranks = parseRanks(parts[0]);
-        var activeColor = parseActiveColor(parts[1]);
+        var sideToMove = parseSideToMove(parts[1]);
         var castles = parseCastles(parts[2]);
-        var enPassantPawn = parseEnPassantTarget(parts[3], activeColor);
+        var enPassantPawn = parseEnPassantTarget(parts[3], sideToMove);
         var halfmove = parseHalfmove(parts[4]);
         int fullmove = parseFullmove(parts[5]);
 
-        return buildBoard(ranks, activeColor, castles, enPassantPawn, halfmove, fullmove);
+        return buildBoard(ranks, sideToMove, castles, enPassantPawn, halfmove, fullmove);
     }
 
     @ExcludeFromGeneratedReport
@@ -96,7 +97,7 @@ public final class FenParser {
         return false;
     }
 
-    private static Color parseActiveColor(String data) {
+    private static Color parseSideToMove(String data) {
         try {
             return Color.fromSymbol(data);
         } catch (ColorSymbolException e) {
@@ -112,15 +113,15 @@ public final class FenParser {
         return data;
     }
 
-    private static @Nullable Pawn parseEnPassantTarget(String data, Color activeColor) {
+    private static @Nullable Pawn parseEnPassantTarget(String data, Color sideToMove) {
         if (data.equals("-")) {
             return null;
         }
 
         try {
-            return new Pawn(data, activeColor.opposite());
+            return new Pawn(data, sideToMove.opposite());
         } catch (AlgebraicNotationException e) {
-            throw new FenParseException("En passant target is not a valid position: " + data);
+            throw new FenParseException("En passant target is not a valid coordinate: " + data);
         }
     }
 
@@ -156,10 +157,10 @@ public final class FenParser {
         return fullmove;
     }
 
-    // TODO: The data for active color, castles, halfmove and fullmove isn't used yet
-    // TODO: A similar method will probably be used to build a turn instead of a board
+    // TODO: The data for side to move, castles, halfmove and fullmove isn't used yet
+    // TODO: Make this method build a position instead of a board
     private static Board buildBoard(
-            List<String> ranks, Color activeColor, String castles, Pawn enPassantPawn, int halfmove, int fullmove) {
+            List<String> ranks, Color sideToMove, String castles, Pawn enPassantPawn, int halfmove, int fullmove) {
 
         var pieces = generatePieces(ranks);
         var whiteKing = findKing(pieces, Color.WHITE);
@@ -189,9 +190,9 @@ public final class FenParser {
                 } else {
                     var file = String.valueOf(FILES.charAt(fileCounter));
                     var rankIndex = Board.SIDE_LENGTH - i;
-                    var position = file + rankIndex;
+                    var coordinate = file + rankIndex;
 
-                    pieces.add(Piece.fromSymbol(String.valueOf(data), position));
+                    pieces.add(Piece.fromSymbol(String.valueOf(data), coordinate));
                     fileCounter++;
                 }
             }

@@ -75,7 +75,7 @@ class SquareTest {
     @Test
     void equalsContract() {
         EqualsVerifier.forClass(Square.class)
-                .withNonnullFields("position", "color")
+                .withNonnullFields("coordinate", "color")
                 .verify();
     }
 }

@@ -5,4 +5,8 @@
 
 package cl.vmardones.chess.engine.move;
 
-public class PromotionMove {}
+public final class IllegalMoveException extends RuntimeException {
+    IllegalMoveException(String message) {
+        super(message);
+    }
+}

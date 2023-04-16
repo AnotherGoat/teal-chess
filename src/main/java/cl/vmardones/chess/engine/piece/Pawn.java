@@ -13,11 +13,12 @@ import cl.vmardones.chess.engine.player.Color;
  * The pawn piece. It only moves forward (depending on the side) and can eat other pieces
  * diagonally. A very weak piece, but it can be promoted when getting to the last rank at the
  * opposite side.
+ * @see <a href="https://www.chessprogramming.org/Pawn">Pawn</a>
  */
 public final class Pawn extends JumpingPiece {
 
-    public Pawn(String position, Color color) {
-        this(position, color, true);
+    public Pawn(String coordinate, Color color) {
+        this(coordinate, color, true);
     }
 
     @Override
@@ -35,10 +36,10 @@ public final class Pawn extends JumpingPiece {
     }
 
     public Piece promote() {
-        return new Queen(position.toString(), color);
+        return new Queen(coordinate.toString(), color);
     }
 
-    private Pawn(String position, Color color, boolean firstMove) {
-        super(PieceType.PAWN, position, color, firstMove, List.of(new int[] {0, color.direction()}));
+    private Pawn(String coordinate, Color color, boolean firstMove) {
+        super(PieceType.PAWN, coordinate, color, firstMove, List.of(new int[] {0, color.direction()}));
     }
 }

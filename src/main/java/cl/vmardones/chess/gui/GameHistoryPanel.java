@@ -23,7 +23,7 @@ class GameHistoryPanel extends JPanel {
     public static final int ROW_HEIGHT = 25;
     private final DataModel model;
     private final JScrollPane scrollPane;
-    private @Nullable Move lastMove;
+    private transient @Nullable Move lastMove;
 
     GameHistoryPanel() {
         super(new BorderLayout());

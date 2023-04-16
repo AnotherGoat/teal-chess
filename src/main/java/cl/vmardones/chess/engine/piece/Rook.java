@@ -9,14 +9,17 @@ import java.util.List;
 
 import cl.vmardones.chess.engine.player.Color;
 
-/** The rook piece. It can move horizontally and vertically. */
+/**
+ * The rook piece. It can move horizontally and vertically.
+ * @see <a href="https://www.chessprogramming.org/Rook">Rook</a>
+ */
 public final class Rook extends SlidingPiece {
 
     private static final List<int[]> MOVES =
             List.of(new int[] {0, 1}, new int[] {-1, 0}, new int[] {1, 0}, new int[] {0, -1});
 
-    public Rook(String position, Color color) {
-        this(position, color, true);
+    public Rook(String coordinate, Color color) {
+        this(coordinate, color, true);
     }
 
     @Override
@@ -29,7 +32,7 @@ public final class Rook extends SlidingPiece {
         return color == Color.WHITE ? "♖" : "♜";
     }
 
-    private Rook(String position, Color color, boolean firstMove) {
-        super(PieceType.ROOK, position, color, firstMove, MOVES);
+    private Rook(String coordinate, Color color, boolean firstMove) {
+        super(PieceType.ROOK, coordinate, color, firstMove, MOVES);
     }
 }
