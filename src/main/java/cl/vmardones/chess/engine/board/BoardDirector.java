@@ -6,12 +6,10 @@
 package cl.vmardones.chess.engine.board;
 
 import cl.vmardones.chess.ExcludeFromGeneratedReport;
-import cl.vmardones.chess.engine.parser.FenParser;
+import cl.vmardones.chess.engine.game.Position;
 
 /** Provides utility functions to create chessboards quickly. */
 public final class BoardDirector {
-
-    private static final Board STANDARD_BOARD = generateStandardBoard();
 
     /* Board creation */
 
@@ -22,16 +20,11 @@ public final class BoardDirector {
      * @return The standard chessboard.
      */
     public static Board createStandardBoard() {
-        return STANDARD_BOARD;
+        return Position.INITIAL_POSITION.board();
     }
 
     @ExcludeFromGeneratedReport
     private BoardDirector() {
         throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
-    }
-
-    private static Board generateStandardBoard() {
-        return FenParser.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-                .board();
     }
 }

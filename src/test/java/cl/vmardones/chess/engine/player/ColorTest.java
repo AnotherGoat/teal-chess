@@ -7,6 +7,10 @@ package cl.vmardones.chess.engine.player;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -60,5 +64,31 @@ class ColorTest {
     @Test
     void blackOppositeDirection() {
         assertThat(black.oppositeDirection()).isPositive().isEqualTo(1);
+    }
+
+    @Test
+    void getPlayer() {
+        var whitePlayer = mock(HumanPlayer.class);
+        when(whitePlayer.color()).thenReturn(Color.WHITE);
+        var blackPlayer = mock(HumanPlayer.class);
+        when(blackPlayer.color()).thenReturn(Color.BLACK);
+
+        List<Player> players = List.of(whitePlayer, blackPlayer);
+
+        assertThat(white.player(players)).isEqualTo(whitePlayer);
+        assertThat(black.player(players)).isEqualTo(blackPlayer);
+    }
+
+    @Test
+    void getOpponent() {
+        var whitePlayer = mock(HumanPlayer.class);
+        when(whitePlayer.color()).thenReturn(Color.WHITE);
+        var blackPlayer = mock(HumanPlayer.class);
+        when(blackPlayer.color()).thenReturn(Color.BLACK);
+
+        List<Player> players = List.of(whitePlayer, blackPlayer);
+
+        assertThat(white.opponent(players)).isEqualTo(blackPlayer);
+        assertThat(black.opponent(players)).isEqualTo(whitePlayer);
     }
 }

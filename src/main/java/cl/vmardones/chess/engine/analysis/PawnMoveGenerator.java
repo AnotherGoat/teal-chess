@@ -27,11 +27,13 @@ final class PawnMoveGenerator {
     private final Board board;
     private final Color sideToMove;
     private final List<Piece> pieces;
+    private final @Nullable Pawn enPassantPawn;
 
-    PawnMoveGenerator(Board board, Color sideToMove, List<Piece> pieces) {
+    PawnMoveGenerator(Board board, Color sideToMove, List<Piece> pieces, @Nullable Pawn enPassantPawn) {
         this.board = board;
         this.pieces = pieces;
         this.sideToMove = sideToMove;
+        this.enPassantPawn = enPassantPawn;
     }
 
     Stream<Move> calculatePawnMoves() {
@@ -42,7 +44,7 @@ final class PawnMoveGenerator {
                 var pawn = (Pawn) piece;
                 moves.add(generateDoublePush(pawn));
 
-                if (board.enPassantPawn() != null) {
+                if (enPassantPawn != null) {
                     moves.add(generateEnPassant(pawn, true));
                     moves.add(generateEnPassant(pawn, false));
                 }
@@ -73,12 +75,6 @@ final class PawnMoveGenerator {
     }
 
     private @Nullable Move generateEnPassant(Pawn pawn, boolean leftSide) {
-
-        var enPassantPawn = board.enPassantPawn();
-
-        if (enPassantPawn == null) {
-            return null;
-        }
 
         var direction = leftSide ? -1 : 1;
         var side = pawn.coordinate().right(direction);

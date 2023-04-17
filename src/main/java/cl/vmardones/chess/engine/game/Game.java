@@ -5,31 +5,29 @@
 
 package cl.vmardones.chess.engine.game;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import cl.vmardones.chess.engine.analysis.BoardAnalyzer;
+import cl.vmardones.chess.engine.analysis.PositionAnalyzer;
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.board.BoardDirector;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveMaker;
 import cl.vmardones.chess.engine.move.MoveResult;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Color;
 import cl.vmardones.chess.engine.player.Player;
-import org.eclipse.jdt.annotation.Nullable;
 
 public final class Game {
 
     private static final Logger LOG = LogManager.getLogger(Game.class);
     private final MoveMaker moveMaker;
     private final GameState state;
-    private BoardAnalyzer boardAnalyzer;
+    private PositionAnalyzer positionAnalyzer;
     private GameHistory history;
-    private final List<Player> players;
+    private Player whitePlayer;
+    private Player blackPlayer;
 
     public Game() {
         LOG.info("Game started!\n");
@@ -37,9 +35,11 @@ public final class Game {
         moveMaker = new MoveMaker();
         state = new GameState();
         history = new GameHistory();
-        players = new ArrayList<>();
+        positionAnalyzer = new PositionAnalyzer(Position.INITIAL_POSITION);
+        whitePlayer = positionAnalyzer.createPlayer(Color.WHITE);
+        blackPlayer = positionAnalyzer.createPlayer(Color.BLACK);
 
-        registerPosition(createInitialPosition());
+        registerPosition(Position.INITIAL_POSITION);
     }
 
     /* Getters */
@@ -49,11 +49,11 @@ public final class Game {
     }
 
     public Player currentPlayer() {
-        return state.currentPosition().player(players);
+        return state.currentPosition().sideToMove().player(players());
     }
 
     public Player currentOpponent() {
-        return state.currentPosition().opponent(players);
+        return state.currentPosition().sideToMove().opponent(players());
     }
 
     public GameHistory history() {
@@ -62,50 +62,55 @@ public final class Game {
 
     public void updatePosition(Move move) {
         var nextPosition = moveMaker.make(state.currentPosition(), move);
+
+        positionAnalyzer = new PositionAnalyzer(nextPosition);
+        whitePlayer = positionAnalyzer.createPlayer(Color.WHITE);
+        blackPlayer = positionAnalyzer.createPlayer(Color.BLACK);
+
         registerPosition(nextPosition);
     }
 
     /* Analysis methods */
 
     public MoveResult testMove(Move move) {
-        return boardAnalyzer.testMove(move);
+        return positionAnalyzer.testMove(move);
     }
 
     public List<Move> findLegalMoves(Piece piece) {
-        return boardAnalyzer.findLegalMoves(piece);
+        return positionAnalyzer.findLegalMoves(piece);
+    }
+
+    private List<Player> players() {
+        return List.of(whitePlayer, blackPlayer);
     }
 
     private void registerPosition(Position position) {
+        analyzePosition(position);
+
         state.currentPosition(position);
-        var memento = state.save();
-        history = history.add(memento);
-        LOG.debug("Move added to history: {}\n", memento.state().lastMove());
+        history = history.add(state.save());
+
+        LOG.debug("Move added to history: {}\n", state.currentPosition().lastMove());
     }
 
-    private Position createInitialPosition() {
-        return createPosition(BoardDirector.createStandardBoard(), Color.WHITE, null);
-    }
+    private void analyzePosition(Position position) {
 
-    private Position createPosition(Board board, Color sideToMove, @Nullable Move lastMove) {
-        LOG.debug("Current gameboard:\n{}", board);
+        var board = position.board();
+
+        LOG.debug("Current chessboard:\n{}", board);
         LOG.debug("White king: {}", board.king(Color.WHITE));
         LOG.debug("White pieces: {}", board.pieces(Color.WHITE));
         LOG.debug("Black king: {}", board.king(Color.BLACK));
         LOG.debug("Black pieces: {}", board.pieces(Color.BLACK));
-        LOG.debug("En passant pawn: {}\n", board.enPassantPawn());
+        LOG.debug("En passant pawn: {}\n", position.enPassantPawn());
 
-        boardAnalyzer = new BoardAnalyzer(board, sideToMove);
-
-        players.clear();
-        var whitePlayer = boardAnalyzer.createPlayer(Color.WHITE);
-        var blackPlayer = boardAnalyzer.createPlayer(Color.BLACK);
-        players.add(whitePlayer);
-        players.add(blackPlayer);
+        var whitePlayer = positionAnalyzer.createPlayer(Color.WHITE);
+        var blackPlayer = positionAnalyzer.createPlayer(Color.BLACK);
 
         LOG.debug("Players: {} vs. {}", whitePlayer, blackPlayer);
-        LOG.debug("White legals: {}", whitePlayer.legals());
-        LOG.debug("Black legals: {}", blackPlayer.legals());
 
-        return new Position(board, sideToMove, whitePlayer, blackPlayer, lastMove);
+        var sideToMove = position.sideToMove();
+        LOG.debug("Side to move: {}", position.sideToMove().name());
+        LOG.debug("Legal moves: {}", sideToMove == Color.WHITE ? whitePlayer.legals() : blackPlayer.legals());
     }
 }

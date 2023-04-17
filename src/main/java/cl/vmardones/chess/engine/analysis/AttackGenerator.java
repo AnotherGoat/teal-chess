@@ -17,6 +17,7 @@ import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
+// TODO: Generating attacks shouldn't produce a Move, but rather an Attack
 final class AttackGenerator {
 
     private final Board board;

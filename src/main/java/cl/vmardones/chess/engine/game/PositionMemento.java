@@ -5,4 +5,5 @@
 
 package cl.vmardones.chess.engine.game;
 
+// TODO: Make this memento save more things than just the last position
 record PositionMemento(Position state) {}

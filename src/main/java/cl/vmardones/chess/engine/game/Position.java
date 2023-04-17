@@ -5,13 +5,11 @@
 
 package cl.vmardones.chess.engine.game;
 
-import java.util.List;
-
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.move.Move;
+import cl.vmardones.chess.engine.parser.FenParser;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.player.Color;
-import cl.vmardones.chess.engine.player.Player;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
@@ -27,7 +25,15 @@ public record Position(
         @Nullable Pawn enPassantPawn,
         int halfmoveClock,
         int fullmoveCounter,
+        // TODO: Move lastMove outside of position, keep it in the memento instead
         @Nullable Move lastMove) {
+
+    /**
+     * The initial position of the chess pieces in the board.
+     * Always used when starting a new game.
+     * @see <a href="https://www.chessprogramming.org/Initial_Position">Initial Position</a>
+     */
+    public static final Position INITIAL_POSITION = generateInitialPosition();
 
     public Position(
             Board board,
@@ -39,17 +45,7 @@ public record Position(
         this(board, sideToMove, castlingRights, enPassantPawn, halfmoveClock, fullmoveCounter, null);
     }
 
-    Player player(List<Player> players) {
-        return players.stream()
-                .filter(player -> player.color() == sideToMove)
-                .findFirst()
-                .orElseThrow(() -> new AssertionError("Unreachable statement"));
-    }
-
-    Player opponent(List<Player> players) {
-        return players.stream()
-                .filter(player -> player.color() != sideToMove)
-                .findFirst()
-                .orElseThrow(() -> new AssertionError("Unreachable statement"));
+    private static Position generateInitialPosition() {
+        return FenParser.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     }
 }

@@ -5,6 +5,8 @@
 
 package cl.vmardones.chess.engine.player;
 
+import java.util.List;
+
 /**
  * Represents a chess piece's color, which can be white or black.
  * @see <a href="https://www.chessprogramming.org/Color">Color</a>
@@ -54,6 +56,22 @@ public enum Color {
 
     public int promotionRank() {
         return promotionRank;
+    }
+
+    /* Choosing players */
+
+    public Player player(List<Player> players) {
+        return players.stream()
+                .filter(player -> player.color() == this)
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("Unreachable statement"));
+    }
+
+    public Player opponent(List<Player> players) {
+        return players.stream()
+                .filter(player -> player.color() != this)
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("Unreachable statement"));
     }
 
     /* toString */

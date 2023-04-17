@@ -207,7 +207,6 @@ public final class Board {
         blackPieces = findPieces(squares, Color.BLACK);
     }
 
-    // TODO: Cache all possible algebraic coordinates
     private List<Square> createSquares(BoardBuilder builder) {
         return IntStream.range(FIRST_SQUARE_INDEX, MAX_SQUARES)
                 .mapToObj(
