@@ -44,8 +44,8 @@ public final class Coordinate {
      * @return The coordinate's file.
      * @see <a href="https://www.chessprogramming.org/Files">Files</a>
      */
-    public char file() {
-        return toString().charAt(0);
+    public String file() {
+        return toString().substring(0, 1);
     }
 
     /**

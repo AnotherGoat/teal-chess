@@ -5,6 +5,7 @@
 
 package cl.vmardones.chess.engine.game;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -24,10 +25,11 @@ import org.eclipse.jdt.annotation.Nullable;
 public final class Game {
 
     private static final Logger LOG = LogManager.getLogger(Game.class);
-    private BoardAnalyzer boardAnalyzer;
     private final MoveMaker moveMaker;
     private final GameState state;
+    private BoardAnalyzer boardAnalyzer;
     private GameHistory history;
+    private final List<Player> players;
 
     public Game() {
         LOG.info("Game started!\n");
@@ -35,6 +37,7 @@ public final class Game {
         moveMaker = new MoveMaker();
         state = new GameState();
         history = new GameHistory();
+        players = new ArrayList<>();
 
         registerPosition(createInitialPosition());
     }
@@ -46,20 +49,19 @@ public final class Game {
     }
 
     public Player currentPlayer() {
-        return state.currentPosition().player();
+        return state.currentPosition().player(players);
     }
 
     public Player currentOpponent() {
-        return state.currentPosition().opponent();
+        return state.currentPosition().opponent(players);
     }
 
     public GameHistory history() {
         return history;
     }
 
-    public void addPosition(Move move) {
-        var nextPositionBoard = moveMaker.make(board(), move);
-        var nextPosition = createPosition(nextPositionBoard, currentOpponent().color(), move);
+    public void updatePosition(Move move) {
+        var nextPosition = moveMaker.make(state.currentPosition(), move);
         registerPosition(nextPosition);
     }
 
@@ -93,8 +95,12 @@ public final class Game {
         LOG.debug("En passant pawn: {}\n", board.enPassantPawn());
 
         boardAnalyzer = new BoardAnalyzer(board, sideToMove);
+
+        players.clear();
         var whitePlayer = boardAnalyzer.createPlayer(Color.WHITE);
         var blackPlayer = boardAnalyzer.createPlayer(Color.BLACK);
+        players.add(whitePlayer);
+        players.add(blackPlayer);
 
         LOG.debug("Players: {} vs. {}", whitePlayer, blackPlayer);
         LOG.debug("White legals: {}", whitePlayer.legals());

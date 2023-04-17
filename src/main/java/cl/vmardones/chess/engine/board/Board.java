@@ -9,7 +9,6 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 import cl.vmardones.chess.engine.piece.King;
-import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
@@ -34,7 +33,6 @@ public final class Board {
     private final List<Piece> whitePieces;
     private final King blackKing;
     private final List<Piece> blackPieces;
-    private final @Nullable Pawn enPassantPawn;
 
     /* Building the board */
 
@@ -159,10 +157,6 @@ public final class Board {
         return Collections.unmodifiableList(pieces);
     }
 
-    public @Nullable Pawn enPassantPawn() {
-        return enPassantPawn;
-    }
-
     /* equals, hashCode and toString */
 
     @Override
@@ -180,13 +174,12 @@ public final class Board {
                 && whiteKing.equals(other.whiteKing)
                 && whitePieces.equals(other.whitePieces)
                 && blackKing.equals(other.blackKing)
-                && blackPieces.equals(other.blackPieces)
-                && Objects.equals(enPassantPawn, other.enPassantPawn);
+                && blackPieces.equals(other.blackPieces);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(squares, whitePieces, whiteKing, blackPieces, blackKing, enPassantPawn);
+        return Objects.hash(squares, whitePieces, whiteKing, blackPieces, blackKing);
     }
 
     @Override
@@ -212,8 +205,6 @@ public final class Board {
 
         blackKing = builder.blackKing;
         blackPieces = findPieces(squares, Color.BLACK);
-
-        enPassantPawn = builder.enPassantPawn;
     }
 
     // TODO: Cache all possible algebraic coordinates
@@ -239,7 +230,6 @@ public final class Board {
         private final Map<Integer, Piece> configuration = new HashMap<>();
         private final King whiteKing;
         private final King blackKing;
-        private @Nullable Pawn enPassantPawn;
 
         /**
          * Add a piece to the board. This action is silently ignored if the piece is null. If multiple
@@ -280,22 +270,6 @@ public final class Board {
             }
 
             configuration.remove(piece.coordinate().index(), piece);
-            return this;
-        }
-
-        /**
-         * Set the pawn that made a pawn jump in the previous position, which can be captured by an
-         * enemy pawn's en passant move. By default, no en passant pawn is set.
-         *
-         * @param pawn The pawn that made the pawn jump.
-         * @return The same instance of this builder, to continue the building process.
-         */
-        public BoardBuilder enPassantPawn(Pawn pawn) {
-            if (enPassantPawn != null) {
-                throw new BoardConstructionException("En passant pawn can only be set once");
-            }
-
-            this.enPassantPawn = pawn;
             return this;
         }
 

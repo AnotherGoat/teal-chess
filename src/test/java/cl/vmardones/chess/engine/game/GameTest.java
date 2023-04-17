@@ -43,7 +43,7 @@ class GameTest {
         when(move.piece()).thenReturn(piece);
         when(move.destination()).thenReturn(Coordinate.of("d4"));
 
-        game.addPosition(move);
+        game.updatePosition(move);
 
         assertThat(game.board()).isNotEqualTo(initialBoard);
         assertThat(game.currentPlayer().color()).isEqualTo(Color.BLACK);

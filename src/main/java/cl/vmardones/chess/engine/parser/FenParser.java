@@ -12,8 +12,9 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import cl.vmardones.chess.ExcludeFromGeneratedReport;
-import cl.vmardones.chess.engine.board.AlgebraicNotationException;
 import cl.vmardones.chess.engine.board.Board;
+import cl.vmardones.chess.engine.game.CastlingRights;
+import cl.vmardones.chess.engine.game.Position;
 import cl.vmardones.chess.engine.piece.*;
 import cl.vmardones.chess.engine.player.Color;
 import cl.vmardones.chess.engine.player.ColorSymbolException;
@@ -27,10 +28,11 @@ public final class FenParser {
 
     private static final Pattern PIECES_PATTERN = Pattern.compile("[/PNBRQKpnbrqk1-8]*");
     private static final Pattern CASTLING_PATTERN = Pattern.compile("-|K?Q?k?q?");
+    private static final Pattern EN_PASSANT_PATTERN = Pattern.compile("-|[a-h][36]");
     private static final int DATA_FIELDS_LENGTH = 6;
     private static final String FILES = "abcdefgh";
 
-    public static Board parse(String fen) {
+    public static Position parse(String fen) {
 
         if (!isPrintableAscii(fen)) {
             throw new FenParseException("FEN string is not ASCII or contains ASCII control characters: " + fen);
@@ -49,7 +51,7 @@ public final class FenParser {
         var halfmove = parseHalfmove(parts[4]);
         int fullmove = parseFullmove(parts[5]);
 
-        return buildBoard(ranks, sideToMove, castles, enPassantPawn, halfmove, fullmove);
+        return buildPosition(ranks, sideToMove, castles, enPassantPawn, halfmove, fullmove);
     }
 
     @ExcludeFromGeneratedReport
@@ -105,73 +107,81 @@ public final class FenParser {
         }
     }
 
-    private static String parseCastles(String data) {
+    private static CastlingRights parseCastles(String data) {
         if (!CASTLING_PATTERN.matcher(data).matches()) {
             throw new FenParseException("Castling availability is incorrect: " + data);
         }
 
-        return data;
+        if (data.equals("-")) {
+            return new CastlingRights();
+        }
+
+        return new CastlingRights(data.contains("K"), data.contains("Q"), data.contains("k"), data.contains("q"));
     }
 
     private static @Nullable Pawn parseEnPassantTarget(String data, Color sideToMove) {
+        if (!EN_PASSANT_PATTERN.matcher(data).matches()) {
+            throw new FenParseException("En passant target is not a valid target coordinate: " + data);
+        }
+
         if (data.equals("-")) {
             return null;
         }
 
-        try {
-            return new Pawn(data, sideToMove.opposite());
-        } catch (AlgebraicNotationException e) {
-            throw new FenParseException("En passant target is not a valid coordinate: " + data);
-        }
+        return new Pawn(data, sideToMove.opposite());
     }
 
     private static int parseHalfmove(String data) {
-        int halfmove;
+        int halfmoveClock;
 
         try {
-            halfmove = Integer.parseInt(data);
+            halfmoveClock = Integer.parseInt(data);
         } catch (NumberFormatException e) {
             throw new FenParseException("Halfmove clock is not an integer: " + data);
         }
 
-        if (halfmove < 0) {
-            throw new FenParseException("Halfmove clock cannot be negative: " + halfmove);
+        if (halfmoveClock < 0) {
+            throw new FenParseException("Halfmove clock cannot be negative: " + halfmoveClock);
         }
 
-        return halfmove;
+        return halfmoveClock;
     }
 
     private static int parseFullmove(String data) {
-        int fullmove;
+        int fullmoveCounter;
 
         try {
-            fullmove = Integer.parseInt(data);
+            fullmoveCounter = Integer.parseInt(data);
         } catch (NumberFormatException e) {
             throw new FenParseException("Fullmove number is not an integer: " + data);
         }
 
-        if (fullmove < 0) {
-            throw new FenParseException("Fullmove number cannot be negative: " + fullmove);
+        if (fullmoveCounter < 1) {
+            throw new FenParseException("Fullmove number cannot be negative or zero: " + fullmoveCounter);
         }
 
-        return fullmove;
+        return fullmoveCounter;
     }
 
-    // TODO: The data for side to move, castles, halfmove and fullmove isn't used yet
-    // TODO: Make this method build a position instead of a board
-    private static Board buildBoard(
-            List<String> ranks, Color sideToMove, String castles, Pawn enPassantPawn, int halfmove, int fullmove) {
+    private static Position buildPosition(
+            List<String> ranks,
+            Color sideToMove,
+            CastlingRights castlingRights,
+            Pawn enPassantPawn,
+            int halfmoveClock,
+            int fullmoveCounter) {
 
+        var board = buildBoard(ranks);
+        return new Position(board, sideToMove, castlingRights, enPassantPawn, halfmoveClock, fullmoveCounter);
+    }
+
+    private static Board buildBoard(List<String> ranks) {
         var pieces = generatePieces(ranks);
+
         var whiteKing = findKing(pieces, Color.WHITE);
         var blackKing = findKing(pieces, Color.BLACK);
 
-        var builder = Board.builder(whiteKing, blackKing);
-
-        builder.withAll(pieces);
-        builder.enPassantPawn(enPassantPawn);
-
-        return builder.build();
+        return Board.builder(whiteKing, blackKing).withAll(pieces).build();
     }
 
     private static List<Piece> generatePieces(List<String> ranks) {

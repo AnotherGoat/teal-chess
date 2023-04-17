@@ -151,9 +151,18 @@ class FenParserTest {
     }
 
     @Test
+    void zeroFullmove() {
+        assertThatThrownBy(() -> FenParser.parse("4k3/8/8/8/8/8/8/4K3 w - - 4 0"))
+                .isInstanceOf(FenParseException.class)
+                .hasMessageContaining("zero")
+                .hasMessageContaining("0");
+    }
+
+    @Test
     void buildBoard() {
         // Board from the explained Chess.com example at https://www.chess.com/terms/fen-chess
-        var board = FenParser.parse("r1bk3r/p2pBpNp/n4n2/1p1NP2P/6P1/3P4/P1P1K3/q5b1 w - - 0 1");
+        var board = FenParser.parse("r1bk3r/p2pBpNp/n4n2/1p1NP2P/6P1/3P4/P1P1K3/q5b1 w - - 0 1")
+                .board();
 
         assertThat(board.pieceAt("a1")).isEqualTo(new Queen("a1", Color.BLACK));
         assertThat(board.pieceAt("b5")).isEqualTo(new Pawn("b5", Color.BLACK));

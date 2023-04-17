@@ -85,7 +85,7 @@ interface SelectionState {
             var status = table.testMove(move);
 
             if (status == MoveResult.CONTINUE) {
-                table.game().addPosition(move);
+                table.game().updatePosition(move);
             }
 
             table.selectionState(new NoSelectionState(table));

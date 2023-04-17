@@ -38,7 +38,7 @@ final class CastleGenerator {
     }
 
     private boolean castlingIsImpossible() {
-        return !king.firstMove() || inCheck || king.coordinate().file() != 'e';
+        return !king.firstMove() || inCheck || !king.coordinate().file().equals("e");
     }
 
     private @Nullable Move generateCastleMove(boolean kingSide) {

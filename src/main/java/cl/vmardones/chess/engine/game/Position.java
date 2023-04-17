@@ -5,11 +5,11 @@
 
 package cl.vmardones.chess.engine.game;
 
-import java.util.Collections;
 import java.util.List;
 
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.move.Move;
+import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.player.Color;
 import cl.vmardones.chess.engine.player.Player;
 import org.eclipse.jdt.annotation.Nullable;
@@ -18,28 +18,38 @@ import org.eclipse.jdt.annotation.Nullable;
  * A chess position. The state of the game at a specific point in time.
  * @see <a href="https://www.chessprogramming.org/Chess_Position">Chess Position</a>
  * @see <a href="https://www.chessprogramming.org/Side_to_move">Side to move</a>
+ * @see <a href="https://www.chessprogramming.org/Halfmove_Clock">Halfmove Clock</a>
  */
-record Position(Board board, Color sideToMove, Player whitePlayer, Player blackPlayer, @Nullable Move lastMove) {
+public record Position(
+        Board board,
+        Color sideToMove,
+        CastlingRights castlingRights,
+        @Nullable Pawn enPassantPawn,
+        int halfmoveClock,
+        int fullmoveCounter,
+        @Nullable Move lastMove) {
 
-    Player player() {
-        return switch (sideToMove) {
-            case WHITE -> whitePlayer;
-            case BLACK -> blackPlayer;
-        };
+    public Position(
+            Board board,
+            Color sideToMove,
+            CastlingRights castlingRights,
+            @Nullable Pawn enPassantPawn,
+            int halfmoveClock,
+            int fullmoveCounter) {
+        this(board, sideToMove, castlingRights, enPassantPawn, halfmoveClock, fullmoveCounter, null);
     }
 
-    List<Move> playerLegals() {
-        return Collections.unmodifiableList(player().legals());
+    Player player(List<Player> players) {
+        return players.stream()
+                .filter(player -> player.color() == sideToMove)
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("Unreachable statement"));
     }
 
-    Player opponent() {
-        return switch (sideToMove) {
-            case WHITE -> blackPlayer;
-            case BLACK -> whitePlayer;
-        };
-    }
-
-    List<Move> opponentLegals() {
-        return Collections.unmodifiableList(opponent().legals());
+    Player opponent(List<Player> players) {
+        return players.stream()
+                .filter(player -> player.color() != sideToMove)
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("Unreachable statement"));
     }
 }

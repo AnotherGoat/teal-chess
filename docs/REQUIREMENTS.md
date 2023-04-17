@@ -311,16 +311,16 @@ testing a lot easier.
     - ✓ The third field represents castling availability.
     - ✗ This indicates potential future castling that may of may not be possible
       at the moment due to blocking pieces or enemy attacks.
-    - ✗ If there is no castling availability for either side, the single
+    - ✓ If there is no castling availability for either side, the single
       character symbol "-" is used.
-    - ✗ Otherwise, a combination of from one to four characters are present.
-    - ✗ If White has kingside castling availability, the uppercase letter "K"
+    - ✓ Otherwise, a combination of from one to four characters are present.
+    - ✓ If White has kingside castling availability, the uppercase letter "K"
       appears.
-    - ✗ If White has queenside castling availability, the uppercase letter "Q"
+    - ✓ If White has queenside castling availability, the uppercase letter "Q"
       appears.
-    - ✗ If Black has kingside castling availability, the lowercase letter "k"
+    - ✓ If Black has kingside castling availability, the lowercase letter "k"
       appears.
-    - ✗ If Black has queenside castling availability, then the lowercase letter
+    - ✓ If Black has queenside castling availability, then the lowercase letter
       "q" appears.
     - ✓ Those letters which appear will be ordered first uppercase before
       lowercase and second kingside before queenside.
@@ -342,12 +342,12 @@ testing a lot easier.
   - ✗ (16.1.3.5) Halfmove clock
     - ✓ The fifth field is a nonnegative integer representing the halfmove
       clock.
-    - ✗ This number is the count of halfmoves (or ply) since the last pawn
+    - ✓ This number is the count of halfmoves (or ply) since the last pawn
       advance or capturing move.
     - ✗ This value is used for the fifty move draw rule.
-  - ✗ (16.1.3.6) Fullmove number
+  - ✓ (16.1.3.6) Fullmove number
     - ✓ The sixth and last field is a positive integer that gives the fullmove
       number.
-    - ✗ This will have the value "1" for the first move of a game for both White
+    - ✓ This will have the value "1" for the first move of a game for both White
       and Black.
-    - ✗ It is incremented by one immediately after each move by Black.
+    - ✓ It is incremented by one immediately after each move by Black.
