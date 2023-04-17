@@ -24,7 +24,7 @@ class CoordinateTest {
 
     @Test
     void getFile() {
-        assertThat(Coordinate.of("f5").file()).isEqualTo('f');
+        assertThat(Coordinate.of("f5").file()).isEqualTo("f");
     }
 
     @Test

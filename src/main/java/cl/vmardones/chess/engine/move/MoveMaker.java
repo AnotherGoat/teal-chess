@@ -33,11 +33,11 @@ public final class MoveMaker {
         var board = createBoard(position, move);
         var sideToMove = position.sideToMove().opposite();
         var castlingRights = updateCastlingRights(position, move);
-        var enPassantPawn = updateEnPassantPawn(move);
+        var enPassantTarget = updateEnPassantTarget(move);
         var halfmoveClock = updateHalfmoveClock(position, move);
         var fullmoveCounter = updateFullmoveCounter(position);
 
-        return new Position(board, sideToMove, castlingRights, enPassantPawn, halfmoveClock, fullmoveCounter, move);
+        return new Position(board, sideToMove, castlingRights, enPassantTarget, halfmoveClock, fullmoveCounter, move);
     }
 
     private Board createBoard(Position position, Move move) {
@@ -78,8 +78,8 @@ public final class MoveMaker {
         return board.nextPositionBuilder(board.king(Color.WHITE), (King) movedPiece);
     }
 
-    private @Nullable Pawn updateEnPassantPawn(Move move) {
-        if (move.type() != MoveType.PAWN_PUSH) {
+    private @Nullable Pawn updateEnPassantTarget(Move move) {
+        if (move.type() != MoveType.DOUBLE_PUSH) {
             return null;
         }
 

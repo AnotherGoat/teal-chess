@@ -68,7 +68,7 @@ public final class Coordinate {
      * @return True if both are on the same file.
      */
     public boolean sameFileAs(Coordinate other) {
-        return file() == other.file();
+        return file().equals(other.file());
     }
 
     /**

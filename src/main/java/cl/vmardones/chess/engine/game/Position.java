@@ -22,7 +22,7 @@ public record Position(
         Board board,
         Color sideToMove,
         CastlingRights castlingRights,
-        @Nullable Pawn enPassantPawn,
+        @Nullable Pawn enPassantTarget,
         int halfmoveClock,
         int fullmoveCounter,
         // TODO: Move lastMove outside of position, keep it in the memento instead
@@ -39,10 +39,10 @@ public record Position(
             Board board,
             Color sideToMove,
             CastlingRights castlingRights,
-            @Nullable Pawn enPassantPawn,
+            @Nullable Pawn enPassantTarget,
             int halfmoveClock,
             int fullmoveCounter) {
-        this(board, sideToMove, castlingRights, enPassantPawn, halfmoveClock, fullmoveCounter, null);
+        this(board, sideToMove, castlingRights, enPassantTarget, halfmoveClock, fullmoveCounter, null);
     }
 
     private static Position generateInitialPosition() {

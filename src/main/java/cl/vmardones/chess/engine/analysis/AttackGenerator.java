@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Square;
+import cl.vmardones.chess.engine.game.Position;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
@@ -25,15 +26,16 @@ final class AttackGenerator {
     private final List<Piece> pieces;
     private final List<Piece> opponentPieces;
 
-    AttackGenerator(Board board, Color sideToMove, List<Piece> pieces, List<Piece> opponentPieces) {
-        this.board = board;
-        this.sideToMove = sideToMove;
-        this.pieces = pieces;
-        this.opponentPieces = opponentPieces;
+    AttackGenerator(Position position) {
+        board = position.board();
+        sideToMove = position.sideToMove();
+        pieces = board.pieces(sideToMove);
+        opponentPieces = board.pieces(sideToMove.opposite());
     }
 
-    Stream<Move> calculateAttacks(Color color) {
-        var attackingPieces = color == sideToMove ? pieces : opponentPieces;
+    // TODO: Split this method into two: one for opponent attacks, other for player captures (maybe in other class)
+    Stream<Move> calculateAttacks(boolean opponent) {
+        var attackingPieces = opponent ? opponentPieces : pieces;
 
         return attackingPieces.stream().flatMap(this::calculatePieceAttacks);
     }

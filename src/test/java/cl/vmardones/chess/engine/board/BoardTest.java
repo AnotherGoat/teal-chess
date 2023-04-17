@@ -13,20 +13,12 @@ import cl.vmardones.chess.engine.player.Color;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
 class BoardTest {
 
     Board.BoardBuilder builder;
-
     King whiteKing = new King("e1", Color.WHITE);
     King blackKing = new King("e8", Color.BLACK);
-
-    @Mock
-    Pawn enPassantPawn;
 
     @BeforeEach
     void setUp() {
@@ -104,22 +96,6 @@ class BoardTest {
         var nextPositionBoard = board.nextPositionBuilder().without(null).build();
 
         assertThat(board).isEqualTo(nextPositionBoard);
-    }
-
-    @Test
-    void enPassantPawn() {
-        var board = builder.enPassantPawn(enPassantPawn).build();
-
-        assertThat(board.enPassantPawn()).isEqualTo(enPassantPawn);
-    }
-
-    @Test
-    void noEnPassantPawnNextPosition() {
-        var board = builder.enPassantPawn(enPassantPawn).build();
-        var nextPositionBoard = board.nextPositionBuilder().build();
-
-        assertThat(board.enPassantPawn()).isEqualTo(enPassantPawn);
-        assertThat(nextPositionBoard.enPassantPawn()).isNull();
     }
 
     @Test

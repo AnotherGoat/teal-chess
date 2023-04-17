@@ -10,17 +10,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.parser.FenParser;
-import cl.vmardones.chess.engine.player.Color;
 import org.junit.jupiter.api.Test;
 
 class AttackGeneratorTest {
 
     @Test
     void pawnAttacks() {
-        var board = FenParser.parse("4k3/8/8/1BpR4/1NPN4/8/8/4K3 b - - 0 1");
+        var position = FenParser.parse("4k3/8/8/1BpR4/1NPN4/8/8/4K3 b - - 0 1");
+        var generator = new AttackGenerator(position);
 
-        var generator = new AttackGenerator(board, Color.BLACK, board.pieces(Color.BLACK), board.pieces(Color.WHITE));
-
+        var board = position.board();
         var pawn = board.pieceAt("c5");
 
         var expectedAttacks = new Move[] {
@@ -28,15 +27,15 @@ class AttackGeneratorTest {
             Move.createCapture(pawn, Coordinate.of("d4"), board.pieceAt("d4"))
         };
 
-        assertThat(generator.calculateAttacks(Color.BLACK)).hasSize(2).containsOnlyOnce(expectedAttacks);
+        assertThat(generator.calculateAttacks(false)).hasSize(2).containsOnlyOnce(expectedAttacks);
     }
 
     @Test
     void rookAttacks() {
-        var board = FenParser.parse("4k3/p7/8/8/R3Bb2/8/8/n3K3 w - - 0 1");
+        var position = FenParser.parse("4k3/p7/8/8/R3Bb2/8/8/n3K3 w - - 0 1");
+        var generator = new AttackGenerator(position);
 
-        var generator = new AttackGenerator(board, Color.WHITE, board.pieces(Color.WHITE), board.pieces(Color.BLACK));
-
+        var board = position.board();
         var rook = board.pieceAt("a4");
 
         var expectedAttacks = new Move[] {
@@ -44,6 +43,6 @@ class AttackGeneratorTest {
             Move.createCapture(rook, Coordinate.of("a1"), board.pieceAt("a1"))
         };
 
-        assertThat(generator.calculateAttacks(Color.WHITE)).hasSize(2).containsOnlyOnce(expectedAttacks);
+        assertThat(generator.calculateAttacks(false)).hasSize(2).containsOnlyOnce(expectedAttacks);
     }
 }

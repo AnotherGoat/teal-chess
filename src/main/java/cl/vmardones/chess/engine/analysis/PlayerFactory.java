@@ -8,6 +8,7 @@ package cl.vmardones.chess.engine.analysis;
 import java.util.Collections;
 import java.util.List;
 
+import cl.vmardones.chess.engine.game.Position;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveResult;
 import cl.vmardones.chess.engine.piece.King;
@@ -27,23 +28,14 @@ final class PlayerFactory {
     private final King opponentKing;
     private final List<Piece> opponentPieces;
 
-    PlayerFactory(
-            MoveTester moveTester,
-            Color sideToMove,
-            King king,
-            List<Piece> pieces,
-            List<Move> legals,
-            King opponentKing,
-            List<Piece> opponentPieces) {
+    PlayerFactory(Position position, MoveTester moveTester, List<Move> legals) {
+        sideToMove = position.sideToMove();
+        king = position.board().king(sideToMove);
+        pieces = position.board().pieces(sideToMove);
+        opponentKing = position.board().king(sideToMove.opposite());
+        opponentPieces = position.board().pieces(sideToMove.opposite());
         this.moveTester = moveTester;
-        this.sideToMove = sideToMove;
-
-        this.king = king;
-        this.pieces = pieces;
         this.legals = legals;
-
-        this.opponentKing = opponentKing;
-        this.opponentPieces = opponentPieces;
     }
 
     Player create(Color color) {

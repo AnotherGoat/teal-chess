@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import cl.vmardones.chess.engine.board.Board;
+import cl.vmardones.chess.engine.game.Position;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Rook;
@@ -16,20 +17,19 @@ import org.eclipse.jdt.annotation.Nullable;
 
 final class CastleGenerator {
 
-    private final MoveTester moveTester;
     private final Board board;
     private final King king;
+    private final MoveTester moveTester;
     private final boolean inCheck;
 
-    CastleGenerator(MoveTester moveTester, Board board, King king) {
+    CastleGenerator(Position position, MoveTester moveTester) {
+        board = position.board();
+        king = position.board().king(position.sideToMove());
         this.moveTester = moveTester;
-        this.board = board;
-        this.king = king;
-        this.inCheck = !moveTester.attacksOnKing().isEmpty();
+        inCheck = !moveTester.attacksOnKing().isEmpty();
     }
 
     Stream<Move> calculateCastles() {
-
         if (castlingIsImpossible()) {
             return Stream.empty();
         }

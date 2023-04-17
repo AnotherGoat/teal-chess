@@ -11,17 +11,17 @@ import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.parser.FenParser;
 import cl.vmardones.chess.engine.piece.Pawn;
-import cl.vmardones.chess.engine.player.Color;
 import org.junit.jupiter.api.Test;
 
 class PawnMoveGeneratorTest {
 
     @Test
     void doublePushes() {
-        var board = FenParser.parse("4k3/p1p1p3/8/2q1N3/8/8/8/4K3 b - - 0 1");
+        var position = FenParser.parse("4k3/p1p1p3/8/2q1N3/8/8/8/4K3 b - - 0 1");
+        var generator = new PawnMoveGenerator(position);
 
+        var board = position.board();
         var jumper = board.pieceAt("a7");
-        var generator = new PawnMoveGenerator(board, Color.BLACK, board.pieces(Color.BLACK));
 
         var expectedMove = Move.createDoublePush((Pawn) jumper, Coordinate.of("a5"));
 
@@ -30,24 +30,26 @@ class PawnMoveGeneratorTest {
 
     @Test
     void enPassantMoves() {
-        var board = FenParser.parse("4k3/8/8/PpP2P2/8/8/8/4K3 w - b5 0 1");
+        var position = FenParser.parse("4k3/8/8/PpP2P2/8/8/8/4K3 w - b6 0 1");
+        var generator = new PawnMoveGenerator(position);
 
         // Only the left and right pawns can en passant
+        var board = position.board();
         var leftPawn = (Pawn) board.pieceAt("a5");
         var rightPawn = (Pawn) board.pieceAt("c5");
         var otherPawn = (Pawn) board.pieceAt("f5");
 
-        var generator = new PawnMoveGenerator(board, Color.WHITE, board.pieces(Color.WHITE));
+        var enPassantTarget = position.enPassantTarget();
 
         var expectedMoves = new Move[] {
-            Move.createEnPassant(leftPawn, Coordinate.of("b6"), board.enPassantPawn()),
-            Move.createEnPassant(rightPawn, Coordinate.of("b6"), board.enPassantPawn())
+            Move.createEnPassant(leftPawn, Coordinate.of("b6"), enPassantTarget),
+            Move.createEnPassant(rightPawn, Coordinate.of("b6"), enPassantTarget)
         };
 
         var unexpectedMoves = new Move[] {
-            Move.createEnPassant(rightPawn, Coordinate.of("d6"), board.enPassantPawn()),
-            Move.createEnPassant(otherPawn, Coordinate.of("e6"), board.enPassantPawn()),
-            Move.createEnPassant(otherPawn, Coordinate.of("g6"), board.enPassantPawn())
+            Move.createEnPassant(rightPawn, Coordinate.of("d6"), enPassantTarget),
+            Move.createEnPassant(otherPawn, Coordinate.of("e6"), enPassantTarget),
+            Move.createEnPassant(otherPawn, Coordinate.of("g6"), enPassantTarget)
         };
 
         assertThat(generator.calculatePawnMoves())

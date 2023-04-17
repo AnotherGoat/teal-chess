@@ -17,9 +17,10 @@ class MoveGeneratorTest {
 
     @Test
     void pawnMoves() {
-        var board = FenParser.parse("4k3/8/8/8/6p1/1P4P1/8/4K3 w - - 0 1");
+        var position = FenParser.parse("4k3/8/8/8/6p1/1P4P1/8/4K3 w - - 0 1");
+        var generator = new MoveGenerator(position);
 
-        var generator = new MoveGenerator(board, board.pieces(Color.WHITE));
+        var board = position.board();
         var leftPawn = board.pieceAt("b3");
 
         var expectedMove = Move.createNormal(leftPawn, Coordinate.of("b4"));
@@ -41,9 +42,10 @@ class MoveGeneratorTest {
 
     @Test
     void kingMoves() {
-        var board = FenParser.parse("4k3/8/8/8/8/8/8/4K3 b - - 0 1");
+        var position = FenParser.parse("4k3/8/8/8/8/8/8/4K3 b - - 0 1");
+        var generator = new MoveGenerator(position);
 
-        var generator = new MoveGenerator(board, board.pieces(Color.BLACK));
+        var board = position.board();
         var king = board.king(Color.BLACK);
 
         var expectedMoves = new Move[] {
@@ -59,10 +61,11 @@ class MoveGeneratorTest {
 
     @Test
     void blockedSlidingMoves() {
-        var board = FenParser.parse("4k3/P7/5B2/8/3N4/8/5Q2/R3K3 w - - 0 1");
+        var position = FenParser.parse("4k3/P7/5B2/8/3N4/8/5Q2/R3K3 w - - 0 1");
 
-        var generator = new MoveGenerator(board, board.pieces(Color.WHITE));
+        var generator = new MoveGenerator(position);
 
+        var board = position.board();
         var bishop = board.pieceAt("f6");
         var rook = board.pieceAt("a1");
         var queen = board.pieceAt("f2");

@@ -81,7 +81,6 @@ dependencies {
     def mockitoVersion = '5.2.0'
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
-    testImplementation "org.mockito:mockito-inline:$mockitoVersion"
 
     // Better assertions
     testImplementation 'org.assertj:assertj-core:3.24.2'

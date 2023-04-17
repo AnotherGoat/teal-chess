@@ -27,33 +27,23 @@ public final class PositionAnalyzer {
 
     // TODO: Pass the position to all the other analyzers
     public PositionAnalyzer(Position position) {
-        var board = position.board();
-        var sideToMove = position.sideToMove();
+        var attackGenerator = new AttackGenerator(position);
+        var opponentAttacks = attackGenerator.calculateAttacks(true).toList();
+        var attacks = attackGenerator.calculateAttacks(false);
 
-        var king = board.king(sideToMove);
-        var pieces = board.pieces(sideToMove);
-
-        var opponentKing = board.king(sideToMove.opposite());
-        var opponentPieces = board.pieces(sideToMove.opposite());
-
-        var attackGenerator = new AttackGenerator(board, sideToMove, pieces, opponentPieces);
-        var opponentAttacks =
-                attackGenerator.calculateAttacks(sideToMove.opposite()).toList();
-        var attacks = attackGenerator.calculateAttacks(sideToMove);
-
-        var moveGenerator = new MoveGenerator(board, pieces);
+        var moveGenerator = new MoveGenerator(position);
         var moves = moveGenerator.calculateMoves();
 
-        var pawnMoveGenerator = new PawnMoveGenerator(board, sideToMove, pieces, position.enPassantPawn());
+        var pawnMoveGenerator = new PawnMoveGenerator(position);
         var pawnMoves = pawnMoveGenerator.calculatePawnMoves();
 
-        moveTester = new MoveTester(king, opponentAttacks);
-        var castleGenerator = new CastleGenerator(moveTester, board, king);
+        moveTester = new MoveTester(position, opponentAttacks);
+        var castleGenerator = new CastleGenerator(position, moveTester);
         var castles = castleGenerator.calculateCastles();
 
         legals = Stream.concat(Stream.concat(attacks, moves), Stream.concat(pawnMoves, castles))
                 .toList();
-        playerFactory = new PlayerFactory(moveTester, sideToMove, king, pieces, legals, opponentKing, opponentPieces);
+        playerFactory = new PlayerFactory(position, moveTester, legals);
     }
 
     public Player createPlayer(Color color) {

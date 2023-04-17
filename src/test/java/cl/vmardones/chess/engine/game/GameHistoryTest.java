@@ -7,12 +7,11 @@ package cl.vmardones.chess.engine.game;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import java.util.List;
-
+import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.move.Move;
+import cl.vmardones.chess.engine.piece.Pawn;
+import cl.vmardones.chess.engine.player.Color;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -28,36 +27,27 @@ class GameHistoryTest {
 
     @Test
     void addToHistory() {
-        var history = new GameHistory();
+        var initialHistory = new GameHistory();
 
-        var turn = mock(Position.class);
-        var move = mock(Move.class);
-        when(turn.lastMove()).thenReturn(move);
+        var initialPosition = Position.INITIAL_POSITION;
+        var history = initialHistory.add(new PositionMemento(initialPosition));
 
-        var newHistory = history.add(new PositionMemento(turn));
-
-        assertThat(newHistory).isNotSameAs(history);
-        assertThat(newHistory.moves()).isNotSameAs(history.moves()).hasSize(1);
+        assertThat(history).isNotSameAs(initialHistory);
+        assertThat(history.lastMove()).isNull();
     }
 
     @Test
     void moveHistory() {
-        var history = new GameHistory();
+        var initialHistory = new GameHistory();
 
-        var turn1 = mock(Position.class);
-        var move1 = mock(Move.class);
-        when(turn1.lastMove()).thenReturn(move1);
+        var position1 = Position.INITIAL_POSITION;
+        var move = Move.createNormal(new Pawn("e2", Color.WHITE), Coordinate.of("e3"));
+        var position2 = new Position(position1.board(), Color.BLACK, position1.castlingRights(), null, 0, 1, move);
 
-        var turn2 = mock(Position.class);
-        var move2 = mock(Move.class);
-        when(turn2.lastMove()).thenReturn(move2);
+        var history1 = initialHistory.add(new PositionMemento(position1));
+        var history2 = history1.add(new PositionMemento(position2));
 
-        var finalHistory = history.add(new PositionMemento(turn1)).add(new PositionMemento(turn2));
-
-        var expectedMoves = List.of(move1, move2);
-        var actualMoves = finalHistory.moves();
-
-        assertThat(actualMoves).isEqualTo(expectedMoves);
+        assertThat(history2.moves()).isNotSameAs(history1.moves()).hasSize(1);
     }
 
     @Test
@@ -69,17 +59,15 @@ class GameHistoryTest {
 
     @Test
     void lastMove() {
-        var history = new GameHistory();
+        var initialHistory = new GameHistory();
 
-        var turn1 = mock(Position.class);
+        var position1 = Position.INITIAL_POSITION;
+        var move = Move.createNormal(new Pawn("c2", Color.WHITE), Coordinate.of("c3"));
+        var position2 = new Position(position1.board(), Color.BLACK, position1.castlingRights(), null, 0, 1, move);
 
-        var turn2 = mock(Position.class);
-        var move2 = mock(Move.class);
-        when(turn2.lastMove()).thenReturn(move2);
+        var finalHistory = initialHistory.add(new PositionMemento(position1)).add(new PositionMemento(position2));
 
-        var finalHistory = history.add(new PositionMemento(turn1)).add(new PositionMemento(turn2));
-
-        assertThat(finalHistory.lastMove()).isEqualTo(move2);
+        assertThat(finalHistory.lastMove()).isEqualTo(move);
     }
 
     @Test

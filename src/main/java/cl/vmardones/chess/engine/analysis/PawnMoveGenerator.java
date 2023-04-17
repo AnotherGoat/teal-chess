@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import cl.vmardones.chess.engine.board.Board;
+import cl.vmardones.chess.engine.game.Position;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
@@ -27,13 +28,13 @@ final class PawnMoveGenerator {
     private final Board board;
     private final Color sideToMove;
     private final List<Piece> pieces;
-    private final @Nullable Pawn enPassantPawn;
+    private final @Nullable Pawn enPassantTarget;
 
-    PawnMoveGenerator(Board board, Color sideToMove, List<Piece> pieces, @Nullable Pawn enPassantPawn) {
-        this.board = board;
-        this.pieces = pieces;
-        this.sideToMove = sideToMove;
-        this.enPassantPawn = enPassantPawn;
+    PawnMoveGenerator(Position position) {
+        board = position.board();
+        sideToMove = position.sideToMove();
+        pieces = board.pieces(sideToMove);
+        enPassantTarget = position.enPassantTarget();
     }
 
     Stream<Move> calculatePawnMoves() {
@@ -44,7 +45,7 @@ final class PawnMoveGenerator {
                 var pawn = (Pawn) piece;
                 moves.add(generateDoublePush(pawn));
 
-                if (enPassantPawn != null) {
+                if (enPassantTarget != null) {
                     moves.add(generateEnPassant(pawn, true));
                     moves.add(generateEnPassant(pawn, false));
                 }
@@ -91,11 +92,11 @@ final class PawnMoveGenerator {
 
         var sidePiece = board.pieceAt(side);
 
-        if (sidePiece == null || !sidePiece.isPawn() || !sidePiece.equals(enPassantPawn)) {
+        if (sidePiece == null || !sidePiece.isPawn() || !sidePiece.equals(enPassantTarget)) {
             return null;
         }
 
-        var enPassantMove = Move.createEnPassant(pawn, destination, enPassantPawn);
+        var enPassantMove = Move.createEnPassant(pawn, destination, enPassantTarget);
         LOG.debug("Created en passant move: {}", enPassantMove);
         return enPassantMove;
     }

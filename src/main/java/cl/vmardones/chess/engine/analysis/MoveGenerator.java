@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Square;
+import cl.vmardones.chess.engine.game.Position;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
@@ -21,9 +22,9 @@ final class MoveGenerator {
     private final Board board;
     private final List<Piece> pieces;
 
-    MoveGenerator(Board board, List<Piece> pieces) {
-        this.board = board;
-        this.pieces = pieces;
+    MoveGenerator(Position position) {
+        board = position.board();
+        pieces = board.pieces(position.sideToMove());
     }
 
     Stream<Move> calculateMoves() {

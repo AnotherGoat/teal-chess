@@ -8,6 +8,7 @@ package cl.vmardones.chess.engine.analysis;
 import java.util.List;
 
 import cl.vmardones.chess.engine.board.Coordinate;
+import cl.vmardones.chess.engine.game.Position;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveResult;
 import cl.vmardones.chess.engine.piece.King;
@@ -17,8 +18,8 @@ final class MoveTester {
     private final King king;
     private final List<Move> opponentAttacks;
 
-    MoveTester(King king, List<Move> opponentAttacks) {
-        this.king = king;
+    MoveTester(Position position, List<Move> opponentAttacks) {
+        king = position.board().king(position.sideToMove());
         this.opponentAttacks = opponentAttacks;
     }
 

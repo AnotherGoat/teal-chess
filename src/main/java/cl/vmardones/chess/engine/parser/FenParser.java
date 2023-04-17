@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 
 import cl.vmardones.chess.ExcludeFromGeneratedReport;
 import cl.vmardones.chess.engine.board.Board;
+import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.game.CastlingRights;
 import cl.vmardones.chess.engine.game.Position;
 import cl.vmardones.chess.engine.piece.*;
@@ -47,11 +48,11 @@ public final class FenParser {
         var ranks = parseRanks(parts[0]);
         var sideToMove = parseSideToMove(parts[1]);
         var castles = parseCastles(parts[2]);
-        var enPassantPawn = parseEnPassantTarget(parts[3], sideToMove);
+        var enPassantTarget = parseEnPassantTarget(parts[3], sideToMove);
         var halfmove = parseHalfmove(parts[4]);
         int fullmove = parseFullmove(parts[5]);
 
-        return buildPosition(ranks, sideToMove, castles, enPassantPawn, halfmove, fullmove);
+        return buildPosition(ranks, sideToMove, castles, enPassantTarget, halfmove, fullmove);
     }
 
     @ExcludeFromGeneratedReport
@@ -128,7 +129,10 @@ public final class FenParser {
             return null;
         }
 
-        return new Pawn(data, sideToMove.opposite());
+        var coordinate = Coordinate.of(data).up(sideToMove.oppositeDirection());
+        assert coordinate != null;
+
+        return new Pawn(coordinate.toString(), sideToMove.opposite());
     }
 
     private static int parseHalfmove(String data) {
@@ -167,12 +171,12 @@ public final class FenParser {
             List<String> ranks,
             Color sideToMove,
             CastlingRights castlingRights,
-            Pawn enPassantPawn,
+            Pawn enPassantTarget,
             int halfmoveClock,
             int fullmoveCounter) {
 
         var board = buildBoard(ranks);
-        return new Position(board, sideToMove, castlingRights, enPassantPawn, halfmoveClock, fullmoveCounter);
+        return new Position(board, sideToMove, castlingRights, enPassantTarget, halfmoveClock, fullmoveCounter);
     }
 
     private static Board buildBoard(List<String> ranks) {

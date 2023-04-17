@@ -102,7 +102,7 @@ public final class Game {
         LOG.debug("White pieces: {}", board.pieces(Color.WHITE));
         LOG.debug("Black king: {}", board.king(Color.BLACK));
         LOG.debug("Black pieces: {}", board.pieces(Color.BLACK));
-        LOG.debug("En passant pawn: {}\n", position.enPassantPawn());
+        LOG.debug("En passant pawn: {}\n", position.enPassantTarget());
 
         var whitePlayer = positionAnalyzer.createPlayer(Color.WHITE);
         var blackPlayer = positionAnalyzer.createPlayer(Color.BLACK);
