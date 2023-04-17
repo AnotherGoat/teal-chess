@@ -10,12 +10,13 @@ import java.util.stream.Stream;
 
 import cl.vmardones.chess.engine.game.Position;
 import cl.vmardones.chess.engine.move.Move;
+import cl.vmardones.chess.engine.move.MoveMaker;
 import cl.vmardones.chess.engine.move.MoveResult;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Color;
 import cl.vmardones.chess.engine.player.Player;
 
-// TODO: For now, it only generates pseudo-legal moves.
+// TODO: For now, it only generates pseudo-legal moves
 /**
  * Analyzes a certain position and generates all the possible legal moves.
  */
@@ -25,7 +26,7 @@ public final class PositionAnalyzer {
     private final MoveTester moveTester;
     private final PlayerFactory playerFactory;
 
-    // TODO: Pass the position to all the other analyzers
+    // TODO: Add promotion moves to the pseudo-legals list
     public PositionAnalyzer(Position position) {
         var attackGenerator = new AttackGenerator(position);
         var opponentAttacks = attackGenerator.calculateAttacks(true).toList();
@@ -41,8 +42,12 @@ public final class PositionAnalyzer {
         var castleGenerator = new CastleGenerator(position, moveTester);
         var castles = castleGenerator.calculateCastles();
 
-        legals = Stream.concat(Stream.concat(attacks, moves), Stream.concat(pawnMoves, castles))
+        var pseudoLegals = Stream.concat(Stream.concat(attacks, moves), Stream.concat(pawnMoves, castles))
                 .toList();
+
+        var legalityChecker = new LegalityChecker(position, new MoveMaker());
+        legals = legalityChecker.checkPseudoLegals(pseudoLegals);
+
         playerFactory = new PlayerFactory(position, moveTester, legals);
     }
 

@@ -48,7 +48,7 @@ final class PlayerFactory {
 
     private PlayerStatus calculateStatus() {
 
-        var checked = !moveTester.attacksOnKing().isEmpty();
+        var checked = moveTester.isKingAttacked();
         var noEscape = calculateEscapeMoves();
 
         if (checked && noEscape) {
@@ -66,6 +66,7 @@ final class PlayerFactory {
         return PlayerStatus.NORMAL;
     }
 
+    // TODO: Implement this method properly
     private boolean calculateEscapeMoves() {
         return legals.stream()
                 .map(move -> moveTester.testMove(move, legals))

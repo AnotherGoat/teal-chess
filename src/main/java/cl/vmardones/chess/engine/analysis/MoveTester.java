@@ -23,20 +23,18 @@ final class MoveTester {
         this.opponentAttacks = opponentAttacks;
     }
 
-    List<Move> attacksOnKing() {
-        return attacksOn(king.coordinate());
+    boolean isKingAttacked() {
+        return isAttacked(king.coordinate());
     }
 
-    List<Move> attacksOn(Coordinate target) {
-        return opponentAttacks.stream()
-                .filter(move -> target.equals(move.destination()))
-                .toList();
+    boolean isAttacked(Coordinate target) {
+        return opponentAttacks.stream().anyMatch(move -> target.equals(move.destination()));
     }
 
     // TODO: Use the move parameter to check what would happen if the move is done
     // For example, the player could SELF_CHECK
     MoveResult testLegalMove(Move move) {
-        if (!attacksOnKing().isEmpty()) {
+        if (isKingAttacked()) {
             return MoveResult.CHECKS;
         }
 
@@ -52,7 +50,7 @@ final class MoveTester {
             return MoveResult.ILLEGAL;
         }
 
-        if (!attacksOnKing().isEmpty()) {
+        if (isKingAttacked()) {
             return MoveResult.CHECKS;
         }
 

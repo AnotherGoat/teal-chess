@@ -26,7 +26,7 @@ final class CastleGenerator {
         board = position.board();
         king = position.board().king(position.sideToMove());
         this.moveTester = moveTester;
-        inCheck = !moveTester.attacksOnKing().isEmpty();
+        inCheck = moveTester.isKingAttacked();
     }
 
     Stream<Move> calculateCastles() {
@@ -105,6 +105,6 @@ final class CastleGenerator {
     private boolean isUnreachableByEnemy(int offset) {
         var destination = king.coordinate().right(offset);
 
-        return destination != null && moveTester.attacksOn(destination).isEmpty();
+        return destination != null && !moveTester.isAttacked(destination);
     }
 }
