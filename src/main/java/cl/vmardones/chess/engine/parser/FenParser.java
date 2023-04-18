@@ -171,7 +171,7 @@ public final class FenParser {
             List<String> ranks,
             Color sideToMove,
             CastlingRights castlingRights,
-            Pawn enPassantTarget,
+            @Nullable Pawn enPassantTarget,
             int halfmoveClock,
             int fullmoveCounter) {
 

@@ -9,6 +9,7 @@ import java.util.List;
 
 import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.game.Position;
+import cl.vmardones.chess.engine.move.Attack;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveResult;
 import cl.vmardones.chess.engine.piece.King;
@@ -16,9 +17,9 @@ import cl.vmardones.chess.engine.piece.King;
 final class MoveTester {
 
     private final King king;
-    private final List<Move> opponentAttacks;
+    private final List<Attack> opponentAttacks;
 
-    MoveTester(Position position, List<Move> opponentAttacks) {
+    MoveTester(Position position, List<Attack> opponentAttacks) {
         king = position.board().king(position.sideToMove());
         this.opponentAttacks = opponentAttacks;
     }
@@ -28,7 +29,8 @@ final class MoveTester {
     }
 
     boolean isAttacked(Coordinate target) {
-        return opponentAttacks.stream().anyMatch(move -> target.equals(move.destination()));
+        return opponentAttacks.stream()
+                .anyMatch(attack -> target.equals(attack.target().coordinate()));
     }
 
     MoveResult testMove(Move move, List<Move> legals) {

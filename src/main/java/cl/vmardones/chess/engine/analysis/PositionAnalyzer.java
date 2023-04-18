@@ -29,10 +29,12 @@ public final class PositionAnalyzer {
     public PositionAnalyzer(Position position) {
         var attackGenerator = new AttackGenerator(position);
         var opponentAttacks = attackGenerator.calculateAttacks(true).toList();
-        var attacks = attackGenerator.calculateAttacks(false);
 
         var moveGenerator = new MoveGenerator(position);
         var moves = moveGenerator.calculateMoves();
+
+        var captureGenerator = new CaptureGenerator(position);
+        var captures = captureGenerator.calculateCaptures();
 
         var pawnMoveGenerator = new PawnMoveGenerator(position);
         var pawnMoves = pawnMoveGenerator.calculatePawnMoves();
@@ -41,7 +43,7 @@ public final class PositionAnalyzer {
         var castleGenerator = new CastleGenerator(position, moveTester);
         var castles = castleGenerator.calculateCastles();
 
-        var pseudoLegals = Stream.concat(Stream.concat(attacks, moves), Stream.concat(pawnMoves, castles))
+        var pseudoLegals = Stream.concat(Stream.concat(moves, captures), Stream.concat(pawnMoves, castles))
                 .toList();
 
         var legalityChecker = new LegalityChecker(position, new MoveMaker());

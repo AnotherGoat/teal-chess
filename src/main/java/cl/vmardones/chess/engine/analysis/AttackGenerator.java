@@ -10,81 +10,51 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import cl.vmardones.chess.engine.board.Board;
-import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.game.Position;
-import cl.vmardones.chess.engine.move.Move;
-import cl.vmardones.chess.engine.piece.Pawn;
+import cl.vmardones.chess.engine.move.Attack;
 import cl.vmardones.chess.engine.piece.Piece;
-import cl.vmardones.chess.engine.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
-// TODO: Generating attacks shouldn't produce a Move, but rather an Attack
 final class AttackGenerator {
 
     private final Board board;
-    private final Color sideToMove;
     private final List<Piece> pieces;
     private final List<Piece> opponentPieces;
 
     AttackGenerator(Position position) {
         board = position.board();
-        sideToMove = position.sideToMove();
-        pieces = board.pieces(sideToMove);
-        opponentPieces = board.pieces(sideToMove.opposite());
+        pieces = board.pieces(position.sideToMove());
+        opponentPieces = board.pieces(position.sideToMove().opposite());
     }
 
-    // TODO: Split this method into two: one for opponent attacks, other for player captures (maybe in other class)
-    Stream<Move> calculateAttacks(boolean opponent) {
+    Stream<Attack> calculateAttacks(boolean opponent) {
         var attackingPieces = opponent ? opponentPieces : pieces;
 
         return attackingPieces.stream().flatMap(this::calculatePieceAttacks);
     }
 
-    private Stream<Move> calculatePieceAttacks(Piece piece) {
+    private Stream<Attack> calculatePieceAttacks(Piece piece) {
 
         if (piece.isPawn()) {
-            var pawn = (Pawn) piece;
-            return Stream.of(generatePawnAttack(pawn, true), generatePawnAttack(pawn, false))
+            return Stream.of(generatePawnAttack(piece, true), generatePawnAttack(piece, false))
                     .filter(Objects::nonNull);
         }
 
         return piece.calculatePossibleDestinations(board).stream()
                 .map(board::squareAt)
-                .map(square -> generateAttack(piece, square))
-                .filter(Objects::nonNull);
+                .map(square -> new Attack(piece, square));
     }
 
-    private @Nullable Move generateAttack(Piece piece, Square destination) {
-
-        var destinationPiece = destination.piece();
-
-        if (destinationPiece == null || piece.isAllyOf(destinationPiece)) {
-            return null;
-        }
-
-        return Move.createCapture(piece, destination.coordinate(), destinationPiece);
-    }
-
-    private @Nullable Move generatePawnAttack(Pawn pawn, boolean leftSide) {
+    private @Nullable Attack generatePawnAttack(Piece pawn, boolean leftSide) {
 
         var direction = leftSide ? -1 : 1;
 
-        var destination = pawn.coordinate().to(direction, sideToMove.direction());
+        var destination = pawn.coordinate().to(direction, pawn.color().direction());
 
         if (destination == null) {
             return null;
         }
 
-        var destinationPiece = board.pieceAt(destination);
-
-        if (destinationPiece == null || pawn.isAllyOf(destinationPiece)) {
-            return null;
-        }
-
-        if (pawn.coordinate().rank() == pawn.rankBeforePromotion()) {
-            return Move.makePromotion(Move.createCapture(pawn, destination, destinationPiece));
-        }
-
-        return Move.createCapture(pawn, destination, destinationPiece);
+        return new Attack(pawn, board.squareAt(destination));
     }
 }
