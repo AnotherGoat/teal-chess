@@ -9,22 +9,28 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import cl.vmardones.chess.engine.board.Board;
+import cl.vmardones.chess.engine.game.CastlingRights;
 import cl.vmardones.chess.engine.game.Position;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.King;
 import cl.vmardones.chess.engine.piece.Rook;
+import cl.vmardones.chess.engine.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
 final class CastleGenerator {
 
     private final Board board;
+    private final Color sideToMove;
     private final King king;
+    private final CastlingRights castlingRights;
     private final MoveTester moveTester;
     private final boolean inCheck;
 
     CastleGenerator(Position position, MoveTester moveTester) {
         board = position.board();
-        king = position.board().king(position.sideToMove());
+        sideToMove = position.sideToMove();
+        king = position.board().king(sideToMove);
+        castlingRights = position.castlingRights();
         this.moveTester = moveTester;
         inCheck = moveTester.isKingAttacked();
     }
@@ -38,7 +44,15 @@ final class CastleGenerator {
     }
 
     private boolean castlingIsImpossible() {
-        return !king.firstMove() || inCheck || !king.coordinate().file().equals("e");
+        if (inCheck) {
+            return false;
+        }
+
+        if (sideToMove == Color.WHITE) {
+            return !castlingRights.whiteKingSide() && !castlingRights.whiteQueenSide();
+        }
+
+        return !castlingRights.blackKingSide() && !castlingRights.blackQueenSide();
     }
 
     private @Nullable Move generateCastleMove(boolean kingSide) {
@@ -57,7 +71,7 @@ final class CastleGenerator {
 
         var rook = (Rook) board.pieceAt(rookCoordinate);
 
-        if (rook == null || !rook.firstMove()) {
+        if (rook == null) {
             return null;
         }
 
@@ -73,7 +87,10 @@ final class CastleGenerator {
     }
 
     private boolean isKingSideCastlePossible() {
-        return isSquareFree(1)
+        var hasRights = sideToMove == Color.WHITE ? castlingRights.whiteKingSide() : castlingRights.blackKingSide();
+
+        return hasRights
+                && isSquareFree(1)
                 && isSquareFree(2)
                 && squareHasRook(3)
                 && isUnreachableByEnemy(1)
@@ -81,7 +98,10 @@ final class CastleGenerator {
     }
 
     private boolean isQueenSideCastlePossible() {
-        return isSquareFree(-1)
+        var hasRights = sideToMove == Color.WHITE ? castlingRights.whiteQueenSide() : castlingRights.blackQueenSide();
+
+        return hasRights
+                && isSquareFree(-1)
                 && isSquareFree(-2)
                 && isSquareFree(-3)
                 && squareHasRook(-4)

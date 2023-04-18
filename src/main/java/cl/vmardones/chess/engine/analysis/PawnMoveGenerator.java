@@ -56,7 +56,7 @@ final class PawnMoveGenerator {
     }
 
     private @Nullable Move generateDoublePush(Pawn pawn) {
-        if (!pawn.firstMove()) {
+        if (pawn.coordinate().rank() != pawn.color().pawnRank()) {
             return null;
         }
 

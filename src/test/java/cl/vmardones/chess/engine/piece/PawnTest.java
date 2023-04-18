@@ -14,11 +14,6 @@ import org.junit.jupiter.api.Test;
 class PawnTest {
 
     @Test
-    void constructor() {
-        assertThat(new Pawn("a1", Color.BLACK)).matches(Pawn::firstMove);
-    }
-
-    @Test
     void toSingleChar() {
         assertThat(new Pawn("a1", Color.WHITE).singleChar()).isEqualTo("P");
         assertThat(new Pawn("a1", Color.BLACK).singleChar()).isEqualTo("p");
@@ -46,9 +41,7 @@ class PawnTest {
     void moveTo() {
         var pawnToMove = new Pawn("a1", Color.WHITE);
 
-        assertThat(pawnToMove.moveTo("a2"))
-                .isInstanceOf(Pawn.class)
-                .matches(pawn -> pawn.coordinate().equals(Coordinate.of("a2")))
-                .matches(pawn -> !pawn.firstMove());
+        assertThat(pawnToMove.moveTo("a2")).isInstanceOf(Pawn.class).matches(pawn -> pawn.coordinate()
+                .equals(Coordinate.of("a2")));
     }
 }

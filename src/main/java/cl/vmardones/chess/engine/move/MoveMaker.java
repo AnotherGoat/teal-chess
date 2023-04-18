@@ -92,7 +92,7 @@ public final class MoveMaker {
         var castlingRights = position.castlingRights();
         var piece = move.piece();
 
-        if (!piece.isKing() || !piece.isRook()) {
+        if (!piece.isKing() && !piece.isRook()) {
             return castlingRights;
         }
 

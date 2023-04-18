@@ -14,11 +14,6 @@ import org.junit.jupiter.api.Test;
 class RookTest {
 
     @Test
-    void constructor() {
-        assertThat(new Rook("a1", Color.BLACK)).matches(Rook::firstMove);
-    }
-
-    @Test
     void toSingleChar() {
         assertThat(new Rook("a1", Color.WHITE).singleChar()).isEqualTo("R");
         assertThat(new Rook("a1", Color.BLACK).singleChar()).isEqualTo("r");
@@ -52,9 +47,7 @@ class RookTest {
     void moveTo() {
         var rookToMove = new Rook("a1", Color.BLACK);
 
-        assertThat(rookToMove.moveTo("a2"))
-                .isInstanceOf(Rook.class)
-                .matches(rook -> rook.coordinate().equals(Coordinate.of("a2")))
-                .matches(rook -> !rook.firstMove());
+        assertThat(rookToMove.moveTo("a2")).isInstanceOf(Rook.class).matches(rook -> rook.coordinate()
+                .equals(Coordinate.of("a2")));
     }
 }

@@ -14,11 +14,6 @@ import org.junit.jupiter.api.Test;
 class KingTest {
 
     @Test
-    void constructor() {
-        assertThat(new King("a1", Color.BLACK)).matches(King::firstMove);
-    }
-
-    @Test
     void toSingleChar() {
         assertThat(new King("a1", Color.WHITE).singleChar()).isEqualTo("K");
         assertThat(new King("a1", Color.BLACK).singleChar()).isEqualTo("k");
@@ -58,9 +53,7 @@ class KingTest {
     void moveTo() {
         var kingToMove = new King("a1", Color.WHITE);
 
-        assertThat(kingToMove.moveTo("a2"))
-                .isInstanceOf(King.class)
-                .matches(king -> king.coordinate().equals(Coordinate.of("a2")))
-                .matches(king -> !king.firstMove());
+        assertThat(kingToMove.moveTo("a2")).isInstanceOf(King.class).matches(king -> king.coordinate()
+                .equals(Coordinate.of("a2")));
     }
 }

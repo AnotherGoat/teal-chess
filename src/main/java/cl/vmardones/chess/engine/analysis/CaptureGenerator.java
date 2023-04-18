@@ -72,7 +72,7 @@ final class CaptureGenerator {
             return null;
         }
 
-        if (pawn.coordinate().rank() == pawn.rankBeforePromotion()) {
+        if (pawn.coordinate().rank() == pawn.color().opposite().pawnRank()) {
             return Move.makePromotion(Move.createCapture(pawn, destination, destinationPiece));
         }
 

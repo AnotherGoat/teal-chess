@@ -104,6 +104,7 @@ public final class Game {
         LOG.debug("White pieces: {}", board.pieces(Color.WHITE));
         LOG.debug("Black king: {}", board.king(Color.BLACK));
         LOG.debug("Black pieces: {}", board.pieces(Color.BLACK));
+        LOG.debug("Castling rights: {}", position.castlingRights());
         LOG.debug("En passant pawn: {}\n", position.enPassantTarget());
 
         LOG.debug("Players: {} vs. {}", whitePlayer, blackPlayer);

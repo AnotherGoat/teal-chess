@@ -14,11 +14,6 @@ import org.junit.jupiter.api.Test;
 class BishopTest {
 
     @Test
-    void constructor() {
-        assertThat(new Bishop("a1", Color.BLACK)).matches(Bishop::firstMove);
-    }
-
-    @Test
     void toSingleChar() {
         assertThat(new Bishop("a1", Color.WHITE).singleChar()).isEqualTo("B");
         assertThat(new Bishop("a1", Color.BLACK).singleChar()).isEqualTo("b");
@@ -46,9 +41,7 @@ class BishopTest {
     void moveTo() {
         var bishopToMove = new Bishop("a1", Color.BLACK);
 
-        assertThat(bishopToMove.moveTo("a2"))
-                .isInstanceOf(Bishop.class)
-                .matches(bishop -> bishop.coordinate().equals(Coordinate.of("a2")))
-                .matches(bishop -> !bishop.firstMove());
+        assertThat(bishopToMove.moveTo("a2")).isInstanceOf(Bishop.class).matches(bishop -> bishop.coordinate()
+                .equals(Coordinate.of("a2")));
     }
 }

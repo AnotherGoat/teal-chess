@@ -13,12 +13,12 @@ import java.util.List;
  */
 public enum Color {
     /** The white side, at the bottom of the board. */
-    WHITE(1, 8),
+    WHITE(1, 2),
     /** The black side, at the top of the board. */
-    BLACK(-1, 1);
+    BLACK(-1, 7);
 
     private final int direction;
-    private final int promotionRank;
+    private final int pawnRank;
 
     /* Alternate color construction */
 
@@ -54,8 +54,8 @@ public enum Color {
         return opposite().direction();
     }
 
-    public int promotionRank() {
-        return promotionRank;
+    public int pawnRank() {
+        return pawnRank;
     }
 
     /* Choosing players */
@@ -81,8 +81,8 @@ public enum Color {
         return String.valueOf(super.toString().toLowerCase().charAt(0));
     }
 
-    Color(int direction, int promotionRank) {
+    Color(int direction, int pawnRank) {
         this.direction = direction;
-        this.promotionRank = promotionRank;
+        this.pawnRank = pawnRank;
     }
 }

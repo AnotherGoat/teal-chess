@@ -26,20 +26,16 @@ public final class Queen extends SlidingPiece {
             new int[] {1, -1});
 
     public Queen(String coordinate, Color color) {
-        this(coordinate, color, true);
+        super(PieceType.QUEEN, coordinate, color, MOVES);
     }
 
     @Override
     public Queen moveTo(String destination) {
-        return new Queen(destination, color, false);
+        return new Queen(destination, color);
     }
 
     @Override
     public String unicodeChar() {
         return color == Color.WHITE ? "♕" : "♛";
-    }
-
-    private Queen(String coordinate, Color color, boolean firstMove) {
-        super(PieceType.QUEEN, coordinate, color, firstMove, MOVES);
     }
 }

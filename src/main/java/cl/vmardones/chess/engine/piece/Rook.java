@@ -25,20 +25,16 @@ public final class Rook extends SlidingPiece {
             List.of(new int[] {0, 1}, new int[] {-1, 0}, new int[] {1, 0}, new int[] {0, -1});
 
     public Rook(String coordinate, Color color) {
-        this(coordinate, color, true);
+        super(PieceType.ROOK, coordinate, color, MOVES);
     }
 
     @Override
     public Rook moveTo(String destination) {
-        return new Rook(destination, color, false);
+        return new Rook(destination, color);
     }
 
     @Override
     public String unicodeChar() {
         return color == Color.WHITE ? "♖" : "♜";
-    }
-
-    private Rook(String coordinate, Color color, boolean firstMove) {
-        super(PieceType.ROOK, coordinate, color, firstMove, MOVES);
     }
 }

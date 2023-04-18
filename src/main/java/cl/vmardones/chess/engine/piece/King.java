@@ -28,20 +28,16 @@ public final class King extends JumpingPiece {
             new int[] {1, -1});
 
     public King(String coordinate, Color color) {
-        this(coordinate, color, true);
+        super(PieceType.KING, coordinate, color, MOVES);
     }
 
     @Override
     public King moveTo(String destination) {
-        return new King(destination, color, false);
+        return new King(destination, color);
     }
 
     @Override
     public String unicodeChar() {
         return color == Color.WHITE ? "♔" : "♚";
-    }
-
-    private King(String coordinate, Color color, boolean firstMove) {
-        super(PieceType.KING, coordinate, color, firstMove, MOVES);
     }
 }

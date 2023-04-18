@@ -38,4 +38,18 @@ public record CastlingRights(
             case BLACK -> new CastlingRights(whiteKingSide, whiteQueenSide, blackKingSide, false);
         };
     }
+
+    @Override
+    public String toString() {
+        if (!whiteKingSide && !whiteQueenSide && !blackKingSide && !blackQueenSide) {
+            return "-";
+        }
+
+        return String.format(
+                "%s%s%s%s",
+                whiteKingSide ? "K" : "",
+                whiteQueenSide ? "Q" : "",
+                blackKingSide ? "k" : "",
+                blackQueenSide ? "q" : "");
+    }
 }

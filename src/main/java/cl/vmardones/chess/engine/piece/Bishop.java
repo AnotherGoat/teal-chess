@@ -19,20 +19,16 @@ public final class Bishop extends SlidingPiece {
             List.of(new int[] {-1, 1}, new int[] {1, 1}, new int[] {-1, -1}, new int[] {1, -1});
 
     public Bishop(String coordinate, Color color) {
-        this(coordinate, color, true);
+        super(PieceType.BISHOP, coordinate, color, MOVES);
     }
 
     @Override
     public Bishop moveTo(String destination) {
-        return new Bishop(destination, color, false);
+        return new Bishop(destination, color);
     }
 
     @Override
     public String unicodeChar() {
         return color == Color.WHITE ? "♗" : "♝";
-    }
-
-    private Bishop(String coordinate, Color color, boolean firstMove) {
-        super(PieceType.BISHOP, coordinate, color, firstMove, MOVES);
     }
 }

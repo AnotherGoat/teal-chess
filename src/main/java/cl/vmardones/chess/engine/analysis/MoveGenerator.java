@@ -13,7 +13,6 @@ import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.game.Position;
 import cl.vmardones.chess.engine.move.Move;
-import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.piece.Piece;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -46,7 +45,8 @@ final class MoveGenerator {
             return null;
         }
 
-        if (piece.isPawn() && piece.coordinate().rank() == ((Pawn) piece).rankBeforePromotion()) {
+        if (piece.isPawn()
+                && piece.coordinate().rank() == piece.color().opposite().pawnRank()) {
             return Move.makePromotion(Move.createNormal(piece, destination.coordinate()));
         }
 

@@ -18,12 +18,12 @@ import cl.vmardones.chess.engine.player.Color;
 public final class Pawn extends JumpingPiece {
 
     public Pawn(String coordinate, Color color) {
-        this(coordinate, color, true);
+        super(PieceType.PAWN, coordinate, color, List.of(new int[] {0, color.direction()}));
     }
 
     @Override
     public Pawn moveTo(String destination) {
-        return new Pawn(destination, color, false);
+        return new Pawn(destination, color);
     }
 
     @Override
@@ -31,15 +31,7 @@ public final class Pawn extends JumpingPiece {
         return color == Color.WHITE ? "♙" : "♟";
     }
 
-    public int rankBeforePromotion() {
-        return color.promotionRank() - color.direction();
-    }
-
     public Piece promote() {
         return new Queen(coordinate.toString(), color);
-    }
-
-    private Pawn(String coordinate, Color color, boolean firstMove) {
-        super(PieceType.PAWN, coordinate, color, firstMove, List.of(new int[] {0, color.direction()}));
     }
 }

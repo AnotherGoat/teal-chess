@@ -21,7 +21,6 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
     protected final PieceType type;
     protected final Coordinate coordinate;
     protected final Color color;
-    protected final boolean firstMove;
 
     /* Alternate piece construction */
 
@@ -57,10 +56,6 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
 
     public Color color() {
         return color;
-    }
-
-    public boolean firstMove() {
-        return firstMove;
     }
 
     public String singleChar() {
@@ -133,15 +128,12 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
         }
 
         var other = (Piece) o;
-        return type == other.type
-                && coordinate.equals(other.coordinate)
-                && color == other.color
-                && firstMove == other.firstMove;
+        return type == other.type && coordinate.equals(other.coordinate) && color == other.color;
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hash(type, coordinate, color, firstMove);
+        return Objects.hash(type, coordinate, color);
     }
 
     @Override
@@ -149,10 +141,9 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
         return String.format("%s%s", unicodeChar(), coordinate);
     }
 
-    protected Piece(PieceType type, String coordinate, Color color, boolean firstMove) {
+    protected Piece(PieceType type, String coordinate, Color color) {
         this.type = type;
         this.coordinate = Coordinate.of(coordinate);
         this.color = color;
-        this.firstMove = firstMove;
     }
 }

@@ -14,11 +14,6 @@ import org.junit.jupiter.api.Test;
 class QueenTest {
 
     @Test
-    void constructor() {
-        assertThat(new Queen("a1", Color.BLACK)).matches(Queen::firstMove);
-    }
-
-    @Test
     void toSingleChar() {
         assertThat(new Queen("a1", Color.WHITE).singleChar()).isEqualTo("Q");
         assertThat(new Queen("a1", Color.BLACK).singleChar()).isEqualTo("q");
@@ -58,9 +53,7 @@ class QueenTest {
     void moveTo() {
         var queenToMove = new Queen("a1", Color.BLACK);
 
-        assertThat(queenToMove.moveTo("a2"))
-                .isInstanceOf(Queen.class)
-                .matches(queen -> queen.coordinate().equals(Coordinate.of("a2")))
-                .matches(queen -> !queen.firstMove());
+        assertThat(queenToMove.moveTo("a2")).isInstanceOf(Queen.class).matches(queen -> queen.coordinate()
+                .equals(Coordinate.of("a2")));
     }
 }

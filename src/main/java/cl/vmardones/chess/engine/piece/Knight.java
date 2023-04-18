@@ -26,7 +26,7 @@ public final class Knight extends JumpingPiece {
             new int[] {1, -2});
 
     public Knight(String coordinate, Color color) {
-        this(coordinate, color, true);
+        super(PieceType.KNIGHT, coordinate, color, MOVES);
     }
 
     @Override
@@ -36,15 +36,11 @@ public final class Knight extends JumpingPiece {
 
     @Override
     public Knight moveTo(String destination) {
-        return new Knight(destination, color, false);
+        return new Knight(destination, color);
     }
 
     @Override
     public String unicodeChar() {
         return color == Color.WHITE ? "♘" : "♞";
-    }
-
-    private Knight(String coordinate, Color color, boolean firstMove) {
-        super(PieceType.KNIGHT, coordinate, color, firstMove, MOVES);
     }
 }
