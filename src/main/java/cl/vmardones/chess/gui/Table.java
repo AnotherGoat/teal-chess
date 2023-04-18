@@ -21,7 +21,6 @@ import org.apache.logging.log4j.Logger;
 
 import cl.vmardones.chess.engine.game.Game;
 import cl.vmardones.chess.engine.move.Move;
-import cl.vmardones.chess.engine.move.MoveResult;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.io.FontLoader;
 import com.formdev.flatlaf.FlatDarkLaf;
@@ -85,10 +84,6 @@ public class Table {
 
         boardPanel.setBoard(game.board());
         boardPanel.draw();
-    }
-
-    MoveResult testMove(Move move) {
-        return game().testMove(move);
     }
 
     /* Getters and setters */

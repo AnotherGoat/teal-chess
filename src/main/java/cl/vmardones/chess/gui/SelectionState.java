@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.board.Square;
 import cl.vmardones.chess.engine.move.MoveFinder;
-import cl.vmardones.chess.engine.move.MoveResult;
 
 interface SelectionState {
     void onLeftClick(Table table, Square pressedSquare);
@@ -34,6 +33,11 @@ interface SelectionState {
 
             if (selectedPiece.color() == table.game().currentOpponent().color()) {
                 LOG.warn("The selected piece belongs to the opponent\n");
+                return;
+            }
+
+            if (table.game().findLegalMoves(selectedPiece).isEmpty()) {
+                LOG.warn("The selected piece has no legal moves\n");
                 return;
             }
 
@@ -82,12 +86,7 @@ interface SelectionState {
                 return;
             }
 
-            var status = table.testMove(move);
-
-            if (status == MoveResult.CONTINUE) {
-                table.game().updatePosition(move);
-            }
-
+            table.game().updatePosition(move);
             table.selectionState(new NoSelectionState(table));
         }
 

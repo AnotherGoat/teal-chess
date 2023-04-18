@@ -31,16 +31,6 @@ final class MoveTester {
         return opponentAttacks.stream().anyMatch(move -> target.equals(move.destination()));
     }
 
-    // TODO: Use the move parameter to check what would happen if the move is done
-    // For example, the player could SELF_CHECK
-    MoveResult testLegalMove(Move move) {
-        if (isKingAttacked()) {
-            return MoveResult.CHECKS;
-        }
-
-        return MoveResult.CONTINUE;
-    }
-
     MoveResult testMove(Move move, List<Move> legals) {
         if (move.isNone()) {
             return MoveResult.NONE;

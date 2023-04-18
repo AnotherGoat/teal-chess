@@ -43,6 +43,4 @@ final class LegalityChecker {
 
         return legals;
     }
-
-    private void isInCheckOrCheckmate(Position possiblePosition) {}
 }

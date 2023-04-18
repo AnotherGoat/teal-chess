@@ -14,7 +14,6 @@ import cl.vmardones.chess.engine.analysis.PositionAnalyzer;
 import cl.vmardones.chess.engine.board.Board;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveMaker;
-import cl.vmardones.chess.engine.move.MoveResult;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Color;
 import cl.vmardones.chess.engine.player.Player;
@@ -72,10 +71,6 @@ public final class Game {
 
     /* Analysis methods */
 
-    public MoveResult testMove(Move move) {
-        return positionAnalyzer.testMove(move);
-    }
-
     public List<Move> findLegalMoves(Piece piece) {
         return positionAnalyzer.findLegalMoves(piece);
     }
@@ -91,6 +86,12 @@ public final class Game {
         history = history.add(state.save());
 
         LOG.debug("Move added to history: {}\n", state.currentPosition().lastMove());
+
+        if (whitePlayer.legals().isEmpty() && blackPlayer.legals().isEmpty()) {
+            LOG.info(
+                    "Checkmate! {} player won!\n",
+                    position.sideToMove().opposite().name());
+        }
     }
 
     private void analyzePosition(Position position) {
@@ -98,19 +99,16 @@ public final class Game {
         var board = position.board();
 
         LOG.debug("Current chessboard:\n{}", board);
+
         LOG.debug("White king: {}", board.king(Color.WHITE));
         LOG.debug("White pieces: {}", board.pieces(Color.WHITE));
         LOG.debug("Black king: {}", board.king(Color.BLACK));
         LOG.debug("Black pieces: {}", board.pieces(Color.BLACK));
         LOG.debug("En passant pawn: {}\n", position.enPassantTarget());
 
-        var whitePlayer = positionAnalyzer.createPlayer(Color.WHITE);
-        var blackPlayer = positionAnalyzer.createPlayer(Color.BLACK);
-
         LOG.debug("Players: {} vs. {}", whitePlayer, blackPlayer);
-
         var sideToMove = position.sideToMove();
-        LOG.debug("Side to move: {}", position.sideToMove().name());
+        LOG.debug("Side to move: {}", sideToMove.name());
         LOG.debug("Legal moves: {}", sideToMove == Color.WHITE ? whitePlayer.legals() : blackPlayer.legals());
     }
 }

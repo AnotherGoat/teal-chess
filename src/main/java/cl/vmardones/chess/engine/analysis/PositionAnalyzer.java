@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 import cl.vmardones.chess.engine.game.Position;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.move.MoveMaker;
-import cl.vmardones.chess.engine.move.MoveResult;
 import cl.vmardones.chess.engine.piece.Piece;
 import cl.vmardones.chess.engine.player.Color;
 import cl.vmardones.chess.engine.player.Player;
@@ -53,10 +52,6 @@ public final class PositionAnalyzer {
 
     public Player createPlayer(Color color) {
         return playerFactory.create(color);
-    }
-
-    public MoveResult testMove(Move move) {
-        return moveTester.testLegalMove(move);
     }
 
     public List<Move> findLegalMoves(Piece piece) {

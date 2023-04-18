@@ -9,26 +9,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import cl.vmardones.chess.engine.board.BoardDirector;
 import cl.vmardones.chess.engine.board.Coordinate;
 import cl.vmardones.chess.engine.move.Move;
 import cl.vmardones.chess.engine.piece.Pawn;
 import cl.vmardones.chess.engine.player.Color;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class GameTest {
 
-    Game game;
-
-    @BeforeEach
-    void setUp() {
-        game = new Game();
-    }
-
     @Test
     void initialPosition() {
-        assertThat(game.board()).isEqualTo(BoardDirector.createStandardBoard());
+        var game = new Game();
+
+        assertThat(game.board()).isEqualTo(Position.INITIAL_POSITION.board());
         assertThat(game.currentPlayer().color()).isEqualTo(Color.WHITE);
         assertThat(game.currentOpponent().color()).isEqualTo(Color.BLACK);
         assertThat(game.history().lastMove()).isNull();
@@ -36,6 +29,8 @@ class GameTest {
 
     @Test
     void secondPosition() {
+        var game = new Game();
+
         var initialBoard = game.board();
         var move = mock(Move.class);
 

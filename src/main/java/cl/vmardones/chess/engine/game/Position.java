@@ -29,7 +29,8 @@ public record Position(
         @Nullable Move lastMove) {
 
     /**
-     * The initial position of the chess pieces in the board.
+     * The initial position of the chess pieces in the board, which consists of a rank filled with 8 pawns on each side with a
+     * formation of 8 major pieces behind.
      * Always used when starting a new game.
      * @see <a href="https://www.chessprogramming.org/Initial_Position">Initial Position</a>
      */

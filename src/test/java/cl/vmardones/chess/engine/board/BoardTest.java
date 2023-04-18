@@ -8,6 +8,8 @@ package cl.vmardones.chess.engine.board;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import cl.vmardones.chess.engine.game.Position;
+import cl.vmardones.chess.engine.parser.FenParser;
 import cl.vmardones.chess.engine.piece.*;
 import cl.vmardones.chess.engine.player.Color;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -120,22 +122,38 @@ class BoardTest {
 
     @Test
     void unmodifiableSquares() {
-        var squares = BoardDirector.createStandardBoard().squares();
+        var squares = FenParser.parse("4k3/8/8/8/8/8/8/4K3 w - - 0 1").board().squares();
 
         assertThatThrownBy(squares::clear).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void unmodifiableWhitePieces() {
-        var whitePieces = BoardDirector.createStandardBoard().pieces(Color.WHITE);
+        var whitePieces =
+                FenParser.parse("4k3/8/8/8/8/8/8/4K3 w - - 0 1").board().pieces(Color.WHITE);
 
         assertThatThrownBy(whitePieces::clear).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void unmodifiableBlackPieces() {
-        var blackPieces = BoardDirector.createStandardBoard().pieces(Color.BLACK);
+        var blackPieces =
+                FenParser.parse("4k3/8/8/8/8/8/8/4K3 w - - 0 1").board().pieces(Color.BLACK);
 
         assertThatThrownBy(blackPieces::clear).isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    @Test
+    void asString() {
+        var board = Position.INITIAL_POSITION.board();
+
+        assertThat(board.toString())
+                .containsOnlyOnce("♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜")
+                .containsOnlyOnce("♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟")
+                .contains("□ ■ □ ■ □ ■ □ ■")
+                .contains("■ □ ■ □ ■ □ ■ □")
+                .containsOnlyOnce("♙ ♙ ♙ ♙ ♙ ♙ ♙ ♙")
+                .containsOnlyOnce("♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖")
+                .contains("\n");
     }
 }
