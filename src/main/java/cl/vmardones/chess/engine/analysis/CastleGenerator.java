@@ -106,8 +106,7 @@ final class CastleGenerator {
                 && isSquareFree(-3)
                 && squareHasRook(-4)
                 && isUnreachableByEnemy(-1)
-                && isUnreachableByEnemy(-2)
-                && isUnreachableByEnemy(-3);
+                && isUnreachableByEnemy(-2);
     }
 
     private boolean isSquareFree(int offset) {

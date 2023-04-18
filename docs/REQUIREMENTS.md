@@ -29,10 +29,10 @@ Only the first 3 articles are taken into account.
   been **made**.
 - ✓ (1.4) The objective of each player is to place the opponent's king **under
   attack** in such a way that the opponent has no legal move.
-  - ✗ (1.4.1)
+  - ✓ (1.4.1)
     - ✗ The player who achieves this goal is said to have **checkmated** the
       opponent's king and to have won the game.
-    - ✗ Leaving one's own king under attack, exposing one's own king to attack
+    - ✓ Leaving one's own king under attack, exposing one's own king to attack
       and also **capturing** the opponent's king is not allowed.
   - ✗ (1.4.2) The opponent whose king has been checkmated has lost the game.
   - ✗ (1.4.3) If the position is such that neither player can possibly checkmate
@@ -91,11 +91,11 @@ Only the first 3 articles are taken into account.
         same move for a new queen, rook, bishop or knight of the same colour on
         the intended square of arrival.
       - ✗ This is called the square of **promotion**.
-    - ✗ (3.7.3.4) The player's choice is not restricted to pieces that have been
+    - ✓ (3.7.3.4) The player's choice is not restricted to pieces that have been
       captured previously.
-    - ✗ (3.7.3.5) This exchange of a pawn for another piece is called promotion,
+    - ✓ (3.7.3.5) This exchange of a pawn for another piece is called promotion,
       and the effect of the new piece is immediate.
-- ✗ (3.8) There are two different ways of moving the king:
+- ✓ (3.8) There are two different ways of moving the king:
   - ✓ (3.8.1) by moving to an adjoining square
   - ✓ (3.8.2)
     - ✓ by **castling**.
@@ -107,25 +107,25 @@ Only the first 3 articles are taken into account.
     - ✓ (3.8.2.1) The right to castle has been lost:
       - ✓ If the king has already moved,
       - ✓ or with a rook that has already moved.
-    - ✗ (3.8.2.2) Castling is prevented temporarily:
-      - If the square on which the king stands, or the square which it must
+    - ✓ (3.8.2.2) Castling is prevented temporarily:
+      - ✓ If the square on which the king stands, or the square which it must
         cross, or the square which it is to occupy, is attacked by one or more
         of the opponent's pieces,
       - ✓ or if there is any piece between the king and the rook with which
         castling is to be effected.
-- ✗ (3.9) The king in check:
-  - ✗ (3.9.1) The king is said to be 'in check' if it is attacked by one or more
+- ✓ (3.9) The king in check:
+  - ✓ (3.9.1) The king is said to be 'in check' if it is attacked by one or more
     of the opponent's pieces, even if such pieces are constrained from moving to
     the square occupied by the king because they would then leave or place their
     own king in check.
-  - ✗ (3.9.2) No piece can be moved that will either expose the king of the same
+  - ✓ (3.9.2) No piece can be moved that will either expose the king of the same
     colour to check or leave that king in check.
-- ✗ (3.10) Legal and illegal moves; illegal positions:
-  - ✗ (3.10.1) A move is legal when all the relevant requirements of Articles
+- ✓ (3.10) Legal and illegal moves; illegal positions:
+  - ✓ (3.10.1) A move is legal when all the relevant requirements of Articles
     3.1 – 3.9 have been fulfilled.
-  - ✗ (3.10.2) A move is illegal when it fails to meet the relevant requirements
+  - ✓ (3.10.2) A move is illegal when it fails to meet the relevant requirements
     of Articles 3.1 – 3.9.
-  - ✗ (3.10.3) A position is illegal when it cannot have been reached by any
+  - ✓ (3.10.3) A position is illegal when it cannot have been reached by any
     series of legal moves.
 
 ### Online Chess Rules
@@ -307,9 +307,9 @@ testing a lot easier.
     - ✓ The second field represents the active color.
     - ✓ A lower case "w" is used if White is to move; a lower case "b" is used
       if Black is the active player.
-  - ✗ (16.1.3.3) Castling availability
+  - ✓ (16.1.3.3) Castling availability
     - ✓ The third field represents castling availability.
-    - ✗ This indicates potential future castling that may of may not be possible
+    - ✓ This indicates potential future castling that may of may not be possible
       at the moment due to blocking pieces or enemy attacks.
     - ✓ If there is no castling availability for either side, the single
       character symbol "-" is used.
