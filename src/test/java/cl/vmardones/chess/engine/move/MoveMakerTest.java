@@ -69,7 +69,23 @@ class MoveMakerTest {
     }
 
     @Test
-    void makeCastleMove() {
+    void makeWhiteKingSideCastle() {
+        var initialPosition = FenParser.parse("4k3/8/8/8/8/8/8/4K2R w K - 0 1");
+        var king = (King) initialPosition.board().pieceAt("e1");
+        var rook = (Rook) initialPosition.board().pieceAt("h1");
+
+        var move = Move.createCastle(true, king, Coordinate.of("g1"), rook, Coordinate.of("f1"));
+        var afterMove = moveMaker.make(initialPosition, move);
+
+        assertThat(afterMove.board().pieceAt("g1")).isInstanceOf(King.class);
+        assertThat(afterMove.board().pieceAt("f1")).isInstanceOf(Rook.class);
+        assertThat(afterMove.board().pieces(Color.WHITE))
+                .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(King.class))
+                .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(Rook.class));
+    }
+
+    @Test
+    void makeWhiteQueenSideCastle() {
         var initialPosition = FenParser.parse("4k3/8/8/8/8/8/8/R3K3 w Q - 0 1");
         var king = (King) initialPosition.board().pieceAt("e1");
         var rook = (Rook) initialPosition.board().pieceAt("a1");
@@ -80,6 +96,38 @@ class MoveMakerTest {
         assertThat(afterMove.board().pieceAt("c1")).isInstanceOf(King.class);
         assertThat(afterMove.board().pieceAt("d1")).isInstanceOf(Rook.class);
         assertThat(afterMove.board().pieces(Color.WHITE))
+                .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(King.class))
+                .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(Rook.class));
+    }
+
+    @Test
+    void makeBlackKingSideCastle() {
+        var initialPosition = FenParser.parse("4k2r/8/8/8/8/8/8/4K3 b k - 0 1");
+        var king = (King) initialPosition.board().pieceAt("e8");
+        var rook = (Rook) initialPosition.board().pieceAt("h8");
+
+        var move = Move.createCastle(true, king, Coordinate.of("g8"), rook, Coordinate.of("f8"));
+        var afterMove = moveMaker.make(initialPosition, move);
+
+        assertThat(afterMove.board().pieceAt("g8")).isInstanceOf(King.class);
+        assertThat(afterMove.board().pieceAt("f8")).isInstanceOf(Rook.class);
+        assertThat(afterMove.board().pieces(Color.BLACK))
+                .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(King.class))
+                .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(Rook.class));
+    }
+
+    @Test
+    void makeBlackQueenSideCastle() {
+        var initialPosition = FenParser.parse("r3k3/8/8/8/8/8/8/4K3 b q - 0 1");
+        var king = (King) initialPosition.board().pieceAt("e8");
+        var rook = (Rook) initialPosition.board().pieceAt("a8");
+
+        var move = Move.createCastle(false, king, Coordinate.of("c8"), rook, Coordinate.of("d8"));
+        var afterMove = moveMaker.make(initialPosition, move);
+
+        assertThat(afterMove.board().pieceAt("c8")).isInstanceOf(King.class);
+        assertThat(afterMove.board().pieceAt("d8")).isInstanceOf(Rook.class);
+        assertThat(afterMove.board().pieces(Color.BLACK))
                 .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(King.class))
                 .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(Rook.class));
     }
@@ -97,5 +145,99 @@ class MoveMakerTest {
         assertThat(afterMove.enPassantTarget().coordinate()).isEqualTo(Coordinate.of("a5"));
         assertThat(afterMove.board().pieces(Color.BLACK))
                 .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(Pawn.class));
+    }
+
+    @Test
+    void keepCastlingRights() {
+        var initialPosition = FenParser.parse("4k3/8/8/8/8/3N4/8/4K3 w KQkq - 0 1");
+        var knight = initialPosition.board().pieceAt("d3");
+
+        var move = Move.createNormal(knight, Coordinate.of("b4"));
+        var afterMove = moveMaker.make(initialPosition, move);
+
+        assertThat(afterMove.castlingRights()).isEqualTo(initialPosition.castlingRights());
+    }
+
+    @Test
+    void loseWhiteCastles() {
+        var initialPosition = FenParser.parse("4k3/8/8/8/8/8/8/4K3 w KQkq - 0 1");
+        var king = initialPosition.board().pieceAt("e1");
+
+        var move = Move.createNormal(king, Coordinate.of("e2"));
+        var afterMove = moveMaker.make(initialPosition, move);
+
+        assertThat(afterMove.castlingRights().whiteKingSide()).isFalse();
+        assertThat(afterMove.castlingRights().whiteQueenSide()).isFalse();
+    }
+
+    @Test
+    void loseBlackCastles() {
+        var initialPosition = FenParser.parse("4k3/8/8/8/8/8/8/4K3 b KQkq - 0 1");
+        var king = initialPosition.board().pieceAt("e8");
+
+        var move = Move.createNormal(king, Coordinate.of("e7"));
+        var afterMove = moveMaker.make(initialPosition, move);
+
+        assertThat(afterMove.castlingRights().blackKingSide()).isFalse();
+        assertThat(afterMove.castlingRights().blackQueenSide()).isFalse();
+    }
+
+    @Test
+    void loseWhiteKingSideCastle() {
+        var initialPosition = FenParser.parse("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
+        var rook = initialPosition.board().pieceAt("h1");
+
+        var move = Move.createNormal(rook, Coordinate.of("h3"));
+        var afterMove = moveMaker.make(initialPosition, move);
+
+        assertThat(afterMove.castlingRights().whiteKingSide()).isFalse();
+        assertThat(afterMove.castlingRights().blackKingSide()).isTrue();
+    }
+
+    @Test
+    void loseWhiteQueenSideCastle() {
+        var initialPosition = FenParser.parse("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
+        var rook = initialPosition.board().pieceAt("a1");
+
+        var move = Move.createNormal(rook, Coordinate.of("d1"));
+        var afterMove = moveMaker.make(initialPosition, move);
+
+        assertThat(afterMove.castlingRights().whiteQueenSide()).isFalse();
+        assertThat(afterMove.castlingRights().blackQueenSide()).isTrue();
+    }
+
+    @Test
+    void loseBlackKingSideCastle() {
+        var initialPosition = FenParser.parse("r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 0 1");
+        var rook = initialPosition.board().pieceAt("h8");
+
+        var move = Move.createNormal(rook, Coordinate.of("g8"));
+        var afterMove = moveMaker.make(initialPosition, move);
+
+        assertThat(afterMove.castlingRights().whiteKingSide()).isTrue();
+        assertThat(afterMove.castlingRights().blackKingSide()).isFalse();
+    }
+
+    @Test
+    void loseBlackQueenSideCastle() {
+        var initialPosition = FenParser.parse("r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 0 1");
+        var rook = initialPosition.board().pieceAt("a8");
+
+        var move = Move.createNormal(rook, Coordinate.of("a6"));
+        var afterMove = moveMaker.make(initialPosition, move);
+
+        assertThat(afterMove.castlingRights().whiteQueenSide()).isTrue();
+        assertThat(afterMove.castlingRights().blackQueenSide()).isFalse();
+    }
+
+    @Test
+    void keepOtherRookCastlingRights() {
+        var initialPosition = FenParser.parse("r3k3/8/8/8/5r2/8/8/4K3 b KQq - 0 1");
+        var rook = initialPosition.board().pieceAt("f4");
+
+        var move = Move.createNormal(rook, Coordinate.of("a4"));
+        var afterMove = moveMaker.make(initialPosition, move);
+
+        assertThat(afterMove.castlingRights()).isEqualTo(initialPosition.castlingRights());
     }
 }

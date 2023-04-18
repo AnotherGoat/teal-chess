@@ -44,4 +44,10 @@ class PawnTest {
         assertThat(pawnToMove.moveTo("a2")).isInstanceOf(Pawn.class).matches(pawn -> pawn.coordinate()
                 .equals(Coordinate.of("a2")));
     }
+
+    @Test
+    void promote() {
+        var pawn = new Pawn("h5", Color.BLACK);
+        assertThat(pawn.promote()).isEqualTo(new Queen("h5", Color.BLACK));
+    }
 }

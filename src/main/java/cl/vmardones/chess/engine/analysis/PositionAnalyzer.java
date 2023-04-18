@@ -56,6 +56,11 @@ public final class PositionAnalyzer {
         return playerFactory.create(color);
     }
 
+    /**
+     * Given a piece, find the legal moves it has for this position.
+     * @param piece The piece to move.
+     * @return The legal moves of the piece.
+     */
     public List<Move> findLegalMoves(Piece piece) {
         return legals.stream().filter(move -> move.piece().equals(piece)).toList();
     }

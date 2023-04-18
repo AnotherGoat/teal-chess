@@ -1,3 +1,6 @@
+/**
+ * Provides classes that can handle the state of a particular chess game.
+ */
 @NonNullByDefault
 package cl.vmardones.chess.engine.game;
 

@@ -71,6 +71,11 @@ public final class Game {
 
     /* Analysis methods */
 
+    /**
+     * Given a piece, find the legal moves it has for this position. Mainly used when the user clicks on a piece, to highlight its legal moves.
+     * @param piece The piece to move.
+     * @return The legal moves of the piece.
+     */
     public List<Move> findLegalMoves(Piece piece) {
         return positionAnalyzer.findLegalMoves(piece);
     }

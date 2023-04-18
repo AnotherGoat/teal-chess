@@ -6,12 +6,30 @@
 package cl.vmardones.chess.engine.piece;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import cl.vmardones.chess.engine.player.Color;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 class PieceTest {
+
+    @Test
+    void fromSymbol() {
+        assertThat(Piece.fromSymbol("p", "a1")).isEqualTo(new Pawn("a1", Color.BLACK));
+        assertThat(Piece.fromSymbol("N", "a1")).isEqualTo(new Knight("a1", Color.WHITE));
+        assertThat(Piece.fromSymbol("b", "a1")).isEqualTo(new Bishop("a1", Color.BLACK));
+        assertThat(Piece.fromSymbol("R", "a1")).isEqualTo(new Rook("a1", Color.WHITE));
+        assertThat(Piece.fromSymbol("q", "a1")).isEqualTo(new Queen("a1", Color.BLACK));
+        assertThat(Piece.fromSymbol("K", "a1")).isEqualTo(new King("a1", Color.WHITE));
+    }
+
+    @Test
+    void fromUnknownSymbol() {
+        assertThatThrownBy(() -> Piece.fromSymbol("e", "e2"))
+                .isInstanceOf(PieceSymbolException.class)
+                .hasMessageContaining("piece symbol");
+    }
 
     @Test
     void isAllyOf() {
