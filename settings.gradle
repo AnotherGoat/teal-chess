@@ -1,1 +1,3 @@
-rootProject.name = 'teal-chess'
+include('desktop', 'core', 'tests')
+
+rootProject.name = 'tealchess'

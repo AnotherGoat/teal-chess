@@ -1,131 +1,69 @@
 plugins {
+    //id 'jacoco-report-aggregation'
     id 'java'
     id 'com.diffplug.spotless' version '6.17.0'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
-    id 'jacoco'
+    // TODO: Check that sonarqube works
     id 'org.sonarqube' version '4.0.0.2929'
-    id 'org.beryx.runtime' version '1.13.0'
 }
 
-group 'cl.vmardones'
-version '0.0'
-
-repositories {
-    mavenCentral()
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
-
-spotless {
-    java {
-        palantirJavaFormat()
-        licenseHeaderFile('license.template')
-        importOrder('java|javax', 'org.apache', '')
-        formatAnnotations()
-    }
-}
-
-application {
-    mainClass = 'cl.vmardones.chess.Chess'
-    applicationName = 'teal-chess'
-}
-
-runtime {
-    // Bind services is need to avoid
-    options = ['--compress', '2', '--no-header-files', '--no-man-pages']
-
-    // Specifying modules is needed for now (https://github.com/beryx/badass-runtime-plugin/issues/136)
-    modules = ['java.desktop']
-
-    launcher {
-        noConsole = true
-    }
-    jpackage {
-        installerType = 'rpm'
-    }
-}
-
-dependencies {
-    // Nullability
-    compileOnly 'org.eclipse.jdt:org.eclipse.jdt.annotation:2.2.700'
-
-    // Logging
-    def log4jVersion = '2.20.0'
-    implementation "org.apache.logging.log4j:log4j-api:$log4jVersion"
-    implementation "org.apache.logging.log4j:log4j-core:$log4jVersion"
-
-    // Transcoding SVG files
-    def batikVersion = '1.16'
-    implementation "org.apache.xmlgraphics:batik-transcoder:$batikVersion"
-    implementation "org.apache.xmlgraphics:batik-codec:$batikVersion"
-
-    // CLI
-    def picocliVersion = '4.7.1'
-    implementation "info.picocli:picocli:$picocliVersion"
-    annotationProcessor "info.picocli:picocli-codegen:$picocliVersion"
-
-    // GUI
-    implementation 'com.miglayout:miglayout-swing:11.0'
-    implementation 'com.formdev:flatlaf:3.0'
-
-    // Unit testing
-    def junitVersion = '5.9.2'
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
-    testCompileOnly "org.junit.jupiter:junit-jupiter-params:$junitVersion"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
-
-    // Mocking
-    def mockitoVersion = '5.2.0'
-    testImplementation "org.mockito:mockito-core:$mockitoVersion"
-    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
-
-    // Better assertions
-    testImplementation 'org.assertj:assertj-core:3.24.2'
-
-    // Testing equality
-    testImplementation 'nl.jqno.equalsverifier:equalsverifier:3.14.1'
-}
+group 'com.vmardones'
 
 tasks {
-    compileJava {
-        dependsOn = [spotlessJavaApply]
-
-        // Use project group and name as the base package for all source code
-        options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
-    }
-
-    jar {
-        manifest {
-            attributes 'Main-Class': 'cl.vmardones.chess.Chess'
-            attributes 'Implementation-Title': project.name
-            attributes 'Implementation-Version': project.version
-        }
-    }
-
-    test {
-        useJUnitPlatform()
-
-        // Generate a report after completing all the tests
-        finalizedBy = [jacocoTestReport]
-    }
-
-    jacocoTestReport {
-        reports {
-            // Required to make Sonarqube understand the results
-            xml.required.set(true)
-        }
-    }
 
     sonarqube {
-        dependsOn(jacocoTestReport)
+    //    dependsOn(jacocoTestReport)
     }
 }
 
-// Reproducible JAR builds (https://imperceptiblethoughts.com/shadow/configuration/reproducible-builds/)
-tasks.withType(AbstractArchiveTask).configureEach {
-    preserveFileTimestamps = false
-    reproducibleFileOrder = true
+allprojects {
+    apply plugin: 'java'
+
+    java.sourceCompatibility = JavaVersion.VERSION_17
+
+    // TODO: Configure jacoco
+    apply plugin: 'jacoco'
+
+    apply plugin: 'com.diffplug.spotless'
+
+    spotless {
+        java {
+            palantirJavaFormat()
+            importOrder('java|javax', 'org.apache', '')
+            licenseHeader('/*\n' +
+                    ' * Copyright (C) $YEAR  Víctor Mardones\n' +
+                    ' * The full notice can be found at README.md in the root directory.\n' +
+                    ' */\n\n')
+            formatAnnotations()
+        }
+    }
+
+    tasks {
+        compileJava {
+            dependsOn = [spotlessJavaApply]
+
+            // Use project group and name as the base package for all source code
+            //options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
+        }
+    }
+
+    version = '0.0'
+
+    ext {
+        jdtVersion = '2.2.700'
+        log4jVersion = '2.20.0'
+
+        batikVersion = '1.16'
+        picocliVersion = '4.7.1'
+        migLayoutVersion = '11.0'
+        flatlafVersion = '3.0'
+
+        junitVersion = '5.9.2'
+        mockitoVersion = '5.2.0'
+        assertjVersion = '3.24.2'
+        equalsVerifierVersion = '3.14.1'
+    }
+
+    repositories {
+        mavenCentral()
+    }
 }

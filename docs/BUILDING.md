@@ -22,7 +22,7 @@ To generate a JAR with every dependency included, the
 ./gradlew shadowJar
 ```
 
-The generated JAR can be found in `build/libs/teal-chess-0.0-all.jar`. No other
+The generated JAR can be found in `desktop/build/libs/teal-chess.jar`. No other
 file is required to run the program.
 
 ### Running the JAR
@@ -30,13 +30,13 @@ file is required to run the program.
 The JAR requires JRE (or JDK) version 17 or higher. To start the program, run:
 
 ```shell
-java -jar teal-chess-0.0-all.jar
+java -jar desktop/build/libs/teal-chess.jar
 ```
 
 To check other command line options, run:
 
 ```shell
-java -jar teal-chess-0.0-all.jar --help
+java -jar desktop/build/libs/teal-chess.jar --help
 ```
 
 ### Packaging the application (platform-specific)
@@ -52,14 +52,13 @@ To package the application with JRE for your platform, run:
 ./gradlew jpackage
 ```
 
-The generated runtime image can be found in `build/image/bin/teal-chess`. The
-platform-specific installer can be found in
-`build/jpackage/teal-chess-0.0-1.x86_64.rpm`.
+The platform-specific installer can be found in
+`desktop/build/jpackage/teal-chess-0.0-1.x86_64.rpm`.
 
 To install the RPM, you can run:
 
 ```shell
-sudo rpm -i teal-chess-0.0-1.x86_64.rpm
+sudo rpm -i desktop/build/jpackage/teal-chess-0.0-1.x86_64.rpm
 ```
 
 Then the installed program can be run like:
@@ -69,14 +68,32 @@ Then the installed program can be run like:
 ```
 
 And that's it! You can add it to your PATH if you want to run it more easily.
-The next sections aren't platform-specific.
+
+To reinstall the RPM, run:
+
+```shell
+sudo rpm -e teal-chess-0.0-1.x86_64
+sudo rpm -i desktop/build/jpackage/teal-chess-0.0-1.x86_64.rpm
+```
+
+This will first uninstall and then reinstall the RPM, which shouldn't cause
+problems due to it not having dependencies. The next sections aren't
+platform-specific.
 
 ## Development tools
 
+### Cleaning the build directory
+
+To clean all `build` directories, run:
+
+```shell
+./gradlew clean
+```
+
 ### Formatting the code
 
-The code is automatically formatted every time the project is compiled.
-To apply it manually, run:
+The code is automatically formatted every time the project is compiled. To apply
+it manually, run:
 
 ```shell
 ./gradlew spotlessApply
@@ -93,24 +110,17 @@ To run every unit test, run:
 A [JaCoCo](https://www.jacoco.org/jacoco/) test coverage report is generated
 after running the tests, which can be found at `build/reports/jacoco/test`.
 
-### Generating a Javadoc
+### Generating Javadocs
 
-To generate a Javadoc for the project's code and see what files are missing
+To generate Javadocs for the project's code and see what files are missing
 documentation, run:
 
 ```shell
 ./gradlew javadoc
 ```
 
-The generated Javadoc can be found at `build/docs/javadoc`.
-
-### Running in debug mode
-
-To run the program in debug mode, which enables logging, run:
-
-```shell
-java -jar teal-chess-0.0-all.jar --debug
-```
+The generated Javadocs can be found at `core/build/docs/javadoc` and
+`desktop/build/docs/javadoc`.
 
 ### Using SonarQube
 
@@ -118,11 +128,3 @@ For checking code quality and security, the Gradle SonarQube Plugin is included.
 I suggest reading
 [the documentation](https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-gradle/)
 to learn how to use it.
-
-### Cleaning the build directory
-
-To clean the `build` directory, run:
-
-```shell
-./gradlew clean
-```
