@@ -4,7 +4,6 @@ plugins {
 }
 
 sourceSets.main {
-    java.srcDirs = ['src/']
     resources.srcDirs = ['../assets/']
 }
 
@@ -56,13 +55,6 @@ tasks.withType(AbstractArchiveTask).configureEach {
 
 dependencies {
     implementation project(':core')
-
-    // Nullability
-    compileOnly "org.eclipse.jdt:org.eclipse.jdt.annotation:$jdtVersion"
-
-    // Logging
-    implementation "org.apache.logging.log4j:log4j-api:$log4jVersion"
-    implementation "org.apache.logging.log4j:log4j-core:$log4jVersion"
 
     // Transcoding SVG files
     implementation "org.apache.xmlgraphics:batik-transcoder:$batikVersion"

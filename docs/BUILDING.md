@@ -108,7 +108,8 @@ To run every unit test, run:
 ```
 
 A [JaCoCo](https://www.jacoco.org/jacoco/) test coverage report is generated
-after running the tests, which can be found at `build/reports/jacoco/test`.
+after running the tests, which can be found at `core/build/reports/jacoco/test`.
+This generates HTML, XML and CSV reports containing the results.
 
 ### Generating Javadocs
 

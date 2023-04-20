@@ -1,27 +1,16 @@
 plugins {
-    //id 'jacoco-report-aggregation'
     id 'java'
     id 'com.diffplug.spotless' version '6.17.0'
-    // TODO: Check that sonarqube works
     id 'org.sonarqube' version '4.0.0.2929'
 }
 
-group 'com.vmardones'
-
-tasks {
-
-    sonarqube {
-    //    dependsOn(jacocoTestReport)
-    }
-}
-
 allprojects {
+    group = 'com.vmardones'
+    version = '0.0'
+
     apply plugin: 'java'
 
     java.sourceCompatibility = JavaVersion.VERSION_17
-
-    // TODO: Configure jacoco
-    apply plugin: 'jacoco'
 
     apply plugin: 'com.diffplug.spotless'
 
@@ -40,30 +29,34 @@ allprojects {
     tasks {
         compileJava {
             dependsOn = [spotlessJavaApply]
-
-            // Use project group and name as the base package for all source code
-            //options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
         }
     }
-
-    version = '0.0'
 
     ext {
         jdtVersion = '2.2.700'
         log4jVersion = '2.20.0'
 
-        batikVersion = '1.16'
-        picocliVersion = '4.7.1'
-        migLayoutVersion = '11.0'
-        flatlafVersion = '3.0'
-
         junitVersion = '5.9.2'
         mockitoVersion = '5.2.0'
         assertjVersion = '3.24.2'
         equalsVerifierVersion = '3.14.1'
+
+        batikVersion = '1.16'
+        picocliVersion = '4.7.1'
+        migLayoutVersion = '11.0'
+        flatlafVersion = '3.0'
     }
 
     repositories {
         mavenCentral()
+    }
+
+    dependencies {
+        // Nullability
+        compileOnly "org.eclipse.jdt:org.eclipse.jdt.annotation:$jdtVersion"
+
+        // Logging
+        implementation "org.apache.logging.log4j:log4j-api:$log4jVersion"
+        implementation "org.apache.logging.log4j:log4j-core:$log4jVersion"
     }
 }

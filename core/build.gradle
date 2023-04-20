@@ -1,17 +1,37 @@
 plugins {
-    id 'java-library'
+    id 'jacoco'
 }
 
-sourceSets.main {
-    java.srcDirs = ['src/']
-    resources.srcDirs = ['resources/']
+tasks {
+    test {
+        useJUnitPlatform()
+
+        // Generate a report after completing all the tests
+        finalizedBy = [jacocoTestReport]
+    }
+
+    jacocoTestReport {
+        reports {
+            // XML reports are required to make Sonarqube understand the results
+            xml.required.set(true)
+            csv.required.set(true)
+        }
+    }
 }
 
 dependencies {
-    // Nullability
-    compileOnly "org.eclipse.jdt:org.eclipse.jdt.annotation:$jdtVersion"
+    // Unit testing
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testCompileOnly "org.junit.jupiter:junit-jupiter-params:$junitVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
 
-    // Logging
-    implementation "org.apache.logging.log4j:log4j-api:$log4jVersion"
-    implementation "org.apache.logging.log4j:log4j-core:$log4jVersion"
+    // Mocking
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+
+    // Better assertions
+    testImplementation "org.assertj:assertj-core:$assertjVersion"
+
+    // Testing equality
+    testImplementation "nl.jqno.equalsverifier:equalsverifier:$equalsVerifierVersion"
 }
