@@ -58,10 +58,12 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
         return color;
     }
 
-    public String singleChar() {
-        var singleChar = getClass().getSimpleName().substring(0, 1);
+    public String firstChar() {
+        return type.firstChar();
+    }
 
-        return color == Color.BLACK ? singleChar.toLowerCase() : singleChar;
+    public String singleChar() {
+        return color == Color.BLACK ? firstChar().toLowerCase() : firstChar();
     }
 
     public abstract String unicodeChar();

@@ -14,7 +14,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 public final class PieceIconLoader {
 
-    private static final String PIECE_ICON_PATH = "art/pieces";
+    private static final String PIECE_ICON_PATH = "art/piece/cburnett";
 
     public static @Nullable ImageIcon load(Piece piece, int width, int height) {
 
@@ -30,7 +30,7 @@ public final class PieceIconLoader {
 
     private static String formatIconPath(Piece piece) {
         return "%s/%s%s.svg"
-                .formatted(PIECE_ICON_PATH, piece.color(), piece.singleChar().toLowerCase());
+                .formatted(PIECE_ICON_PATH, piece.color(), piece.firstChar());
     }
 
     @ExcludeFromGeneratedReport

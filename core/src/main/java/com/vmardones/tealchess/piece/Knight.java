@@ -30,11 +30,6 @@ public final class Knight extends JumpingPiece {
     }
 
     @Override
-    public String singleChar() {
-        return color == Color.BLACK ? "n" : "N";
-    }
-
-    @Override
     public Knight moveTo(String destination) {
         return new Knight(destination, color);
     }
