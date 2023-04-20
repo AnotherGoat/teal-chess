@@ -45,6 +45,7 @@ allprojects {
         picocliVersion = '4.7.1'
         migLayoutVersion = '11.0'
         flatlafVersion = '3.0'
+        gdxVersion = '1.11.0'
     }
 
     repositories {

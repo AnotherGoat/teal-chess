@@ -5,10 +5,11 @@
 
 package com.vmardones.tealchess.cli;
 
-import com.vmardones.tealchess.gui.Table;
+import com.vmardones.tealchess.gdx.Window;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
+// TODO: Add a command line option to choose between ASCII and Unicode chess pieces
 @Command(name = "chess-game", mixinStandardHelpOptions = true, versionProvider = VersionProvider.class)
 public final class MainCommand implements Runnable {
 
@@ -33,7 +34,6 @@ public final class MainCommand implements Runnable {
     public void run() {
         System.setProperty("awt.useSystemAAFontSettings", "on");
 
-        // TODO: Add a command line option to choose between ASCII and Unicode chess pieces
-        new Table(darkTheme, highlightLegals, flipBoard);
+        new Window(darkTheme, highlightLegals, flipBoard);
     }
 }

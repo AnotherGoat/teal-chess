@@ -9,7 +9,7 @@ import com.vmardones.tealchess.cli.MainCommand;
 import picocli.CommandLine;
 
 /** The chess game launcher. */
-public final class Chess {
+public final class DesktopLauncher {
 
     /**
      * Launch the game.
@@ -21,7 +21,7 @@ public final class Chess {
     }
 
     @ExcludeFromGeneratedReport
-    private Chess() {
+    private DesktopLauncher() {
         throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
     }
 }
