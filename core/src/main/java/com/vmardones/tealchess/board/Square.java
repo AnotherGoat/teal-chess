@@ -5,9 +5,10 @@
 
 package com.vmardones.tealchess.board;
 
+import static java.util.stream.Collectors.toMap;
+
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.vmardones.tealchess.piece.Piece;
@@ -110,7 +111,7 @@ public final class Square {
         return IntStream.range(Board.FIRST_SQUARE_INDEX, Board.MAX_SQUARES)
                 .mapToObj(AlgebraicConverter::toAlgebraic)
                 .map(coordinate -> new Entry(coordinate, new Square(coordinate)))
-                .collect(Collectors.toMap(Entry::coordinate, Entry::square));
+                .collect(toMap(Entry::coordinate, Entry::square));
     }
 
     private Square(String coordinate) {

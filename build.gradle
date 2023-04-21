@@ -1,8 +1,13 @@
+import net.ltgt.gradle.errorprone.CheckSeverity
+
 plugins {
     id 'java'
     id 'com.diffplug.spotless' version '6.17.0'
+    id 'net.ltgt.errorprone' version '3.0.1'
     id 'org.sonarqube' version '4.0.0.2929'
 }
+
+defaultTasks 'compileJava'
 
 allprojects {
     group = 'com.vmardones'
@@ -32,8 +37,24 @@ allprojects {
         }
     }
 
+    apply plugin: 'net.ltgt.errorprone'
+
+    tasks.withType(JavaCompile).configureEach {
+        options.compilerArgs.add("-Xlint:all")
+
+        if (!name.toLowerCase().contains("test")) {
+            options.errorprone {
+                check("NullAway", CheckSeverity.ERROR)
+                option("NullAway:AnnotatedPackages", "com.uber")
+            }
+        }
+    }
+
     ext {
         jdtVersion = '2.2.700'
+        errorProneVersion = '2.18.0'
+        nullAwayVersion = '0.10.10'
+        errorProneSupportVersion = '0.9.0'
         log4jVersion = '2.20.0'
 
         junitVersion = '5.9.2'
@@ -55,6 +76,11 @@ allprojects {
     dependencies {
         // Nullability
         compileOnly "org.eclipse.jdt:org.eclipse.jdt.annotation:$jdtVersion"
+
+        // Linting
+        errorprone "com.google.errorprone:error_prone_core:$errorProneVersion"
+        errorprone "com.uber.nullaway:nullaway:$nullAwayVersion"
+        errorprone "tech.picnic.error-prone-support:error-prone-contrib:$errorProneSupportVersion"
 
         // Logging
         implementation "org.apache.logging.log4j:log4j-api:$log4jVersion"

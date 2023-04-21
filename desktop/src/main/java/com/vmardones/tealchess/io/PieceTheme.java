@@ -5,11 +5,13 @@
 
 package com.vmardones.tealchess.io;
 
+import java.util.Locale;
+
 public enum PieceTheme {
     CBURNETT;
 
     @Override
     public String toString() {
-        return super.toString().toLowerCase();
+        return super.toString().toLowerCase(Locale.ROOT);
     }
 }

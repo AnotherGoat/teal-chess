@@ -14,19 +14,19 @@ import picocli.CommandLine.Option;
 public final class MainCommand implements Runnable {
 
     @Option(
-            names = {"-d", "--dark-theme"},
+            names = {"--dark-theme", "-d"},
             description = "Enable dark theme.")
     private boolean darkTheme;
 
     @Option(
-            names = {"-l", "--highlight-legals"},
+            names = {"--highlight-legals", "-l"},
             description = "Highlight legal moves when selecting a piece.",
             negatable = true,
             defaultValue = "true")
     private boolean highlightLegals;
 
     @Option(
-            names = {"-f", "--flip-board"},
+            names = {"--flip-board", "-f"},
             description = "Flip the board, white at the top and black at the bottom.")
     private boolean flipBoard;
 

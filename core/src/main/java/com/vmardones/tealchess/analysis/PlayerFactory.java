@@ -5,7 +5,8 @@
 
 package com.vmardones.tealchess.analysis;
 
-import java.util.Collections;
+import static java.util.Collections.emptyList;
+
 import java.util.List;
 
 import com.vmardones.tealchess.game.Position;
@@ -43,7 +44,7 @@ final class PlayerFactory {
             return new HumanPlayer(color, king, pieces, legals, calculateStatus());
         }
 
-        return new HumanPlayer(color, opponentKing, opponentPieces, Collections.emptyList(), PlayerStatus.NORMAL);
+        return new HumanPlayer(color, opponentKing, opponentPieces, emptyList(), PlayerStatus.NORMAL);
     }
 
     private PlayerStatus calculateStatus() {

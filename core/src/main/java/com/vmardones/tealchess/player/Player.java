@@ -5,7 +5,8 @@
 
 package com.vmardones.tealchess.player;
 
-import java.util.Collections;
+import static java.util.Collections.unmodifiableList;
+
 import java.util.List;
 
 import com.vmardones.tealchess.move.*;
@@ -54,11 +55,11 @@ public abstract sealed class Player permits HumanPlayer {
     }
 
     public List<Piece> pieces() {
-        return Collections.unmodifiableList(pieces);
+        return unmodifiableList(pieces);
     }
 
     public List<Move> legals() {
-        return Collections.unmodifiableList(legals);
+        return unmodifiableList(legals);
     }
 
     /* toString */

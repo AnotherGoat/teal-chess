@@ -6,6 +6,7 @@
 package com.vmardones.tealchess.piece;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import com.vmardones.tealchess.board.Board;
@@ -35,7 +36,7 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
      */
     public static Piece fromSymbol(String symbol, String coordinate) {
         var color = Character.isUpperCase(symbol.charAt(0)) ? Color.WHITE : Color.BLACK;
-        var upperCaseSymbol = symbol.toUpperCase();
+        var upperCaseSymbol = symbol.toUpperCase(Locale.ROOT);
 
         return switch (upperCaseSymbol) {
             case "P" -> new Pawn(coordinate, color);
@@ -63,7 +64,7 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
     }
 
     public String singleChar() {
-        return color == Color.BLACK ? firstChar().toLowerCase() : firstChar();
+        return color == Color.BLACK ? firstChar().toLowerCase(Locale.ROOT) : firstChar();
     }
 
     public abstract String unicodeChar();
@@ -125,11 +126,10 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
             return true;
         }
 
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Piece other)) {
             return false;
         }
 
-        var other = (Piece) o;
         return type == other.type && coordinate.equals(other.coordinate) && color == other.color;
     }
 
@@ -140,7 +140,7 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
 
     @Override
     public String toString() {
-        return String.format("%s%s", unicodeChar(), coordinate);
+        return unicodeChar() + coordinate;
     }
 
     protected Piece(PieceType type, String coordinate, Color color) {

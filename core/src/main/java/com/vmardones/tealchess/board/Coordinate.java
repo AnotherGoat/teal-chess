@@ -190,7 +190,7 @@ public final class Coordinate {
     }
 
     private boolean illegalJump(int x, Coordinate destination) {
-        return x < 0 && destination.fileIndex() > fileIndex() || x > 0 && destination.fileIndex() < fileIndex();
+        return (x < 0 && destination.fileIndex() > fileIndex()) || (x > 0 && destination.fileIndex() < fileIndex());
     }
 
     private int fileIndex() {

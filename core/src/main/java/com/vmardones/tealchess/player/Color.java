@@ -13,10 +13,11 @@ import java.util.List;
  */
 public enum Color {
     /** The white side, at the bottom of the board. */
-    WHITE(1, 2),
+    WHITE("w", 1, 2),
     /** The black side, at the top of the board. */
-    BLACK(-1, 7);
+    BLACK("b", -1, 7);
 
+    private final String symbol;
     private final int direction;
     private final int pawnRank;
 
@@ -78,10 +79,11 @@ public enum Color {
 
     @Override
     public String toString() {
-        return String.valueOf(super.toString().toLowerCase().charAt(0));
+        return symbol;
     }
 
-    Color(int direction, int pawnRank) {
+    Color(String symbol, int direction, int pawnRank) {
+        this.symbol = symbol;
         this.direction = direction;
         this.pawnRank = pawnRank;
     }

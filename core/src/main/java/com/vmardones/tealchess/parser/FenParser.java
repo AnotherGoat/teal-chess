@@ -5,9 +5,10 @@
 
 package com.vmardones.tealchess.parser;
 
+import static java.util.Collections.unmodifiableList;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -39,7 +40,7 @@ public final class FenParser {
             throw new FenParseException("FEN string is not ASCII or contains ASCII control characters: " + fen);
         }
 
-        var parts = fen.split(" ");
+        var parts = fen.split(" ", -1);
 
         if (parts.length != DATA_FIELDS_LENGTH) {
             throw new FenParseException("FEN string doesn't have exactly 6 data fields: " + fen);
@@ -200,7 +201,7 @@ public final class FenParser {
                 var data = rank.charAt(j);
 
                 if (Character.isDigit(data)) {
-                    fileCounter += Character.getNumericValue(data);
+                    fileCounter += Character.digit(data, 10);
                 } else {
                     var file = String.valueOf(FILES.charAt(fileCounter));
                     var rankIndex = Board.SIDE_LENGTH - i;
@@ -212,7 +213,7 @@ public final class FenParser {
             }
         }
 
-        return Collections.unmodifiableList(pieces);
+        return unmodifiableList(pieces);
     }
 
     private static King findKing(List<Piece> pieces, Color color) {

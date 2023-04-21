@@ -11,13 +11,13 @@ import com.badlogic.gdx.graphics.Color;
 
 public final class Window {
 
-    private boolean highlightLegals;
     private boolean darkTheme;
+    private boolean highlightLegals;
     private boolean flipBoard;
 
-    public Window(boolean highlightLegals, boolean darkTheme, boolean flipBoard) {
-        this.highlightLegals = highlightLegals;
+    public Window(boolean darkTheme, boolean highlightLegals, boolean flipBoard) {
         this.darkTheme = darkTheme;
+        this.highlightLegals = highlightLegals;
         this.flipBoard = flipBoard;
 
         var configuration = new Lwjgl3ApplicationConfiguration();

@@ -45,8 +45,8 @@ public record CastlingRights(
             return "-";
         }
 
-        return String.format(
-                "%s%s%s%s",
+        return String.join(
+                "",
                 whiteKingSide ? "K" : "",
                 whiteQueenSide ? "Q" : "",
                 blackKingSide ? "k" : "",

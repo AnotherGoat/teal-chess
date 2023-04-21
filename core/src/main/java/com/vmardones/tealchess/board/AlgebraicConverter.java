@@ -39,7 +39,7 @@ final class AlgebraicConverter {
     private static int calculateIndex(String algebraicNotation) {
 
         var fileIndex = algebraicNotation.charAt(0) - 'a';
-        var rank = Character.getNumericValue(algebraicNotation.charAt(1));
+        var rank = Character.digit(algebraicNotation.charAt(1), 10);
         var rankValue = Board.SIDE_LENGTH * (Board.SIDE_LENGTH - rank);
 
         return fileIndex + rankValue;

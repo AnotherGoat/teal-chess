@@ -5,6 +5,8 @@
 
 package com.vmardones.tealchess.board;
 
+import static java.util.Collections.unmodifiableList;
+
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -144,7 +146,7 @@ public final class Board {
     /* Getters */
 
     public List<Square> squares() {
-        return Collections.unmodifiableList(squares);
+        return unmodifiableList(squares);
     }
 
     public King king(Color color) {
@@ -154,7 +156,7 @@ public final class Board {
     public List<Piece> pieces(Color color) {
         var pieces = color == Color.WHITE ? whitePieces : blackPieces;
 
-        return Collections.unmodifiableList(pieces);
+        return unmodifiableList(pieces);
     }
 
     /* equals, hashCode and toString */

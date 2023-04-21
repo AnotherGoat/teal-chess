@@ -171,7 +171,8 @@ public final class Move {
     private String simpleToString() {
         return switch (type) {
             case CAPTURE -> piece.singleChar() + destination();
-            case PAWN_CAPTURE -> String.format("%sx%s", piece.coordinate().file(), destination());
+            case PAWN_CAPTURE -> String.join(
+                    "x", piece.coordinate().file(), destination().toString());
             case KING_CASTLE -> "0-0";
             case QUEEN_CASTLE -> "0-0-0";
             default -> destination().toString();

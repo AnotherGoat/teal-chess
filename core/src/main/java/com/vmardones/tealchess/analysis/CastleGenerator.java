@@ -57,7 +57,7 @@ final class CastleGenerator {
 
     private @Nullable Move generateCastleMove(boolean kingSide) {
 
-        if (kingSide && !isKingSideCastlePossible() || !kingSide && !isQueenSideCastlePossible()) {
+        if ((kingSide && !isKingSideCastlePossible()) || (!kingSide && !isQueenSideCastlePossible())) {
             return null;
         }
 
