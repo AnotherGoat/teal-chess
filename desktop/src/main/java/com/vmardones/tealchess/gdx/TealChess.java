@@ -13,6 +13,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.vmardones.tealchess.io.PieceLoader;
+import com.vmardones.tealchess.io.PieceTheme;
 
 final class TealChess extends ApplicationAdapter {
 
@@ -24,7 +26,7 @@ final class TealChess extends ApplicationAdapter {
         batch = new SpriteBatch();
 
         textures = new ArrayList<>();
-        textures.add(new Texture("teal-chess.png"));
+        textures.add(new Texture(PieceLoader.load(PieceTheme.CBURNETT, "wP")));
     }
 
     @Override
@@ -32,6 +34,9 @@ final class TealChess extends ApplicationAdapter {
         ScreenUtils.clear(Color.TEAL);
         batch.begin();
         batch.draw(textures.get(0), 0, 0);
+        batch.draw(textures.get(0), 100, 100);
+        batch.draw(textures.get(0), 200, 200);
+        batch.draw(textures.get(0), 300, 300);
         batch.end();
     }
 

@@ -68,10 +68,6 @@ dependencies {
     implementation "info.picocli:picocli:$picocliVersion"
     annotationProcessor "info.picocli:picocli-codegen:$picocliVersion"
 
-    // GUI
-    implementation "com.miglayout:miglayout-swing:$migLayoutVersion"
-    implementation "com.formdev:flatlaf:$flatlafVersion"
-
     // Game engine
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"

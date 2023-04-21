@@ -1,66 +1,52 @@
 /*
- * Copyright (C) 2022  Víctor Mardones
+ * Copyright (C) 2023  Víctor Mardones
  * The full notice can be found at README.md in the root directory.
  */
 
 package com.vmardones.tealchess.io;
 
-import java.awt.*;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import javax.swing.*;
 
+import org.apache.batik.transcoder.SVGAbstractTranscoder;
+import org.apache.batik.transcoder.TranscoderException;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.vmardones.tealchess.ExcludeFromGeneratedReport;
-import org.eclipse.jdt.annotation.Nullable;
 
 public final class SvgLoader {
 
     private static final Logger LOG = LogManager.getLogger(SvgLoader.class);
-    private static final int BASE_SIZE = 500;
-    private static final Map<String, ImageIcon> SVG_CACHE = new HashMap<>();
+    private static final PNGTranscoder TRANSCODER = new PNGTranscoder();
 
-    public static @Nullable ImageIcon load(String path, int width, int height) {
-
-        var baseIcon = load(path);
-
-        if (baseIcon == null) {
-            return null;
-        }
-
-        var scaledImage = baseIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        return new ImageIcon(scaledImage);
+    public static Pixmap load(String path, int sideSize) {
+        return load(path, sideSize, sideSize);
     }
 
-    static @Nullable ImageIcon load(String path) {
+    public static Pixmap load(String path, int width, int height) {
+        TRANSCODER.addTranscodingHint(SVGAbstractTranscoder.KEY_WIDTH, (float) width);
+        TRANSCODER.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, (float) height);
 
-        if (SVG_CACHE.containsKey(path)) {
-            return SVG_CACHE.get(path);
-        }
+        var file = Gdx.files.internal(path);
 
-        var iconResource = ResourceImporter.get(path);
+        try (var inputStream = file.read();
+                var outputStream = new ByteArrayOutputStream()) {
+            var input = new TranscoderInput(inputStream);
+            var output = new TranscoderOutput(outputStream);
 
-        if (iconResource == null) {
-            LOG.warn("Could not load the SVG file {}", path);
-            return null;
-        }
+            TRANSCODER.transcode(input, output);
 
-        try {
-            var svgImage = SvgImporter.get(iconResource, BASE_SIZE, BASE_SIZE);
-
-            if (svgImage == null) {
-                return null;
-            }
-
-            var icon = new ImageIcon(svgImage);
-            SVG_CACHE.put(path, icon);
-            return icon;
-        } catch (IOException e) {
-            LOG.warn("Could not load the SVG file {}", path);
-            return null;
+            var pngBytes = outputStream.toByteArray();
+            return new Pixmap(pngBytes, 0, pngBytes.length);
+        } catch (IOException | TranscoderException e) {
+            LOG.warn("Could not load SVG file {}", path);
+            return new Pixmap(width, height, Pixmap.Format.Alpha);
         }
     }
 
