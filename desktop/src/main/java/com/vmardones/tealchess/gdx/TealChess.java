@@ -15,6 +15,7 @@ import java.util.Map;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.vmardones.tealchess.game.Game;
 import com.vmardones.tealchess.io.PieceLoader;
@@ -23,16 +24,24 @@ import com.vmardones.tealchess.player.Color;
 
 final class TealChess extends ApplicationAdapter {
 
+    private static final com.badlogic.gdx.graphics.Color LIGHT_COLOR =
+            com.badlogic.gdx.graphics.Color.valueOf("#FFCE9E");
+    private static final com.badlogic.gdx.graphics.Color DARK_COLOR =
+            com.badlogic.gdx.graphics.Color.valueOf("#D18B47");
     private static final List<String> pieceCodes =
             List.of("wP", "wN", "wB", "wR", "wQ", "wK", "bP", "bN", "bB", "bR", "bQ", "bK");
 
     private Game game;
+    private ShapeRenderer shapeRenderer;
     private SpriteBatch batch;
     private Map<String, Texture> textures;
 
     @Override
     public void create() {
         game = new Game();
+
+        shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setAutoShapeType(true);
 
         batch = new SpriteBatch();
 
@@ -46,11 +55,25 @@ final class TealChess extends ApplicationAdapter {
     public void render() {
         ScreenUtils.clear(TEAL);
 
-        batch.begin();
+        var files = "abcdefgh";
 
         var board = game.board();
 
-        var files = "abcdefgh";
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        for (var square : board.squares()) {
+
+            var drawColor = square.color() == Color.WHITE ? LIGHT_COLOR : DARK_COLOR;
+            var file = files.indexOf(square.coordinate().file()) * 80;
+            var rank = (square.coordinate().rank() - 1) * 80;
+
+            shapeRenderer.setColor(drawColor);
+            shapeRenderer.rect(file, rank, 80, 80);
+        }
+
+        shapeRenderer.end();
+
+        batch.begin();
 
         for (var piece : board.pieces(Color.WHITE)) {
             batch.draw(
