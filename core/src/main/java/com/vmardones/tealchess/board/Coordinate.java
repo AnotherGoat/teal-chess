@@ -19,7 +19,7 @@ import org.eclipse.jdt.annotation.Nullable;
 public final class Coordinate {
 
     /**
-     * All the files that a coordinate can have.
+     * All the files that a coordinate can have, as a single String.
      */
     public static final String FILES = "abcdefgh";
 

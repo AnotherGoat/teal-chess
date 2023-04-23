@@ -30,14 +30,6 @@ final class BoardTest {
     }
 
     @Test
-    void contains() {
-        var piece = new Bishop("e2", Color.WHITE);
-        var board = builder.with(piece).build();
-
-        assertThat(board.contains("e2", Bishop.class)).isTrue();
-    }
-
-    @Test
     void isEmpty() {
         var board = builder.build();
 

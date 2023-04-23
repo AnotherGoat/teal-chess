@@ -11,7 +11,6 @@ import java.util.List;
 
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.move.Move;
-import com.vmardones.tealchess.move.MoveResult;
 import com.vmardones.tealchess.piece.King;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.player.Color;
@@ -21,7 +20,7 @@ import com.vmardones.tealchess.player.PlayerStatus;
 
 final class PlayerFactory {
 
-    private final MoveTester moveTester;
+    private final AttackTester attackTester;
     private final Color sideToMove;
     private final King king;
     private final List<Piece> pieces;
@@ -29,13 +28,13 @@ final class PlayerFactory {
     private final King opponentKing;
     private final List<Piece> opponentPieces;
 
-    PlayerFactory(Position position, MoveTester moveTester, List<Move> legals) {
+    PlayerFactory(Position position, AttackTester attackTester, List<Move> legals) {
         sideToMove = position.sideToMove();
         king = position.board().king(sideToMove);
         pieces = position.board().pieces(sideToMove);
         opponentKing = position.board().king(sideToMove.opposite());
         opponentPieces = position.board().pieces(sideToMove.opposite());
-        this.moveTester = moveTester;
+        this.attackTester = attackTester;
         this.legals = legals;
     }
 
@@ -49,30 +48,21 @@ final class PlayerFactory {
 
     private PlayerStatus calculateStatus() {
 
-        var checked = moveTester.isKingAttacked();
-        var noEscape = calculateEscapeMoves();
+        var attacked = attackTester.isKingAttacked();
+        var cantMove = legals.isEmpty();
 
-        if (checked && noEscape) {
+        if (attacked && cantMove) {
             return PlayerStatus.CHECKMATED;
         }
 
-        if (!checked && noEscape) {
+        if (!attacked && cantMove) {
             return PlayerStatus.STALEMATED;
         }
 
-        if (checked) {
+        if (attacked) {
             return PlayerStatus.CHECKED;
         }
 
         return PlayerStatus.NORMAL;
-    }
-
-    // TODO: Implement this method properly
-    private boolean calculateEscapeMoves() {
-        return legals.stream()
-                .map(move -> moveTester.testMove(move, legals))
-                .noneMatch(result -> result == MoveResult.CONTINUE
-                        || result == MoveResult.CHECKS
-                        || result == MoveResult.CHECKMATES);
     }
 }

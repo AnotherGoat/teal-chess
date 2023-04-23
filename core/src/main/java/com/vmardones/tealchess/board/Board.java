@@ -120,20 +120,6 @@ public final class Board {
     }
 
     /**
-     * Check whether the specified square contains a type of piece or not.
-     *
-     * @param coordinate The coordinate to search, in algebraic notation.
-     * @param pieceType The type of piece to search.
-     * @return True if the square has a piece of the specified type. Always returns false if the square is
-     *     empty.
-     */
-    public boolean contains(String coordinate, Class<? extends Piece> pieceType) {
-        var piece = pieceAt(coordinate);
-
-        return pieceType.isInstance(piece);
-    }
-
-    /**
      * Check if a specific square is empty.
      *
      * @param coordinate The coordinate of the square to check.

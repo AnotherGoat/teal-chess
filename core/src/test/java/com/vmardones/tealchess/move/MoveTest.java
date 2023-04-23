@@ -32,64 +32,6 @@ final class MoveTest {
     }
 
     @Test
-    void isCapture() {
-        var piece = mock(Knight.class);
-        var destination = mock(Coordinate.class);
-        var capturedPiece = mock(Knight.class);
-
-        var move = Move.createCapture(piece, destination, capturedPiece);
-
-        assertThat(move.isCapture()).isTrue();
-    }
-
-    @Test
-    void normalIsNotCapture() {
-        var piece = mock(Knight.class);
-        var destination = mock(Coordinate.class);
-
-        var move = Move.createNormal(piece, destination);
-
-        assertThat(move.isCapture()).isFalse();
-    }
-
-    @Test
-    void castleIsNotCapture() {
-        var king = mock(King.class);
-        var rook = mock(Rook.class);
-
-        var move = Move.createCastle(true, king, mock(Coordinate.class), rook, mock(Coordinate.class));
-
-        assertThat(move.isCapture()).isFalse();
-    }
-
-    @Test
-    void isNone() {
-        var source = mock(Coordinate.class);
-        var piece = mock(Knight.class);
-        when(piece.coordinate()).thenReturn(source);
-
-        var capturedPiece = mock(Knight.class);
-
-        var move = Move.createCapture(piece, source, capturedPiece);
-
-        assertThat(move.isNone()).isTrue();
-    }
-
-    @Test
-    void isNotNone() {
-        var source = mock(Coordinate.class);
-        var piece = mock(Knight.class);
-        when(piece.coordinate()).thenReturn(source);
-
-        var capturedPiece = mock(Knight.class);
-
-        var destination = mock(Coordinate.class);
-        var move = Move.createCapture(piece, destination, capturedPiece);
-
-        assertThat(move.isNone()).isFalse();
-    }
-
-    @Test
     void normalToString() {
         var piece = new Rook("a1", Color.WHITE);
         var move = Move.createNormal(piece, Coordinate.of("e1"));

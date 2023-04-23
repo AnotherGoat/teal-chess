@@ -62,6 +62,10 @@ public abstract sealed class Player permits HumanPlayer {
         return unmodifiableList(legals);
     }
 
+    public PlayerStatus status() {
+        return status;
+    }
+
     /* toString */
 
     @Override

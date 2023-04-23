@@ -9,17 +9,15 @@ package com.vmardones.tealchess.move;
 /** Tells what happens after a move is made and whether that move is possible or not. Because illegal moves are never saved, the ILLEGAL and NONE results are only used when testing moves. */
 public enum MoveResult {
     /** The move can be made and the game continues normally. */
-    CONTINUE,
+    CONTINUE(""),
     /** Leaves the opponent in check. */
     CHECKS("+"),
     /** Checkmates the opponent. The game finishes. */
-    CHECKMATES("#"),
-    /** Violates the game's rules, cannot be made. */
-    ILLEGAL,
-    /** Both the source and destination are the same, which means this isn't a move. */
-    NONE;
+    CHECKMATES("#");
 
     private final String endHash;
+
+    /* Getters */
 
     /**
      * The end hash used by this result, according to PGN notation.
@@ -27,10 +25,6 @@ public enum MoveResult {
      */
     public String endHash() {
         return endHash;
-    }
-
-    MoveResult() {
-        endHash = "";
     }
 
     MoveResult(String endHash) {

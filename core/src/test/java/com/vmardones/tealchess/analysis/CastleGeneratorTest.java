@@ -22,7 +22,7 @@ final class CastleGeneratorTest {
     void noWhiteCastlingRights() {
         var position = FenParser.parse("r3k2r/8/8/8/8/8/8/R3K2R w kq - 0 1");
         var opponentAttacks = new AttackGenerator(position).calculateAttacks(true);
-        var moveTester = new MoveTester(position, opponentAttacks.toList());
+        var moveTester = new AttackTester(position, opponentAttacks.toList());
         var generator = new CastleGenerator(position, moveTester);
 
         assertThat(generator.calculateCastles()).isEmpty();
@@ -32,7 +32,7 @@ final class CastleGeneratorTest {
     void noBlackCastlingRights() {
         var position = FenParser.parse("r3k2r/8/8/8/8/8/8/R3K2R b KQ - 0 1");
         var opponentAttacks = new AttackGenerator(position).calculateAttacks(true);
-        var moveTester = new MoveTester(position, opponentAttacks.toList());
+        var moveTester = new AttackTester(position, opponentAttacks.toList());
         var generator = new CastleGenerator(position, moveTester);
 
         assertThat(generator.calculateCastles()).isEmpty();
@@ -43,7 +43,7 @@ final class CastleGeneratorTest {
         // Castling can be done queen side even if the square beside the rook is being attacked
         var position = FenParser.parse("1r5k/8/8/8/8/8/8/R3K3 w Q - 0 1");
         var opponentAttacks = new AttackGenerator(position).calculateAttacks(true);
-        var moveTester = new MoveTester(position, opponentAttacks.toList());
+        var moveTester = new AttackTester(position, opponentAttacks.toList());
         var generator = new CastleGenerator(position, moveTester);
 
         var board = position.board();

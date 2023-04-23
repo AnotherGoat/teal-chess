@@ -22,26 +22,19 @@ import com.vmardones.tealchess.player.Player;
 public final class PositionAnalyzer {
 
     private final List<Move> legals;
-    private final MoveTester moveTester;
     private final PlayerFactory playerFactory;
 
     // TODO: Add promotion moves to the pseudo-legals list
     public PositionAnalyzer(Position position) {
-        var attackGenerator = new AttackGenerator(position);
-        var opponentAttacks = attackGenerator.calculateAttacks(true).toList();
 
-        var moveGenerator = new MoveGenerator(position);
-        var moves = moveGenerator.calculateMoves();
+        var moves = new MoveGenerator(position).calculateMoves();
+        var captures = new CaptureGenerator(position).calculateCaptures();
+        var pawnMoves = new PawnMoveGenerator(position).calculatePawnMoves();
 
-        var captureGenerator = new CaptureGenerator(position);
-        var captures = captureGenerator.calculateCaptures();
-
-        var pawnMoveGenerator = new PawnMoveGenerator(position);
-        var pawnMoves = pawnMoveGenerator.calculatePawnMoves();
-
-        moveTester = new MoveTester(position, opponentAttacks);
-        var castleGenerator = new CastleGenerator(position, moveTester);
-        var castles = castleGenerator.calculateCastles();
+        var opponentAttacks =
+                new AttackGenerator(position).calculateAttacks(true).toList();
+        var attackTester = new AttackTester(position, opponentAttacks);
+        var castles = new CastleGenerator(position, attackTester).calculateCastles();
 
         var pseudoLegals = Stream.concat(Stream.concat(moves, captures), Stream.concat(pawnMoves, castles))
                 .toList();
@@ -49,7 +42,7 @@ public final class PositionAnalyzer {
         var legalityChecker = new LegalityChecker(position, new MoveMaker());
         legals = legalityChecker.checkPseudoLegals(pseudoLegals);
 
-        playerFactory = new PlayerFactory(position, moveTester, legals);
+        playerFactory = new PlayerFactory(position, attackTester, legals);
     }
 
     public Player createPlayer(Color color) {

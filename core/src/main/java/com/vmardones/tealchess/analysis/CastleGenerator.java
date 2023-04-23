@@ -23,16 +23,16 @@ final class CastleGenerator {
     private final Color sideToMove;
     private final King king;
     private final CastlingRights castlingRights;
-    private final MoveTester moveTester;
+    private final AttackTester attackTester;
     private final boolean inCheck;
 
-    CastleGenerator(Position position, MoveTester moveTester) {
+    CastleGenerator(Position position, AttackTester attackTester) {
         board = position.board();
         sideToMove = position.sideToMove();
         king = position.board().king(sideToMove);
         castlingRights = position.castlingRights();
-        this.moveTester = moveTester;
-        inCheck = moveTester.isKingAttacked();
+        this.attackTester = attackTester;
+        inCheck = attackTester.isKingAttacked();
     }
 
     Stream<Move> calculateCastles() {
@@ -90,23 +90,23 @@ final class CastleGenerator {
         var hasRights = sideToMove.isWhite() ? castlingRights.whiteKingSide() : castlingRights.blackKingSide();
 
         return hasRights
+                && squareHasRook(3)
                 && isSquareFree(1)
                 && isSquareFree(2)
-                && squareHasRook(3)
-                && isUnreachableByEnemy(1)
-                && isUnreachableByEnemy(2);
+                && isNotUnderAttack(1)
+                && isNotUnderAttack(2);
     }
 
     private boolean isQueenSideCastlePossible() {
         var hasRights = sideToMove.isWhite() ? castlingRights.whiteQueenSide() : castlingRights.blackQueenSide();
 
         return hasRights
+                && squareHasRook(-4)
                 && isSquareFree(-1)
                 && isSquareFree(-2)
                 && isSquareFree(-3)
-                && squareHasRook(-4)
-                && isUnreachableByEnemy(-1)
-                && isUnreachableByEnemy(-2);
+                && isNotUnderAttack(-1)
+                && isNotUnderAttack(-2);
     }
 
     private boolean isSquareFree(int offset) {
@@ -118,12 +118,18 @@ final class CastleGenerator {
     private boolean squareHasRook(int offset) {
         var destination = king.coordinate().right(offset);
 
-        return destination != null && board.contains(destination.toString(), Rook.class);
+        if (destination == null) {
+            return false;
+        }
+
+        var piece = board.pieceAt(destination);
+
+        return piece != null && piece.isRook();
     }
 
-    private boolean isUnreachableByEnemy(int offset) {
+    private boolean isNotUnderAttack(int offset) {
         var destination = king.coordinate().right(offset);
 
-        return destination != null && !moveTester.isAttacked(destination);
+        return destination != null && !attackTester.isAttacked(destination);
     }
 }

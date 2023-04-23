@@ -32,7 +32,7 @@ final class LegalityChecker {
 
             var attackGenerator = new AttackGenerator(result);
             var opponentAttacks = attackGenerator.calculateAttacks(false).toList();
-            var moveTester = new MoveTester(result, opponentAttacks);
+            var moveTester = new AttackTester(result, opponentAttacks);
 
             var king = result.board().king(position.sideToMove());
 

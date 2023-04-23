@@ -92,10 +92,14 @@ public final class Game {
 
         LOG.debug("Move added to history: {}\n", state.currentPosition().lastMove());
 
-        if (whitePlayer.legals().isEmpty() && blackPlayer.legals().isEmpty()) {
-            LOG.info(
+        switch (currentPlayer().status()) {
+            case NORMAL -> LOG.info("{}'s turn!\n", position.sideToMove().name());
+            case CHECKED -> LOG.info(
+                    "Check! {} king is in danger!\n", position.sideToMove().name());
+            case CHECKMATED -> LOG.info(
                     "Checkmate! {} player won!\n",
                     position.sideToMove().opposite().name());
+            case STALEMATED -> LOG.info("Stalemate! The game ends in a draw!\n");
         }
     }
 

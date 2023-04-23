@@ -92,14 +92,6 @@ public final class Move {
         return promotion;
     }
 
-    public boolean isCapture() {
-        return otherPiece != null && rookDestination == null;
-    }
-
-    public boolean isNone() {
-        return piece.coordinate().equals(destination);
-    }
-
     /* equals, hashCode and toString */
 
     @Override
