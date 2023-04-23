@@ -6,40 +6,24 @@
 package com.vmardones.tealchess.game;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.parser.FenParser;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class GameStateTest {
-
-    GameState gameState;
-
-    @BeforeEach
-    void setUp() {
-        gameState = new GameState();
-    }
+@ExcludeFromNullAway
+final class GameStateTest {
 
     @Test
     void save() {
-        var position = Position.INITIAL_POSITION;
-        gameState.currentPosition(position);
+        var gameState = new GameState();
 
-        assertThat(gameState.save().state()).isEqualTo(position);
-    }
-
-    @Test
-    void saveNull() {
-        assertThatThrownBy(gameState::save)
-                .isInstanceOf(IllegalSaveException.class)
-                .hasMessageContaining("null");
+        assertThat(gameState.save().state()).isEqualTo(Position.INITIAL_POSITION);
     }
 
     @Test
     void load() {
-        var firstPosition = Position.INITIAL_POSITION;
-        gameState.currentPosition(firstPosition);
+        var gameState = new GameState();
         var firstMemento = gameState.save();
 
         var secondPosition = FenParser.parse("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1");
@@ -47,6 +31,6 @@ class GameStateTest {
 
         gameState.load(firstMemento);
 
-        assertThat(gameState.currentPosition()).isEqualTo(firstPosition).isNotEqualTo(secondPosition);
+        assertThat(gameState.currentPosition()).isEqualTo(firstMemento.state()).isNotEqualTo(secondPosition);
     }
 }

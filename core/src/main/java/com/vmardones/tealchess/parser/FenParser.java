@@ -32,7 +32,6 @@ public final class FenParser {
     private static final Pattern CASTLING_PATTERN = Pattern.compile("-|K?Q?k?q?");
     private static final Pattern EN_PASSANT_PATTERN = Pattern.compile("-|[a-h][36]");
     private static final int DATA_FIELDS_LENGTH = 6;
-    private static final String FILES = "abcdefgh";
 
     public static Position parse(String fen) {
 
@@ -131,7 +130,10 @@ public final class FenParser {
         }
 
         var coordinate = Coordinate.of(data).up(sideToMove.oppositeDirection());
-        assert coordinate != null;
+
+        if (coordinate == null) {
+            throw new AssertionError("Unreachable statement");
+        }
 
         return new Pawn(coordinate.toString(), sideToMove.opposite());
     }
@@ -203,7 +205,7 @@ public final class FenParser {
                 if (Character.isDigit(data)) {
                     fileCounter += Character.digit(data, 10);
                 } else {
-                    var file = String.valueOf(FILES.charAt(fileCounter));
+                    var file = String.valueOf(Coordinate.FILES.charAt(fileCounter));
                     var rankIndex = Board.SIDE_LENGTH - i;
                     var coordinate = file + rankIndex;
 

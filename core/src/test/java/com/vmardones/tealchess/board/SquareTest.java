@@ -7,6 +7,7 @@ package com.vmardones.tealchess.board;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.piece.Knight;
 import com.vmardones.tealchess.piece.Pawn;
 import com.vmardones.tealchess.piece.Rook;
@@ -14,7 +15,8 @@ import com.vmardones.tealchess.player.Color;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
-class SquareTest {
+@ExcludeFromNullAway
+final class SquareTest {
 
     @Test
     void createOccupied() {

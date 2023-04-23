@@ -7,10 +7,12 @@ package com.vmardones.tealchess.board;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.vmardones.tealchess.ExcludeFromNullAway;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
-class CoordinateTest {
+@ExcludeFromNullAway
+final class CoordinateTest {
 
     @Test
     void cache() {
@@ -25,6 +27,12 @@ class CoordinateTest {
     @Test
     void getFile() {
         assertThat(Coordinate.of("f5").file()).isEqualTo("f");
+    }
+
+    @Test
+    void getFileIndex() {
+        assertThat(Coordinate.of("a6").fileIndex()).isEqualTo(0);
+        assertThat(Coordinate.of("h6").fileIndex()).isEqualTo(7);
     }
 
     @Test

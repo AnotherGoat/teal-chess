@@ -29,6 +29,6 @@ public final class Bishop extends SlidingPiece {
 
     @Override
     public String unicodeChar() {
-        return color == Color.WHITE ? "♗" : "♝";
+        return color.isWhite() ? "♗" : "♝";
     }
 }

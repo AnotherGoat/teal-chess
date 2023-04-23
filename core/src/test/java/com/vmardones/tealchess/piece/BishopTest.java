@@ -7,11 +7,13 @@ package com.vmardones.tealchess.piece;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.player.Color;
 import org.junit.jupiter.api.Test;
 
-class BishopTest {
+@ExcludeFromNullAway
+final class BishopTest {
 
     @Test
     void toSingleChar() {

@@ -34,11 +34,11 @@ public final class Game {
         moveMaker = new MoveMaker();
         state = new GameState();
         history = new GameHistory();
-        positionAnalyzer = new PositionAnalyzer(Position.INITIAL_POSITION);
+        positionAnalyzer = new PositionAnalyzer(state.currentPosition());
         whitePlayer = positionAnalyzer.createPlayer(Color.WHITE);
         blackPlayer = positionAnalyzer.createPlayer(Color.BLACK);
 
-        registerPosition(Position.INITIAL_POSITION);
+        registerPosition(state.currentPosition());
     }
 
     /* Getters */
@@ -115,6 +115,6 @@ public final class Game {
         LOG.debug("Players: {} vs. {}", whitePlayer, blackPlayer);
         var sideToMove = position.sideToMove();
         LOG.debug("Side to move: {}", sideToMove.name());
-        LOG.debug("Legal moves: {}", sideToMove == Color.WHITE ? whitePlayer.legals() : blackPlayer.legals());
+        LOG.debug("Legal moves: {}", sideToMove.isWhite() ? whitePlayer.legals() : blackPlayer.legals());
     }
 }

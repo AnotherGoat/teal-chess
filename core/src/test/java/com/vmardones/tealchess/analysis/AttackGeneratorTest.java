@@ -7,11 +7,13 @@ package com.vmardones.tealchess.analysis;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.move.Attack;
 import com.vmardones.tealchess.parser.FenParser;
 import org.junit.jupiter.api.Test;
 
-class AttackGeneratorTest {
+@ExcludeFromNullAway
+final class AttackGeneratorTest {
 
     @Test
     void kingAttacks() {

@@ -71,7 +71,7 @@ public final class MoveMaker {
             return board.nextPositionBuilder();
         }
 
-        if (movedPiece.color() == Color.WHITE) {
+        if (movedPiece.color().isWhite()) {
             return board.nextPositionBuilder((King) movedPiece, board.king(Color.BLACK));
         }
 
@@ -125,7 +125,7 @@ public final class MoveMaker {
     }
 
     private int updateFullmoveCounter(Position position) {
-        if (position.sideToMove() == Color.BLACK) {
+        if (position.sideToMove().isBlack()) {
             return position.fullmoveCounter() + 1;
         }
 

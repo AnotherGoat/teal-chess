@@ -8,6 +8,7 @@ package com.vmardones.tealchess.board;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.parser.FenParser;
 import com.vmardones.tealchess.piece.*;
@@ -16,7 +17,8 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class BoardTest {
+@ExcludeFromNullAway
+final class BoardTest {
 
     Board.BoardBuilder builder;
     King whiteKing = new King("e1", Color.WHITE);

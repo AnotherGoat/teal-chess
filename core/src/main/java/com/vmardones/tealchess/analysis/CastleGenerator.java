@@ -48,7 +48,7 @@ final class CastleGenerator {
             return false;
         }
 
-        if (sideToMove == Color.WHITE) {
+        if (sideToMove.isWhite()) {
             return !castlingRights.whiteKingSide() && !castlingRights.whiteQueenSide();
         }
 
@@ -87,7 +87,7 @@ final class CastleGenerator {
     }
 
     private boolean isKingSideCastlePossible() {
-        var hasRights = sideToMove == Color.WHITE ? castlingRights.whiteKingSide() : castlingRights.blackKingSide();
+        var hasRights = sideToMove.isWhite() ? castlingRights.whiteKingSide() : castlingRights.blackKingSide();
 
         return hasRights
                 && isSquareFree(1)
@@ -98,7 +98,7 @@ final class CastleGenerator {
     }
 
     private boolean isQueenSideCastlePossible() {
-        var hasRights = sideToMove == Color.WHITE ? castlingRights.whiteQueenSide() : castlingRights.blackQueenSide();
+        var hasRights = sideToMove.isWhite() ? castlingRights.whiteQueenSide() : castlingRights.blackQueenSide();
 
         return hasRights
                 && isSquareFree(-1)

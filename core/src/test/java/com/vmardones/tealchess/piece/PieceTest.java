@@ -8,11 +8,13 @@ package com.vmardones.tealchess.piece;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.player.Color;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
-class PieceTest {
+@ExcludeFromNullAway
+final class PieceTest {
 
     @Test
     void fromSymbol() {

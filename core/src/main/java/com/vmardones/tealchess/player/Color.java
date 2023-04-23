@@ -40,6 +40,14 @@ public enum Color {
 
     /* Getters */
 
+    public boolean isWhite() {
+        return this == WHITE;
+    }
+
+    public boolean isBlack() {
+        return !isWhite();
+    }
+
     public int direction() {
         return direction;
     }

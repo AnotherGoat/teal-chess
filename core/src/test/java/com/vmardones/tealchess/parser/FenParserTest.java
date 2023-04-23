@@ -8,11 +8,13 @@ package com.vmardones.tealchess.parser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
+import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.piece.*;
 import com.vmardones.tealchess.player.Color;
 import org.junit.jupiter.api.Test;
 
-class FenParserTest {
+@ExcludeFromNullAway
+final class FenParserTest {
 
     @Test
     void nonAscii() {

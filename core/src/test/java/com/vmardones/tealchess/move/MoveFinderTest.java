@@ -12,10 +12,12 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.board.Coordinate;
 import org.junit.jupiter.api.Test;
 
-class MoveFinderTest {
+@ExcludeFromNullAway
+final class MoveFinderTest {
 
     @Test
     void sameCoordinate() {

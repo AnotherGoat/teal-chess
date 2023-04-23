@@ -12,6 +12,7 @@ import java.util.Objects;
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.player.Color;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * A chess piece, which players can move in the board.
@@ -64,7 +65,7 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
     }
 
     public String singleChar() {
-        return color == Color.BLACK ? firstChar().toLowerCase(Locale.ROOT) : firstChar();
+        return color.isBlack() ? firstChar().toLowerCase(Locale.ROOT) : firstChar();
     }
 
     public abstract String unicodeChar();
@@ -121,7 +122,7 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
     /* equals, hashCode and toString */
 
     @Override
-    public final boolean equals(Object o) {
+    public final boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

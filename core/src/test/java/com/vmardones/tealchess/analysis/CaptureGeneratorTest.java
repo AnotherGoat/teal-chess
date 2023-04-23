@@ -7,12 +7,14 @@ package com.vmardones.tealchess.analysis;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.parser.FenParser;
 import org.junit.jupiter.api.Test;
 
-class CaptureGeneratorTest {
+@ExcludeFromNullAway
+final class CaptureGeneratorTest {
 
     @Test
     void pawnCaptures() {

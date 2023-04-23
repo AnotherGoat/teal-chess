@@ -8,9 +8,11 @@ package com.vmardones.tealchess.board;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.vmardones.tealchess.ExcludeFromNullAway;
 import org.junit.jupiter.api.Test;
 
-class AlgebraicConverterTest {
+@ExcludeFromNullAway
+final class AlgebraicConverterTest {
 
     @Test
     void validAlgebraicNotation() {

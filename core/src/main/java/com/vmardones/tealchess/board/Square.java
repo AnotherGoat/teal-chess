@@ -38,7 +38,13 @@ public final class Square {
      */
     public static Square create(String coordinate, @Nullable Piece piece) {
         if (piece == null) {
-            return EMPTY_SQUARE_CACHE.get(coordinate);
+            var emptySquare = EMPTY_SQUARE_CACHE.get(coordinate);
+
+            if (emptySquare == null) {
+                throw new AssertionError("Unreachable statement");
+            }
+
+            return emptySquare;
         }
 
         return new Square(coordinate, piece);
@@ -99,7 +105,7 @@ public final class Square {
     @Override
     public String toString() {
         if (piece == null) {
-            return color == Color.WHITE ? "□" : "■";
+            return color.isWhite() ? "□" : "■";
         }
 
         return piece.unicodeChar();

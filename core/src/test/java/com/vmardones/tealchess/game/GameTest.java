@@ -9,13 +9,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.piece.Pawn;
 import com.vmardones.tealchess.player.Color;
 import org.junit.jupiter.api.Test;
 
-class GameTest {
+@ExcludeFromNullAway
+final class GameTest {
 
     @Test
     void initialPosition() {

@@ -7,6 +7,7 @@ package com.vmardones.tealchess.move;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.parser.FenParser;
 import com.vmardones.tealchess.piece.King;
@@ -16,7 +17,8 @@ import com.vmardones.tealchess.player.Color;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class MoveMakerTest {
+@ExcludeFromNullAway
+final class MoveMakerTest {
 
     MoveMaker moveMaker;
 

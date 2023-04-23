@@ -150,11 +150,11 @@ public final class Board {
     }
 
     public King king(Color color) {
-        return color == Color.WHITE ? whiteKing : blackKing;
+        return color.isWhite() ? whiteKing : blackKing;
     }
 
     public List<Piece> pieces(Color color) {
-        var pieces = color == Color.WHITE ? whitePieces : blackPieces;
+        var pieces = color.isWhite() ? whitePieces : blackPieces;
 
         return unmodifiableList(pieces);
     }
@@ -280,11 +280,11 @@ public final class Board {
          * @return The finished, unmodifiable board.
          */
         public Board build() {
-            if (!configuration.get(whiteKing.coordinate().index()).equals(whiteKing)) {
+            if (!whiteKing.equals(configuration.get(whiteKing.coordinate().index()))) {
                 with(whiteKing);
             }
 
-            if (!configuration.get(blackKing.coordinate().index()).equals(blackKing)) {
+            if (!blackKing.equals(configuration.get(blackKing.coordinate().index()))) {
                 with(blackKing);
             }
 

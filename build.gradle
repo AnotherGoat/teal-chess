@@ -42,11 +42,14 @@ allprojects {
     tasks.withType(JavaCompile).configureEach {
         options.compilerArgs.add("-Xlint:all")
 
-        if (!name.toLowerCase().contains("test")) {
-            options.errorprone {
-                check("NullAway", CheckSeverity.ERROR)
-                option("NullAway:AnnotatedPackages", "com.uber")
-            }
+        options.errorprone {
+            check('NullAway', CheckSeverity.ERROR)
+            option('NullAway:AnnotatedPackages', project.group)
+
+            // Exclude unit tests from null away
+            option('NullAway:ExcludedClassAnnotations', 'com.vmardones.tealchess.ExcludeFromNullAway')
+
+            option('NullAway:KnownInitializers', 'com.badlogic.gdx.ApplicationAdapter.create')
         }
     }
 

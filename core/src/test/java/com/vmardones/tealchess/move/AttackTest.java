@@ -8,13 +8,15 @@ package com.vmardones.tealchess.move;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.piece.Knight;
 import com.vmardones.tealchess.piece.Pawn;
 import com.vmardones.tealchess.player.Color;
 import org.junit.jupiter.api.Test;
 
-class AttackTest {
+@ExcludeFromNullAway
+final class AttackTest {
 
     @Test
     void notAnAttack() {

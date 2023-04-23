@@ -12,9 +12,11 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
+import com.vmardones.tealchess.ExcludeFromNullAway;
 import org.junit.jupiter.api.Test;
 
-class ColorTest {
+@ExcludeFromNullAway
+final class ColorTest {
 
     Color white = Color.WHITE;
     Color black = Color.BLACK;
@@ -34,6 +36,18 @@ class ColorTest {
         assertThatThrownBy(() -> Color.fromSymbol("+"))
                 .isInstanceOf(ColorSymbolException.class)
                 .hasMessageContaining("+");
+    }
+
+    @Test
+    void isWhite() {
+        assertThat(white.isWhite()).isTrue();
+        assertThat(black.isWhite()).isFalse();
+    }
+
+    @Test
+    void isBlack() {
+        assertThat(white.isBlack()).isFalse();
+        assertThat(black.isBlack()).isTrue();
     }
 
     @Test

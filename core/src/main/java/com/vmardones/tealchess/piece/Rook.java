@@ -35,6 +35,6 @@ public final class Rook extends SlidingPiece {
 
     @Override
     public String unicodeChar() {
-        return color == Color.WHITE ? "♖" : "♜";
+        return color.isWhite() ? "♖" : "♜";
     }
 }

@@ -7,10 +7,12 @@ package com.vmardones.tealchess.game;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.player.Color;
 import org.junit.jupiter.api.Test;
 
-class CastlingRightsTest {
+@ExcludeFromNullAway
+final class CastlingRightsTest {
 
     @Test
     void emptyConstructor() {

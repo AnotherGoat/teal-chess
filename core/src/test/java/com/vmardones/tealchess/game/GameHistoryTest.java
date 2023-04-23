@@ -8,6 +8,7 @@ package com.vmardones.tealchess.game;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.piece.Pawn;
@@ -15,7 +16,8 @@ import com.vmardones.tealchess.player.Color;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
-class GameHistoryTest {
+@ExcludeFromNullAway
+final class GameHistoryTest {
 
     @Test
     void startWithNullMove() {

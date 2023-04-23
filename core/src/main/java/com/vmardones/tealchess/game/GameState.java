@@ -6,19 +6,15 @@
 package com.vmardones.tealchess.game;
 
 // TODO: See if this class can be immutable
-
-import org.eclipse.jdt.annotation.Nullable;
-
-/** A mutable class that holds the current state of the game. */
 final class GameState {
 
-    private @Nullable Position currentPosition;
+    private Position currentPosition;
+
+    GameState() {
+        currentPosition = Position.INITIAL_POSITION;
+    }
 
     PositionMemento save() {
-        if (currentPosition == null) {
-            throw new IllegalSaveException();
-        }
-
         return new PositionMemento(currentPosition);
     }
 
@@ -26,7 +22,7 @@ final class GameState {
         currentPosition = positionMemento.state();
     }
 
-    @Nullable Position currentPosition() {
+    Position currentPosition() {
         return currentPosition;
     }
 

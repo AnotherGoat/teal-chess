@@ -48,8 +48,8 @@ public final class Move {
         return new Move(MoveType.DOUBLE_PUSH, pawn, destination);
     }
 
-    public static Move createEnPassant(Pawn pawn, Coordinate destination, Piece capturedPiece) {
-        return new Move(MoveType.EN_PASSANT, pawn, destination, capturedPiece);
+    public static Move createEnPassant(Pawn pawn, Coordinate destination, @Nullable Pawn enPassantTarget) {
+        return new Move(MoveType.EN_PASSANT, pawn, destination, enPassantTarget);
     }
 
     public static Move createCastle(

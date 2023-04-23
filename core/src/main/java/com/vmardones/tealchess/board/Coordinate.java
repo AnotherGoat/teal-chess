@@ -18,6 +18,11 @@ import org.eclipse.jdt.annotation.Nullable;
  */
 public final class Coordinate {
 
+    /**
+     * All the files that a coordinate can have.
+     */
+    public static final String FILES = "abcdefgh";
+
     private static final List<Coordinate> COORDINATE_CACHE = fillCoordinateCache();
 
     private final int index;
@@ -46,6 +51,14 @@ public final class Coordinate {
      */
     public String file() {
         return toString().substring(0, 1);
+    }
+
+    /**
+     * Obtains the index of this coordinate's file. The index goes from 0 (file a) to 7 (file h).
+     * @return The index of the coordinate's file.
+     */
+    public int fileIndex() {
+        return index % Board.SIDE_LENGTH;
     }
 
     /**
@@ -191,10 +204,6 @@ public final class Coordinate {
 
     private boolean illegalJump(int x, Coordinate destination) {
         return (x < 0 && destination.fileIndex() > fileIndex()) || (x > 0 && destination.fileIndex() < fileIndex());
-    }
-
-    private int fileIndex() {
-        return index % Board.SIDE_LENGTH;
     }
 
     private int horizontalClamp(int x) {
