@@ -14,6 +14,11 @@ import picocli.CommandLine.Option;
 public final class MainCommand implements Runnable {
 
     @Option(
+            names = {"-D", "--debug"},
+            description = "Enable debug mode")
+    private boolean debugMode;
+
+    @Option(
             names = {"--dark-theme", "-d"},
             description = "Enable dark theme.")
     private boolean darkTheme;
@@ -32,8 +37,6 @@ public final class MainCommand implements Runnable {
 
     @Override
     public void run() {
-        System.setProperty("awt.useSystemAAFontSettings", "on");
-
-        new Window(darkTheme, highlightLegals, flipBoard);
+        new Window(debugMode, darkTheme, highlightLegals, flipBoard);
     }
 }
