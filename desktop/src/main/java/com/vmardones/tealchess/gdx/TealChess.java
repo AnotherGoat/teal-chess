@@ -7,10 +7,9 @@ package com.vmardones.tealchess.gdx;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.vmardones.tealchess.game.Game;
+import org.lwjgl.opengl.GL20;
 
 final class TealChess extends ApplicationAdapter {
 
@@ -24,13 +23,12 @@ final class TealChess extends ApplicationAdapter {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        var board = game.board();
-        board.squares().forEach(square -> stage.addActor(new ClickableSquare(square)));
+        stage.addActor(new BoardGroup(game.board()));
     }
 
     @Override
     public void render() {
-        ScreenUtils.clear(Color.TEAL);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.draw();
     }

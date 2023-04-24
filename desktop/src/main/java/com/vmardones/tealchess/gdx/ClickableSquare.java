@@ -12,6 +12,7 @@ import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
@@ -22,9 +23,9 @@ import com.vmardones.tealchess.io.PieceTheme;
 
 final class ClickableSquare extends Actor {
 
-    private static final Color LIGHT_COLOR = Color.valueOf("#FFCE9E");
-    private static final Color DARK_COLOR = Color.valueOf("#D18B47");
-    private static final int SIDE_SIZE = 80;
+    static final int SIZE = 72;
+    private static final Texture LIGHT_TEXTURE = createBackground("#FFCE9E");
+    private static final Texture DARK_TEXTURE = createBackground("#D18B47");
     private static final List<String> PIECE_CODES =
             List.of("wP", "wN", "wB", "wR", "wQ", "wK", "bP", "bN", "bB", "bR", "bQ", "bK");
     private static final Map<String, Texture> TEXTURES = new HashMap<>();
@@ -39,27 +40,38 @@ final class ClickableSquare extends Actor {
     ClickableSquare(Square square) {
         this.square = square;
 
-        var x = square.coordinate().fileIndex() * 80;
-        var y = (square.coordinate().rank() - 1) * 80;
-        hitbox = new Rectangle(x, y, SIDE_SIZE, SIDE_SIZE);
+        setSize(SIZE, SIZE);
+
+        var x = square.coordinate().fileIndex() * getWidth();
+        var y = square.coordinate().rankIndex() * getHeight();
+        setPosition(x, y);
+
+        hitbox = new Rectangle(0, 0, getWidth(), getHeight());
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
 
+        var background = square.color().isWhite() ? LIGHT_TEXTURE : DARK_TEXTURE;
+        batch.draw(background, getX(), getY(), background.getWidth(), background.getHeight());
+
         var piece = square.piece();
 
-        if (piece != null) {
-            var x = hitbox.x + 4;
-            var y = hitbox.y + 4;
-            var texture = TEXTURES.get(piece.color() + piece.firstChar());
-
-            batch.setColor(0, 0, 0, 0.1f);
-            batch.draw(texture, x + 4, y, 76, 76);
-
-            batch.setColor(Color.WHITE);
-            batch.draw(texture, x, y);
+        if (piece == null) {
+            return;
         }
+
+        var texture = TEXTURES.get(piece.color() + piece.firstChar());
+
+        if (texture == null) {
+            return;
+        }
+
+        batch.setColor(0, 0, 0, 0.15f);
+        batch.draw(texture, getX() + 8, getY() + 4, texture.getWidth() + 4, texture.getHeight());
+
+        batch.setColor(Color.WHITE);
+        batch.draw(texture, getX() + 4, getY() + 4);
     }
 
     @Override
@@ -70,5 +82,13 @@ final class ClickableSquare extends Actor {
         }
 
         return null;
+    }
+
+    private static Texture createBackground(String hexCode) {
+        var pixmap = new Pixmap(SIZE, SIZE, Pixmap.Format.RGB888);
+        pixmap.setColor(Color.valueOf(hexCode));
+        pixmap.fill();
+
+        return new Texture(pixmap);
     }
 }

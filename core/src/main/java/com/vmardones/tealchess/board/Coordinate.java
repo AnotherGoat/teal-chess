@@ -72,6 +72,14 @@ public final class Coordinate {
         return Board.SIDE_LENGTH - index / Board.SIDE_LENGTH;
     }
 
+    /**
+     * Obtains the index of this coordinate's rank. The index goes from 0 (rank 1) to 7 (rank 8).
+     * @return The index of the coordinate's rank.
+     */
+    public int rankIndex() {
+        return rank() - 1;
+    }
+
     /* Comparisons */
 
     /**

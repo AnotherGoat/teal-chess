@@ -14,7 +14,7 @@ import picocli.CommandLine.Option;
 public final class MainCommand implements Runnable {
 
     @Option(
-            names = {"-D", "--debug"},
+            names = {"--debug", "-D"},
             description = "Enable debug mode")
     private boolean debugMode;
 
