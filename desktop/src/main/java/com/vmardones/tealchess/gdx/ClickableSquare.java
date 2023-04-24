@@ -89,6 +89,18 @@ final class ClickableSquare extends Actor {
         addListener(new SquareListener());
     }
 
+    void flip(boolean flip) {
+        var x = square.coordinate().fileIndex() * getWidth();
+        var y = square.coordinate().rankIndex() * getHeight();
+
+        if (flip) {
+            x = 7 * getWidth() - x;
+            y = 7 * getHeight() - y;
+        }
+
+        setPosition(x, y);
+    }
+
     void highlight(boolean highlight) {
         this.highlight = highlight;
     }

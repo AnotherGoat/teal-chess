@@ -55,6 +55,10 @@ final class BoardGroup extends Group {
         }
     }
 
+    void flip(boolean flip) {
+        squares.forEach(square -> square.flip(flip));
+    }
+
     void highlightSquares(Set<Coordinate> coordinates) {
         squares.forEach(square -> square.highlight(coordinates.contains(square.coordinate())));
     }

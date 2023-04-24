@@ -19,6 +19,6 @@ public final class Window {
         configuration.setForegroundFPS(60);
         configuration.disableAudio(true);
 
-        new Lwjgl3Application(new TealChess(debugMode, highlightLegals), configuration);
+        new Lwjgl3Application(new TealChess(debugMode, highlightLegals, flipBoard), configuration);
     }
 }

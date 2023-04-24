@@ -8,9 +8,8 @@ package com.vmardones.tealchess.gdx;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.game.Game;
@@ -21,14 +20,16 @@ final class TealChess extends ApplicationAdapter {
 
     private boolean debugMode;
     private boolean highlightLegals;
+    private boolean flipBoard;
     private Game game;
     private Stage stage;
     private BoardGroup boardGroup;
     private SelectionState selectionState;
 
-    TealChess(boolean debugMode, boolean highlightLegals) {
+    TealChess(boolean debugMode, boolean highlightLegals, boolean flipBoard) {
         this.debugMode = debugMode;
         this.highlightLegals = highlightLegals;
+        this.flipBoard = flipBoard;
     }
 
     @Override
@@ -44,10 +45,16 @@ final class TealChess extends ApplicationAdapter {
         Gdx.input.setInputProcessor(stage);
 
         boardGroup = new BoardGroup(game.board());
+        if (flipBoard) {
+            boardGroup.flip(flipBoard);
+        }
+
         stage.addActor(boardGroup);
 
         selectionState = new SourceSelection();
         stage.addListener(new SquareListener());
+
+        stage.addListener(new KeyListener());
     }
 
     @Override
@@ -62,7 +69,7 @@ final class TealChess extends ApplicationAdapter {
         stage.dispose();
     }
 
-    private final class SquareListener implements EventListener {
+    private class SquareListener implements EventListener {
         @Override
         public boolean handle(Event event) {
             if (event instanceof SquareEvent squareEvent) {
@@ -85,7 +92,7 @@ final class TealChess extends ApplicationAdapter {
         void unselect();
     }
 
-    private final class SourceSelection implements SelectionState {
+    private class SourceSelection implements SelectionState {
         @Override
         public void select(Square square) {
             var piece = square.piece();
@@ -111,7 +118,6 @@ final class TealChess extends ApplicationAdapter {
 
             if (highlightLegals) {
                 boardGroup.highlightSquares(legalDestinations);
-                boardGroup.act(1);
             }
 
             selectionState = new DestinationSelection(piece.coordinate());
@@ -125,12 +131,11 @@ final class TealChess extends ApplicationAdapter {
         private SourceSelection() {
             if (highlightLegals) {
                 boardGroup.hideHighlights();
-                boardGroup.act(1);
             }
         }
     }
 
-    private final class DestinationSelection implements SelectionState {
+    private class DestinationSelection implements SelectionState {
 
         private final Coordinate sourceCoordinate;
 
@@ -167,6 +172,36 @@ final class TealChess extends ApplicationAdapter {
 
         private DestinationSelection(Coordinate sourceCoordinate) {
             this.sourceCoordinate = sourceCoordinate;
+        }
+    }
+
+    private class KeyListener extends InputListener {
+        @Override
+        public boolean keyDown(InputEvent event, int keycode) {
+            if (keycode == Input.Keys.D) {
+                Gdx.app.log("Key", "Toggling debug mode\n");
+                debugMode = !debugMode;
+
+                if (debugMode) {
+                    Gdx.app.setLogLevel(Application.LOG_DEBUG);
+                } else {
+                    Gdx.app.setLogLevel(Application.LOG_INFO);
+                }
+
+                return true;
+            } else if (keycode == Input.Keys.H) {
+                Gdx.app.log("Key", "Toggling legal move highlighting\n");
+                highlightLegals = !highlightLegals;
+                // TODO: Handle hiding or showing legals when a piece is already selected
+                return true;
+            } else if (keycode == Input.Keys.F) {
+                Gdx.app.log("Key", "Flipping the board\n");
+                flipBoard = !flipBoard;
+                boardGroup.flip(flipBoard);
+                return true;
+            }
+
+            return false;
         }
     }
 }
