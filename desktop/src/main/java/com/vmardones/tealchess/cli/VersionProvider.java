@@ -7,7 +7,7 @@ package com.vmardones.tealchess.cli;
 
 import picocli.CommandLine;
 
-class VersionProvider implements CommandLine.IVersionProvider {
+final class VersionProvider implements CommandLine.IVersionProvider {
 
     private static final String[] UNKNOWN_VERSION = {"UNKNOWN"};
 

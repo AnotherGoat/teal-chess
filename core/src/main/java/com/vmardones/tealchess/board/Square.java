@@ -64,6 +64,10 @@ public final class Square {
         return piece;
     }
 
+    public String info() {
+        return toString() + coordinate;
+    }
+
     /* Comparing squares */
 
     /**

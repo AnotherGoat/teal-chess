@@ -9,14 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.io.PieceLoader;
 import com.vmardones.tealchess.io.PieceTheme;
@@ -34,7 +34,6 @@ final class ClickableSquare extends Actor {
         PIECE_CODES.forEach(code -> TEXTURES.put(code, new Texture(PieceLoader.load(PieceTheme.CBURNETT, code))));
     }
 
-    private Rectangle hitbox;
     private Square square;
 
     ClickableSquare(Square square) {
@@ -46,7 +45,12 @@ final class ClickableSquare extends Actor {
         var y = square.coordinate().rankIndex() * getHeight();
         setPosition(x, y);
 
-        hitbox = new Rectangle(0, 0, getWidth(), getHeight());
+        addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                fire(new SquareEvent(square));
+            }
+        });
     }
 
     @Override
@@ -74,14 +78,14 @@ final class ClickableSquare extends Actor {
         batch.draw(texture, getX() + 4, getY() + 4);
     }
 
-    @Override
-    public Actor hit(float x, float y, boolean touchable) {
-        if (touchable && hitbox.contains(x, y) && Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            Gdx.app.log("Clicked!", square.toString() + square.coordinate());
-            return this;
-        }
+    /* Getters and setters */
 
-        return null;
+    Coordinate coordinate() {
+        return square.coordinate();
+    }
+
+    void square(Square value) {
+        square = value;
     }
 
     private static Texture createBackground(String hexCode) {

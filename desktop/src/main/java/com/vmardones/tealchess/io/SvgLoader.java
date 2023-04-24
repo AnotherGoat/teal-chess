@@ -20,7 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.vmardones.tealchess.ExcludeFromGeneratedReport;
 
-public final class SvgLoader {
+final class SvgLoader {
 
     private static final Logger LOG = LogManager.getLogger(SvgLoader.class);
     private static final PNGTranscoder TRANSCODER = new PNGTranscoder();

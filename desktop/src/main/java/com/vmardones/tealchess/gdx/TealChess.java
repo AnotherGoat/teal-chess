@@ -24,6 +24,8 @@ final class TealChess extends ApplicationAdapter {
         Gdx.input.setInputProcessor(stage);
 
         stage.addActor(new BoardGroup(game.board()));
+
+        stage.addListener(new SquareListener());
     }
 
     @Override
