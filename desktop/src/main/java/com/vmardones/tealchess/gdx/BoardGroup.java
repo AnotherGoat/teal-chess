@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.vmardones.tealchess.board.Board;
 
 final class BoardGroup extends Group {
@@ -31,11 +34,41 @@ final class BoardGroup extends Group {
             squares.add(square);
             addActor(square);
         });
+
+        addListener(new ClearListener());
+    }
+
+    @Override
+    public void act(float delta) {
+        for (var i = 0; i < squares.size(); i++) {
+            var newSquare = board.squares().get(i);
+            var clickableSquare = squares.get(i);
+
+            if (!newSquare.equals(clickableSquare.square())) {
+                clickableSquare.square(newSquare);
+                clickableSquare.act(1);
+            }
+        }
     }
 
     /* Setters */
 
     void board(Board value) {
         board = value;
+    }
+
+    private class ClearListener extends ClickListener {
+        @Override
+        public void clicked(InputEvent event, float x, float y) {
+            var button = event.getButton();
+
+            if (button == Input.Buttons.RIGHT) {
+                fire(new ClearSelectionEvent());
+            }
+        }
+
+        private ClearListener() {
+            setButton(Input.Buttons.RIGHT);
+        }
     }
 }

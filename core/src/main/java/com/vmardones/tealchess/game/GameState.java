@@ -5,7 +5,6 @@
 
 package com.vmardones.tealchess.game;
 
-// TODO: See if this class can be immutable
 final class GameState {
 
     private Position currentPosition;

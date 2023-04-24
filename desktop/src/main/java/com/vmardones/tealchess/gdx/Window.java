@@ -5,8 +5,6 @@
 
 package com.vmardones.tealchess.gdx;
 
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
@@ -18,11 +16,6 @@ public final class Window {
     private boolean flipBoard;
 
     public Window(boolean debugMode, boolean darkTheme, boolean highlightLegals, boolean flipBoard) {
-        if (debugMode) {
-            // TODO: Remove log4j2 dependency and move all the logging outside the core
-            Gdx.app.setLogLevel(Application.LOG_DEBUG);
-        }
-
         this.darkTheme = darkTheme;
         this.highlightLegals = highlightLegals;
         this.flipBoard = flipBoard;
@@ -36,6 +29,6 @@ public final class Window {
         configuration.setForegroundFPS(60);
         configuration.disableAudio(true);
 
-        new Lwjgl3Application(new TealChess(), configuration);
+        new Lwjgl3Application(new TealChess(debugMode), configuration);
     }
 }

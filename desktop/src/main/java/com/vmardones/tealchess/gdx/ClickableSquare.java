@@ -28,6 +28,7 @@ final class ClickableSquare extends Actor {
     private static final Texture DARK_TEXTURE = createBackground("#D18B47");
     private static final List<String> PIECE_CODES =
             List.of("wP", "wN", "wB", "wR", "wQ", "wK", "bP", "bN", "bB", "bR", "bQ", "bK");
+    // TODO: Use an asset manager instead
     private static final Map<String, Texture> TEXTURES = new HashMap<>();
 
     static {
@@ -45,12 +46,13 @@ final class ClickableSquare extends Actor {
         var y = square.coordinate().rankIndex() * getHeight();
         setPosition(x, y);
 
-        addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                fire(new SquareEvent(square));
-            }
-        });
+        addListener(new SquareListener());
+    }
+
+    @Override
+    public void act(float delta) {
+        clearListeners();
+        addListener(new SquareListener());
     }
 
     @Override
@@ -80,12 +82,16 @@ final class ClickableSquare extends Actor {
 
     /* Getters and setters */
 
-    Coordinate coordinate() {
-        return square.coordinate();
+    Square square() {
+        return square;
     }
 
     void square(Square value) {
         square = value;
+    }
+
+    Coordinate coordinate() {
+        return square.coordinate();
     }
 
     private static Texture createBackground(String hexCode) {
@@ -94,5 +100,12 @@ final class ClickableSquare extends Actor {
         pixmap.fill();
 
         return new Texture(pixmap);
+    }
+
+    private class SquareListener extends ClickListener {
+        @Override
+        public void clicked(InputEvent event, float x, float y) {
+            fire(new SquareEvent(square));
+        }
     }
 }
