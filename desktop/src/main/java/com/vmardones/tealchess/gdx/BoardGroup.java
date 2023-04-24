@@ -7,6 +7,7 @@ package com.vmardones.tealchess.gdx;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.vmardones.tealchess.board.Board;
+import com.vmardones.tealchess.board.Coordinate;
 
 final class BoardGroup extends Group {
 
@@ -38,23 +40,27 @@ final class BoardGroup extends Group {
         addListener(new ClearListener());
     }
 
-    @Override
-    public void act(float delta) {
+    /* Setters */
+
+    void board(Board value) {
+        board = value;
+
         for (var i = 0; i < squares.size(); i++) {
             var newSquare = board.squares().get(i);
             var clickableSquare = squares.get(i);
 
             if (!newSquare.equals(clickableSquare.square())) {
                 clickableSquare.square(newSquare);
-                clickableSquare.act(1);
             }
         }
     }
 
-    /* Setters */
+    void highlightSquares(Set<Coordinate> coordinates) {
+        squares.forEach(square -> square.highlight(coordinates.contains(square.coordinate())));
+    }
 
-    void board(Board value) {
-        board = value;
+    void hideHighlights() {
+        squares.forEach(square -> square.highlight(false));
     }
 
     private class ClearListener extends ClickListener {

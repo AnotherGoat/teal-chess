@@ -26,6 +26,7 @@ final class ClickableSquare extends Actor {
     static final int SIZE = 72;
     private static final Texture LIGHT_TEXTURE = createBackground("#FFCE9E");
     private static final Texture DARK_TEXTURE = createBackground("#D18B47");
+    private static final Texture HIGHLIGHT_TEXTURE = createHighlight();
     private static final List<String> PIECE_CODES =
             List.of("wP", "wN", "wB", "wR", "wQ", "wK", "bP", "bN", "bB", "bR", "bQ", "bK");
     // TODO: Use an asset manager instead
@@ -36,6 +37,7 @@ final class ClickableSquare extends Actor {
     }
 
     private Square square;
+    private boolean highlight;
 
     ClickableSquare(Square square) {
         this.square = square;
@@ -50,12 +52,6 @@ final class ClickableSquare extends Actor {
     }
 
     @Override
-    public void act(float delta) {
-        clearListeners();
-        addListener(new SquareListener());
-    }
-
-    @Override
     public void draw(Batch batch, float parentAlpha) {
 
         var background = square.color().isWhite() ? LIGHT_TEXTURE : DARK_TEXTURE;
@@ -63,21 +59,21 @@ final class ClickableSquare extends Actor {
 
         var piece = square.piece();
 
-        if (piece == null) {
-            return;
+        if (piece != null) {
+            var texture = TEXTURES.get(piece.color() + piece.firstChar());
+
+            if (texture != null) {
+                batch.setColor(0, 0, 0, 0.15f);
+                batch.draw(texture, getX() + 8, getY() + 4, texture.getWidth() + 4, texture.getHeight());
+
+                batch.setColor(Color.WHITE);
+                batch.draw(texture, getX() + 4, getY() + 4);
+            }
         }
 
-        var texture = TEXTURES.get(piece.color() + piece.firstChar());
-
-        if (texture == null) {
-            return;
+        if (highlight) {
+            batch.draw(HIGHLIGHT_TEXTURE, getX(), getY());
         }
-
-        batch.setColor(0, 0, 0, 0.15f);
-        batch.draw(texture, getX() + 8, getY() + 4, texture.getWidth() + 4, texture.getHeight());
-
-        batch.setColor(Color.WHITE);
-        batch.draw(texture, getX() + 4, getY() + 4);
     }
 
     /* Getters and setters */
@@ -88,6 +84,13 @@ final class ClickableSquare extends Actor {
 
     void square(Square value) {
         square = value;
+
+        clearListeners();
+        addListener(new SquareListener());
+    }
+
+    void highlight(boolean highlight) {
+        this.highlight = highlight;
     }
 
     Coordinate coordinate() {
@@ -98,6 +101,14 @@ final class ClickableSquare extends Actor {
         var pixmap = new Pixmap(SIZE, SIZE, Pixmap.Format.RGB888);
         pixmap.setColor(Color.valueOf(hexCode));
         pixmap.fill();
+
+        return new Texture(pixmap);
+    }
+
+    private static Texture createHighlight() {
+        var pixmap = new Pixmap(SIZE, SIZE, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.TEAL);
+        pixmap.fillCircle(SIZE / 2, SIZE / 2, SIZE / 6);
 
         return new Texture(pixmap);
     }

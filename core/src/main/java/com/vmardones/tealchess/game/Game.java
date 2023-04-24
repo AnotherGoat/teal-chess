@@ -5,13 +5,17 @@
 
 package com.vmardones.tealchess.game;
 
+import static java.util.stream.Collectors.toUnmodifiableSet;
+
 import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.vmardones.tealchess.analysis.PositionAnalyzer;
 import com.vmardones.tealchess.board.Board;
+import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.move.MoveMaker;
 import com.vmardones.tealchess.piece.Piece;
@@ -76,8 +80,10 @@ public final class Game {
      * @param piece The piece to move.
      * @return The legal moves of the piece.
      */
-    public List<Move> findLegalMoves(Piece piece) {
-        return positionAnalyzer.findLegalMoves(piece);
+    public Set<Coordinate> findLegalDestinations(Piece piece) {
+        return positionAnalyzer.findLegalMoves(piece).stream()
+                .map(Move::destination)
+                .collect(toUnmodifiableSet());
     }
 
     private List<Player> players() {

@@ -20,13 +20,15 @@ import org.lwjgl.opengl.GL20;
 final class TealChess extends ApplicationAdapter {
 
     private boolean debugMode;
+    private boolean highlightLegals;
     private Game game;
     private Stage stage;
     private BoardGroup boardGroup;
-    private SelectionState selectionState = new SourceSelection();
+    private SelectionState selectionState;
 
-    TealChess(boolean debugMode) {
+    TealChess(boolean debugMode, boolean highlightLegals) {
         this.debugMode = debugMode;
+        this.highlightLegals = highlightLegals;
     }
 
     @Override
@@ -44,6 +46,7 @@ final class TealChess extends ApplicationAdapter {
         boardGroup = new BoardGroup(game.board());
         stage.addActor(boardGroup);
 
+        selectionState = new SourceSelection();
         stage.addListener(new SquareListener());
     }
 
@@ -99,9 +102,16 @@ final class TealChess extends ApplicationAdapter {
                 return;
             }
 
-            if (game.findLegalMoves(piece).isEmpty()) {
+            var legalDestinations = game.findLegalDestinations(piece);
+
+            if (legalDestinations.isEmpty()) {
                 Gdx.app.debug("Source", "The selected piece has no legal moves\n");
                 return;
+            }
+
+            if (highlightLegals) {
+                boardGroup.highlightSquares(legalDestinations);
+                boardGroup.act(1);
             }
 
             selectionState = new DestinationSelection(piece.coordinate());
@@ -112,7 +122,12 @@ final class TealChess extends ApplicationAdapter {
             // No need to do anything in this state, because nothing has been selected yet
         }
 
-        private SourceSelection() {}
+        private SourceSelection() {
+            if (highlightLegals) {
+                boardGroup.hideHighlights();
+                boardGroup.act(1);
+            }
+        }
     }
 
     private final class DestinationSelection implements SelectionState {

@@ -5,7 +5,10 @@
 
 package com.vmardones.tealchess.analysis;
 
+import static java.util.stream.Collectors.toUnmodifiableSet;
+
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import com.vmardones.tealchess.game.Position;
@@ -54,7 +57,7 @@ public final class PositionAnalyzer {
      * @param piece The piece to move.
      * @return The legal moves of the piece.
      */
-    public List<Move> findLegalMoves(Piece piece) {
-        return legals.stream().filter(move -> move.piece().equals(piece)).toList();
+    public Set<Move> findLegalMoves(Piece piece) {
+        return legals.stream().filter(move -> move.piece().equals(piece)).collect(toUnmodifiableSet());
     }
 }
