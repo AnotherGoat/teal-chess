@@ -13,16 +13,14 @@ import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.PNGTranscoder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.vmardones.tealchess.ExcludeFromGeneratedReport;
 
 final class SvgLoader {
 
-    private static final Logger LOG = LogManager.getLogger(SvgLoader.class);
     private static final PNGTranscoder TRANSCODER = new PNGTranscoder();
 
     public static Pixmap load(String path, int sideSize) {
@@ -44,8 +42,8 @@ final class SvgLoader {
 
             var pngBytes = outputStream.toByteArray();
             return new Pixmap(pngBytes, 0, pngBytes.length);
-        } catch (IOException | TranscoderException e) {
-            LOG.warn("Could not load SVG file {}", path);
+        } catch (GdxRuntimeException | IOException | TranscoderException e) {
+            Gdx.app.error("Assets", "Could not load SVG file " + path);
             return new Pixmap(width, height, Pixmap.Format.Alpha);
         }
     }

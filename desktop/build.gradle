@@ -17,10 +17,11 @@ application {
 }
 
 runtime {
-    // Bind services is need to avoid "Could not reconfigure JMX" exception
-    options = ['--compress', '2', '--no-header-files', '--no-man-pages', '--bind-services']
+    options = ['--compress', '2', '--no-header-files', '--no-man-pages']
 
     // Specifying modules is needed for now (https://github.com/beryx/badass-runtime-plugin/issues/136)
+    // java.desktop avoids java.lang.ClassNotFoundException: org.beryx.jlink.shadow.asm.ClassVisitor
+    // jdk.unsupported avoids java.lang.NoClassDefFoundError: sun/misc/Unsafe
     modules = ['java.desktop', 'jdk.unsupported']
 
     launcher {

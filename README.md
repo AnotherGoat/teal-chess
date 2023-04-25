@@ -15,11 +15,11 @@ Teal Chess has some differences with the original project, some of which are:
 
 - The project uses Java 17 (the latest LTS version)
 - Gradle is used to manage dependencies, with the Groovy DSL
-- The UI looks a bit more modern, thanks to
-  [FlatLaf](https://www.formdev.com/flatlaf/)
+- The UI is done using [libGDX](https://libgdx.com/), a game development
+  framework, which is more flexible than Swing
 - Chess graphics are the same as the ones
   [by Cburnett on Wikipedia](https://en.wikipedia.org/wiki/User:Cburnett/GFDL_images/Chess)
-- Abstractions were added when it makes sense, to increase code readability
+- Abstractions were added when it makes sense, to make core mode readable
 
 The project is far from finished (even as a demo), which is why there's no
 release yet. Any extra documentation can be found in the [docs](docs) folder.

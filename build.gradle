@@ -52,7 +52,6 @@ allprojects {
         errorProneVersion = '2.18.0'
         nullAwayVersion = '0.10.10'
         errorProneSupportVersion = '0.9.0'
-        log4jVersion = '2.20.0'
 
         junitVersion = '5.9.2'
         mockitoVersion = '5.2.0'
@@ -61,8 +60,6 @@ allprojects {
 
         batikVersion = '1.16'
         picocliVersion = '4.7.1'
-        migLayoutVersion = '11.0'
-        flatlafVersion = '3.0'
         gdxVersion = '1.11.0'
     }
 
@@ -78,9 +75,5 @@ allprojects {
         errorprone "com.google.errorprone:error_prone_core:$errorProneVersion"
         errorprone "com.uber.nullaway:nullaway:$nullAwayVersion"
         errorprone "tech.picnic.error-prone-support:error-prone-contrib:$errorProneSupportVersion"
-
-        // Logging
-        implementation "org.apache.logging.log4j:log4j-api:$log4jVersion"
-        implementation "org.apache.logging.log4j:log4j-core:$log4jVersion"
     }
 }

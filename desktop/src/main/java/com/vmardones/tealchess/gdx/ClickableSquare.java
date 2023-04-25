@@ -60,7 +60,7 @@ final class ClickableSquare extends Actor {
         var piece = square.piece();
 
         if (piece != null) {
-            var texture = TEXTURES.get(piece.color() + piece.firstChar());
+            var texture = TEXTURES.get(piece.color().fen() + piece.firstChar());
 
             if (texture != null) {
                 batch.setColor(0, 0, 0, 0.15f);

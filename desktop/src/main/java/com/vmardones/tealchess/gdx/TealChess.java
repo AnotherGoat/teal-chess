@@ -15,6 +15,7 @@ import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.game.Game;
 import com.vmardones.tealchess.move.MoveFinder;
+import com.vmardones.tealchess.player.Color;
 import org.lwjgl.opengl.GL20;
 
 final class TealChess extends ApplicationAdapter {
@@ -36,11 +37,12 @@ final class TealChess extends ApplicationAdapter {
     @Override
     public void create() {
         if (debugMode) {
-            // TODO: Remove log4j2 dependency and move all the logging outside the core
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
         }
 
+        Gdx.app.log("Game", "Game started!\n");
         game = new Game();
+        logCurrentPosition();
 
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -68,6 +70,38 @@ final class TealChess extends ApplicationAdapter {
     @Override
     public void dispose() {
         stage.dispose();
+    }
+
+    // TODO: Move this method somewhere else
+    private void logCurrentPosition() {
+        var board = game.board();
+        var position = game.position();
+        var sideToMove = position.sideToMove();
+        var player = game.player();
+        var opponent = game.oppponent();
+        var history = game.history();
+
+        Gdx.app.debug("Game", "Current chessboard:\n" + board.unicode());
+
+        Gdx.app.debug("Game", "White king: " + board.king(Color.WHITE));
+        Gdx.app.debug("Game", "White pieces: " + board.pieces(Color.WHITE));
+        Gdx.app.debug("Game", "Black king: " + board.king(Color.BLACK));
+        Gdx.app.debug("Game", "Black pieces: " + board.pieces(Color.BLACK));
+        Gdx.app.debug("Game", "Castling rights: " + position.castlingRights().fen());
+        Gdx.app.debug("Game", "En passant pawn: " + position.enPassantTarget());
+
+        Gdx.app.debug("Game", "Players: " + player + " vs. " + opponent);
+        Gdx.app.log("Game", sideToMove + "'s turn!");
+        Gdx.app.debug("Game", "Legal moves: " + player.legals());
+
+        Gdx.app.debug("Game", "Move history: " + history.moves());
+
+        switch (game.player().status()) {
+            case NORMAL -> Gdx.app.log("Game", "The game continues like normal...\n");
+            case CHECKED -> Gdx.app.log("Game", "Check! " + sideToMove + " king is in danger!\n");
+            case CHECKMATED -> Gdx.app.log("Game", "Checkmate! " + sideToMove.opposite() + " player won!\n");
+            case STALEMATED -> Gdx.app.log("Game", "Stalemate! The game ends in a draw!\n");
+        }
     }
 
     private class SquareListener implements EventListener {
@@ -105,7 +139,7 @@ final class TealChess extends ApplicationAdapter {
 
             Gdx.app.log("Source", "The source contains " + piece);
 
-            if (piece.color() == game.currentOpponent().color()) {
+            if (piece.color() == game.oppponent().color()) {
                 Gdx.app.debug("Source", "The selected piece belongs to the opponent\n");
                 return;
             }
@@ -150,7 +184,7 @@ final class TealChess extends ApplicationAdapter {
 
             Gdx.app.log("Destination", "The destination contains " + square.piece());
 
-            var moves = MoveFinder.choose(game.currentPlayer().legals(), sourceCoordinate, square.coordinate());
+            var moves = MoveFinder.choose(game.player().legals(), sourceCoordinate, square.coordinate());
 
             if (moves.isEmpty()) {
                 Gdx.app.debug("Destination", "The selected move is illegal\n");
@@ -159,16 +193,17 @@ final class TealChess extends ApplicationAdapter {
             }
 
             if (moves.size() == 1) {
+                Gdx.app.log("Destination", "Legal move found! Updating the chessboard...\n");
                 game.updatePosition(moves.get(0));
                 selectionState = new SourceSelection();
 
                 boardGroup.board(game.board());
-                boardGroup.act(1);
+                logCurrentPosition();
                 return;
             }
 
             // TODO: Handle promotion choices
-            Gdx.app.log("Destination", "Promotion");
+            Gdx.app.log("Destination", "Promoting a pawn! Please select the piece you want to promote it to\n");
 
             var choice = MathUtils.random(3);
 
@@ -176,7 +211,7 @@ final class TealChess extends ApplicationAdapter {
             selectionState = new SourceSelection();
 
             boardGroup.board(game.board());
-            boardGroup.act(1);
+            logCurrentPosition();
         }
 
         @Override

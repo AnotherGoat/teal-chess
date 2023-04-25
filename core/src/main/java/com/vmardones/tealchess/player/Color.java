@@ -6,12 +6,15 @@
 package com.vmardones.tealchess.player;
 
 import java.util.List;
+import java.util.Locale;
+
+import com.vmardones.tealchess.parser.Fen;
 
 /**
  * Represents a chess piece's color, which can be white or black.
  * @see <a href="https://www.chessprogramming.org/Color">Color</a>
  */
-public enum Color {
+public enum Color implements Fen {
     /** The white side, at the bottom of the board. */
     WHITE("w", 1, 2),
     /** The black side, at the top of the board. */
@@ -63,6 +66,11 @@ public enum Color {
         return opposite().direction();
     }
 
+    @Override
+    public String fen() {
+        return symbol;
+    }
+
     public int pawnRank() {
         return pawnRank;
     }
@@ -87,7 +95,7 @@ public enum Color {
 
     @Override
     public String toString() {
-        return symbol;
+        return name().charAt(0) + name().substring(1).toLowerCase(Locale.ROOT);
     }
 
     Color(String symbol, int direction, int pawnRank) {

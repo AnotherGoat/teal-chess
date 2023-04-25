@@ -24,8 +24,8 @@ final class GameTest {
         var game = new Game();
 
         assertThat(game.board()).isEqualTo(Position.INITIAL_POSITION.board());
-        assertThat(game.currentPlayer().color()).isEqualTo(Color.WHITE);
-        assertThat(game.currentOpponent().color()).isEqualTo(Color.BLACK);
+        assertThat(game.player().color()).isEqualTo(Color.WHITE);
+        assertThat(game.oppponent().color()).isEqualTo(Color.BLACK);
         assertThat(game.history().lastMove()).isNull();
     }
 
@@ -43,8 +43,8 @@ final class GameTest {
         game.updatePosition(move);
 
         assertThat(game.board()).isNotEqualTo(initialBoard);
-        assertThat(game.currentPlayer().color()).isEqualTo(Color.BLACK);
-        assertThat(game.currentOpponent().color()).isEqualTo(Color.WHITE);
+        assertThat(game.player().color()).isEqualTo(Color.BLACK);
+        assertThat(game.oppponent().color()).isEqualTo(Color.WHITE);
         assertThat(game.history().lastMove()).isEqualTo(move);
     }
 }
