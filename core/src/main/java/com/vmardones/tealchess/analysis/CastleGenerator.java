@@ -83,7 +83,7 @@ final class CastleGenerator {
             return null;
         }
 
-        return Move.createCastle(kingSide, king, kingDestination, rook, rookDestination);
+        return Move.builder(king, kingDestination).castle(kingSide, rook, rookDestination);
     }
 
     private boolean isKingSideCastlePossible() {

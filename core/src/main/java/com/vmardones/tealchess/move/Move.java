@@ -11,9 +11,7 @@ import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.piece.*;
 import org.eclipse.jdt.annotation.Nullable;
 
-// TODO: Refactor this class after it works, use either a builder and/or a class hierarchy to avoid telescoping
-// constructors
-/** The action of moving a piece. */
+/** The action of moving a piece. This class only represents pseudo-legal moves. */
 public final class Move {
 
     private final MoveType type;
@@ -26,37 +24,40 @@ public final class Move {
 
     private final @Nullable PromotionChoice promotionChoice;
 
-    // TODO: Actually implement this, it should be used for PGN notation hash (+ for check, # for checkmate)
-    private final MoveResult result = MoveResult.CONTINUE;
+    /* Building moves */
 
-    /* Creating moves */
-
-    public static Move createNormal(Piece piece, Coordinate destination) {
-        var type = piece.isPawn() ? MoveType.PAWN_PUSH : MoveType.NORMAL;
-        return new Move(type, piece, destination);
+    /**
+     * The standard and only method to build a move. This is because there are many move types that require different information, so the build simplifies the building process. Please note that the move builder never checks if the move is pseudo-legal or not. Any checks should be done outside, before using the builder, and any moves built using this builder are assumed to be pseudo-legal.
+     * @param piece Source square.
+     * @param destination Destination square.
+     * @return The move builder.
+     */
+    public static MoveBuilder builder(Piece piece, Coordinate destination) {
+        return new MoveBuilder(piece, destination);
     }
 
-    public static Move createCapture(Piece piece, Coordinate destination, Piece capturedPiece) {
-        var type = piece.isPawn() ? MoveType.PAWN_CAPTURE : MoveType.CAPTURE;
-        return new Move(type, piece, destination, capturedPiece);
+    /* Transforming moves */
+
+    /**
+     * Mark this move as a promotion move. This should only be used if the piece is a pawn.
+     * @param choice The piece that the pawn will be promoted to.
+     * @return A version of this move that promotes the piece.
+     */
+    public Move makePromotion(PromotionChoice choice) {
+        if (!piece.isPawn()) {
+            throw new IllegalMoveException("Only pawns can be promoted to other pieces");
+        }
+
+        return new Move(type, piece, destination, otherPiece, rookDestination, choice);
     }
 
-    public static Move createDoublePush(Pawn pawn, Coordinate destination) {
-        return new Move(MoveType.DOUBLE_PUSH, pawn, destination);
-    }
-
-    public static Move createEnPassant(Pawn pawn, Coordinate destination, @Nullable Pawn enPassantTarget) {
-        return new Move(MoveType.EN_PASSANT, pawn, destination, enPassantTarget);
-    }
-
-    public static Move createCastle(
-            boolean kingSide, King king, Coordinate kingDestination, Rook rook, Coordinate rookDestination) {
-        return new Move(
-                kingSide ? MoveType.KING_CASTLE : MoveType.QUEEN_CASTLE, king, kingDestination, rook, rookDestination);
-    }
-
-    public static Move makePromotion(Move move, PromotionChoice promotionChoice) {
-        return new Move(move.type, move.piece, move.destination, move.otherPiece, null, promotionChoice);
+    /**
+     * Convert this pseudo-legal move to a legal one. For this, a move result must be supplied.
+     * @param result What happens to the opponent after the move is done.
+     * @return A legal version of this move.
+     */
+    public LegalMove makeLegal(MoveResult result) {
+        return new LegalMove(this, result);
     }
 
     /* Getters */
@@ -107,39 +108,33 @@ public final class Move {
                 && destination.equals(other.destination)
                 && Objects.equals(otherPiece, other.otherPiece)
                 && Objects.equals(rookDestination, other.rookDestination)
-                && result.equals(other.result)
                 && Objects.equals(promotionChoice, other.promotionChoice);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, piece, destination, otherPiece, rookDestination, result, promotionChoice);
+        return Objects.hash(type, piece, destination, otherPiece, rookDestination, promotionChoice);
     }
 
     /**
      * Represents a move using the notation defined by the PGN standard.
+     * Because the move is only pseudo-legal, this doesn't have the end hash.
      * @return The move in PGN notation.
      */
     @Override
     public String toString() {
-        return simpleToString() + result.endHash();
+        return switch (type) {
+            case CAPTURE -> piece.singleChar() + destination();
+            case PAWN_CAPTURE -> String.join(
+                    "x", piece.coordinate().file(), destination().toString());
+            case KING_CASTLE -> "0-0";
+            case QUEEN_CASTLE -> "0-0-0";
+            default -> destination().toString();
+        };
     }
 
-    private Move(MoveType type, Piece piece, Coordinate destination) {
-        this(type, piece, destination, null);
-    }
-
-    private Move(MoveType type, Piece piece, Coordinate destination, @Nullable Piece otherPiece) {
-        this(type, piece, destination, otherPiece, null);
-    }
-
-    private Move(
-            MoveType type,
-            Piece piece,
-            Coordinate destination,
-            @Nullable Piece otherPiece,
-            @Nullable Coordinate rookDestination) {
-        this(type, piece, destination, otherPiece, rookDestination, null);
+    private Move(MoveBuilder builder) {
+        this(builder.type, builder.piece, builder.destination, builder.otherPiece, builder.rookDestination, null);
     }
 
     private Move(
@@ -157,14 +152,64 @@ public final class Move {
         this.promotionChoice = promotionChoice;
     }
 
-    private String simpleToString() {
-        return switch (type) {
-            case CAPTURE -> piece.singleChar() + destination();
-            case PAWN_CAPTURE -> String.join(
-                    "x", piece.coordinate().file(), destination().toString());
-            case KING_CASTLE -> "0-0";
-            case QUEEN_CASTLE -> "0-0-0";
-            default -> destination().toString();
-        };
+    /**
+     * The class responsible for building any kind of pseudo-legal chess moves. Any legality checks must be done after using this builder. Every method of this builder finishes the building process, to avoid unexpected behavior.
+     */
+    public static class MoveBuilder {
+
+        private MoveType type;
+        private final Piece piece;
+        private final Coordinate destination;
+
+        @Nullable private Piece otherPiece;
+
+        @Nullable private Coordinate rookDestination;
+
+        public Move normal() {
+            type = piece.isPawn() ? MoveType.PAWN_PUSH : MoveType.NORMAL;
+            return new Move(this);
+        }
+
+        public Move capture(Piece capturedPiece) {
+            type = piece.isPawn() ? MoveType.PAWN_CAPTURE : MoveType.CAPTURE;
+            otherPiece = capturedPiece;
+            return new Move(this);
+        }
+
+        public Move doublePush() {
+            if (!piece.isPawn()) {
+                throw new IllegalMoveException("Only pawns can make double push moves");
+            }
+
+            type = MoveType.DOUBLE_PUSH;
+            return new Move(this);
+        }
+
+        public Move enPassant(Pawn enPassantTarget) {
+            if (!piece.isPawn()) {
+                throw new IllegalMoveException("Only pawns can make en passant moves");
+            }
+
+            type = MoveType.EN_PASSANT;
+            otherPiece = enPassantTarget;
+            return new Move(this);
+        }
+
+        public Move castle(boolean kingSide, Rook rook, Coordinate rookDestination) {
+            if (!piece.isKing()) {
+                throw new IllegalMoveException("Only kings can make castling moves");
+            }
+
+            type = kingSide ? MoveType.KING_CASTLE : MoveType.QUEEN_CASTLE;
+            otherPiece = rook;
+            this.rookDestination = rookDestination;
+            return new Move(this);
+        }
+
+        private MoveBuilder(Piece piece, Coordinate destination) {
+            this.piece = piece;
+            this.destination = destination;
+            type = MoveType.NORMAL;
+        }
     }
 }

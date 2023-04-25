@@ -31,6 +31,10 @@ public final class Pawn extends JumpingPiece {
         return color.isWhite() ? "♙" : "♟";
     }
 
+    public boolean canBePromoted() {
+        return coordinate.rank() == color.opposite().pawnRank();
+    }
+
     public Piece promote(PromotionChoice choice) {
         return switch (choice) {
             case KNIGHT -> new Knight(coordinate.toString(), color);

@@ -17,13 +17,14 @@ public enum MoveResult {
 
     private final String endHash;
 
-    /* Getters */
+    /* toString */
 
     /**
      * The end hash used by this result, according to PGN notation.
      * @return The end hash.
      */
-    public String endHash() {
+    @Override
+    public String toString() {
         return endHash;
     }
 

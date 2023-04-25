@@ -13,6 +13,7 @@ import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.move.Move;
+import com.vmardones.tealchess.piece.Pawn;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.piece.PromotionChoice;
 
@@ -44,12 +45,16 @@ final class MoveGenerator {
             return Stream.empty();
         }
 
-        var move = Move.createNormal(piece, destination.coordinate());
+        var move = Move.builder(piece, destination.coordinate()).normal();
 
-        // TODO: In the frontend, check if a destination has more than 1 possible move, in that case it's a promotion
-        if (piece.isPawn()
-                && piece.coordinate().rank() == piece.color().opposite().pawnRank()) {
-            return Arrays.stream(PromotionChoice.values()).map(choice -> Move.makePromotion(move, choice));
+        if (!piece.isPawn()) {
+            return Stream.of(move);
+        }
+
+        var pawn = (Pawn) piece;
+
+        if (pawn.canBePromoted()) {
+            return Arrays.stream(PromotionChoice.values()).map(move::makePromotion);
         }
 
         return Stream.of(move);

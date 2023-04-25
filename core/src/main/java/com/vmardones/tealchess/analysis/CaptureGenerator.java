@@ -55,7 +55,7 @@ final class CaptureGenerator {
             return null;
         }
 
-        return Move.createCapture(piece, destination.coordinate(), destinationPiece);
+        return Move.builder(piece, destination.coordinate()).capture(destinationPiece);
     }
 
     private Stream<Move> generatePawnCaptures(Pawn pawn, boolean leftSide) {
@@ -74,10 +74,10 @@ final class CaptureGenerator {
             return Stream.empty();
         }
 
-        var move = Move.createCapture(pawn, destination, destinationPiece);
+        var move = Move.builder(pawn, destination).capture(destinationPiece);
 
-        if (pawn.coordinate().rank() == pawn.color().opposite().pawnRank()) {
-            return Arrays.stream(PromotionChoice.values()).map(choice -> Move.makePromotion(move, choice));
+        if (pawn.canBePromoted()) {
+            return Arrays.stream(PromotionChoice.values()).map(move::makePromotion);
         }
 
         return Stream.of(move);

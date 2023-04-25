@@ -23,8 +23,6 @@ import org.eclipse.jdt.annotation.Nullable;
 
 final class PawnMoveGenerator {
 
-    private static final Logger LOG = LogManager.getLogger(PawnMoveGenerator.class);
-
     private final Board board;
     private final Color sideToMove;
     private final List<Piece> pieces;
@@ -44,11 +42,8 @@ final class PawnMoveGenerator {
             if (piece.isPawn()) {
                 var pawn = (Pawn) piece;
                 moves.add(generateDoublePush(pawn));
-
-                if (enPassantTarget != null) {
-                    moves.add(generateEnPassant(pawn, true));
-                    moves.add(generateEnPassant(pawn, false));
-                }
+                moves.add(generateEnPassant(pawn, true));
+                moves.add(generateEnPassant(pawn, false));
             }
         }
 
@@ -72,10 +67,14 @@ final class PawnMoveGenerator {
             return null;
         }
 
-        return Move.createDoublePush(pawn, destination);
+        return Move.builder(pawn, destination).doublePush();
     }
 
     private @Nullable Move generateEnPassant(Pawn pawn, boolean leftSide) {
+
+        if (enPassantTarget == null) {
+            return null;
+        }
 
         var direction = leftSide ? -1 : 1;
         var side = pawn.coordinate().right(direction);
@@ -96,8 +95,6 @@ final class PawnMoveGenerator {
             return null;
         }
 
-        var enPassantMove = Move.createEnPassant(pawn, destination, enPassantTarget);
-        LOG.debug("Created en passant move: {}", enPassantMove);
-        return enPassantMove;
+        return Move.builder(pawn, destination).enPassant(enPassantTarget);
     }
 }
