@@ -119,18 +119,25 @@ public final class Move {
     /**
      * Represents a move using the notation defined by the PGN standard.
      * Because the move is only pseudo-legal, this doesn't have the end hash.
-     * @return The move in PGN notation.
+     * @return The move in SAN movetext.
      */
     @Override
     public String toString() {
-        return switch (type) {
-            case CAPTURE -> piece.singleChar() + destination();
-            case PAWN_CAPTURE -> String.join(
-                    "x", piece.coordinate().file(), destination().toString());
-            case KING_CASTLE -> "0-0";
-            case QUEEN_CASTLE -> "0-0-0";
-            default -> destination().toString();
-        };
+        var base =
+                switch (type) {
+                    case NORMAL -> piece.firstChar() + destination();
+                    case CAPTURE -> piece.firstChar() + "x" + destination();
+                    case PAWN_PUSH, DOUBLE_PUSH -> destination.toString();
+                    case PAWN_CAPTURE, EN_PASSANT -> piece.coordinate().file() + "x" + destination();
+                    case KING_CASTLE -> "O-O";
+                    case QUEEN_CASTLE -> "O-O-O";
+                };
+
+        if (promotionChoice == null) {
+            return base;
+        }
+
+        return base + promotionChoice;
     }
 
     private Move(MoveBuilder builder) {

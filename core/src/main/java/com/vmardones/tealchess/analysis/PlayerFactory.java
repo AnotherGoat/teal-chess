@@ -10,7 +10,7 @@ import static java.util.Collections.emptyList;
 import java.util.List;
 
 import com.vmardones.tealchess.game.Position;
-import com.vmardones.tealchess.move.Move;
+import com.vmardones.tealchess.move.LegalMove;
 import com.vmardones.tealchess.piece.King;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.player.Color;
@@ -24,11 +24,11 @@ final class PlayerFactory {
     private final Color sideToMove;
     private final King king;
     private final List<Piece> pieces;
-    private final List<Move> legals;
+    private final List<LegalMove> legals;
     private final King opponentKing;
     private final List<Piece> opponentPieces;
 
-    PlayerFactory(Position position, AttackTester attackTester, List<Move> legals) {
+    PlayerFactory(Position position, AttackTester attackTester, List<LegalMove> legals) {
         sideToMove = position.sideToMove();
         king = position.board().king(sideToMove);
         pieces = position.board().pieces(sideToMove);

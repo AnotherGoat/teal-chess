@@ -5,7 +5,7 @@
 
 package com.vmardones.tealchess.move;
 
-// TODO: Add illegal states: SELF_CHECKS and SELF_CHECKMATES
+// TODO: This is essentially the same as PlayerStatus, merge both classes
 /** Tells what happens after a move is made and whether that move is possible or not. Because illegal moves are never saved, the ILLEGAL and NONE results are only used when testing moves. */
 public enum MoveResult {
     /** The move can be made and the game continues normally. */
@@ -13,7 +13,9 @@ public enum MoveResult {
     /** Leaves the opponent in check. */
     CHECKS("+"),
     /** Checkmates the opponent. The game finishes. */
-    CHECKMATES("#");
+    CHECKMATES("#"),
+    /** Leaves the opponent without moves, but doesn't checkmate. The game finishes. */
+    STALEMATES("");
 
     private final String endHash;
 

@@ -24,7 +24,18 @@ public final class MoveMaker {
     /**
      * When a move is made, a new chess position is created, due to the position being immutable.
      *
-     * @param position The current position.
+     * @param position The position before the move.
+     * @param move The move to make.
+     * @return The new position, after the move is made.
+     */
+    public Position make(Position position, LegalMove move) {
+        return make(position, move.move());
+    }
+
+    /**
+     * When a move is made, a new chess position is created, due to the position being immutable.
+     *
+     * @param position The position before the move.
      * @param move The move to make.
      * @return The new position, after the move is made.
      */
@@ -37,7 +48,7 @@ public final class MoveMaker {
         var halfmoveClock = updateHalfmoveClock(position, move);
         var fullmoveCounter = updateFullmoveCounter(position);
 
-        return new Position(board, sideToMove, castlingRights, enPassantTarget, halfmoveClock, fullmoveCounter, move);
+        return new Position(board, sideToMove, castlingRights, enPassantTarget, halfmoveClock, fullmoveCounter);
     }
 
     private Board createBoard(Position position, Move move) {

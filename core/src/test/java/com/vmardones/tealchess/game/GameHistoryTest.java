@@ -32,7 +32,7 @@ final class GameHistoryTest {
         var initialHistory = new GameHistory();
 
         var initialPosition = Position.INITIAL_POSITION;
-        var history = initialHistory.add(new PositionMemento(initialPosition));
+        var history = initialHistory.add(new GameMemento(initialPosition));
 
         assertThat(history).isNotSameAs(initialHistory);
         assertThat(history.lastMove()).isNull();
@@ -46,8 +46,8 @@ final class GameHistoryTest {
         var move = Move.createNormal(new Pawn("e2", Color.WHITE), Coordinate.of("e3"));
         var position2 = new Position(position1.board(), Color.BLACK, position1.castlingRights(), null, 0, 1, move);
 
-        var history1 = initialHistory.add(new PositionMemento(position1));
-        var history2 = history1.add(new PositionMemento(position2));
+        var history1 = initialHistory.add(new GameMemento(position1));
+        var history2 = history1.add(new GameMemento(position2));
 
         assertThat(history2.moves()).isNotSameAs(history1.moves()).hasSize(1);
     }
@@ -67,7 +67,7 @@ final class GameHistoryTest {
         var move = Move.createNormal(new Pawn("c2", Color.WHITE), Coordinate.of("c3"));
         var position2 = new Position(position1.board(), Color.BLACK, position1.castlingRights(), null, 0, 1, move);
 
-        var finalHistory = initialHistory.add(new PositionMemento(position1)).add(new PositionMemento(position2));
+        var finalHistory = initialHistory.add(new GameMemento(position1)).add(new GameMemento(position2));
 
         assertThat(finalHistory.lastMove()).isEqualTo(move);
     }

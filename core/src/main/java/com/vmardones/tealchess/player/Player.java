@@ -22,7 +22,7 @@ public abstract sealed class Player permits HumanPlayer {
     protected final Color color;
     protected final King king;
     protected final List<Piece> pieces;
-    protected final List<Move> legals;
+    protected final List<LegalMove> legals;
     protected final PlayerStatus status;
 
     /* Player creation */
@@ -36,7 +36,7 @@ public abstract sealed class Player permits HumanPlayer {
      * @param legals The legal moves of the player.
      * @param status The state of the player, which may limit their moves.
      */
-    protected Player(Color color, King king, List<Piece> pieces, List<Move> legals, PlayerStatus status) {
+    protected Player(Color color, King king, List<Piece> pieces, List<LegalMove> legals, PlayerStatus status) {
         this.color = color;
         this.king = king;
         this.pieces = pieces;
@@ -58,7 +58,7 @@ public abstract sealed class Player permits HumanPlayer {
         return unmodifiableList(pieces);
     }
 
-    public List<Move> legals() {
+    public List<LegalMove> legals() {
         return unmodifiableList(legals);
     }
 

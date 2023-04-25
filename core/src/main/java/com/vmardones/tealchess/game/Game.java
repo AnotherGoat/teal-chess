@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 import com.vmardones.tealchess.analysis.PositionAnalyzer;
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Coordinate;
-import com.vmardones.tealchess.move.Move;
+import com.vmardones.tealchess.move.LegalMove;
 import com.vmardones.tealchess.move.MoveMaker;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.player.Color;
@@ -38,33 +38,35 @@ public final class Game {
         moveMaker = new MoveMaker();
         state = new GameState();
         history = new GameHistory();
-        positionAnalyzer = new PositionAnalyzer(state.currentPosition());
+        positionAnalyzer = new PositionAnalyzer(state.position());
         whitePlayer = positionAnalyzer.createPlayer(Color.WHITE);
         blackPlayer = positionAnalyzer.createPlayer(Color.BLACK);
 
-        registerPosition(state.currentPosition());
+        registerPosition(state.position());
     }
 
     /* Getters */
 
     public Board board() {
-        return state.currentPosition().board();
+        return state.position().board();
     }
 
     public Player currentPlayer() {
-        return state.currentPosition().sideToMove().player(players());
+        return state.position().sideToMove().player(players());
     }
 
     public Player currentOpponent() {
-        return state.currentPosition().sideToMove().opponent(players());
+        return state.position().sideToMove().opponent(players());
     }
 
     public GameHistory history() {
         return history;
     }
 
-    public void updatePosition(Move move) {
-        var nextPosition = moveMaker.make(state.currentPosition(), move);
+    public void updatePosition(LegalMove move) {
+        state.lastMove(move);
+
+        var nextPosition = moveMaker.make(state.position(), move);
 
         positionAnalyzer = new PositionAnalyzer(nextPosition);
         whitePlayer = positionAnalyzer.createPlayer(Color.WHITE);
@@ -82,7 +84,7 @@ public final class Game {
      */
     public Set<Coordinate> findLegalDestinations(Piece piece) {
         return positionAnalyzer.findLegalMoves(piece).stream()
-                .map(Move::destination)
+                .map(legal -> legal.move().destination())
                 .collect(toUnmodifiableSet());
     }
 
@@ -93,15 +95,17 @@ public final class Game {
     private void registerPosition(Position position) {
         analyzePosition(position);
 
-        state.currentPosition(position);
+        state.position(position);
         history = history.add(state.save());
 
-        LOG.debug("Move added to history: {}\n", state.currentPosition().lastMove());
+        LOG.debug("Move history: {}\n", history.moves());
+        LOG.info("{}'s turn!\n", position.sideToMove().name());
 
         switch (currentPlayer().status()) {
-            case NORMAL -> LOG.info("{}'s turn!\n", position.sideToMove().name());
+            case NORMAL -> LOG.info("The game continues like normal...");
             case CHECKED -> LOG.info(
-                    "Check! {} king is in danger!\n", position.sideToMove().name());
+                    "{0}'s turn!\nCheck! {} king is in danger!\n",
+                    position.sideToMove().name());
             case CHECKMATED -> LOG.info(
                     "Checkmate! {} player won!\n",
                     position.sideToMove().opposite().name());

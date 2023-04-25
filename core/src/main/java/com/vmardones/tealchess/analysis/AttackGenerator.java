@@ -27,8 +27,8 @@ final class AttackGenerator {
         opponentPieces = board.pieces(position.sideToMove().opposite());
     }
 
-    Stream<Attack> calculateAttacks(boolean opponent) {
-        var attackingPieces = opponent ? opponentPieces : pieces;
+    Stream<Attack> calculateAttacks(boolean opponentAttacks) {
+        var attackingPieces = opponentAttacks ? opponentPieces : pieces;
 
         return attackingPieces.stream().flatMap(this::calculatePieceAttacks);
     }

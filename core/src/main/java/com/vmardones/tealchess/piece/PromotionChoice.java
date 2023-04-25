@@ -5,9 +5,23 @@
 
 package com.vmardones.tealchess.piece;
 
+/**
+ * Each of the choices that a pawn can be promoted to when it reaches the opposite side.
+ */
 public enum PromotionChoice {
-    KNIGHT,
-    BISHOP,
-    ROOK,
-    QUEEN;
+    KNIGHT("=N"),
+    BISHOP("=B"),
+    ROOK("=R"),
+    QUEEN("=Q");
+
+    private final String san;
+
+    @Override
+    public String toString() {
+        return san;
+    }
+
+    PromotionChoice(String san) {
+        this.san = san;
+    }
 }

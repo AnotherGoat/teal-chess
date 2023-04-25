@@ -5,27 +5,40 @@
 
 package com.vmardones.tealchess.game;
 
+import com.vmardones.tealchess.move.LegalMove;
+import org.eclipse.jdt.annotation.Nullable;
+
 final class GameState {
 
-    private Position currentPosition;
+    private Position position;
+    private @Nullable LegalMove lastMove;
 
     GameState() {
-        currentPosition = Position.INITIAL_POSITION;
+        position = Position.INITIAL_POSITION;
     }
 
-    PositionMemento save() {
-        return new PositionMemento(currentPosition);
+    GameMemento save() {
+        return new GameMemento(position, lastMove);
     }
 
-    void load(PositionMemento positionMemento) {
-        currentPosition = positionMemento.state();
+    void load(GameMemento gameMemento) {
+        position = gameMemento.position();
+        lastMove = gameMemento.lastMove();
     }
 
-    Position currentPosition() {
-        return currentPosition;
+    Position position() {
+        return position;
     }
 
-    void currentPosition(Position value) {
-        currentPosition = value;
+    void position(Position value) {
+        position = value;
+    }
+
+    @Nullable LegalMove lastMove() {
+        return lastMove;
+    }
+
+    void lastMove(LegalMove value) {
+        lastMove = value;
     }
 }

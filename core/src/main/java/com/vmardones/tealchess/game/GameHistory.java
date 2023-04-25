@@ -9,29 +9,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.vmardones.tealchess.move.Move;
+import com.vmardones.tealchess.move.LegalMove;
 import org.eclipse.jdt.annotation.Nullable;
 
 public final class GameHistory {
 
-    private final List<PositionMemento> history;
+    private final List<GameMemento> history;
 
     /* Getters */
 
-    public List<Move> moves() {
+    public List<LegalMove> moves() {
         return history.stream()
-                .map(PositionMemento::state)
-                .map(Position::lastMove)
+                .map(GameMemento::lastMove)
                 .filter(Objects::nonNull)
                 .toList();
     }
 
-    public @Nullable Move lastMove() {
+    public @Nullable LegalMove lastMove() {
         if (history.isEmpty()) {
             return null;
         }
 
-        return history.get(history.size() - 1).state().lastMove();
+        return history.get(history.size() - 1).lastMove();
     }
 
     /* equals and hashCode */
@@ -59,13 +58,13 @@ public final class GameHistory {
         this(new ArrayList<>());
     }
 
-    GameHistory add(PositionMemento state) {
+    GameHistory add(GameMemento state) {
         var newHistory = new ArrayList<>(history);
         newHistory.add(state);
         return new GameHistory(newHistory);
     }
 
-    private GameHistory(List<PositionMemento> history) {
+    private GameHistory(List<GameMemento> history) {
         this.history = history;
     }
 }

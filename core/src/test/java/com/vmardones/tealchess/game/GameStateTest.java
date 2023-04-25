@@ -18,7 +18,7 @@ final class GameStateTest {
     void save() {
         var gameState = new GameState();
 
-        assertThat(gameState.save().state()).isEqualTo(Position.INITIAL_POSITION);
+        assertThat(gameState.save().position()).isEqualTo(Position.INITIAL_POSITION);
     }
 
     @Test
@@ -27,10 +27,10 @@ final class GameStateTest {
         var firstMemento = gameState.save();
 
         var secondPosition = FenParser.parse("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1");
-        gameState.currentPosition(secondPosition);
+        gameState.position(secondPosition);
 
         gameState.load(firstMemento);
 
-        assertThat(gameState.currentPosition()).isEqualTo(firstMemento.state()).isNotEqualTo(secondPosition);
+        assertThat(gameState.position()).isEqualTo(firstMemento.position()).isNotEqualTo(secondPosition);
     }
 }
