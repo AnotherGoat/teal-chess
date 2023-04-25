@@ -9,6 +9,7 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.board.Square;
@@ -149,15 +150,29 @@ final class TealChess extends ApplicationAdapter {
 
             Gdx.app.log("Destination", "The destination contains " + square.piece());
 
-            var move = MoveFinder.choose(game.currentPlayer().legals(), sourceCoordinate, square.coordinate());
+            var moves = MoveFinder.choose(game.currentPlayer().legals(), sourceCoordinate, square.coordinate());
 
-            if (move == null) {
+            if (moves.isEmpty()) {
                 Gdx.app.debug("Destination", "The selected move is illegal\n");
                 selectionState = new SourceSelection();
                 return;
             }
 
-            game.updatePosition(move);
+            if (moves.size() == 1) {
+                game.updatePosition(moves.get(0));
+                selectionState = new SourceSelection();
+
+                boardGroup.board(game.board());
+                boardGroup.act(1);
+                return;
+            }
+
+            // TODO: Handle promotion choices
+            Gdx.app.log("Destination", "Promotion");
+
+            var choice = MathUtils.random(3);
+
+            game.updatePosition(moves.get(choice));
             selectionState = new SourceSelection();
 
             boardGroup.board(game.board());

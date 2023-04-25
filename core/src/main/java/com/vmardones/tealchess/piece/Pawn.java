@@ -31,7 +31,12 @@ public final class Pawn extends JumpingPiece {
         return color.isWhite() ? "♙" : "♟";
     }
 
-    public Piece promote() {
-        return new Queen(coordinate.toString(), color);
+    public Piece promote(PromotionChoice choice) {
+        return switch (choice) {
+            case KNIGHT -> new Knight(coordinate.toString(), color);
+            case BISHOP -> new Bishop(coordinate.toString(), color);
+            case ROOK -> new Rook(coordinate.toString(), color);
+            case QUEEN -> new Queen(coordinate.toString(), color);
+        };
     }
 }

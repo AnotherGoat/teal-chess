@@ -5,8 +5,8 @@
 
 package com.vmardones.tealchess.analysis;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 import com.vmardones.tealchess.board.Board;
@@ -14,7 +14,7 @@ import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.piece.Piece;
-import org.eclipse.jdt.annotation.Nullable;
+import com.vmardones.tealchess.piece.PromotionChoice;
 
 final class MoveGenerator {
 
@@ -33,23 +33,25 @@ final class MoveGenerator {
     private Stream<Move> calculatePieceMoves(Piece piece) {
         return piece.calculatePossibleDestinations(board).stream()
                 .map(board::squareAt)
-                .map(square -> createMove(piece, square))
-                .filter(Objects::nonNull);
+                .flatMap(square -> createMoves(piece, square));
     }
 
-    private @Nullable Move createMove(Piece piece, Square destination) {
+    private Stream<Move> createMoves(Piece piece, Square destination) {
 
         var destinationPiece = destination.piece();
 
         if (destinationPiece != null) {
-            return null;
+            return Stream.empty();
         }
 
+        var move = Move.createNormal(piece, destination.coordinate());
+
+        // TODO: In the frontend, check if a destination has more than 1 possible move, in that case it's a promotion
         if (piece.isPawn()
                 && piece.coordinate().rank() == piece.color().opposite().pawnRank()) {
-            return Move.makePromotion(Move.createNormal(piece, destination.coordinate()));
+            return Arrays.stream(PromotionChoice.values()).map(choice -> Move.makePromotion(move, choice));
         }
 
-        return Move.createNormal(piece, destination.coordinate());
+        return Stream.of(move);
     }
 }

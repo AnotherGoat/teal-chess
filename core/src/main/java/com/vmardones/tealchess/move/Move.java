@@ -8,10 +8,7 @@ package com.vmardones.tealchess.move;
 import java.util.Objects;
 
 import com.vmardones.tealchess.board.Coordinate;
-import com.vmardones.tealchess.piece.King;
-import com.vmardones.tealchess.piece.Pawn;
-import com.vmardones.tealchess.piece.Piece;
-import com.vmardones.tealchess.piece.Rook;
+import com.vmardones.tealchess.piece.*;
 import org.eclipse.jdt.annotation.Nullable;
 
 // TODO: Refactor this class after it works, use either a builder and/or a class hierarchy to avoid telescoping
@@ -27,7 +24,7 @@ public final class Move {
 
     @Nullable private final Coordinate rookDestination;
 
-    private final boolean promotion;
+    private final @Nullable PromotionChoice promotionChoice;
 
     // TODO: Actually implement this, it should be used for PGN notation hash (+ for check, # for checkmate)
     private final MoveResult result = MoveResult.CONTINUE;
@@ -58,8 +55,8 @@ public final class Move {
                 kingSide ? MoveType.KING_CASTLE : MoveType.QUEEN_CASTLE, king, kingDestination, rook, rookDestination);
     }
 
-    public static Move makePromotion(Move move) {
-        return new Move(move.type, move.piece, move.destination, move.otherPiece, null, true);
+    public static Move makePromotion(Move move, PromotionChoice promotionChoice) {
+        return new Move(move.type, move.piece, move.destination, move.otherPiece, null, promotionChoice);
     }
 
     /* Getters */
@@ -88,8 +85,8 @@ public final class Move {
         return rookDestination;
     }
 
-    public boolean promotion() {
-        return promotion;
+    public @Nullable PromotionChoice promotionChoice() {
+        return promotionChoice;
     }
 
     /* equals, hashCode and toString */
@@ -111,12 +108,12 @@ public final class Move {
                 && Objects.equals(otherPiece, other.otherPiece)
                 && Objects.equals(rookDestination, other.rookDestination)
                 && result.equals(other.result)
-                && promotion == other.promotion;
+                && Objects.equals(promotionChoice, other.promotionChoice);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, piece, destination, otherPiece, rookDestination, result, promotion);
+        return Objects.hash(type, piece, destination, otherPiece, rookDestination, result, promotionChoice);
     }
 
     /**
@@ -142,7 +139,7 @@ public final class Move {
             Coordinate destination,
             @Nullable Piece otherPiece,
             @Nullable Coordinate rookDestination) {
-        this(type, piece, destination, otherPiece, rookDestination, false);
+        this(type, piece, destination, otherPiece, rookDestination, null);
     }
 
     private Move(
@@ -151,13 +148,13 @@ public final class Move {
             Coordinate destination,
             @Nullable Piece otherPiece,
             @Nullable Coordinate rookDestination,
-            boolean promotion) {
+            @Nullable PromotionChoice promotionChoice) {
         this.type = type;
         this.piece = piece;
         this.destination = destination;
         this.otherPiece = otherPiece;
         this.rookDestination = rookDestination;
-        this.promotion = promotion;
+        this.promotionChoice = promotionChoice;
     }
 
     private String simpleToString() {

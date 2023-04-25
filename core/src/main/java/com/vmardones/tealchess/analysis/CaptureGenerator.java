@@ -5,6 +5,7 @@
 
 package com.vmardones.tealchess.analysis;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -15,6 +16,7 @@ import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.piece.Pawn;
 import com.vmardones.tealchess.piece.Piece;
+import com.vmardones.tealchess.piece.PromotionChoice;
 import org.eclipse.jdt.annotation.Nullable;
 
 final class CaptureGenerator {
@@ -35,8 +37,8 @@ final class CaptureGenerator {
 
         if (piece.isPawn()) {
             var pawn = (Pawn) piece;
-            return Stream.of(generatePawnCapture(pawn, true), generatePawnCapture(pawn, false))
-                    .filter(Objects::nonNull);
+
+            return Stream.concat(generatePawnCaptures(pawn, true), generatePawnCaptures(pawn, false));
         }
 
         return piece.calculatePossibleDestinations(board).stream()
@@ -56,26 +58,28 @@ final class CaptureGenerator {
         return Move.createCapture(piece, destination.coordinate(), destinationPiece);
     }
 
-    private @Nullable Move generatePawnCapture(Pawn pawn, boolean leftSide) {
+    private Stream<Move> generatePawnCaptures(Pawn pawn, boolean leftSide) {
 
         var direction = leftSide ? -1 : 1;
 
         var destination = pawn.coordinate().to(direction, pawn.color().direction());
 
         if (destination == null) {
-            return null;
+            return Stream.empty();
         }
 
         var destinationPiece = board.pieceAt(destination);
 
         if (destinationPiece == null || pawn.isAllyOf(destinationPiece)) {
-            return null;
+            return Stream.empty();
         }
+
+        var move = Move.createCapture(pawn, destination, destinationPiece);
 
         if (pawn.coordinate().rank() == pawn.color().opposite().pawnRank()) {
-            return Move.makePromotion(Move.createCapture(pawn, destination, destinationPiece));
+            return Arrays.stream(PromotionChoice.values()).map(choice -> Move.makePromotion(move, choice));
         }
 
-        return Move.createCapture(pawn, destination, destinationPiece);
+        return Stream.of(move);
     }
 }

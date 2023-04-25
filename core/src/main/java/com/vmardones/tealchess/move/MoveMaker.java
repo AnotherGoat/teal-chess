@@ -57,9 +57,11 @@ public final class MoveMaker {
             builder.with(otherPiece.moveTo(rookDestination.toString()));
         }
 
-        if (move.promotion()) {
+        var promotionChoice = move.promotionChoice();
+
+        if (promotionChoice != null) {
             var pawn = (Pawn) movedPiece;
-            builder.with(pawn.promote());
+            builder.with(pawn.promote(promotionChoice));
         }
 
         return builder.build();
