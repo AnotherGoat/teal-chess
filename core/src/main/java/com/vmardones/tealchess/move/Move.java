@@ -8,11 +8,12 @@ package com.vmardones.tealchess.move;
 import java.util.Objects;
 
 import com.vmardones.tealchess.board.Coordinate;
+import com.vmardones.tealchess.parser.San;
 import com.vmardones.tealchess.piece.*;
 import org.eclipse.jdt.annotation.Nullable;
 
 /** The action of moving a piece. This class only represents pseudo-legal moves. */
-public final class Move {
+public final class Move implements San {
 
     private final MoveType type;
     private final Piece piece;
@@ -90,7 +91,30 @@ public final class Move {
         return promotionChoice;
     }
 
-    /* equals, hashCode and toString */
+    /**
+     * Represents a move using the SAN movetext notation defined by the PGN standard.
+     * Because the move is only pseudo-legal, this doesn't have the end hash.
+     * @return The move in SAN movetext.
+     */
+    @Override
+    public String san() {
+        var base =
+                switch (type) {
+                    case CAPTURE -> piece.san() + "x" + destination();
+                    case PAWN_CAPTURE, EN_PASSANT -> piece.coordinate().file() + "x" + destination();
+                    case KING_CASTLE -> "O-O";
+                    case QUEEN_CASTLE -> "O-O-O";
+                    default -> piece.san() + destination();
+                };
+
+        if (promotionChoice == null) {
+            return base;
+        }
+
+        return base + promotionChoice;
+    }
+
+    /* equals and hashCode */
 
     @Override
     public boolean equals(Object o) {
@@ -114,30 +138,6 @@ public final class Move {
     @Override
     public int hashCode() {
         return Objects.hash(type, piece, destination, otherPiece, rookDestination, promotionChoice);
-    }
-
-    /**
-     * Represents a move using the notation defined by the PGN standard.
-     * Because the move is only pseudo-legal, this doesn't have the end hash.
-     * @return The move in SAN movetext.
-     */
-    @Override
-    public String toString() {
-        var base =
-                switch (type) {
-                    case NORMAL -> piece.firstChar() + destination();
-                    case CAPTURE -> piece.firstChar() + "x" + destination();
-                    case PAWN_PUSH, DOUBLE_PUSH -> destination.toString();
-                    case PAWN_CAPTURE, EN_PASSANT -> piece.coordinate().file() + "x" + destination();
-                    case KING_CASTLE -> "O-O";
-                    case QUEEN_CASTLE -> "O-O-O";
-                };
-
-        if (promotionChoice == null) {
-            return base;
-        }
-
-        return base + promotionChoice;
     }
 
     private Move(MoveBuilder builder) {

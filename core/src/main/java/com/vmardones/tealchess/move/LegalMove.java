@@ -5,7 +5,9 @@
 
 package com.vmardones.tealchess.move;
 
-public final class LegalMove {
+import com.vmardones.tealchess.parser.San;
+
+public final class LegalMove implements San {
 
     private final Move move;
     private final MoveResult result;
@@ -21,10 +23,15 @@ public final class LegalMove {
         return move;
     }
 
+    @Override
+    public String san() {
+        return move.san() + result.san();
+    }
+
     /* toString */
 
     @Override
     public String toString() {
-        return move.toString() + result;
+        return san();
     }
 }

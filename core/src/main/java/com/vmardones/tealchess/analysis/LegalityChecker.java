@@ -84,8 +84,6 @@ final class LegalityChecker {
         var attacked = attackTester.isKingAttacked();
         var cantMove = confirmedLegals.isEmpty();
 
-        System.out.println("CONFIRMED: " + confirmedLegals);
-
         if (attacked && cantMove) {
             return MoveResult.CHECKMATES;
         }

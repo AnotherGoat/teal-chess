@@ -10,6 +10,7 @@ import static java.util.Collections.unmodifiableList;
 import java.util.*;
 import java.util.stream.IntStream;
 
+import com.vmardones.tealchess.parser.Unicode;
 import com.vmardones.tealchess.piece.King;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.player.Color;
@@ -19,7 +20,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * The chessboard, made of 8x8 squares.
  * @see <a href="https://www.chessprogramming.org/Chessboard">Chessboard</a>
  */
-public final class Board {
+public final class Board implements Unicode {
 
     /** The chessboard is a square grid composed of squares. This is the number of squares per side. */
     public static final int SIDE_LENGTH = 8;
@@ -145,6 +146,21 @@ public final class Board {
         return unmodifiableList(pieces);
     }
 
+    @Override
+    public String unicode() {
+        var builder = new StringBuilder();
+
+        for (Square square : squares) {
+            builder.append(square.unicode()).append(" ");
+
+            if ((square.coordinate().index() + 1) % Board.SIDE_LENGTH == 0) {
+                builder.append("\n");
+            }
+        }
+
+        return builder.toString();
+    }
+
     /* equals, hashCode and toString */
 
     @Override
@@ -168,21 +184,6 @@ public final class Board {
     @Override
     public int hashCode() {
         return Objects.hash(squares, whitePieces, whiteKing, blackPieces, blackKing);
-    }
-
-    @Override
-    public String toString() {
-        var builder = new StringBuilder();
-
-        for (Square square : squares) {
-            builder.append(square).append(" ");
-
-            if ((square.coordinate().index() + 1) % Board.SIDE_LENGTH == 0) {
-                builder.append("\n");
-            }
-        }
-
-        return builder.toString();
     }
 
     private Board(BoardBuilder builder) {

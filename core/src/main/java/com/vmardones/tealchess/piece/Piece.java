@@ -11,6 +11,8 @@ import java.util.Objects;
 
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Coordinate;
+import com.vmardones.tealchess.parser.San;
+import com.vmardones.tealchess.parser.Unicode;
 import com.vmardones.tealchess.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -18,7 +20,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * A chess piece, which players can move in the board.
  * @see <a href="https://www.chessprogramming.org/Pieces">Pieces</a>
  */
-public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
+public abstract sealed class Piece implements San, Unicode permits JumpingPiece, SlidingPiece {
 
     protected final PieceType type;
     protected final Coordinate coordinate;
@@ -68,7 +70,16 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
         return color.isBlack() ? firstChar().toLowerCase(Locale.ROOT) : firstChar();
     }
 
-    public abstract String unicodeChar();
+    /**
+     * Represent this piece in SAN notation.
+     * In most contexts, pawns don't have a SAN abbreviation.
+     * If "P" is needed to represent a pawn, use singleChar instead.
+     * @return String representation of this piece in SAN movetext.
+     */
+    @Override
+    public String san() {
+        return isPawn() ? "" : type.firstChar();
+    }
 
     /* Checking piece types */
 
@@ -141,7 +152,7 @@ public abstract sealed class Piece permits JumpingPiece, SlidingPiece {
 
     @Override
     public String toString() {
-        return unicodeChar() + coordinate;
+        return unicode() + coordinate;
     }
 
     protected Piece(PieceType type, String coordinate, Color color) {

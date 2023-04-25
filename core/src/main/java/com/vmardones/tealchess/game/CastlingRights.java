@@ -5,6 +5,7 @@
 
 package com.vmardones.tealchess.game;
 
+import com.vmardones.tealchess.parser.Fen;
 import com.vmardones.tealchess.player.Color;
 
 /**
@@ -12,7 +13,7 @@ import com.vmardones.tealchess.player.Color;
  * @see <a href="https://www.chessprogramming.org/Castling_Rights">Castling Rights</a>
  */
 public record CastlingRights(
-        boolean whiteKingSide, boolean whiteQueenSide, boolean blackKingSide, boolean blackQueenSide) {
+        boolean whiteKingSide, boolean whiteQueenSide, boolean blackKingSide, boolean blackQueenSide) implements Fen {
 
     public CastlingRights() {
         this(false, false, false, false);
@@ -40,7 +41,7 @@ public record CastlingRights(
     }
 
     @Override
-    public String toString() {
+    public String fen() {
         if (!whiteKingSide && !whiteQueenSide && !blackKingSide && !blackQueenSide) {
             return "-";
         }

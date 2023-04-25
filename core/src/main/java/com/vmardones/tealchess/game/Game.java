@@ -98,11 +98,10 @@ public final class Game {
         state.position(position);
         history = history.add(state.save());
 
-        LOG.debug("Move history: {}\n", history.moves());
-        LOG.info("{}'s turn!\n", position.sideToMove().name());
+        LOG.debug("Move history: {}", history.moves());
 
         switch (currentPlayer().status()) {
-            case NORMAL -> LOG.info("The game continues like normal...");
+            case NORMAL -> LOG.info("The game continues like normal...\n");
             case CHECKED -> LOG.info(
                     "{0}'s turn!\nCheck! {} king is in danger!\n",
                     position.sideToMove().name());
@@ -117,18 +116,18 @@ public final class Game {
 
         var board = position.board();
 
-        LOG.debug("Current chessboard:\n{}", board);
+        LOG.debug("Current chessboard:\n{}", board.unicode());
 
         LOG.debug("White king: {}", board.king(Color.WHITE));
         LOG.debug("White pieces: {}", board.pieces(Color.WHITE));
         LOG.debug("Black king: {}", board.king(Color.BLACK));
         LOG.debug("Black pieces: {}", board.pieces(Color.BLACK));
-        LOG.debug("Castling rights: {}", position.castlingRights());
+        LOG.debug("Castling rights: {}", position.castlingRights().fen());
         LOG.debug("En passant pawn: {}\n", position.enPassantTarget());
 
-        LOG.debug("Players: {} vs. {}", whitePlayer, blackPlayer);
+        LOG.debug("Players: {} vs. {}\n", whitePlayer, blackPlayer);
         var sideToMove = position.sideToMove();
-        LOG.debug("Side to move: {}", sideToMove.name());
+        LOG.info("{}'s turn!", sideToMove.name());
         LOG.debug("Legal moves: {}", sideToMove.isWhite() ? whitePlayer.legals() : blackPlayer.legals());
     }
 }

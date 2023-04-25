@@ -27,7 +27,7 @@ public final class Pawn extends JumpingPiece {
     }
 
     @Override
-    public String unicodeChar() {
+    public String unicode() {
         return color.isWhite() ? "♙" : "♟";
     }
 

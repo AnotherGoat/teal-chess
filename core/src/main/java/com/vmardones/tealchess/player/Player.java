@@ -72,10 +72,10 @@ public abstract sealed class Player permits HumanPlayer {
     public String toString() {
         var template =
                 switch (status) {
-                    case CHECKMATED -> "%s Player, in checkmate!";
-                    case STALEMATED -> "%s Player, in stalemate!";
-                    case CHECKED -> "%s Player, in check!";
-                    case NORMAL -> "%s Player";
+                    case CHECKMATED -> "%s player, in checkmate!";
+                    case STALEMATED -> "%s player, in stalemate!";
+                    case CHECKED -> "%s player, in check!";
+                    case NORMAL -> "%s player";
                 };
 
         return String.format(template, color.name());

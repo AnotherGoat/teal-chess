@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
+import com.vmardones.tealchess.parser.Unicode;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
@@ -19,7 +20,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * A single chess square, which may or may not contain a piece.
  * @see <a href="https://www.chessprogramming.org/Squares">Squares</a>
  */
-public final class Square {
+public final class Square implements Unicode {
 
     private static final Map<String, Square> EMPTY_SQUARE_CACHE = fillEmptySquareCache();
 
@@ -64,8 +65,18 @@ public final class Square {
         return piece;
     }
 
-    public String info() {
-        return toString() + coordinate;
+    /**
+     * String representation of this square, used when displaying the board.
+     *
+     * @return The character that represents the piece, or - if the square is empty.
+     */
+    @Override
+    public String unicode() {
+        if (piece == null) {
+            return color.isWhite() ? "□" : "■";
+        }
+
+        return piece.unicode();
     }
 
     /* Comparing squares */
@@ -99,20 +110,6 @@ public final class Square {
     @Override
     public int hashCode() {
         return Objects.hash(coordinate, color, piece);
-    }
-
-    /**
-     * String representation of this square, used when displaying the board.
-     *
-     * @return The character that represents the piece, or - if the square is empty.
-     */
-    @Override
-    public String toString() {
-        if (piece == null) {
-            return color.isWhite() ? "□" : "■";
-        }
-
-        return piece.unicodeChar();
     }
 
     private static Map<String, Square> fillEmptySquareCache() {

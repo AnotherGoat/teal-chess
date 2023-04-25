@@ -35,7 +35,7 @@ public final class Queen extends SlidingPiece {
     }
 
     @Override
-    public String unicodeChar() {
+    public String unicode() {
         return color.isWhite() ? "♕" : "♛";
     }
 }

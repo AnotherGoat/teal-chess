@@ -37,7 +37,7 @@ public final class King extends JumpingPiece {
     }
 
     @Override
-    public String unicodeChar() {
+    public String unicode() {
         return color.isWhite() ? "♔" : "♚";
     }
 }

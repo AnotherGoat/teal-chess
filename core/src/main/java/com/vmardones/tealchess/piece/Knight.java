@@ -35,7 +35,7 @@ public final class Knight extends JumpingPiece {
     }
 
     @Override
-    public String unicodeChar() {
+    public String unicode() {
         return color.isWhite() ? "♘" : "♞";
     }
 }
