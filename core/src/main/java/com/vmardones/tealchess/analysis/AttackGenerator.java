@@ -40,9 +40,7 @@ final class AttackGenerator {
                     .filter(Objects::nonNull);
         }
 
-        return piece.calculatePossibleDestinations(board).stream()
-                .map(board::squareAt)
-                .map(square -> new Attack(piece, square));
+        return new DestinationFinder(board).calculateDestinations(piece).map(square -> new Attack(piece, square));
     }
 
     private @Nullable Attack generatePawnAttack(Piece pawn, boolean leftSide) {

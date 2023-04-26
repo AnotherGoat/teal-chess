@@ -13,7 +13,7 @@ import com.vmardones.tealchess.player.Color;
  * The queen, the strongest piece in the game. It can move horizontally, vertically and diagonally.
  * @see <a href="https://www.chessprogramming.org/Queen">Queen</a>
  */
-public final class Queen extends SlidingPiece {
+public final class Queen extends Piece {
 
     private static final List<Vector> MOVES = List.of(
             new Vector(-1, 1),
@@ -26,7 +26,7 @@ public final class Queen extends SlidingPiece {
             new Vector(1, -1));
 
     public Queen(String coordinate, Color color) {
-        super(PieceType.QUEEN, coordinate, color, MOVES);
+        super(PieceType.QUEEN, coordinate, color, MOVES, true);
     }
 
     @Override

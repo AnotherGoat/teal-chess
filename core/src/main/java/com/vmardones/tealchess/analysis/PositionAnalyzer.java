@@ -23,7 +23,8 @@ import com.vmardones.tealchess.player.Player;
 public final class PositionAnalyzer {
 
     private final List<LegalMove> legals;
-    private final PlayerFactory playerFactory;
+    private final Player whitePlayer;
+    private final Player blackPlayer;
 
     public PositionAnalyzer(Position position) {
 
@@ -33,11 +34,20 @@ public final class PositionAnalyzer {
         var confirmedLegals = legalityChecker.filterPseudoLegals(pseudoLegals);
         legals = legalityChecker.transformToLegals(confirmedLegals);
 
-        playerFactory = new PlayerFactory(position, legals);
+        var playerFactory = new PlayerFactory(position, legals);
+
+        whitePlayer = playerFactory.create(Color.WHITE);
+        blackPlayer = playerFactory.create(Color.BLACK);
     }
 
-    public Player createPlayer(Color color) {
-        return playerFactory.create(color);
+    /* Getters */
+
+    public Player newWhitePlayer() {
+        return whitePlayer;
+    }
+
+    public Player newBlackPlayer() {
+        return blackPlayer;
     }
 
     /**

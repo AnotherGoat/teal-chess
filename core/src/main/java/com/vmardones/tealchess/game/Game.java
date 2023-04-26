@@ -16,7 +16,6 @@ import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.move.LegalMove;
 import com.vmardones.tealchess.move.MoveMaker;
 import com.vmardones.tealchess.piece.Piece;
-import com.vmardones.tealchess.player.Color;
 import com.vmardones.tealchess.player.Player;
 
 public final class Game {
@@ -33,8 +32,8 @@ public final class Game {
         state = new GameState();
         history = new GameHistory();
         positionAnalyzer = new PositionAnalyzer(state.position());
-        whitePlayer = positionAnalyzer.createPlayer(Color.WHITE);
-        blackPlayer = positionAnalyzer.createPlayer(Color.BLACK);
+        whitePlayer = positionAnalyzer.newWhitePlayer();
+        blackPlayer = positionAnalyzer.newBlackPlayer();
 
         registerPosition(state.position());
     }
@@ -69,8 +68,8 @@ public final class Game {
         var nextPosition = moveMaker.make(state.position(), move);
 
         positionAnalyzer = new PositionAnalyzer(nextPosition);
-        whitePlayer = positionAnalyzer.createPlayer(Color.WHITE);
-        blackPlayer = positionAnalyzer.createPlayer(Color.BLACK);
+        whitePlayer = positionAnalyzer.newWhitePlayer();
+        blackPlayer = positionAnalyzer.newBlackPlayer();
 
         registerPosition(nextPosition);
     }

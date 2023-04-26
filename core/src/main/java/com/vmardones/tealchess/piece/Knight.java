@@ -13,7 +13,7 @@ import com.vmardones.tealchess.player.Color;
  * The knight piece. It moves in an L shape.
  * @see <a href="https://www.chessprogramming.org/Knight">Knight</a>
  */
-public final class Knight extends JumpingPiece {
+public final class Knight extends Piece {
 
     private static final List<Vector> MOVES = List.of(
             new Vector(-1, 2),
@@ -26,7 +26,7 @@ public final class Knight extends JumpingPiece {
             new Vector(1, -2));
 
     public Knight(String coordinate, Color color) {
-        super(PieceType.KNIGHT, coordinate, color, MOVES);
+        super(PieceType.KNIGHT, coordinate, color, MOVES, false);
     }
 
     @Override

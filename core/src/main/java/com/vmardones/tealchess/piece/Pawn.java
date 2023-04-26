@@ -15,10 +15,10 @@ import com.vmardones.tealchess.player.Color;
  * opposite side.
  * @see <a href="https://www.chessprogramming.org/Pawn">Pawn</a>
  */
-public final class Pawn extends JumpingPiece {
+public final class Pawn extends Piece {
 
     public Pawn(String coordinate, Color color) {
-        super(PieceType.PAWN, coordinate, color, List.of(new Vector(0, color.direction())));
+        super(PieceType.PAWN, coordinate, color, List.of(new Vector(0, color.direction())), false);
     }
 
     @Override

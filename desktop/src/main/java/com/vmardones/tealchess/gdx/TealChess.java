@@ -182,7 +182,11 @@ final class TealChess extends ApplicationAdapter {
                 return;
             }
 
-            Gdx.app.log("Destination", "The destination contains " + square.piece());
+            if (square.piece() == null) {
+                Gdx.app.log("Destination", "The destination is empty");
+            } else {
+                Gdx.app.log("Destination", "The destination contains " + square.piece());
+            }
 
             var moves = MoveFinder.choose(game.player().legals(), sourceCoordinate, square.coordinate());
 

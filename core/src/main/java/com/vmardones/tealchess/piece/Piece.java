@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.parser.San;
 import com.vmardones.tealchess.parser.Unicode;
@@ -20,11 +19,13 @@ import org.eclipse.jdt.annotation.Nullable;
  * A chess piece, which players can move in the board.
  * @see <a href="https://www.chessprogramming.org/Pieces">Pieces</a>
  */
-public abstract sealed class Piece implements San, Unicode permits JumpingPiece, SlidingPiece {
+public abstract sealed class Piece implements San, Unicode permits Bishop, King, Knight, Pawn, Queen, Rook {
 
     protected final PieceType type;
     protected final Coordinate coordinate;
     protected final Color color;
+    protected final boolean sliding;
+    protected final List<Vector> moveVectors;
 
     /* Alternate piece construction */
 
@@ -60,6 +61,21 @@ public abstract sealed class Piece implements San, Unicode permits JumpingPiece,
 
     public Color color() {
         return color;
+    }
+
+    /**
+     * Checks whether a piece slides when moving or not.
+     * Sliding pieces can move freely in a direction until they're blocked by other pieces and they can easily pin enemy pieces, like a Rook.
+     * Non-sliding pieces have a fixed set of possible destinations, like a Knight.
+     * @see <a href="https://www.chessprogramming.org/Sliding_Pieces">Sliding Pieces</a>
+     * @return True if the piece slides.
+     */
+    public boolean sliding() {
+        return sliding;
+    }
+
+    public List<Vector> moveVectors() {
+        return moveVectors;
     }
 
     public String firstChar() {
@@ -119,8 +135,6 @@ public abstract sealed class Piece implements San, Unicode permits JumpingPiece,
 
     /* Movement */
 
-    public abstract List<Coordinate> calculatePossibleDestinations(Board board);
-
     /**
      * Move this piece to another square. No checks of any kind are done to check whether the move is
      * legal or not.
@@ -155,9 +169,11 @@ public abstract sealed class Piece implements San, Unicode permits JumpingPiece,
         return unicode() + coordinate;
     }
 
-    protected Piece(PieceType type, String coordinate, Color color) {
+    protected Piece(PieceType type, String coordinate, Color color, List<Vector> moveVectors, boolean sliding) {
         this.type = type;
         this.coordinate = Coordinate.of(coordinate);
         this.color = color;
+        this.moveVectors = moveVectors;
+        this.sliding = sliding;
     }
 }

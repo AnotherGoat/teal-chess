@@ -6,12 +6,12 @@
 package com.vmardones.tealchess.move;
 
 import com.vmardones.tealchess.board.Board;
+import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.game.CastlingRights;
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.piece.King;
 import com.vmardones.tealchess.piece.Pawn;
 import com.vmardones.tealchess.piece.Piece;
-import com.vmardones.tealchess.piece.Rook;
 import com.vmardones.tealchess.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -20,6 +20,11 @@ import org.eclipse.jdt.annotation.Nullable;
  * @see <a href="https://www.chessprogramming.org/Make_Move">Make Move</a>
  */
 public final class MoveMaker {
+
+    private static final Coordinate WHITE_KING_SIDE = Coordinate.of("h1");
+    private static final Coordinate WHITE_QUEEN_SIDE = Coordinate.of("a1");
+    private static final Coordinate BLACK_KING_SIDE = Coordinate.of("h8");
+    private static final Coordinate BLACK_QUEEN_SIDE = Coordinate.of("a8");
 
     /**
      * When a move is made, a new chess position is created, due to the position being immutable.
@@ -117,11 +122,11 @@ public final class MoveMaker {
 
         var coordinate = piece.coordinate();
 
-        if (coordinate.equals(Rook.WHITE_KING_SIDE) || coordinate.equals(Rook.BLACK_KING_SIDE)) {
+        if (coordinate.equals(WHITE_KING_SIDE) || coordinate.equals(BLACK_KING_SIDE)) {
             return castlingRights.disableKingSide(sideToMove);
         }
 
-        if (coordinate.equals(Rook.WHITE_QUEEN_SIDE) || coordinate.equals(Rook.BLACK_QUEEN_SIDE)) {
+        if (coordinate.equals(WHITE_QUEEN_SIDE) || coordinate.equals(BLACK_QUEEN_SIDE)) {
             return castlingRights.disableQueenSide(sideToMove);
         }
 

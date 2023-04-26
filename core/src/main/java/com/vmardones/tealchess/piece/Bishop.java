@@ -13,13 +13,13 @@ import com.vmardones.tealchess.player.Color;
  * The bishop piece. It can move diagonally.
  * @see <a href="https://www.chessprogramming.org/Bishop">Bishop</a>
  */
-public final class Bishop extends SlidingPiece {
+public final class Bishop extends Piece {
 
     private static final List<Vector> MOVES =
             List.of(new Vector(-1, 1), new Vector(1, 1), new Vector(-1, -1), new Vector(1, -1));
 
     public Bishop(String coordinate, Color color) {
-        super(PieceType.BISHOP, coordinate, color, MOVES);
+        super(PieceType.BISHOP, coordinate, color, MOVES, true);
     }
 
     @Override

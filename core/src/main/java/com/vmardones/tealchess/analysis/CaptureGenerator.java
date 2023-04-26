@@ -43,8 +43,8 @@ final class CaptureGenerator extends MoveGenerator {
             return Stream.concat(generatePawnCaptures(pawn, true), generatePawnCaptures(pawn, false));
         }
 
-        return piece.calculatePossibleDestinations(board).stream()
-                .map(board::squareAt)
+        return new DestinationFinder(board)
+                .calculateDestinations(piece)
                 .map(square -> generateCapture(piece, square))
                 .filter(Objects::nonNull);
     }

@@ -15,7 +15,7 @@ import com.vmardones.tealchess.player.Color;
  * be captured.
  * @see <a href="https://www.chessprogramming.org/King">King</a>
  */
-public final class King extends JumpingPiece {
+public final class King extends Piece {
 
     private static final List<Vector> MOVES = List.of(
             new Vector(-1, 1),
@@ -28,7 +28,7 @@ public final class King extends JumpingPiece {
             new Vector(1, -1));
 
     public King(String coordinate, Color color) {
-        super(PieceType.KING, coordinate, color, MOVES);
+        super(PieceType.KING, coordinate, color, MOVES, false);
     }
 
     @Override

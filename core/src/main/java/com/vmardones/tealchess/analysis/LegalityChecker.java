@@ -7,7 +7,6 @@ package com.vmardones.tealchess.analysis;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.move.LegalMove;
@@ -64,13 +63,7 @@ final class LegalityChecker {
     // TODO: Remove duplicated code
     private MoveResult calculateResult(Position afterMove) {
 
-        var moves = new NormalGenerator(afterMove).generate();
-        var captures = new CaptureGenerator(afterMove).generate();
-        var pawnMoves = new PawnMoveGenerator(afterMove).generate();
-        var castles = new CastleGenerator(afterMove).generate();
-
-        var pseudoLegals = Stream.concat(Stream.concat(moves, captures), Stream.concat(pawnMoves, castles))
-                .toList();
+        var pseudoLegals = new PseudoLegalGenerator(afterMove).generate().toList();
 
         var legalityChecker = new LegalityChecker(afterMove, new MoveMaker());
         var confirmedLegals = legalityChecker.filterPseudoLegals(pseudoLegals);

@@ -34,9 +34,7 @@ final class NormalGenerator extends MoveGenerator {
     }
 
     private Stream<Move> calculatePieceMoves(Piece piece) {
-        return piece.calculatePossibleDestinations(board).stream()
-                .map(board::squareAt)
-                .flatMap(square -> createMoves(piece, square));
+        return new DestinationFinder(board).calculateDestinations(piece).flatMap(square -> createMoves(piece, square));
     }
 
     private Stream<Move> createMoves(Piece piece, Square destination) {
