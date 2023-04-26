@@ -15,15 +15,15 @@ import com.vmardones.tealchess.player.Color;
  */
 public final class Queen extends SlidingPiece {
 
-    private static final List<int[]> MOVES = List.of(
-            new int[] {-1, 1},
-            new int[] {0, 1},
-            new int[] {1, 1},
-            new int[] {-1, 0},
-            new int[] {1, 0},
-            new int[] {-1, -1},
-            new int[] {0, -1},
-            new int[] {1, -1});
+    private static final List<Vector> MOVES = List.of(
+            new Vector(-1, 1),
+            new Vector(0, 1),
+            new Vector(1, 1),
+            new Vector(-1, 0),
+            new Vector(1, 0),
+            new Vector(-1, -1),
+            new Vector(0, -1),
+            new Vector(1, -1));
 
     public Queen(String coordinate, Color color) {
         super(PieceType.QUEEN, coordinate, color, MOVES);

@@ -15,15 +15,15 @@ import com.vmardones.tealchess.player.Color;
  */
 public final class Knight extends JumpingPiece {
 
-    private static final List<int[]> MOVES = List.of(
-            new int[] {-1, 2},
-            new int[] {1, 2},
-            new int[] {-2, 1},
-            new int[] {2, 1},
-            new int[] {-2, -1},
-            new int[] {2, -1},
-            new int[] {-1, -2},
-            new int[] {1, -2});
+    private static final List<Vector> MOVES = List.of(
+            new Vector(-1, 2),
+            new Vector(1, 2),
+            new Vector(-2, 1),
+            new Vector(2, 1),
+            new Vector(-2, -1),
+            new Vector(2, -1),
+            new Vector(-1, -2),
+            new Vector(1, -2));
 
     public Knight(String coordinate, Color color) {
         super(PieceType.KNIGHT, coordinate, color, MOVES);

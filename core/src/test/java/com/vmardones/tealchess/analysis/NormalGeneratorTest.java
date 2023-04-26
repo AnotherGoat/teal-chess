@@ -15,19 +15,19 @@ import com.vmardones.tealchess.player.Color;
 import org.junit.jupiter.api.Test;
 
 @ExcludeFromNullAway
-final class MoveGeneratorTest {
+final class NormalGeneratorTest {
 
     @Test
     void pawnMoves() {
         var position = FenParser.parse("4k3/8/8/8/6p1/1P4P1/8/4K3 w - - 0 1");
-        var generator = new MoveGenerator(position);
+        var generator = new NormalGenerator(position);
 
         var board = position.board();
         var leftPawn = board.pieceAt("b3");
 
         var expectedMove = Move.createNormal(leftPawn, Coordinate.of("b4"));
 
-        assertThat(generator.calculateMoves()).containsOnlyOnce(expectedMove);
+        assertThat(generator.generate()).containsOnlyOnce(expectedMove);
     }
 
     @Test
@@ -45,7 +45,7 @@ final class MoveGeneratorTest {
     @Test
     void kingMoves() {
         var position = FenParser.parse("4k3/8/8/8/8/8/8/4K3 b - - 0 1");
-        var generator = new MoveGenerator(position);
+        var generator = new NormalGenerator(position);
 
         var board = position.board();
         var king = board.king(Color.BLACK);
@@ -58,14 +58,14 @@ final class MoveGeneratorTest {
             Move.createNormal(king, Coordinate.of("f7"))
         };
 
-        assertThat(generator.calculateMoves()).hasSize(5).containsOnlyOnce(expectedMoves);
+        assertThat(generator.generate()).hasSize(5).containsOnlyOnce(expectedMoves);
     }
 
     @Test
     void blockedSlidingMoves() {
         var position = FenParser.parse("4k3/P7/5B2/8/3N4/8/5Q2/R3K3 w - - 0 1");
 
-        var generator = new MoveGenerator(position);
+        var generator = new NormalGenerator(position);
 
         var board = position.board();
         var bishop = board.pieceAt("f6");
@@ -83,6 +83,6 @@ final class MoveGeneratorTest {
             Move.createNormal(queen, Coordinate.of("f7"))
         };
 
-        assertThat(generator.calculateMoves()).isNotEmpty().doesNotContain(unexpectedMoves);
+        assertThat(generator.generate()).isNotEmpty().doesNotContain(unexpectedMoves);
     }
 }

@@ -17,7 +17,7 @@ defined in the FIDE's
 
 Only the first 3 articles are taken into account.
 
-#### ✗ Article 1: The Nature and Objectives of the Game of Chess
+#### ✓ Article 1: The Nature and Objectives of the Game of Chess
 
 - ✓ (1.1) The game of chess is played between two opponents who move their
   pieces on a square board called a **chessboard**.
@@ -34,8 +34,8 @@ Only the first 3 articles are taken into account.
       opponent's king and to have won the game.
     - ✓ Leaving one's own king under attack, exposing one's own king to attack
       and also **capturing** the opponent's king is not allowed.
-  - ✗ (1.4.2) The opponent whose king has been checkmated has lost the game.
-  - ✗ (1.4.3) If the position is such that neither player can possibly checkmate
+  - ✓ (1.4.2) The opponent whose king has been checkmated has lost the game.
+  - ✓ (1.4.3) If the position is such that neither player can possibly checkmate
     the opponent's king, the game is drawn (see Article 5.2.2).
 
 #### ✓ Article 2: The Initial Position of the Pieces on the Chessboard
@@ -90,7 +90,7 @@ Only the first 3 articles are taken into account.
         its starting position, he/she must exchange that pawn as part of the
         same move for a new queen, rook, bishop or knight of the same colour on
         the intended square of arrival.
-      - ✗ This is called the square of **promotion**.
+      - ✓ This is called the square of **promotion**.
     - ✓ (3.7.3.4) The player's choice is not restricted to pieces that have been
       captured previously.
     - ✓ (3.7.3.5) This exchange of a pawn for another piece is called promotion,
@@ -204,7 +204,7 @@ Only the first 5 articles are taken into account for now.
 
 #### ✗ Article 5: Completing the Game
 
-- ✗ (5.1) The game is won by the player who has checkmated his/her opponent's
+- ✓ (5.1) The game is won by the player who has checkmated his/her opponent's
   king.
 - ✗ (5.2) The game is won by the player whose opponent declares he/she resigns
   by pressing button “resign” or by another method available on the playing
@@ -217,9 +217,9 @@ Only the first 5 articles are taken into account for now.
 - ✗ (5.4) The game is automatically drawn when:
   - ✗ (5.4.1) the same position appeared for the third time (as described in
     Article 9.2.2 of the FIDE Laws of Chess);
-  - ✗ (5.4.2)
-    - ✗ the player to move has no legal move and his/her king is not in check.
-    - ✗ The game is said to end in **stalemate**;
+  - ✓ (5.4.2)
+    - ✓ the player to move has no legal move and his/her king is not in check.
+    - ✓ The game is said to end in **stalemate**;
   - ✗ (5.4.3) a position has arisen in which neither player can checkmate the
     opponent's king with any series of legal moves;
   - ✗ (5.4.4) the last 50 moves by each player have been completed without the
@@ -281,7 +281,7 @@ testing a lot easier.
   positions using the ASCII character set.
 - ✓ A single FEN record uses one text line of variable length composed of six
   data fields.
-- ✗ The first four fields of the FEN specification are the same as the first
+- ✓ The first four fields of the FEN specification are the same as the first
   four fields of the EPD specification.
 - ✗ A text file composed exclusively of FEN data records should have a file name
   with the suffix ".fen".

@@ -15,15 +15,11 @@ import com.vmardones.tealchess.player.Color;
 
 abstract sealed class SlidingPiece extends Piece permits Bishop, Queen, Rook {
 
-    protected final List<int[]> moveVectors;
+    protected final List<Vector> moveVectors;
 
-    protected SlidingPiece(PieceType type, String coordinate, Color color, List<int[]> moveVectors) {
+    protected SlidingPiece(PieceType type, String coordinate, Color color, List<Vector> moveVectors) {
         super(type, coordinate, color);
         this.moveVectors = moveVectors;
-    }
-
-    public List<int[]> moveVectors() {
-        return moveVectors;
     }
 
     @Override
@@ -34,9 +30,9 @@ abstract sealed class SlidingPiece extends Piece permits Bishop, Queen, Rook {
                 .toList();
     }
 
-    private List<Coordinate> calculateOffsets(int[] vector, Board board) {
+    private List<Coordinate> calculateOffsets(Vector vector, Board board) {
         var squares = IntStream.range(1, Board.SIDE_LENGTH + 1)
-                .mapToObj(i -> coordinate().to(vector[0] * i, vector[1] * i))
+                .mapToObj(i -> coordinate().to(vector.x() * i, vector.y() * i))
                 .filter(Objects::nonNull)
                 .map(board::squareAt)
                 .toList()

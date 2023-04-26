@@ -25,7 +25,7 @@ final class CastleGeneratorTest {
         var moveTester = new AttackTester(position, opponentAttacks.toList());
         var generator = new CastleGenerator(position, moveTester);
 
-        assertThat(generator.calculateCastles()).isEmpty();
+        assertThat(generator.generate()).isEmpty();
     }
 
     @Test
@@ -35,7 +35,7 @@ final class CastleGeneratorTest {
         var moveTester = new AttackTester(position, opponentAttacks.toList());
         var generator = new CastleGenerator(position, moveTester);
 
-        assertThat(generator.calculateCastles()).isEmpty();
+        assertThat(generator.generate()).isEmpty();
     }
 
     @Test
@@ -53,6 +53,6 @@ final class CastleGeneratorTest {
         var expectedCastles =
                 new Move[] {Move.createCastle(false, king, Coordinate.of("c1"), rook, Coordinate.of("d1"))};
 
-        assertThat(generator.calculateCastles()).hasSize(1).containsOnlyOnce(expectedCastles);
+        assertThat(generator.generate()).hasSize(1).containsOnlyOnce(expectedCastles);
     }
 }

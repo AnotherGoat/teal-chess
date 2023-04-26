@@ -18,7 +18,7 @@ import com.vmardones.tealchess.player.Color;
 public final class Pawn extends JumpingPiece {
 
     public Pawn(String coordinate, Color color) {
-        super(PieceType.PAWN, coordinate, color, List.of(new int[] {0, color.direction()}));
+        super(PieceType.PAWN, coordinate, color, List.of(new Vector(0, color.direction())));
     }
 
     @Override

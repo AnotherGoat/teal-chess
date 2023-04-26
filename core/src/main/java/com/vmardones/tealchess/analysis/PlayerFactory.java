@@ -28,13 +28,17 @@ final class PlayerFactory {
     private final King opponentKing;
     private final List<Piece> opponentPieces;
 
-    PlayerFactory(Position position, AttackTester attackTester, List<LegalMove> legals) {
+    PlayerFactory(Position position, List<LegalMove> legals) {
         sideToMove = position.sideToMove();
         king = position.board().king(sideToMove);
         pieces = position.board().pieces(sideToMove);
         opponentKing = position.board().king(sideToMove.opposite());
         opponentPieces = position.board().pieces(sideToMove.opposite());
-        this.attackTester = attackTester;
+
+        var opponentAttacks =
+                new AttackGenerator(position).calculateAttacks(true).toList();
+        attackTester = new AttackTester(position, opponentAttacks);
+
         this.legals = legals;
     }
 

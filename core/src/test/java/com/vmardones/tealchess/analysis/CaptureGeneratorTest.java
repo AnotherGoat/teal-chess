@@ -29,7 +29,7 @@ final class CaptureGeneratorTest {
             Move.createCapture(pawn, Coordinate.of("d4"), board.pieceAt("d4"))
         };
 
-        assertThat(generator.calculateCaptures()).hasSize(2).containsOnlyOnce(expectedCaptures);
+        assertThat(generator.generate()).hasSize(2).containsOnlyOnce(expectedCaptures);
     }
 
     @Test
@@ -46,7 +46,7 @@ final class CaptureGeneratorTest {
             Move.createCapture(knight, Coordinate.of("d7"), board.pieceAt("d7"))
         };
 
-        assertThat(generator.calculateCaptures()).hasSize(3).containsOnlyOnce(expectedCaptures);
+        assertThat(generator.generate()).hasSize(3).containsOnlyOnce(expectedCaptures);
     }
 
     @Test
@@ -63,7 +63,7 @@ final class CaptureGeneratorTest {
             Move.createCapture(bishop, Coordinate.of("e3"), board.pieceAt("e3"))
         };
 
-        assertThat(generator.calculateCaptures()).hasSize(3).containsOnlyOnce(expectedCaptures);
+        assertThat(generator.generate()).hasSize(3).containsOnlyOnce(expectedCaptures);
     }
 
     @Test
@@ -79,7 +79,7 @@ final class CaptureGeneratorTest {
             Move.createCapture(rook, Coordinate.of("a1"), board.pieceAt("a1"))
         };
 
-        assertThat(generator.calculateCaptures()).hasSize(2).containsOnlyOnce(expectedCaptures);
+        assertThat(generator.generate()).hasSize(2).containsOnlyOnce(expectedCaptures);
     }
 
     @Test
@@ -95,7 +95,7 @@ final class CaptureGeneratorTest {
             Move.createCapture(queen, Coordinate.of("g2"), board.pieceAt("g2"))
         };
 
-        assertThat(generator.calculateCaptures()).hasSize(2).containsOnlyOnce(expectedCaptures);
+        assertThat(generator.generate()).hasSize(2).containsOnlyOnce(expectedCaptures);
     }
 
     @Test
@@ -111,6 +111,6 @@ final class CaptureGeneratorTest {
             Move.createCapture(queen, Coordinate.of("f7"), board.pieceAt("f7"))
         };
 
-        assertThat(generator.calculateCaptures()).hasSize(2).containsOnlyOnce(expectedCaptures);
+        assertThat(generator.generate()).hasSize(2).containsOnlyOnce(expectedCaptures);
     }
 }

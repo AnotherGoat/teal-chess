@@ -17,7 +17,7 @@ import com.vmardones.tealchess.piece.Rook;
 import com.vmardones.tealchess.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
-final class CastleGenerator {
+final class CastleGenerator extends MoveGenerator {
 
     private final Board board;
     private final Color sideToMove;
@@ -26,16 +26,20 @@ final class CastleGenerator {
     private final AttackTester attackTester;
     private final boolean inCheck;
 
-    CastleGenerator(Position position, AttackTester attackTester) {
+    CastleGenerator(Position position) {
+        super(position);
+        var opponentAttacks =
+                new AttackGenerator(position).calculateAttacks(true).toList();
+        attackTester = new AttackTester(position, opponentAttacks);
         board = position.board();
         sideToMove = position.sideToMove();
         king = position.board().king(sideToMove);
         castlingRights = position.castlingRights();
-        this.attackTester = attackTester;
         inCheck = attackTester.isKingAttacked();
     }
 
-    Stream<Move> calculateCastles() {
+    @Override
+    Stream<Move> generate() {
         if (castlingIsImpossible()) {
             return Stream.empty();
         }

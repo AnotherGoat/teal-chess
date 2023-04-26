@@ -21,8 +21,8 @@ public final class Rook extends SlidingPiece {
     public static final Coordinate BLACK_KING_SIDE = Coordinate.of("h8");
     public static final Coordinate BLACK_QUEEN_SIDE = Coordinate.of("a8");
 
-    private static final List<int[]> MOVES =
-            List.of(new int[] {0, 1}, new int[] {-1, 0}, new int[] {1, 0}, new int[] {0, -1});
+    private static final List<Vector> MOVES =
+            List.of(new Vector(0, 1), new Vector(-1, 0), new Vector(1, 0), new Vector(0, -1));
 
     public Rook(String coordinate, Color color) {
         super(PieceType.ROOK, coordinate, color, MOVES);

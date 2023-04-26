@@ -19,17 +19,19 @@ import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.piece.PromotionChoice;
 import org.eclipse.jdt.annotation.Nullable;
 
-final class CaptureGenerator {
+final class CaptureGenerator extends MoveGenerator {
 
     private final Board board;
     private final List<Piece> pieces;
 
     CaptureGenerator(Position position) {
+        super(position);
         board = position.board();
         pieces = board.pieces(position.sideToMove());
     }
 
-    Stream<Move> calculateCaptures() {
+    @Override
+    Stream<Move> generate() {
         return pieces.stream().flatMap(this::calculatePieceCaptures);
     }
 

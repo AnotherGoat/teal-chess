@@ -18,13 +18,9 @@ import com.vmardones.tealchess.player.Color;
  */
 abstract sealed class JumpingPiece extends Piece permits King, Knight, Pawn {
 
-    protected final List<int[]> moveOffsets;
+    protected final List<Vector> moveOffsets;
 
-    public List<int[]> moveOffsets() {
-        return moveOffsets;
-    }
-
-    protected JumpingPiece(PieceType type, String coordinate, Color color, List<int[]> moveOffsets) {
+    protected JumpingPiece(PieceType type, String coordinate, Color color, List<Vector> moveOffsets) {
         super(type, coordinate, color);
         this.moveOffsets = moveOffsets;
     }
@@ -32,7 +28,7 @@ abstract sealed class JumpingPiece extends Piece permits King, Knight, Pawn {
     @Override
     public List<Coordinate> calculatePossibleDestinations(Board board) {
         return moveOffsets.stream()
-                .map(offset -> coordinate().to(offset[0], offset[1]))
+                .map(offset -> coordinate().to(offset.x(), offset.y()))
                 .filter(Objects::nonNull)
                 .toList();
     }

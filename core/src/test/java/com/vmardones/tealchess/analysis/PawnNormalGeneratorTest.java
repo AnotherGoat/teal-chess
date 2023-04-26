@@ -15,7 +15,7 @@ import com.vmardones.tealchess.piece.Pawn;
 import org.junit.jupiter.api.Test;
 
 @ExcludeFromNullAway
-final class PawnMoveGeneratorTest {
+final class PawnNormalGeneratorTest {
 
     @Test
     void doublePushes() {
@@ -27,7 +27,7 @@ final class PawnMoveGeneratorTest {
 
         var expectedMove = Move.createDoublePush((Pawn) jumper, Coordinate.of("a5"));
 
-        assertThat(generator.calculatePawnMoves()).hasSize(1).containsOnlyOnce(expectedMove);
+        assertThat(generator.generate()).hasSize(1).containsOnlyOnce(expectedMove);
     }
 
     @Test
@@ -54,8 +54,6 @@ final class PawnMoveGeneratorTest {
             Move.createEnPassant(otherPawn, Coordinate.of("g6"), enPassantTarget)
         };
 
-        assertThat(generator.calculatePawnMoves())
-                .containsOnlyOnce(expectedMoves)
-                .doesNotContain(unexpectedMoves);
+        assertThat(generator.generate()).containsOnlyOnce(expectedMoves).doesNotContain(unexpectedMoves);
     }
 }

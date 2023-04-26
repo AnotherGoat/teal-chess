@@ -9,7 +9,6 @@ import static java.util.stream.Collectors.toUnmodifiableSet;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.move.LegalMove;
@@ -28,23 +27,13 @@ public final class PositionAnalyzer {
 
     public PositionAnalyzer(Position position) {
 
-        var moves = new MoveGenerator(position).calculateMoves();
-        var captures = new CaptureGenerator(position).calculateCaptures();
-        var pawnMoves = new PawnMoveGenerator(position).calculatePawnMoves();
-
-        var opponentAttacks =
-                new AttackGenerator(position).calculateAttacks(true).toList();
-        var attackTester = new AttackTester(position, opponentAttacks);
-        var castles = new CastleGenerator(position, attackTester).calculateCastles();
-
-        var pseudoLegals = Stream.concat(Stream.concat(moves, captures), Stream.concat(pawnMoves, castles))
-                .toList();
+        var pseudoLegals = new PseudoLegalGenerator(position).generate().toList();
 
         var legalityChecker = new LegalityChecker(position, new MoveMaker());
         var confirmedLegals = legalityChecker.filterPseudoLegals(pseudoLegals);
         legals = legalityChecker.transformToLegals(confirmedLegals);
 
-        playerFactory = new PlayerFactory(position, attackTester, legals);
+        playerFactory = new PlayerFactory(position, legals);
     }
 
     public Player createPlayer(Color color) {

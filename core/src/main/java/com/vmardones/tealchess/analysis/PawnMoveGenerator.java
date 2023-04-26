@@ -18,7 +18,7 @@ import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
-final class PawnMoveGenerator {
+final class PawnMoveGenerator extends MoveGenerator {
 
     private final Board board;
     private final Color sideToMove;
@@ -26,13 +26,15 @@ final class PawnMoveGenerator {
     private final @Nullable Pawn enPassantTarget;
 
     PawnMoveGenerator(Position position) {
+        super(position);
         board = position.board();
         sideToMove = position.sideToMove();
         pieces = board.pieces(sideToMove);
         enPassantTarget = position.enPassantTarget();
     }
 
-    Stream<Move> calculatePawnMoves() {
+    @Override
+    Stream<Move> generate() {
         var moves = new ArrayList<@Nullable Move>();
 
         for (var piece : pieces) {

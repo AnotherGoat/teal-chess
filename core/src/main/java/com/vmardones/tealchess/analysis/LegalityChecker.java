@@ -64,14 +64,10 @@ final class LegalityChecker {
     // TODO: Remove duplicated code
     private MoveResult calculateResult(Position afterMove) {
 
-        var moves = new MoveGenerator(afterMove).calculateMoves();
-        var captures = new CaptureGenerator(afterMove).calculateCaptures();
-        var pawnMoves = new PawnMoveGenerator(afterMove).calculatePawnMoves();
-
-        var opponentAttacks =
-                new AttackGenerator(afterMove).calculateAttacks(true).toList();
-        var attackTester = new AttackTester(afterMove, opponentAttacks);
-        var castles = new CastleGenerator(afterMove, attackTester).calculateCastles();
+        var moves = new NormalGenerator(afterMove).generate();
+        var captures = new CaptureGenerator(afterMove).generate();
+        var pawnMoves = new PawnMoveGenerator(afterMove).generate();
+        var castles = new CastleGenerator(afterMove).generate();
 
         var pseudoLegals = Stream.concat(Stream.concat(moves, captures), Stream.concat(pawnMoves, castles))
                 .toList();
@@ -80,6 +76,10 @@ final class LegalityChecker {
         var confirmedLegals = legalityChecker.filterPseudoLegals(pseudoLegals);
 
         // TODO: Duplicated code ends here
+
+        var opponentAttacks =
+                new AttackGenerator(afterMove).calculateAttacks(true).toList();
+        var attackTester = new AttackTester(afterMove, opponentAttacks);
 
         var attacked = attackTester.isKingAttacked();
         var cantMove = confirmedLegals.isEmpty();
