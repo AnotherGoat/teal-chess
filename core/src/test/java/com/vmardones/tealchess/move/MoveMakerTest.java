@@ -10,9 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.parser.FenParser;
-import com.vmardones.tealchess.piece.King;
-import com.vmardones.tealchess.piece.Pawn;
-import com.vmardones.tealchess.piece.Rook;
+import com.vmardones.tealchess.piece.*;
 import com.vmardones.tealchess.player.Color;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -132,6 +130,17 @@ final class MoveMakerTest {
         assertThat(afterMove.board().pieces(Color.BLACK))
                 .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(King.class))
                 .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(Rook.class));
+    }
+
+    @Test
+    void makePromotion() {
+        var initialPosition = FenParser.parse("4k3/P7/8/8/8/8/8/4K3 w - - 0 1");
+
+        var pawn = (Pawn) initialPosition.board().pieceAt("a7");
+        var move = Move.builder(pawn, Coordinate.of("a8")).normal().makePromotion(PromotionChoice.BISHOP);
+        var afterMove = moveMaker.make(initialPosition, move);
+
+        assertThat(afterMove.board().pieceAt("a8")).isInstanceOf(Bishop.class);
     }
 
     @Test

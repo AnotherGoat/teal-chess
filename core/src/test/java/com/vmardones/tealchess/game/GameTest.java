@@ -5,7 +5,7 @@
 
 package com.vmardones.tealchess.game;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.board.Coordinate;
@@ -43,5 +43,15 @@ final class GameTest {
         assertThat(game.player().color()).isEqualTo(Color.BLACK);
         assertThat(game.oppponent().color()).isEqualTo(Color.WHITE);
         assertThat(game.history().lastMove()).isEqualTo(move);
+    }
+
+    @Test
+    void findlegalDestinations() {
+        var game = new Game();
+        var knight = game.board().pieceAt("g1");
+
+        var expectedDestinations = new Coordinate[] {Coordinate.of("f3"), Coordinate.of("h3")};
+
+        assertThat(game.findLegalDestinations(knight)).hasSize(2).containsOnlyOnce(expectedDestinations);
     }
 }

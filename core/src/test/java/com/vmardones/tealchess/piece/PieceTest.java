@@ -110,6 +110,20 @@ final class PieceTest {
     }
 
     @Test
+    void normalSan() {
+        var piece = new Rook("a1", Color.WHITE);
+
+        assertThat(piece.san()).isUpperCase().isEqualTo("R");
+    }
+
+    @Test
+    void pawnSan() {
+        var pawn = new Pawn("a1", Color.WHITE);
+
+        assertThat(pawn.san()).isEqualTo("");
+    }
+
+    @Test
     void equalsContract() {
         EqualsVerifier.forClass(Piece.class)
                 .withNonnullFields("coordinate", "moveVectors")

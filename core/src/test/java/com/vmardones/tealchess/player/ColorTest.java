@@ -7,10 +7,6 @@ package com.vmardones.tealchess.player;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
 
 import com.vmardones.tealchess.ExcludeFromNullAway;
 import org.junit.jupiter.api.Test;
@@ -81,28 +77,18 @@ final class ColorTest {
     }
 
     @Test
-    void getPlayer() {
-        var whitePlayer = mock(HumanPlayer.class);
-        when(whitePlayer.color()).thenReturn(Color.WHITE);
-        var blackPlayer = mock(HumanPlayer.class);
-        when(blackPlayer.color()).thenReturn(Color.BLACK);
-
-        List<Player> players = List.of(whitePlayer, blackPlayer);
-
-        assertThat(white.player(players)).isEqualTo(whitePlayer);
-        assertThat(black.player(players)).isEqualTo(blackPlayer);
+    void whiteFen() {
+        assertThat(white.fen()).isEqualTo("w");
     }
 
     @Test
-    void getOpponent() {
-        var whitePlayer = mock(HumanPlayer.class);
-        when(whitePlayer.color()).thenReturn(Color.WHITE);
-        var blackPlayer = mock(HumanPlayer.class);
-        when(blackPlayer.color()).thenReturn(Color.BLACK);
+    void blackFen() {
+        assertThat(black.fen()).isEqualTo("b");
+    }
 
-        List<Player> players = List.of(whitePlayer, blackPlayer);
-
-        assertThat(white.opponent(players)).isEqualTo(blackPlayer);
-        assertThat(black.opponent(players)).isEqualTo(whitePlayer);
+    @Test
+    void asString() {
+        assertThat(white).hasToString("White");
+        assertThat(black).hasToString("Black");
     }
 }

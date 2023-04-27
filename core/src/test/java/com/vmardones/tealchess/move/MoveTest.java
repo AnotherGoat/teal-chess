@@ -6,6 +6,7 @@
 package com.vmardones.tealchess.move;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -32,7 +33,50 @@ final class MoveTest {
     }
 
     @Test
-    void normalToString() {
+    void illegalDoublePush() {
+        var bishop = new Bishop("c3", Color.BLACK);
+        var builder = Move.builder(bishop, Coordinate.of("e5"));
+
+        assertThatThrownBy(builder::doublePush)
+                .isInstanceOf(IllegalMoveException.class)
+                .hasMessageContaining("double push");
+    }
+
+    @Test
+    void illegalEnPassant() {
+        var queen = new Queen("e3", Color.BLACK);
+        var builder = Move.builder(queen, Coordinate.of("e8"));
+        var pawn = mock(Pawn.class);
+
+        assertThatThrownBy(() -> builder.enPassant(pawn))
+                .isInstanceOf(IllegalMoveException.class)
+                .hasMessageContaining("en passant");
+    }
+
+    @Test
+    void illegalCastle() {
+        var knight = new Knight("e5", Color.WHITE);
+        var builder = Move.builder(knight, Coordinate.of("c6"));
+        var rook = mock(Rook.class);
+        var rookDestination = mock(Coordinate.class);
+
+        assertThatThrownBy(() -> builder.castle(true, rook, rookDestination))
+                .isInstanceOf(IllegalMoveException.class)
+                .hasMessageContaining("castling");
+    }
+
+    @Test
+    void illegalPromotion() {
+        var king = new King("b2", Color.BLACK);
+        var move = Move.builder(king, Coordinate.of("b1")).normal();
+
+        assertThatThrownBy(() -> move.makePromotion(PromotionChoice.ROOK))
+                .isInstanceOf(IllegalMoveException.class)
+                .hasMessageContaining("pawn");
+    }
+
+    @Test
+    void normalSan() {
         var piece = new Rook("a1", Color.WHITE);
         var move = Move.builder(piece, Coordinate.of("e1")).normal();
 
@@ -40,7 +84,7 @@ final class MoveTest {
     }
 
     @Test
-    void captureToString() {
+    void captureSan() {
         var piece = new Bishop("b1", Color.WHITE);
         var capturedPiece = new Bishop("c2", Color.BLACK);
         var move = Move.builder(piece, Coordinate.of("c2")).capture(capturedPiece);
@@ -73,6 +117,15 @@ final class MoveTest {
         var move = Move.builder(king, Coordinate.of("e3")).castle(false, rook, Coordinate.of("e4"));
 
         assertThat(move.san()).isEqualTo("O-O-O");
+    }
+
+    @Test
+    void promotionSan() {
+        var pawn = new Pawn("f7", Color.WHITE);
+        var normalMove = Move.builder(pawn, Coordinate.of("f8")).normal();
+        var promotionMove = normalMove.makePromotion(PromotionChoice.KNIGHT);
+
+        assertThat(promotionMove.san()).isEqualTo("f8=N");
     }
 
     @Test

@@ -48,6 +48,24 @@ final class PawnTest {
     }
 
     @Test
+    void canWhiteBePromoted() {
+        var pawn = new Pawn("h7", Color.WHITE);
+        assertThat(pawn.canBePromoted()).isTrue();
+
+        var otherPawn = new Pawn("h2", Color.WHITE);
+        assertThat(otherPawn.canBePromoted()).isFalse();
+    }
+
+    @Test
+    void canBlackBePromoted() {
+        var pawn = new Pawn("h2", Color.BLACK);
+        assertThat(pawn.canBePromoted()).isTrue();
+
+        var otherPawn = new Pawn("h7", Color.BLACK);
+        assertThat(otherPawn.canBePromoted()).isFalse();
+    }
+
+    @Test
     void promoteToKnight() {
         var pawn = new Pawn("h5", Color.BLACK);
         assertThat(pawn.promote(PromotionChoice.KNIGHT)).isEqualTo(new Knight("h5", Color.BLACK));
