@@ -49,7 +49,7 @@ final class CastleGenerator extends MoveGenerator {
 
     private boolean castlingIsImpossible() {
         if (inCheck) {
-            return false;
+            return true;
         }
 
         if (sideToMove.isWhite()) {

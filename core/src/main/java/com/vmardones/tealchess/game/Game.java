@@ -7,7 +7,6 @@ package com.vmardones.tealchess.game;
 
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
-import java.util.List;
 import java.util.Set;
 
 import com.vmardones.tealchess.analysis.PositionAnalyzer;
@@ -45,7 +44,7 @@ public final class Game {
     }
 
     public Board board() {
-        return state.position().board();
+        return position().board();
     }
 
     public GameHistory history() {
@@ -53,11 +52,11 @@ public final class Game {
     }
 
     public Player player() {
-        return state.position().sideToMove().player(players());
+        return position().sideToMove().isWhite() ? whitePlayer : blackPlayer;
     }
 
     public Player oppponent() {
-        return state.position().sideToMove().opponent(players());
+        return position().sideToMove().isWhite() ? blackPlayer : whitePlayer;
     }
 
     /* Updating game state */
@@ -85,10 +84,6 @@ public final class Game {
         return positionAnalyzer.findLegalMoves(piece).stream()
                 .map(LegalMove::destination)
                 .collect(toUnmodifiableSet());
-    }
-
-    private List<Player> players() {
-        return List.of(whitePlayer, blackPlayer);
     }
 
     private void registerPosition(Position position) {

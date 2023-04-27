@@ -5,7 +5,6 @@
 
 package com.vmardones.tealchess.player;
 
-import java.util.List;
 import java.util.Locale;
 
 import com.vmardones.tealchess.parser.Fen;
@@ -73,22 +72,6 @@ public enum Color implements Fen {
 
     public int pawnRank() {
         return pawnRank;
-    }
-
-    /* Choosing players */
-
-    public Player player(List<Player> players) {
-        return players.stream()
-                .filter(player -> player.color() == this)
-                .findFirst()
-                .orElseThrow(() -> new AssertionError("Unreachable statement"));
-    }
-
-    public Player opponent(List<Player> players) {
-        return players.stream()
-                .filter(player -> player.color() != this)
-                .findFirst()
-                .orElseThrow(() -> new AssertionError("Unreachable statement"));
     }
 
     /* toString */

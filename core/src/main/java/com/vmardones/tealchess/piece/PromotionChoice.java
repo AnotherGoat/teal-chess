@@ -5,10 +5,12 @@
 
 package com.vmardones.tealchess.piece;
 
+import com.vmardones.tealchess.parser.San;
+
 /**
  * Each of the choices that a pawn can be promoted to when it reaches the opposite side.
  */
-public enum PromotionChoice {
+public enum PromotionChoice implements San {
     KNIGHT("=N"),
     BISHOP("=B"),
     ROOK("=R"),
@@ -16,8 +18,10 @@ public enum PromotionChoice {
 
     private final String san;
 
+    /* Getters */
+
     @Override
-    public String toString() {
+    public String san() {
         return san;
     }
 

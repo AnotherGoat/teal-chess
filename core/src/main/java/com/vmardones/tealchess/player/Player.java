@@ -78,6 +78,6 @@ public abstract sealed class Player permits HumanPlayer {
                     case NORMAL -> "%s player";
                 };
 
-        return String.format(template, color.name());
+        return String.format(template, color);
     }
 }

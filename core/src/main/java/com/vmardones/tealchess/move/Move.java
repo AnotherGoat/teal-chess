@@ -111,7 +111,7 @@ public final class Move implements San {
             return base;
         }
 
-        return base + promotionChoice;
+        return base + promotionChoice.san();
     }
 
     /* equals and hashCode */
