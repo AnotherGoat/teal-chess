@@ -1,7 +1,9 @@
+import com.diffplug.spotless.java.PalantirJavaFormatStep
+
 plugins {
     id 'java'
-    id 'com.diffplug.spotless' version '6.17.0'
-    id 'net.ltgt.errorprone' version '3.0.1'
+    id 'com.diffplug.spotless' version '6.18.0'
+    id 'net.ltgt.errorprone' version '3.1.0'
     id 'org.sonarqube' version '4.0.0.2929'
 }
 
@@ -11,6 +13,25 @@ allprojects {
     group = 'com.vmardones'
     version = '0.0'
 
+    ext {
+        palantirFormatVersion = '2.30.0'
+        jacocoVersion = '0.8.10'
+
+        jdtVersion = '2.2.700'
+        errorProneVersion = '2.18.0'
+        nullAwayVersion = '0.10.10'
+        errorProneSupportVersion = '0.9.0'
+
+        junitVersion = '5.9.3'
+        mockitoVersion = '5.3.1'
+        assertjVersion = '3.24.2'
+        equalsVerifierVersion = '3.14.1'
+
+        batikVersion = '1.16'
+        picocliVersion = '4.7.3'
+        gdxVersion = '1.11.0'
+    }
+
     apply plugin: 'java'
 
     java.sourceCompatibility = JavaVersion.VERSION_17
@@ -19,7 +40,7 @@ allprojects {
 
     spotless {
         java {
-            palantirJavaFormat()
+            palantirJavaFormat(palantirFormatVersion)
             importOrder('java|javax', 'org.apache', '')
             licenseHeader('/*\n' +
                     ' * Copyright (C) $YEAR  Víctor Mardones\n' +
@@ -45,22 +66,6 @@ allprojects {
             option('NullAway:ExcludedClassAnnotations', 'com.vmardones.tealchess.ExcludeFromNullAway')
             option('NullAway:KnownInitializers', 'com.badlogic.gdx.ApplicationAdapter.create')
         }
-    }
-
-    ext {
-        jdtVersion = '2.2.700'
-        errorProneVersion = '2.18.0'
-        nullAwayVersion = '0.10.10'
-        errorProneSupportVersion = '0.9.0'
-
-        junitVersion = '5.9.2'
-        mockitoVersion = '5.2.0'
-        assertjVersion = '3.24.2'
-        equalsVerifierVersion = '3.14.1'
-
-        batikVersion = '1.16'
-        picocliVersion = '4.7.1'
-        gdxVersion = '1.11.0'
     }
 
     repositories {
