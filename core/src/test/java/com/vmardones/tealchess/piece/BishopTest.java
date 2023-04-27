@@ -30,13 +30,13 @@ final class BishopTest {
     @Test
     void diagonalMove() {
         var bishop = new Bishop("a1", Color.BLACK);
-        assertThat(bishop.moveVectors()).containsOnlyOnce(new int[] {1, 1});
+        assertThat(bishop.moveVectors()).containsOnlyOnce(new Vector(1, 1));
     }
 
     @Test
     void illegalMove() {
         var bishop = new Bishop("a1", Color.BLACK);
-        assertThat(bishop.moveVectors()).isNotEmpty().doesNotContain(new int[] {0, 1});
+        assertThat(bishop.moveVectors()).isNotEmpty().doesNotContain(new Vector(0, 1));
     }
 
     @Test

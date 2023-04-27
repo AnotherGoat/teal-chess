@@ -56,8 +56,6 @@ public final class PositionAnalyzer {
      * @return The legal moves of the piece.
      */
     public Set<LegalMove> findLegalMoves(Piece piece) {
-        return legals.stream()
-                .filter(legal -> legal.move().piece().equals(piece))
-                .collect(toUnmodifiableSet());
+        return legals.stream().filter(legal -> legal.piece().equals(piece)).collect(toUnmodifiableSet());
     }
 }

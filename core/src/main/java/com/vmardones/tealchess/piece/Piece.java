@@ -156,12 +156,16 @@ public abstract sealed class Piece implements San, Unicode permits Bishop, King,
             return false;
         }
 
-        return type == other.type && coordinate.equals(other.coordinate) && color == other.color;
+        return type == other.type
+                && coordinate.equals(other.coordinate)
+                && color == other.color
+                && sliding == other.sliding
+                && moveVectors.equals(other.moveVectors);
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hash(type, coordinate, color);
+        return Objects.hash(type, coordinate, color, sliding, moveVectors);
     }
 
     @Override

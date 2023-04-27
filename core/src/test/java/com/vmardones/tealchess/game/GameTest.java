@@ -6,12 +6,11 @@
 package com.vmardones.tealchess.game;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.move.Move;
+import com.vmardones.tealchess.move.MoveResult;
 import com.vmardones.tealchess.piece.Pawn;
 import com.vmardones.tealchess.player.Color;
 import org.junit.jupiter.api.Test;
@@ -34,11 +33,9 @@ final class GameTest {
         var game = new Game();
 
         var initialBoard = game.board();
-        var move = mock(Move.class);
 
-        var piece = new Pawn("d5", Color.WHITE);
-        when(move.piece()).thenReturn(piece);
-        when(move.destination()).thenReturn(Coordinate.of("d4"));
+        var piece = new Pawn("d4", Color.WHITE);
+        var move = Move.builder(piece, Coordinate.of("d5")).normal().makeLegal(MoveResult.CONTINUE);
 
         game.updatePosition(move);
 

@@ -19,10 +19,10 @@ final class MoveFinderTest {
 
     @Test
     void sameCoordinate() {
-        var moves = List.of(mock(Move.class), mock(Move.class), mock(Move.class));
+        var moves = List.of(mock(LegalMove.class), mock(LegalMove.class), mock(LegalMove.class));
         var coordinate = mock(Coordinate.class);
 
-        assertThat(MoveFinder.choose(moves, coordinate, coordinate)).isNull();
+        assertThat(MoveFinder.choose(moves, coordinate, coordinate)).isEmpty();
     }
 
     @Test
@@ -31,17 +31,17 @@ final class MoveFinderTest {
         var destination = mock(Coordinate.class);
         var otherDestination = mock(Coordinate.class);
 
-        var move1 = mock(Move.class);
+        var move1 = mock(LegalMove.class);
         when(move1.source()).thenReturn(source);
         when(move1.destination()).thenReturn(otherDestination);
 
-        var move2 = mock(Move.class);
+        var move2 = mock(LegalMove.class);
         when(move2.source()).thenReturn(source);
         when(move2.destination()).thenReturn(destination);
 
         var moves = List.of(move1, move2);
 
-        assertThat(MoveFinder.choose(moves, source, destination)).isEqualTo(move2);
+        assertThat(MoveFinder.choose(moves, source, destination)).isEqualTo(List.of(move2));
     }
 
     @Test
@@ -49,41 +49,41 @@ final class MoveFinderTest {
         var source = mock(Coordinate.class);
         var destination = mock(Coordinate.class);
 
-        var move = mock(Move.class);
+        var move = mock(LegalMove.class);
         when(move.source()).thenReturn(mock(Coordinate.class));
         when(move.destination()).thenReturn(mock(Coordinate.class));
 
         var moves = List.of(move);
 
-        assertThat(MoveFinder.choose(moves, source, destination)).isNull();
+        assertThat(MoveFinder.choose(moves, source, destination)).isEmpty();
     }
 
     @Test
     void passEmptyMoves() {
         var source = mock(Coordinate.class);
         var destination = mock(Coordinate.class);
-        var moves = new ArrayList<Move>();
+        var moves = new ArrayList<LegalMove>();
 
-        assertThat(MoveFinder.choose(moves, source, destination)).isNull();
+        assertThat(MoveFinder.choose(moves, source, destination)).isEmpty();
     }
 
     @Test
-    void findFirstMove() {
+    void findMultipleMoves() {
         var source = mock(Coordinate.class);
         var destination = mock(Coordinate.class);
 
-        var move1 = mock(Move.class);
+        var move1 = mock(LegalMove.class);
         when(move1.source()).thenReturn(source);
         when(move1.destination()).thenReturn(destination);
 
-        var move2 = mock(Move.class);
+        var move2 = mock(LegalMove.class);
         when(move2.source()).thenReturn(source);
         when(move2.destination()).thenReturn(destination);
 
         var moves = List.of(move1, move2);
 
         assertThat(MoveFinder.choose(moves, source, destination))
-                .isNotEqualTo(move2)
-                .isEqualTo(move1);
+                .containsOnlyOnce(move1)
+                .containsOnlyOnce(move2);
     }
 }

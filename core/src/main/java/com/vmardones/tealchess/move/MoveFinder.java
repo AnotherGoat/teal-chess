@@ -37,7 +37,6 @@ public final class MoveFinder {
     }
 
     private static Predicate<LegalMove> isMovePossible(Coordinate source, Coordinate destination) {
-        return legal -> legal.move().source().equals(source)
-                && legal.move().destination().equals(destination);
+        return legal -> legal.source().equals(source) && legal.destination().equals(destination);
     }
 }

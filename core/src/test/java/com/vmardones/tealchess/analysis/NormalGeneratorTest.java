@@ -25,7 +25,7 @@ final class NormalGeneratorTest {
         var board = position.board();
         var leftPawn = board.pieceAt("b3");
 
-        var expectedMove = Move.createNormal(leftPawn, Coordinate.of("b4"));
+        var expectedMove = Move.builder(leftPawn, Coordinate.of("b4")).normal();
 
         assertThat(generator.generate()).containsOnlyOnce(expectedMove);
     }
@@ -51,11 +51,11 @@ final class NormalGeneratorTest {
         var king = board.king(Color.BLACK);
 
         var expectedMoves = new Move[] {
-            Move.createNormal(king, Coordinate.of("d8")),
-            Move.createNormal(king, Coordinate.of("f8")),
-            Move.createNormal(king, Coordinate.of("d7")),
-            Move.createNormal(king, Coordinate.of("e7")),
-            Move.createNormal(king, Coordinate.of("f7"))
+            Move.builder(king, Coordinate.of("d8")).normal(),
+            Move.builder(king, Coordinate.of("f8")).normal(),
+            Move.builder(king, Coordinate.of("d7")).normal(),
+            Move.builder(king, Coordinate.of("e7")).normal(),
+            Move.builder(king, Coordinate.of("f7")).normal()
         };
 
         assertThat(generator.generate()).hasSize(5).containsOnlyOnce(expectedMoves);
@@ -73,14 +73,14 @@ final class NormalGeneratorTest {
         var queen = board.pieceAt("f2");
 
         var unexpectedMoves = new Move[] {
-            Move.createNormal(bishop, Coordinate.of("d4")),
-            Move.createNormal(bishop, Coordinate.of("c3")),
-            Move.createNormal(rook, Coordinate.of("a7")),
-            Move.createNormal(rook, Coordinate.of("a8")),
-            Move.createNormal(queen, Coordinate.of("d4")),
-            Move.createNormal(queen, Coordinate.of("c5")),
-            Move.createNormal(queen, Coordinate.of("f6")),
-            Move.createNormal(queen, Coordinate.of("f7"))
+            Move.builder(bishop, Coordinate.of("d4")).normal(),
+            Move.builder(bishop, Coordinate.of("c3")).normal(),
+            Move.builder(rook, Coordinate.of("a7")).normal(),
+            Move.builder(rook, Coordinate.of("a8")).normal(),
+            Move.builder(queen, Coordinate.of("d4")).normal(),
+            Move.builder(queen, Coordinate.of("c5")).normal(),
+            Move.builder(queen, Coordinate.of("f6")).normal(),
+            Move.builder(queen, Coordinate.of("f7")).normal()
         };
 
         assertThat(generator.generate()).isNotEmpty().doesNotContain(unexpectedMoves);

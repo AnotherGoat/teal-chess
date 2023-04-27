@@ -111,6 +111,8 @@ final class PieceTest {
 
     @Test
     void equalsContract() {
-        EqualsVerifier.forClass(Piece.class).withNonnullFields("coordinate").verify();
+        EqualsVerifier.forClass(Piece.class)
+                .withNonnullFields("coordinate", "moveVectors")
+                .verify();
     }
 }

@@ -61,20 +61,20 @@ final class CastlingRightsTest {
     }
 
     @Test
-    void noRightsToString() {
+    void noRightsFen() {
         var rights = new CastlingRights();
-        assertThat(rights).hasToString("-");
+        assertThat(rights.fen()).isEqualTo("-");
     }
 
     @Test
-    void allRightsToString() {
+    void allRightsFen() {
         var rights = new CastlingRights(true, true, true, true);
-        assertThat(rights).hasToString("KQkq");
+        assertThat(rights.fen()).isEqualTo("KQkq");
     }
 
     @Test
-    void someRightsToString() {
+    void someRightsFen() {
         var rights = new CastlingRights(false, true, true, false);
-        assertThat(rights).hasToString("Qk");
+        assertThat(rights.fen()).isEqualTo("Qk");
     }
 }

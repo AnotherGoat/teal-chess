@@ -83,7 +83,7 @@ public final class Game {
      */
     public Set<Coordinate> findLegalDestinations(Piece piece) {
         return positionAnalyzer.findLegalMoves(piece).stream()
-                .map(legal -> legal.move().destination())
+                .map(LegalMove::destination)
                 .collect(toUnmodifiableSet());
     }
 

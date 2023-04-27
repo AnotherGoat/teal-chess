@@ -57,21 +57,21 @@ final class SquareTest {
     }
 
     @Test
-    void whitePieceToString() {
+    void whitePieceUnicode() {
         var piece = new Pawn("a1", Color.WHITE);
-        assertThat(Square.create("a1", piece)).hasToString("♙");
+        assertThat(Square.create("a1", piece).unicode()).isEqualTo("♙");
     }
 
     @Test
-    void blackPieceToString() {
+    void blackPieceUnicode() {
         var piece = new Rook("a1", Color.BLACK);
-        assertThat(Square.create("a1", piece)).hasToString("♜");
+        assertThat(Square.create("a1", piece).unicode()).isEqualTo("♜");
     }
 
     @Test
-    void emptyToString() {
-        assertThat(Square.create("h1", null)).hasToString("□");
-        assertThat(Square.create("g1", null)).hasToString("■");
+    void emptyUnicode() {
+        assertThat(Square.create("h1", null).unicode()).isEqualTo("□");
+        assertThat(Square.create("g1", null).unicode()).isEqualTo("■");
     }
 
     @Test

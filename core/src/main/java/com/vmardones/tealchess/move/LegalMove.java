@@ -5,7 +5,9 @@
 
 package com.vmardones.tealchess.move;
 
+import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.parser.San;
+import com.vmardones.tealchess.piece.Piece;
 
 public final class LegalMove implements San {
 
@@ -21,6 +23,18 @@ public final class LegalMove implements San {
 
     public Move move() {
         return move;
+    }
+
+    public Piece piece() {
+        return move.piece();
+    }
+
+    public Coordinate source() {
+        return move.source();
+    }
+
+    public Coordinate destination() {
+        return move.destination();
     }
 
     @Override

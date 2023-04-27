@@ -24,19 +24,19 @@ final class KnightTest {
     @Test
     void numberOfMoves() {
         var knight = new Knight("a1", Color.WHITE);
-        assertThat(knight.moveOffsets()).hasSize(8);
+        assertThat(knight.moveVectors()).hasSize(8);
     }
 
     @Test
     void lShapedMove() {
         var knight = new Knight("a1", Color.WHITE);
-        assertThat(knight.moveOffsets()).containsOnlyOnce(new int[] {-2, 1});
+        assertThat(knight.moveVectors()).containsOnlyOnce(new Vector(-2, 1));
     }
 
     @Test
     void illegalMove() {
         var knight = new Knight("a1", Color.WHITE);
-        assertThat(knight.moveOffsets()).isNotEmpty().doesNotContain(new int[] {0, 1});
+        assertThat(knight.moveVectors()).isNotEmpty().doesNotContain(new Vector(0, 1));
     }
 
     @Test

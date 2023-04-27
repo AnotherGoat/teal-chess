@@ -24,31 +24,31 @@ final class KingTest {
     @Test
     void numberOfMoves() {
         var king = new King("a1", Color.WHITE);
-        assertThat(king.moveOffsets()).hasSize(8);
+        assertThat(king.moveVectors()).hasSize(8);
     }
 
     @Test
     void diagonalMove() {
         var king = new King("a1", Color.WHITE);
-        assertThat(king.moveOffsets()).containsOnlyOnce(new int[] {1, 1});
+        assertThat(king.moveVectors()).containsOnlyOnce(new Vector(1, 1));
     }
 
     @Test
     void horizontalMove() {
         var king = new King("a1", Color.WHITE);
-        assertThat(king.moveOffsets()).containsOnlyOnce(new int[] {-1, 0});
+        assertThat(king.moveVectors()).containsOnlyOnce(new Vector(-1, 0));
     }
 
     @Test
     void verticalMove() {
         var king = new King("a1", Color.WHITE);
-        assertThat(king.moveOffsets()).containsOnlyOnce(new int[] {0, 1});
+        assertThat(king.moveVectors()).containsOnlyOnce(new Vector(0, 1));
     }
 
     @Test
     void illegalMove() {
         var king = new King("a1", Color.WHITE);
-        assertThat(king.moveOffsets()).isNotEmpty().doesNotContain(new int[] {-1, 2});
+        assertThat(king.moveVectors()).isNotEmpty().doesNotContain(new Vector(-1, 2));
     }
 
     @Test

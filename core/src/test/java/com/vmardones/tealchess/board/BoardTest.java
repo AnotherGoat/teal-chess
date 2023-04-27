@@ -138,10 +138,10 @@ final class BoardTest {
     }
 
     @Test
-    void asString() {
+    void unicode() {
         var board = Position.INITIAL_POSITION.board();
 
-        assertThat(board.toString())
+        assertThat(board.unicode())
                 .containsOnlyOnce("♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜")
                 .containsOnlyOnce("♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟")
                 .contains("□ ■ □ ■ □ ■ □ ■")

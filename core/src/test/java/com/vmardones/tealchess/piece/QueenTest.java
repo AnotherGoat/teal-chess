@@ -30,25 +30,25 @@ final class QueenTest {
     @Test
     void diagonalMove() {
         var queen = new Queen("a1", Color.BLACK);
-        assertThat(queen.moveVectors()).containsOnlyOnce(new int[] {1, -1});
+        assertThat(queen.moveVectors()).containsOnlyOnce(new Vector(1, -1));
     }
 
     @Test
     void horizontalMove() {
         var queen = new Queen("a1", Color.BLACK);
-        assertThat(queen.moveVectors()).containsOnlyOnce(new int[] {-1, 0});
+        assertThat(queen.moveVectors()).containsOnlyOnce(new Vector(-1, 0));
     }
 
     @Test
     void verticalMove() {
         var queen = new Queen("a1", Color.BLACK);
-        assertThat(queen.moveVectors()).containsOnlyOnce(new int[] {0, 1});
+        assertThat(queen.moveVectors()).containsOnlyOnce(new Vector(0, 1));
     }
 
     @Test
     void illegalMove() {
         var queen = new Queen("a1", Color.BLACK);
-        assertThat(queen.moveVectors()).isNotEmpty().doesNotContain(new int[] {-1, 2});
+        assertThat(queen.moveVectors()).isNotEmpty().doesNotContain(new Vector(-1, 2));
     }
 
     @Test

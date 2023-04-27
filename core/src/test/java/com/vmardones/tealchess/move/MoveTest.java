@@ -26,7 +26,7 @@ final class MoveTest {
         when(piece.coordinate()).thenReturn(source);
 
         var destination = mock(Coordinate.class);
-        var move = Move.createNormal(piece, destination);
+        var move = Move.builder(piece, destination).normal();
 
         assertThat(move.source()).isEqualTo(source);
     }
@@ -34,51 +34,51 @@ final class MoveTest {
     @Test
     void normalToString() {
         var piece = new Rook("a1", Color.WHITE);
-        var move = Move.createNormal(piece, Coordinate.of("e1"));
+        var move = Move.builder(piece, Coordinate.of("e1")).normal();
 
-        assertThat(move).hasToString("e1");
+        assertThat(move.san()).isEqualTo("Re1");
     }
 
     @Test
     void captureToString() {
         var piece = new Bishop("b1", Color.WHITE);
         var capturedPiece = new Bishop("c2", Color.BLACK);
-        var move = Move.createCapture(piece, Coordinate.of("c2"), capturedPiece);
+        var move = Move.builder(piece, Coordinate.of("c2")).capture(capturedPiece);
 
-        assertThat(move).hasToString("Bc2");
+        assertThat(move.san()).isEqualTo("Bxc2");
     }
 
     @Test
-    void pawnCaptureToString() {
+    void pawnCaptureSan() {
         var pawn = new Pawn("a8", Color.BLACK);
         var capturedPawn = new Pawn("b7", Color.WHITE);
-        var move = Move.createCapture(pawn, Coordinate.of("b7"), capturedPawn);
+        var move = Move.builder(pawn, Coordinate.of("b7")).capture(capturedPawn);
 
-        assertThat(move).hasToString("axb7");
+        assertThat(move.san()).isEqualTo("axb7");
     }
 
     @Test
-    void kingCastleToString() {
+    void kingCastleSan() {
         var king = new King("e5", Color.WHITE);
         var rook = new Rook("e8", Color.WHITE);
-        var move = Move.createCastle(true, king, Coordinate.of("e7"), rook, Coordinate.of("e6"));
+        var move = Move.builder(king, Coordinate.of("e7")).castle(true, rook, Coordinate.of("e6"));
 
-        assertThat(move).hasToString("0-0");
+        assertThat(move.san()).isEqualTo("O-O");
     }
 
     @Test
-    void queenCastleToString() {
+    void queenCastleSan() {
         var king = new King("e5", Color.WHITE);
         var rook = new Rook("e1", Color.WHITE);
-        var move = Move.createCastle(false, king, Coordinate.of("e3"), rook, Coordinate.of("e4"));
+        var move = Move.builder(king, Coordinate.of("e3")).castle(false, rook, Coordinate.of("e4"));
 
-        assertThat(move).hasToString("0-0-0");
+        assertThat(move.san()).isEqualTo("O-O-O");
     }
 
     @Test
     void equalsContract() {
         EqualsVerifier.forClass(Move.class)
-                .withNonnullFields("type", "piece", "destination", "result")
+                .withNonnullFields("type", "piece", "destination")
                 .verify();
     }
 }

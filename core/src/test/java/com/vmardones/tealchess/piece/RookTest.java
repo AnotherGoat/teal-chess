@@ -30,19 +30,19 @@ final class RookTest {
     @Test
     void horizontalMove() {
         var rook = new Rook("a1", Color.BLACK);
-        assertThat(rook.moveVectors()).containsOnlyOnce(new int[] {1, 0});
+        assertThat(rook.moveVectors()).containsOnlyOnce(new Vector(1, 0));
     }
 
     @Test
     void verticalMove() {
         var rook = new Rook("a1", Color.BLACK);
-        assertThat(rook.moveVectors()).containsOnlyOnce(new int[] {0, 1});
+        assertThat(rook.moveVectors()).containsOnlyOnce(new Vector(0, 1));
     }
 
     @Test
     void illegalMove() {
         var rook = new Rook("a1", Color.BLACK);
-        assertThat(rook.moveVectors()).isNotEmpty().doesNotContain(new int[] {1, -1});
+        assertThat(rook.moveVectors()).isNotEmpty().doesNotContain(new Vector(1, -1));
     }
 
     @Test

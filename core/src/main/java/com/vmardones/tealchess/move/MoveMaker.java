@@ -30,11 +30,11 @@ public final class MoveMaker {
      * When a move is made, a new chess position is created, due to the position being immutable.
      *
      * @param position The position before the move.
-     * @param move The move to make.
+     * @param legalMove The move to make.
      * @return The new position, after the move is made.
      */
-    public Position make(Position position, LegalMove move) {
-        return make(position, move.move());
+    public Position make(Position position, LegalMove legalMove) {
+        return make(position, legalMove.move());
     }
 
     /**
