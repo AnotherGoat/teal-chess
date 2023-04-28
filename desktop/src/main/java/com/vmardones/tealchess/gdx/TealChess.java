@@ -15,6 +15,7 @@ import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.game.Game;
 import com.vmardones.tealchess.move.MoveFinder;
+import com.vmardones.tealchess.parser.PgnSerializer;
 import com.vmardones.tealchess.player.Color;
 import org.lwjgl.opengl.GL11;
 
@@ -81,7 +82,7 @@ final class TealChess extends ApplicationAdapter {
         var sideToMove = position.sideToMove();
         var player = game.player();
         var opponent = game.oppponent();
-        var history = game.history();
+        var moves = game.history().moves();
 
         Gdx.app.debug(LOG_TAG, "Current chessboard:\n" + board.unicode());
 
@@ -96,7 +97,7 @@ final class TealChess extends ApplicationAdapter {
         Gdx.app.log(LOG_TAG, sideToMove + "'s turn!");
         Gdx.app.debug(LOG_TAG, "Legal moves: " + player.legals());
 
-        Gdx.app.debug(LOG_TAG, "Move history: " + history.moves());
+        Gdx.app.debug(LOG_TAG, "Move history: " + PgnSerializer.serializeMoves(moves));
 
         switch (game.player().status()) {
             case NORMAL -> Gdx.app.log(LOG_TAG, "The game continues like normal...\n");
