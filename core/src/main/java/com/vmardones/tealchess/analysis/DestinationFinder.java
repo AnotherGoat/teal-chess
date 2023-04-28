@@ -39,7 +39,7 @@ final class DestinationFinder {
 
     private Stream<Square> calculateSlides(Piece piece, Coordinate coordinate, Vector vector) {
 
-        Stream.Builder<Square> destinations = Stream.builder();
+        var destinations = Stream.<Square>builder();
 
         for (var i = 1; i < Board.SIDE_LENGTH; i++) {
             var destination = coordinate.to(vector.x() * i, vector.y() * i);

@@ -5,34 +5,29 @@
 
 package com.vmardones.tealchess.analysis;
 
-import static java.util.stream.Collectors.toUnmodifiableSet;
-
-import java.util.List;
-import java.util.Set;
-
 import com.vmardones.tealchess.game.Position;
-import com.vmardones.tealchess.move.LegalMove;
-import com.vmardones.tealchess.move.MoveMaker;
-import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.player.Color;
 import com.vmardones.tealchess.player.Player;
 
 /**
- * Analyzes a certain position and generates all the possible legal moves.
+ * Analyzes a certain position and generates all the possible legal moves for the side to move.
  */
 public final class PositionAnalyzer {
 
-    private final List<LegalMove> legals;
     private final Player whitePlayer;
     private final Player blackPlayer;
 
+    /**
+     * Builds a new, immutable position analyzer.
+     * @param position The position to analyze. Generally, this will be used after a move is made.
+     */
     public PositionAnalyzer(Position position) {
 
-        var pseudoLegals = new PseudoLegalGenerator(position).generate().toList();
+        var pseudoLegals = new PseudoLegalGenerator(position).generate();
 
-        var legalityChecker = new LegalityChecker(position, new MoveMaker());
-        var confirmedLegals = legalityChecker.filterPseudoLegals(pseudoLegals);
-        legals = legalityChecker.transformToLegals(confirmedLegals);
+        var legalityTester = new LegalityTester(position);
+        var confirmedLegals = legalityTester.testPseudoLegals(pseudoLegals);
+        var legals = legalityTester.transformToLegals(confirmedLegals);
 
         var playerFactory = new PlayerFactory(position, legals);
 
@@ -42,20 +37,19 @@ public final class PositionAnalyzer {
 
     /* Getters */
 
-    public Player newWhitePlayer() {
+    /**
+     * Get a player in this new position, which includes all their legal moves if it's their turn to move.
+     * @return The white player for this new position.
+     */
+    public Player whitePlayer() {
         return whitePlayer;
     }
 
-    public Player newBlackPlayer() {
-        return blackPlayer;
-    }
-
     /**
-     * Given a piece, find the legal moves it has for this position.
-     * @param piece The piece to move.
-     * @return The legal moves of the piece.
+     * Get a player in this new position, which includes all their legal moves if it's their turn to move.
+     * @return The black player for this new position.
      */
-    public Set<LegalMove> findLegalMoves(Piece piece) {
-        return legals.stream().filter(legal -> legal.piece().equals(piece)).collect(toUnmodifiableSet());
+    public Player blackPlayer() {
+        return blackPlayer;
     }
 }

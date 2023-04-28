@@ -23,6 +23,28 @@ public enum MoveResult implements San {
     private final String endHash;
 
     /**
+     * Given the state of the game after a move is made, find the respective result.
+     * @param attacked Whether the opponent's king is attack or not.
+     * @param cantMove Whether the opponent has legal moves after the move or not.
+     * @return The move result for the case.
+     */
+    public static MoveResult findResult(boolean attacked, boolean cantMove) {
+        if (attacked && cantMove) {
+            return MoveResult.CHECKMATES;
+        }
+
+        if (!attacked && cantMove) {
+            return MoveResult.STALEMATES;
+        }
+
+        if (attacked) {
+            return MoveResult.CHECKS;
+        }
+
+        return MoveResult.CONTINUE;
+    }
+
+    /**
      * The end hash used by this result, used in SAN movetext notation.
      * @return The end hash.
      */

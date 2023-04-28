@@ -31,8 +31,8 @@ public final class Game {
         state = new GameState();
         history = new GameHistory();
         positionAnalyzer = new PositionAnalyzer(state.position());
-        whitePlayer = positionAnalyzer.newWhitePlayer();
-        blackPlayer = positionAnalyzer.newBlackPlayer();
+        whitePlayer = positionAnalyzer.whitePlayer();
+        blackPlayer = positionAnalyzer.blackPlayer();
 
         registerPosition(state.position());
     }
@@ -67,8 +67,8 @@ public final class Game {
         var nextPosition = moveMaker.make(state.position(), move);
 
         positionAnalyzer = new PositionAnalyzer(nextPosition);
-        whitePlayer = positionAnalyzer.newWhitePlayer();
-        blackPlayer = positionAnalyzer.newBlackPlayer();
+        whitePlayer = positionAnalyzer.whitePlayer();
+        blackPlayer = positionAnalyzer.blackPlayer();
 
         registerPosition(nextPosition);
     }
@@ -76,12 +76,13 @@ public final class Game {
     /* Analysis methods */
 
     /**
-     * Given a piece, find the legal moves it has for this position. Mainly used when the user clicks on a piece, to highlight its legal moves.
+     * Given a piece, find the destinations of its moves for the current position. Mainly used when the user clicks on a piece, to highlight its legal moves.
      * @param piece The piece to move.
-     * @return The legal moves of the piece.
+     * @return The legal destinations for the piece's moves.
      */
     public Set<Coordinate> findLegalDestinations(Piece piece) {
-        return positionAnalyzer.findLegalMoves(piece).stream()
+        return player().legals().stream()
+                .filter(legal -> legal.piece().equals(piece))
                 .map(LegalMove::destination)
                 .collect(toUnmodifiableSet());
     }

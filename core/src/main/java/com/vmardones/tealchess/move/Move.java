@@ -12,7 +12,10 @@ import com.vmardones.tealchess.parser.San;
 import com.vmardones.tealchess.piece.*;
 import org.eclipse.jdt.annotation.Nullable;
 
-/** The action of moving a piece. This class only represents pseudo-legal moves. */
+/**
+ * The action of moving a piece. This class only represents pseudo-legal moves.
+ * @see <a href="https://www.chessprogramming.org/Pseudo-Legal_Move">Pseudo-Legal Move</a>
+ */
 public final class Move implements San {
 
     private final MoveType type;

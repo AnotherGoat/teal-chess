@@ -12,6 +12,10 @@ import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.move.Attack;
 import com.vmardones.tealchess.piece.King;
 
+/**
+ * Responsible for testing attacks and checking whether a square is attacked or not.
+ * @see <a href="https://www.chessprogramming.org/Square_Attacked_By">Square Attacked By</a>
+ */
 final class AttackTester {
 
     private final King king;
