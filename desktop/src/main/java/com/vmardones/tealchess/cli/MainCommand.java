@@ -19,11 +19,6 @@ public final class MainCommand implements Runnable {
     private boolean debugMode;
 
     @Option(
-            names = {"--dark-theme", "-d"},
-            description = "Enable dark theme.")
-    private boolean darkTheme;
-
-    @Option(
             names = {"--highlight-legals", "-l"},
             description = "Highlight legal moves when selecting a piece.",
             negatable = true,
@@ -37,6 +32,6 @@ public final class MainCommand implements Runnable {
 
     @Override
     public void run() {
-        new Window(debugMode, darkTheme, highlightLegals, flipBoard);
+        new Window(debugMode, highlightLegals, flipBoard);
     }
 }

@@ -120,7 +120,7 @@ final class PieceTest {
     void pawnSan() {
         var pawn = new Pawn("a1", Color.WHITE);
 
-        assertThat(pawn.san()).isEqualTo("");
+        assertThat(pawn.san()).isEmpty();
     }
 
     @Test

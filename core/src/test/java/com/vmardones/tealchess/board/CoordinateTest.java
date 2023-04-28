@@ -31,7 +31,7 @@ final class CoordinateTest {
 
     @Test
     void getFileIndex() {
-        assertThat(Coordinate.of("a6").fileIndex()).isEqualTo(0);
+        assertThat(Coordinate.of("a6").fileIndex()).isZero();
         assertThat(Coordinate.of("h6").fileIndex()).isEqualTo(7);
     }
 
@@ -48,6 +48,12 @@ final class CoordinateTest {
     @Test
     void getRank() {
         assertThat(Coordinate.of("f5").rank()).isEqualTo(5);
+    }
+
+    @Test
+    void getRankIndex() {
+        assertThat(Coordinate.of("c1").rankIndex()).isZero();
+        assertThat(Coordinate.of("c8").rankIndex()).isEqualTo(7);
     }
 
     @Test

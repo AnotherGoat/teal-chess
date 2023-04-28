@@ -46,6 +46,10 @@ public abstract sealed class Player permits HumanPlayer {
 
     /* Getters */
 
+    /**
+     * The color (side of the board) of this player.
+     * @return This player's color.
+     */
     public Color color() {
         return color;
     }

@@ -7,13 +7,11 @@ package com.vmardones.tealchess.game;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.vmardones.tealchess.ExcludeFromNullAway;
-import com.vmardones.tealchess.board.Coordinate;
-import com.vmardones.tealchess.move.Move;
-import com.vmardones.tealchess.move.MoveResult;
-import com.vmardones.tealchess.piece.Pawn;
-import com.vmardones.tealchess.player.Color;
+import com.vmardones.tealchess.move.LegalMove;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -21,60 +19,51 @@ import org.junit.jupiter.api.Test;
 final class GameHistoryTest {
 
     @Test
-    void startWithNullMove() {
-        var history = new GameHistory();
-
-        assertThat(history.lastMove()).isNull();
-        assertThat(history.moves()).isEmpty();
-    }
-
-    @Test
     void addToHistory() {
-        var initialHistory = new GameHistory();
+        var memento1 = mock(GameMemento.class);
+        var history1 = new GameHistory(memento1);
 
-        var initialPosition = Position.INITIAL_POSITION;
-        var history = initialHistory.add(new GameMemento(initialPosition, null));
+        var memento2 = mock(GameMemento.class);
+        var history2 = history1.add(memento2);
 
-        assertThat(history).isNotSameAs(initialHistory);
-        assertThat(history.lastMove()).isNull();
+        assertThat(history2).isNotSameAs(history1);
     }
 
     @Test
     void moveHistory() {
-        var initialHistory = new GameHistory();
+        var memento1 = mock(GameMemento.class);
+        var history1 = new GameHistory(memento1);
 
-        var position1 = Position.INITIAL_POSITION;
-        var move = Move.builder(new Pawn("e2", Color.WHITE), Coordinate.of("e3"))
-                .normal()
-                .makeLegal(MoveResult.CONTINUE);
-        var position2 = new Position(position1.board(), Color.BLACK, position1.castlingRights(), null, 0, 1);
+        var memento2 = mock(GameMemento.class);
+        var history2 = history1.add(memento2);
 
-        var history1 = initialHistory.add(new GameMemento(position1, null));
-        var history2 = history1.add(new GameMemento(position2, move));
+        when(memento2.lastMove()).thenReturn(mock(LegalMove.class));
 
+        assertThat(history1.moves()).isEmpty();
         assertThat(history2.moves()).isNotSameAs(history1.moves()).hasSize(1);
     }
 
     @Test
     void unmodifiableMoves() {
-        var moves = new GameHistory().moves();
+        var moves = new GameHistory(mock(GameMemento.class)).moves();
 
         assertThatThrownBy(moves::clear).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void lastMove() {
-        var initialHistory = new GameHistory();
+        var memento1 = mock(GameMemento.class);
+        var history1 = new GameHistory(memento1);
 
-        var position1 = Position.INITIAL_POSITION;
-        var move = Move.builder(new Pawn("c2", Color.WHITE), Coordinate.of("c3"))
-                .normal()
-                .makeLegal(MoveResult.CONTINUE);
-        var position2 = new Position(position1.board(), Color.BLACK, position1.castlingRights(), null, 0, 1);
+        var memento2 = mock(GameMemento.class);
+        var history2 = history1.add(memento2);
 
-        var finalHistory = initialHistory.add(new GameMemento(position1, null)).add(new GameMemento(position2, move));
+        when(memento1.lastMove()).thenReturn(null);
+        var move = mock(LegalMove.class);
+        when(memento2.lastMove()).thenReturn(move);
 
-        assertThat(finalHistory.lastMove()).isEqualTo(move);
+        assertThat(history1.lastMove()).isNull();
+        assertThat(history2.lastMove()).isEqualTo(move);
     }
 
     @Test

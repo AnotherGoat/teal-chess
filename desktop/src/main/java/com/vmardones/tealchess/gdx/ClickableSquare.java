@@ -64,7 +64,7 @@ final class ClickableSquare extends Actor {
 
             if (texture != null) {
                 batch.setColor(0, 0, 0, 0.15f);
-                batch.draw(texture, getX() + 8, getY() + 4, texture.getWidth() + 4, texture.getHeight());
+                batch.draw(texture, getX() + 8, getY() + 4, (float) texture.getWidth() + 4, texture.getHeight());
 
                 batch.setColor(Color.WHITE);
                 batch.draw(texture, getX() + 4, getY() + 4);

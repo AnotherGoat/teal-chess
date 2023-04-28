@@ -21,6 +21,7 @@ import com.vmardones.tealchess.ExcludeFromGeneratedReport;
 
 final class SvgLoader {
 
+    private static final String LOG_TAG = "Assets";
     private static final PNGTranscoder TRANSCODER = new PNGTranscoder();
 
     public static Pixmap load(String path, int sideSize) {
@@ -43,7 +44,7 @@ final class SvgLoader {
             var pngBytes = outputStream.toByteArray();
             return new Pixmap(pngBytes, 0, pngBytes.length);
         } catch (GdxRuntimeException | IOException | TranscoderException e) {
-            Gdx.app.error("Assets", "Could not load SVG file " + path);
+            Gdx.app.error(LOG_TAG, "Could not load SVG file " + path);
             return new Pixmap(width, height, Pixmap.Format.Alpha);
         }
     }

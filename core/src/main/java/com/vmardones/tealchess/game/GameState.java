@@ -5,26 +5,36 @@
 
 package com.vmardones.tealchess.game;
 
+import com.vmardones.tealchess.analysis.PositionAnalyzer;
 import com.vmardones.tealchess.move.LegalMove;
+import com.vmardones.tealchess.player.Player;
 import org.eclipse.jdt.annotation.Nullable;
 
 final class GameState {
 
     private Position position;
+    private Player whitePlayer;
+    private Player blackPlayer;
     private @Nullable LegalMove lastMove;
 
     GameState() {
         position = Position.INITIAL_POSITION;
+
+        var positionAnalyzer = PositionAnalyzer.INITIAL_ANALYZER;
+        whitePlayer = positionAnalyzer.whitePlayer();
+        blackPlayer = positionAnalyzer.blackPlayer();
     }
 
     GameMemento save() {
-        return new GameMemento(position, lastMove);
+        return new GameMemento(position, whitePlayer, blackPlayer, lastMove);
     }
 
     void load(GameMemento gameMemento) {
         position = gameMemento.position();
         lastMove = gameMemento.lastMove();
     }
+
+    /* Getters and setters */
 
     Position position() {
         return position;
@@ -34,8 +44,20 @@ final class GameState {
         position = value;
     }
 
-    @Nullable LegalMove lastMove() {
-        return lastMove;
+    public Player whitePlayer() {
+        return whitePlayer;
+    }
+
+    void whitePlayer(Player value) {
+        whitePlayer = value;
+    }
+
+    public Player blackPlayer() {
+        return blackPlayer;
+    }
+
+    void blackPlayer(Player value) {
+        blackPlayer = value;
     }
 
     void lastMove(LegalMove value) {

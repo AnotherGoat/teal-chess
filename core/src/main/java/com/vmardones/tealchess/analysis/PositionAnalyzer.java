@@ -18,6 +18,12 @@ public final class PositionAnalyzer {
     private final Player blackPlayer;
 
     /**
+     * The position analyzer for the initial position in a game of chess.
+     * Because the initial position is present in every standard game, this instance will always be available.
+     */
+    public static final PositionAnalyzer INITIAL_ANALYZER = new PositionAnalyzer(Position.INITIAL_POSITION);
+
+    /**
      * Builds a new, immutable position analyzer.
      * @param position The position to analyze. Generally, this will be used after a move is made.
      */

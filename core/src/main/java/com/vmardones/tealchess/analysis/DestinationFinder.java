@@ -41,6 +41,7 @@ final class DestinationFinder {
 
         var destinations = Stream.<Square>builder();
 
+        // TODO: Refactor this method to not use break and continue in such a confusing way
         for (var i = 1; i < Board.SIDE_LENGTH; i++) {
             var destination = coordinate.to(vector.x() * i, vector.y() * i);
 
@@ -58,7 +59,6 @@ final class DestinationFinder {
 
             if (piece.isEnemyOf(destinationPiece)) {
                 destinations.add(square);
-                break;
             }
 
             break;

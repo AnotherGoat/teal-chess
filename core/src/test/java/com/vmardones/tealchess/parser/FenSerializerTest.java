@@ -12,7 +12,7 @@ import com.vmardones.tealchess.game.Position;
 import org.junit.jupiter.api.Test;
 
 @ExcludeFromNullAway
-class FenSerializerTest {
+final class FenSerializerTest {
 
     @Test
     void initialPosition() {

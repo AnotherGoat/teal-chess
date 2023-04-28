@@ -37,7 +37,7 @@ final class GameTest {
         var piece = new Pawn("d4", Color.WHITE);
         var move = Move.builder(piece, Coordinate.of("d5")).normal().makeLegal(MoveResult.CONTINUE);
 
-        game.updatePosition(move);
+        game.makeMove(move);
 
         assertThat(game.board()).isNotEqualTo(initialBoard);
         assertThat(game.player().color()).isEqualTo(Color.BLACK);

@@ -17,24 +17,23 @@ import com.vmardones.tealchess.move.MoveMaker;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.player.Player;
 
+/**
+ * A game of chess.
+ * @see <a href="https://www.chessprogramming.org/Chess_Game">Chess Game</a>
+ */
 public final class Game {
 
     private final MoveMaker moveMaker;
     private final GameState state;
-    private PositionAnalyzer positionAnalyzer;
     private GameHistory history;
-    private Player whitePlayer;
-    private Player blackPlayer;
 
+    /**
+     * The standard way to create a new game, starting from the initial position.
+     */
     public Game() {
         moveMaker = new MoveMaker();
         state = new GameState();
-        history = new GameHistory();
-        positionAnalyzer = new PositionAnalyzer(state.position());
-        whitePlayer = positionAnalyzer.whitePlayer();
-        blackPlayer = positionAnalyzer.blackPlayer();
-
-        registerPosition(state.position());
+        history = new GameHistory(state.save());
     }
 
     /* Getters */
@@ -52,25 +51,30 @@ public final class Game {
     }
 
     public Player player() {
-        return position().sideToMove().isWhite() ? whitePlayer : blackPlayer;
+        return position().sideToMove().isWhite() ? state.whitePlayer() : state.blackPlayer();
     }
 
     public Player oppponent() {
-        return position().sideToMove().isWhite() ? blackPlayer : whitePlayer;
+        return position().sideToMove().isWhite() ? state.blackPlayer() : state.whitePlayer();
     }
 
     /* Updating game state */
 
-    public void updatePosition(LegalMove move) {
+    /**
+     * Make a move on the chessboard and update the position.
+     * @param move The legal move, chosen by the player.
+     */
+    public void makeMove(LegalMove move) {
         state.lastMove(move);
 
         var nextPosition = moveMaker.make(state.position(), move);
+        state.position(nextPosition);
 
-        positionAnalyzer = new PositionAnalyzer(nextPosition);
-        whitePlayer = positionAnalyzer.whitePlayer();
-        blackPlayer = positionAnalyzer.blackPlayer();
+        var positionAnalyzer = new PositionAnalyzer(nextPosition);
+        state.whitePlayer(positionAnalyzer.whitePlayer());
+        state.blackPlayer(positionAnalyzer.blackPlayer());
 
-        registerPosition(nextPosition);
+        history = history.add(state.save());
     }
 
     /* Analysis methods */
@@ -85,10 +89,5 @@ public final class Game {
                 .filter(legal -> legal.piece().equals(piece))
                 .map(LegalMove::destination)
                 .collect(toUnmodifiableSet());
-    }
-
-    private void registerPosition(Position position) {
-        state.position(position);
-        history = history.add(state.save());
     }
 }
