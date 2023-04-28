@@ -16,9 +16,9 @@ import org.junit.jupiter.api.Test;
 final class KingTest {
 
     @Test
-    void toSingleChar() {
-        assertThat(new King("a1", Color.WHITE).singleChar()).isEqualTo("K");
-        assertThat(new King("a1", Color.BLACK).singleChar()).isEqualTo("k");
+    void fen() {
+        assertThat(new King("a1", Color.WHITE).fen()).isEqualTo("K");
+        assertThat(new King("a1", Color.BLACK).fen()).isEqualTo("k");
     }
 
     @Test

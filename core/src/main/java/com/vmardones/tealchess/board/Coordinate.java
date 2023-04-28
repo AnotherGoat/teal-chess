@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
+import com.vmardones.tealchess.parser.San;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
@@ -16,7 +17,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * the chess algebraic notation, which consists of the coordinate's rank (a-h) folowed by its file
  * (1-8).
  */
-public final class Coordinate {
+public final class Coordinate implements San {
 
     /**
      * All the files that a coordinate can have, as a single String.
@@ -42,6 +43,10 @@ public final class Coordinate {
 
     /* Getters */
 
+    public String san() {
+        return AlgebraicConverter.toAlgebraic(index);
+    }
+
     /**
      * Obtains the file (row in chess terminology) of this coordinate. The file is a letter between lowercase a (left side or
      * queen's side) and lowercase h (right side or king's side).
@@ -50,7 +55,7 @@ public final class Coordinate {
      * @see <a href="https://www.chessprogramming.org/Files">Files</a>
      */
     public String file() {
-        return toString().substring(0, 1);
+        return san().substring(0, 1);
     }
 
     /**
@@ -193,7 +198,7 @@ public final class Coordinate {
      */
     @Override
     public String toString() {
-        return AlgebraicConverter.toAlgebraic(index);
+        return san();
     }
 
     int index() {

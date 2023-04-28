@@ -16,9 +16,9 @@ import org.junit.jupiter.api.Test;
 final class QueenTest {
 
     @Test
-    void toSingleChar() {
-        assertThat(new Queen("a1", Color.WHITE).singleChar()).isEqualTo("Q");
-        assertThat(new Queen("a1", Color.BLACK).singleChar()).isEqualTo("q");
+    void fen() {
+        assertThat(new Queen("a1", Color.WHITE).fen()).isEqualTo("Q");
+        assertThat(new Queen("a1", Color.BLACK).fen()).isEqualTo("q");
     }
 
     @Test

@@ -16,9 +16,9 @@ import org.junit.jupiter.api.Test;
 final class PawnTest {
 
     @Test
-    void toSingleChar() {
-        assertThat(new Pawn("a1", Color.WHITE).singleChar()).isEqualTo("P");
-        assertThat(new Pawn("a1", Color.BLACK).singleChar()).isEqualTo("p");
+    void fen() {
+        assertThat(new Pawn("a1", Color.WHITE).fen()).isEqualTo("P");
+        assertThat(new Pawn("a1", Color.BLACK).fen()).isEqualTo("p");
     }
 
     @Test

@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 import com.vmardones.tealchess.board.Coordinate;
+import com.vmardones.tealchess.parser.Fen;
 import com.vmardones.tealchess.parser.San;
 import com.vmardones.tealchess.parser.Unicode;
 import com.vmardones.tealchess.player.Color;
@@ -19,7 +20,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * A chess piece, which players can move in the board.
  * @see <a href="https://www.chessprogramming.org/Pieces">Pieces</a>
  */
-public abstract sealed class Piece implements San, Unicode permits Bishop, King, Knight, Pawn, Queen, Rook {
+public abstract sealed class Piece implements Fen, San, Unicode permits Bishop, King, Knight, Pawn, Queen, Rook {
 
     protected final PieceType type;
     protected final Coordinate coordinate;
@@ -82,7 +83,8 @@ public abstract sealed class Piece implements San, Unicode permits Bishop, King,
         return type.firstChar();
     }
 
-    public String singleChar() {
+    @Override
+    public String fen() {
         return color.isBlack() ? firstChar().toLowerCase(Locale.ROOT) : firstChar();
     }
 

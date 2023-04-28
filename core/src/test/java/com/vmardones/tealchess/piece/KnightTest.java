@@ -16,9 +16,9 @@ import org.junit.jupiter.api.Test;
 final class KnightTest {
 
     @Test
-    void toSingleChar() {
-        assertThat(new Knight("a1", Color.WHITE).singleChar()).isEqualTo("N");
-        assertThat(new Knight("a1", Color.BLACK).singleChar()).isEqualTo("n");
+    void fen() {
+        assertThat(new Knight("a1", Color.WHITE).fen()).isEqualTo("N");
+        assertThat(new Knight("a1", Color.BLACK).fen()).isEqualTo("n");
     }
 
     @Test

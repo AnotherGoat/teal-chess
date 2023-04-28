@@ -16,9 +16,9 @@ import org.junit.jupiter.api.Test;
 final class BishopTest {
 
     @Test
-    void toSingleChar() {
-        assertThat(new Bishop("a1", Color.WHITE).singleChar()).isEqualTo("B");
-        assertThat(new Bishop("a1", Color.BLACK).singleChar()).isEqualTo("b");
+    void fen() {
+        assertThat(new Bishop("a1", Color.WHITE).fen()).isEqualTo("B");
+        assertThat(new Bishop("a1", Color.BLACK).fen()).isEqualTo("b");
     }
 
     @Test

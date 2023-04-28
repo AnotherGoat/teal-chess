@@ -26,7 +26,6 @@ tasks {
 dependencies {
     // Unit testing
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
-    testCompileOnly "org.junit.jupiter:junit-jupiter-params:$junitVersion"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
 
     // Mocking

@@ -16,9 +16,9 @@ import org.junit.jupiter.api.Test;
 final class RookTest {
 
     @Test
-    void toSingleChar() {
-        assertThat(new Rook("a1", Color.WHITE).singleChar()).isEqualTo("R");
-        assertThat(new Rook("a1", Color.BLACK).singleChar()).isEqualTo("r");
+    void fen() {
+        assertThat(new Rook("a1", Color.WHITE).fen()).isEqualTo("R");
+        assertThat(new Rook("a1", Color.BLACK).fen()).isEqualTo("r");
     }
 
     @Test

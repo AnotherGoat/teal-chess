@@ -129,10 +129,10 @@ public final class FenParser {
             return null;
         }
 
-        var coordinate = Coordinate.of(data).up(sideToMove.oppositeDirection());
+        var coordinate = Coordinate.of(data).down(sideToMove.direction());
 
         if (coordinate == null) {
-            throw new AssertionError("Unreachable statement");
+            throw new FenParseException("");
         }
 
         return new Pawn(coordinate.toString(), sideToMove.opposite());

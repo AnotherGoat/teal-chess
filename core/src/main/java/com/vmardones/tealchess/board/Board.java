@@ -148,17 +148,17 @@ public final class Board implements Unicode {
 
     @Override
     public String unicode() {
-        var builder = new StringBuilder();
+        var result = new StringBuilder();
 
         for (Square square : squares) {
-            builder.append(square.unicode()).append(" ");
+            result.append(square.unicode()).append(" ");
 
             if ((square.coordinate().index() + 1) % Board.SIDE_LENGTH == 0) {
-                builder.append("\n");
+                result.append("\n");
             }
         }
 
-        return builder.toString();
+        return result.toString();
     }
 
     /* equals, hashCode and toString */

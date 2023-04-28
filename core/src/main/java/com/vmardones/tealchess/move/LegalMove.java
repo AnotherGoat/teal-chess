@@ -9,6 +9,11 @@ import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.parser.San;
 import com.vmardones.tealchess.piece.Piece;
 
+/**
+ * Represents a legal move done by one side, also known as a ply depending on the context.
+ * @see <a href="https://www.chessprogramming.org/Legal_Move">Legal Move</a>
+ * @see <a href="https://www.chessprogramming.org/Ply">Ply</a>
+ */
 public final class LegalMove implements San {
 
     private final Move move;
