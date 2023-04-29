@@ -229,7 +229,7 @@ Only the first 5 articles are taken into account for now.
 
 Another objective of this project is to allow exporting and replaying recorded
 chess games, which is why some standard file formats will be handled by this
-program.
+program, for both parsing and serialization.
 
 ### ✗ Portable Game Notation (PGN)
 
@@ -242,10 +242,18 @@ now, and its priority is lower than implementing the actual game.
 The FEN notation will probably be implemented first because it makes unit
 testing a lot easier.
 
+#### ✗ Tag pair section
+
+- ✗ The tag pair section is composed of a series of zero or more tag pairs.
+- ✗ A tag pair is composed of four consecutive tokens: a left bracket token, a symbol token, a string token, and a right bracket token. The symbol token is the tag name and the string token is the tag value associated with the tag name.
+- ✗ The same tag name should not appear more than once in a tag pair section.
+- ✗ A further restriction on tag names is that they are composed exclusively of letters, digits, and the underscore character.
+- ✗ This is done to facilitate mapping of tag names into key and attribute names for use with general purpose database programs.
+
 #### ✗ Movetext section
 
 - ✗ (8.2) Movetext section
-  - The movetext section is composed of chess moves, move number indications,
+  - ✗ The movetext section is composed of chess moves, move number indications,
     optional annotations, and a single concluding game termination marker.
   - ✗ (8.2.1) Movetext line justification
   - ✗ (8.2.2) Movetext move number indications

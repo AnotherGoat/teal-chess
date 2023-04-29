@@ -25,7 +25,7 @@ public final class PgnSerializer {
             moveText.add(moves.get(i).san());
         }
 
-        return String.join(" ", moveText.toArray(new String[0]));
+        return String.join(" ", moveText.toArray(new String[moves.size()]));
     }
 
     @ExcludeFromGeneratedReport

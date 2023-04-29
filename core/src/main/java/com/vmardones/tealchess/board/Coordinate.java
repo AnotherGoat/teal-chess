@@ -43,6 +43,7 @@ public final class Coordinate implements San {
 
     /* Getters */
 
+    @Override
     public String san() {
         return AlgebraicConverter.toAlgebraic(index);
     }

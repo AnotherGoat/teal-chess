@@ -77,7 +77,7 @@ public final class FenParser {
             throw new FenParseException("The board has more than 2 kings: " + data);
         }
 
-        var ranks = data.split("/");
+        var ranks = data.split("/", -1);
 
         if (ranks.length != Board.SIDE_LENGTH) {
             throw new FenParseException("Piece placement data doesn't have exactly 8 ranks: " + data);
