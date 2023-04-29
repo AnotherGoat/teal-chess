@@ -11,6 +11,10 @@ import java.util.List;
 import com.vmardones.tealchess.ExcludeFromGeneratedReport;
 import com.vmardones.tealchess.move.LegalMove;
 
+/**
+ * PGN (Portable Game Notation) serializer.
+ * Parses data written in PNG export format.
+ */
 public final class PgnSerializer {
 
     public static String serializeMoves(List<LegalMove> moves) {

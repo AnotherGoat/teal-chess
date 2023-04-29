@@ -10,6 +10,10 @@ import java.util.Arrays;
 import com.vmardones.tealchess.ExcludeFromGeneratedReport;
 import com.vmardones.tealchess.game.Game;
 
+/**
+ * PGN (Portable Game Notation) parser.
+ * Parses data written in PNG import format.
+ */
 public final class PgnParser {
 
     public static Game parse(String pgn) {

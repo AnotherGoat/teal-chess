@@ -23,7 +23,7 @@ import com.vmardones.tealchess.player.ColorSymbolException;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
- * FEN (Forsyth-Edwards Notation) string parser.
+ * FEN (Forsyth-Edwards Notation) parser.
  * @see <a href="https://www.chessprogramming.org/Forsyth-Edwards_Notation">Forsyth-Edwards Notation</a>
  */
 public final class FenParser {
