@@ -5,58 +5,51 @@
 
 package com.vmardones.tealchess.analysis;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.move.Move;
-import com.vmardones.tealchess.piece.Pawn;
 import com.vmardones.tealchess.piece.Piece;
-import com.vmardones.tealchess.piece.PromotionChoice;
+import org.eclipse.jdt.annotation.Nullable;
 
 final class NormalGenerator extends MoveGenerator {
 
     private final Board board;
     private final List<Piece> pieces;
+    private final DestinationFinder destinationFinder;
 
     NormalGenerator(Position position) {
         super(position);
         board = position.board();
         pieces = board.pieces(position.sideToMove());
+        destinationFinder = new DestinationFinder(board);
     }
 
     @Override
     Stream<Move> generate() {
-        return pieces.stream().flatMap(this::calculatePieceMoves);
+        return pieces.stream().flatMap(this::calculatePieceMoves).filter(Objects::nonNull);
     }
 
     private Stream<Move> calculatePieceMoves(Piece piece) {
-        return new DestinationFinder(board).calculateDestinations(piece).flatMap(square -> createMoves(piece, square));
+        if (piece.isPawn()) {
+            return Stream.empty();
+        }
+
+        return destinationFinder.calculateDestinations(piece).map(square -> generateNormalMove(piece, square));
     }
 
-    private Stream<Move> createMoves(Piece piece, Square destination) {
+    private @Nullable Move generateNormalMove(Piece piece, Square destination) {
 
         var destinationPiece = destination.piece();
 
         if (destinationPiece != null) {
-            return Stream.empty();
+            return null;
         }
 
-        var move = Move.builder(piece, destination.coordinate()).normal();
-
-        if (!piece.isPawn()) {
-            return Stream.of(move);
-        }
-
-        var pawn = (Pawn) piece;
-
-        if (pawn.canBePromoted()) {
-            return Arrays.stream(PromotionChoice.values()).map(move::makePromotion);
-        }
-
-        return Stream.of(move);
+        return Move.builder(piece, destination.coordinate()).normal();
     }
 }

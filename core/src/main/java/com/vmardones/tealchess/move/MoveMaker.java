@@ -7,6 +7,7 @@ package com.vmardones.tealchess.move;
 
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Coordinate;
+import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.game.CastlingRights;
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.piece.King;
@@ -49,7 +50,7 @@ public final class MoveMaker {
         var board = createBoard(position, move);
         var sideToMove = position.sideToMove().opposite();
         var castlingRights = updateCastlingRights(position, move);
-        var enPassantTarget = updateEnPassantTarget(move);
+        var enPassantTarget = updateEnPassantTarget(move, position.sideToMove());
         var halfmoveClock = updateHalfmoveClock(position, move);
         var fullmoveCounter = updateFullmoveCounter(position);
 
@@ -96,14 +97,18 @@ public final class MoveMaker {
         return board.nextPositionBuilder(board.king(Color.WHITE), (King) movedPiece);
     }
 
-    private @Nullable Pawn updateEnPassantTarget(Move move) {
+    private @Nullable Square updateEnPassantTarget(Move move, Color sideToMove) {
         if (move.type() != MoveType.DOUBLE_PUSH) {
             return null;
         }
 
-        var destination = move.destination().toString();
+        var enPassantTarget = move.destination().down(sideToMove.direction());
 
-        return (Pawn) move.piece().moveTo(destination);
+        if (enPassantTarget == null) {
+            throw new AssertionError("Unreachable statement");
+        }
+
+        return Square.create(enPassantTarget.san(), null);
     }
 
     private CastlingRights updateCastlingRights(Position position, Move move) {

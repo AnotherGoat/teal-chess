@@ -144,8 +144,23 @@ final class MoveMakerTest {
     }
 
     @Test
-    void markEnPassantTarget() {
-        var initialPosition = FenParser.parse("4k3/p7/8/8/8/8/8/4K3 w - - 0 1");
+    void markWhiteEnPassantTarget() {
+        var initialPosition = FenParser.parse("4k3/8/8/8/8/8/P7/4K3 w - - 0 1");
+        var pawn = (Pawn) initialPosition.board().pieceAt("a2");
+
+        var move = Move.builder(pawn, Coordinate.of("a4")).doublePush();
+        var afterMove = moveMaker.make(initialPosition, move);
+
+        assertThat(afterMove.board().pieceAt("a4")).isInstanceOf(Pawn.class);
+        assertThat(afterMove.enPassantTarget()).isNotNull();
+        assertThat(afterMove.enPassantTarget().coordinate()).isEqualTo(Coordinate.of("a3"));
+        assertThat(afterMove.board().pieces(Color.WHITE))
+                .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(Pawn.class));
+    }
+
+    @Test
+    void markBlackEnPassantTarget() {
+        var initialPosition = FenParser.parse("4k3/p7/8/8/8/8/8/4K3 b - - 0 1");
         var pawn = (Pawn) initialPosition.board().pieceAt("a7");
 
         var move = Move.builder(pawn, Coordinate.of("a5")).doublePush();
@@ -153,7 +168,7 @@ final class MoveMakerTest {
 
         assertThat(afterMove.board().pieceAt("a5")).isInstanceOf(Pawn.class);
         assertThat(afterMove.enPassantTarget()).isNotNull();
-        assertThat(afterMove.enPassantTarget().coordinate()).isEqualTo(Coordinate.of("a5"));
+        assertThat(afterMove.enPassantTarget().coordinate()).isEqualTo(Coordinate.of("a6"));
         assertThat(afterMove.board().pieces(Color.BLACK))
                 .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(Pawn.class));
     }

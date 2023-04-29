@@ -117,7 +117,7 @@ public final class Move implements San {
         return base + promotionChoice.san();
     }
 
-    /* equals and hashCode */
+    /* equals, hashCode and toString */
 
     @Override
     public boolean equals(Object o) {
@@ -141,6 +141,11 @@ public final class Move implements San {
     @Override
     public int hashCode() {
         return Objects.hash(type, piece, destination, otherPiece, rookDestination, promotionChoice);
+    }
+
+    @Override
+    public String toString() {
+        return san();
     }
 
     private Move(MoveBuilder builder) {
@@ -195,13 +200,13 @@ public final class Move implements San {
             return new Move(this);
         }
 
-        public Move enPassant(Pawn enPassantTarget) {
+        public Move enPassant(Pawn attackedPawn) {
             if (!piece.isPawn()) {
                 throw new IllegalMoveException("Only pawns can make en passant moves");
             }
 
             type = MoveType.EN_PASSANT;
-            otherPiece = enPassantTarget;
+            otherPiece = attackedPawn;
             return new Move(this);
         }
 

@@ -5,7 +5,6 @@
 
 package com.vmardones.tealchess.analysis;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -14,39 +13,33 @@ import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.move.Move;
-import com.vmardones.tealchess.piece.Pawn;
 import com.vmardones.tealchess.piece.Piece;
-import com.vmardones.tealchess.piece.PromotionChoice;
 import org.eclipse.jdt.annotation.Nullable;
 
 final class CaptureGenerator extends MoveGenerator {
 
     private final Board board;
     private final List<Piece> pieces;
+    private final DestinationFinder destinationFinder;
 
     CaptureGenerator(Position position) {
         super(position);
         board = position.board();
         pieces = board.pieces(position.sideToMove());
+        destinationFinder = new DestinationFinder(board);
     }
 
     @Override
     Stream<Move> generate() {
-        return pieces.stream().flatMap(this::calculatePieceCaptures);
+        return pieces.stream().flatMap(this::calculatePieceCaptures).filter(Objects::nonNull);
     }
 
     private Stream<Move> calculatePieceCaptures(Piece piece) {
-
         if (piece.isPawn()) {
-            var pawn = (Pawn) piece;
-
-            return Stream.concat(generatePawnCaptures(pawn, true), generatePawnCaptures(pawn, false));
+            return Stream.empty();
         }
 
-        return new DestinationFinder(board)
-                .calculateDestinations(piece)
-                .map(square -> generateCapture(piece, square))
-                .filter(Objects::nonNull);
+        return destinationFinder.calculateDestinations(piece).map(square -> generateCapture(piece, square));
     }
 
     private @Nullable Move generateCapture(Piece piece, Square destination) {
@@ -58,30 +51,5 @@ final class CaptureGenerator extends MoveGenerator {
         }
 
         return Move.builder(piece, destination.coordinate()).capture(destinationPiece);
-    }
-
-    private Stream<Move> generatePawnCaptures(Pawn pawn, boolean leftSide) {
-
-        var direction = leftSide ? -1 : 1;
-
-        var destination = pawn.coordinate().to(direction, pawn.color().direction());
-
-        if (destination == null) {
-            return Stream.empty();
-        }
-
-        var destinationPiece = board.pieceAt(destination);
-
-        if (destinationPiece == null || pawn.isAllyOf(destinationPiece)) {
-            return Stream.empty();
-        }
-
-        var move = Move.builder(pawn, destination).capture(destinationPiece);
-
-        if (pawn.canBePromoted()) {
-            return Arrays.stream(PromotionChoice.values()).map(move::makePromotion);
-        }
-
-        return Stream.of(move);
     }
 }

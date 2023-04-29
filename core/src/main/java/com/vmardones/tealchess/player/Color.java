@@ -70,6 +70,10 @@ public enum Color implements Fen {
         return symbol;
     }
 
+    /**
+     * The pawn rank is the rank which is filled with pawns in a standard chess initial position.
+     * @return The pawn rank.
+     */
     public int pawnRank() {
         return pawnRank;
     }

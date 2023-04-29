@@ -80,6 +80,7 @@ final class TealChess extends ApplicationAdapter {
         var board = game.board();
         var position = game.position();
         var sideToMove = position.sideToMove();
+        var enPassantTarget = position.enPassantTarget();
         var player = game.player();
         var opponent = game.oppponent();
         var moves = game.history().moves();
@@ -91,7 +92,10 @@ final class TealChess extends ApplicationAdapter {
         Gdx.app.debug(LOG_TAG, "Black king: " + board.king(Color.BLACK));
         Gdx.app.debug(LOG_TAG, "Black pieces: " + board.pieces(Color.BLACK));
         Gdx.app.debug(LOG_TAG, "Castling rights: " + position.castlingRights().fen());
-        Gdx.app.debug(LOG_TAG, "En passant pawn: " + position.enPassantTarget());
+
+        if (enPassantTarget != null) {
+            Gdx.app.debug(LOG_TAG, "En passant target: " + enPassantTarget.unicode() + enPassantTarget.coordinate());
+        }
 
         Gdx.app.debug(LOG_TAG, "Players: " + player + " vs. " + opponent);
         Gdx.app.log(LOG_TAG, sideToMove + "'s turn!");

@@ -7,9 +7,8 @@ package com.vmardones.tealchess.parser;
 
 import com.vmardones.tealchess.ExcludeFromGeneratedReport;
 import com.vmardones.tealchess.board.Board;
+import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.game.Position;
-import com.vmardones.tealchess.piece.Pawn;
-import com.vmardones.tealchess.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
 public final class FenSerializer {
@@ -19,7 +18,7 @@ public final class FenSerializer {
         var ranks = serializeBoard(position.board());
         var sideToMove = position.sideToMove().fen();
         var castles = position.castlingRights().fen();
-        var enPassantTarget = serializeEnPassantTarget(position.enPassantTarget(), position.sideToMove());
+        var enPassantTarget = serializeEnPassantTarget(position.enPassantTarget());
         var halfmove = String.valueOf(position.halfmoveClock());
         var fullmove = String.valueOf(position.fullmoveCounter());
 
@@ -69,17 +68,11 @@ public final class FenSerializer {
         return result.toString();
     }
 
-    private static String serializeEnPassantTarget(@Nullable Pawn pawn, Color sideToMove) {
-        if (pawn == null) {
+    private static String serializeEnPassantTarget(@Nullable Square enPassantTarget) {
+        if (enPassantTarget == null) {
             return "-";
         }
 
-        var coordinate = pawn.coordinate().up(sideToMove.direction());
-
-        if (coordinate == null) {
-            throw new AssertionError("Unreachable statement");
-        }
-
-        return coordinate.san();
+        return enPassantTarget.coordinate().san();
     }
 }

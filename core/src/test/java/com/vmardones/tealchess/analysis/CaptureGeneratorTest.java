@@ -17,19 +17,11 @@ import org.junit.jupiter.api.Test;
 final class CaptureGeneratorTest {
 
     @Test
-    void pawnCaptures() {
-        var position = FenParser.parse("4k3/8/8/1BpR4/1NPN4/8/8/4K3 b - - 0 1");
+    void ignoresPawnCaptures() {
+        var position = FenParser.parse("4k3/8/8/8/1n1b1r1q/P1P1P1P1/8/4K3 w - - 0 1");
         var generator = new CaptureGenerator(position);
 
-        var board = position.board();
-        var pawn = board.pieceAt("c5");
-
-        var expectedCaptures = new Move[] {
-            Move.builder(pawn, Coordinate.of("b4")).capture(board.pieceAt("b4")),
-            Move.builder(pawn, Coordinate.of("d4")).capture(board.pieceAt("d4"))
-        };
-
-        assertThat(generator.generate()).hasSize(2).containsOnlyOnce(expectedCaptures);
+        assertThat(generator.generate()).isEmpty();
     }
 
     @Test

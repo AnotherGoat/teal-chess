@@ -18,31 +18,6 @@ import org.junit.jupiter.api.Test;
 final class NormalGeneratorTest {
 
     @Test
-    void pawnMoves() {
-        var position = FenParser.parse("4k3/8/8/8/6p1/1P4P1/8/4K3 w - - 0 1");
-        var generator = new NormalGenerator(position);
-
-        var board = position.board();
-        var leftPawn = board.pieceAt("b3");
-
-        var expectedMove = Move.builder(leftPawn, Coordinate.of("b4")).normal();
-
-        assertThat(generator.generate()).containsOnlyOnce(expectedMove);
-    }
-
-    @Test
-    void knightMoves() {}
-
-    @Test
-    void bishopMoves() {}
-
-    @Test
-    void rookMoves() {}
-
-    @Test
-    void queenMoves() {}
-
-    @Test
     void kingMoves() {
         var position = FenParser.parse("4k3/8/8/8/8/8/8/4K3 b - - 0 1");
         var generator = new NormalGenerator(position);
@@ -60,6 +35,29 @@ final class NormalGeneratorTest {
 
         assertThat(generator.generate()).hasSize(5).containsOnlyOnce(expectedMoves);
     }
+
+    @Test
+    void ignoresPawnPushes() {
+        var position = FenParser.parse("4k3/8/pppppppp/8/8/8/8/4K3 b - - 0 1");
+        var generator = new NormalGenerator(position);
+
+        var kingMoves = 5;
+
+        assertThat(generator.generate()).hasSize(kingMoves).allMatch(move -> move.piece()
+                .isKing());
+    }
+
+    @Test
+    void knightMoves() {}
+
+    @Test
+    void bishopMoves() {}
+
+    @Test
+    void rookMoves() {}
+
+    @Test
+    void queenMoves() {}
 
     @Test
     void blockedSlidingMoves() {

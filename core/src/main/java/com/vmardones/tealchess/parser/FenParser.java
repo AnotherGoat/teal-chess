@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 import com.vmardones.tealchess.ExcludeFromGeneratedReport;
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Coordinate;
+import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.game.CastlingRights;
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.piece.*;
@@ -48,7 +49,7 @@ public final class FenParser {
         var ranks = parseRanks(parts[0]);
         var sideToMove = parseSideToMove(parts[1]);
         var castles = parseCastles(parts[2]);
-        var enPassantTarget = parseEnPassantTarget(parts[3], sideToMove);
+        var enPassantTarget = parseEnPassantTarget(parts[3]);
         var halfmove = parseHalfmove(parts[4]);
         int fullmove = parseFullmove(parts[5]);
 
@@ -120,7 +121,7 @@ public final class FenParser {
         return new CastlingRights(data.contains("K"), data.contains("Q"), data.contains("k"), data.contains("q"));
     }
 
-    private static @Nullable Pawn parseEnPassantTarget(String data, Color sideToMove) {
+    private static @Nullable Square parseEnPassantTarget(String data) {
         if (!EN_PASSANT_PATTERN.matcher(data).matches()) {
             throw new FenParseException("En passant target is not a valid target coordinate: " + data);
         }
@@ -129,13 +130,7 @@ public final class FenParser {
             return null;
         }
 
-        var coordinate = Coordinate.of(data).down(sideToMove.direction());
-
-        if (coordinate == null) {
-            throw new FenParseException("");
-        }
-
-        return new Pawn(coordinate.toString(), sideToMove.opposite());
+        return Square.create(data, null);
     }
 
     private static int parseHalfmove(String data) {
@@ -174,7 +169,7 @@ public final class FenParser {
             List<String> ranks,
             Color sideToMove,
             CastlingRights castlingRights,
-            @Nullable Pawn enPassantTarget,
+            @Nullable Square enPassantTarget,
             int halfmoveClock,
             int fullmoveCounter) {
 
