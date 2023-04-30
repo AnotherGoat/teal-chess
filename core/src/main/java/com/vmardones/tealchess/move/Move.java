@@ -64,6 +64,18 @@ public final class Move implements San {
         return new LegalMove(this, result);
     }
 
+    /**
+     * Convert this pseudo-legal move to a legal one. For this, a move result must be supplied.
+     * This alternative also asks for a disambiguation type, which is needed for proper SAN movetext representation.
+     * For unambiguous cases, use the shorter version of this method.
+     * @param result What happens to the opponent after the move is done.
+     * @param disambiguation Disambiguation type.
+     * @return A legal version of this move.
+     */
+    public LegalMove makeLegal(MoveResult result, Disambiguation disambiguation) {
+        return new LegalMove(this, result, disambiguation);
+    }
+
     /* Getters */
 
     public MoveType type() {

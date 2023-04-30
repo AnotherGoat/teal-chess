@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.board.Coordinate;
+import com.vmardones.tealchess.piece.Knight;
 import com.vmardones.tealchess.piece.Pawn;
 import com.vmardones.tealchess.piece.Queen;
 import com.vmardones.tealchess.player.Color;
@@ -32,5 +33,32 @@ final class LegalMoveTest {
         var legalMove = Move.builder(piece, Coordinate.of("c6")).normal().makeLegal(MoveResult.CONTINUE);
 
         assertThat(legalMove.san()).isEqualTo(legalMove.toString());
+    }
+
+    @Test
+    void fileDisambiguation() {
+        var piece = new Knight("b3", Color.WHITE);
+        var legalMove =
+                Move.builder(piece, Coordinate.of("c5")).normal().makeLegal(MoveResult.CONTINUE, Disambiguation.FILE);
+
+        assertThat(legalMove.san()).isEqualTo("Nbc5");
+    }
+
+    @Test
+    void rankDisambiguation() {
+        var piece = new Knight("b3", Color.WHITE);
+        var legalMove =
+                Move.builder(piece, Coordinate.of("c5")).normal().makeLegal(MoveResult.CONTINUE, Disambiguation.RANK);
+
+        assertThat(legalMove.san()).isEqualTo("N3c5");
+    }
+
+    @Test
+    void fullDisambiguation() {
+        var piece = new Knight("b3", Color.WHITE);
+        var legalMove =
+                Move.builder(piece, Coordinate.of("c5")).normal().makeLegal(MoveResult.CONTINUE, Disambiguation.FULL);
+
+        assertThat(legalMove.san()).isEqualTo("Nb3c5");
     }
 }

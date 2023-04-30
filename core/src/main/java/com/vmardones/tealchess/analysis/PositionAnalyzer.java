@@ -30,10 +30,8 @@ public final class PositionAnalyzer {
     public PositionAnalyzer(Position position) {
 
         var pseudoLegals = new PseudoLegalGenerator(position).generate();
-
-        var legalityTester = new LegalityTester(position);
-        var confirmedLegals = legalityTester.testPseudoLegals(pseudoLegals);
-        var legals = legalityTester.transformToLegals(confirmedLegals);
+        var confirmedLegals = new LegalityTester(position).testPseudoLegals(pseudoLegals);
+        var legals = new LegalMoveConverter(position).transformToLegals(confirmedLegals);
 
         var playerFactory = new PlayerFactory(position, legals);
 

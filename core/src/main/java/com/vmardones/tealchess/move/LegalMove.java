@@ -8,6 +8,7 @@ package com.vmardones.tealchess.move;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.parser.San;
 import com.vmardones.tealchess.piece.Piece;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * Represents a legal move done by one side, also known as a ply depending on the context.
@@ -18,10 +19,16 @@ public final class LegalMove implements San {
 
     private final Move move;
     private final MoveResult result;
+    private final @Nullable Disambiguation disambiguation;
 
     LegalMove(Move move, MoveResult result) {
+        this(move, result, null);
+    }
+
+    LegalMove(Move move, MoveResult result, @Nullable Disambiguation disambiguation) {
         this.move = move;
         this.result = result;
+        this.disambiguation = disambiguation;
     }
 
     /* Getters */
@@ -44,7 +51,20 @@ public final class LegalMove implements San {
 
     @Override
     public String san() {
-        return move.san() + result.san();
+        var base = move.san() + result.san();
+
+        if (disambiguation == null) {
+            return base;
+        }
+
+        var start = base.substring(0, 1);
+        var end = base.substring(1);
+
+        return switch (disambiguation) {
+            case FILE -> start + source().file() + end;
+            case RANK -> start + source().rank() + end;
+            case FULL -> start + source().san() + end;
+        };
     }
 
     /* toString */

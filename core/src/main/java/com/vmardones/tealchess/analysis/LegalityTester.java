@@ -5,15 +5,12 @@
 
 package com.vmardones.tealchess.analysis;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 import com.vmardones.tealchess.game.Position;
-import com.vmardones.tealchess.move.LegalMove;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.move.MoveMaker;
-import com.vmardones.tealchess.move.MoveResult;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
@@ -34,10 +31,6 @@ final class LegalityTester {
         return pseudoLegals.map(this::testPseudoLegal).filter(Objects::nonNull);
     }
 
-    List<LegalMove> transformToLegals(Stream<Move> confirmedLegals) {
-        return confirmedLegals.map(this::makeLegal).toList();
-    }
-
     private @Nullable Move testPseudoLegal(Move move) {
         var afterMove = moveMaker.make(position, move);
 
@@ -52,28 +45,5 @@ final class LegalityTester {
         }
 
         return move;
-    }
-
-    private LegalMove makeLegal(Move move) {
-        var afterMove = moveMaker.make(position, move);
-        var result = calculateResult(afterMove);
-        return move.makeLegal(result);
-    }
-
-    private MoveResult calculateResult(Position afterMove) {
-
-        var pseudoLegals = new PseudoLegalGenerator(afterMove).generate();
-
-        var legalityTester = new LegalityTester(afterMove);
-        var confirmedLegals = legalityTester.testPseudoLegals(pseudoLegals);
-
-        var opponentAttacks =
-                new AttackGenerator(afterMove).calculateAttacks(true).toList();
-        var attackTester = new AttackTester(afterMove, opponentAttacks);
-
-        var attacked = attackTester.isKingAttacked();
-        var cantMove = confirmedLegals.findFirst().isPresent();
-
-        return MoveResult.findResult(attacked, cantMove);
     }
 }
