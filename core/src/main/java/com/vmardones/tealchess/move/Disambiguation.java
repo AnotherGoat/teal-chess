@@ -8,7 +8,8 @@ package com.vmardones.tealchess.move;
 /**
  * Disambiguation used when representing legal moves in SAN movetext, where two pieces of the same kind can get to the same destination.
  * It rarely happens, so most of the time it will be NONE.
- * Due to the rules of the game, Pawn and King moves never require disambiguation.
+ * Due to the rules of the game, King moves never require disambiguation.
+ * The same happens to Pawn moves, which are always automatically disambiguated.
  * @see <a href="https://www.chessprogramming.org/Algebraic_Chess_Notation#Ambiguities">Ambiguities</a>
  */
 public enum Disambiguation {

@@ -664,20 +664,20 @@ The following parts will be implemented in the future:
       the destination square with a promoted piece letter (indicating one of
       knight, bishop, rook, or queen) immediately following the equal sign.
     - ✓ As above, the piece letter is in upper case.
-  - ✗ (8.2.3.4) Disambiguation
-    - ✗ In the case of ambiguities (multiple pieces of the same type moving to
+  - ✓ (8.2.3.4) Disambiguation
+    - ✓ In the case of ambiguities (multiple pieces of the same type moving to
       the same square), the first appropriate disambiguating step of the three
       following steps is taken:
-      - ✗ First, if the moving pieces can be distinguished by their originating
+      - ✓ First, if the moving pieces can be distinguished by their originating
         files, the originating file letter of the moving piece is inserted
         immediately after the moving piece letter.
-      - ✗ Second (when the first step fails), if the moving pieces can be
+      - ✓ Second (when the first step fails), if the moving pieces can be
         distinguished by their originating ranks, the originating rank digit of
         the moving piece is inserted immediately after the moving piece letter.
-      - ✗ Third (when both the first and the second steps fail), the two
+      - ✓ Third (when both the first and the second steps fail), the two
         character square coordinate of the originating square of the moving
         piece is inserted immediately after the moving piece letter.
-    - ✗ Note that the above disambiguation is needed only to distinguish among
+    - ✓ Note that the above disambiguation is needed only to distinguish among
       moves of the same piece type to the same square; it is not used to
       distinguish among attacks of the same piece type to the same square.
   - ✗ (8.2.3.5) Check and checkmate indication characters
@@ -685,13 +685,13 @@ The following parts will be implemented in the future:
       suffix to the basic SAN move notation;
     - ✓ if the move is a checkmating move, the octothorpe sign "#" is appended
       instead.
-    - ✗ Neither the appearance nor the absence of either a check or checkmating
+    - ✓ Neither the appearance nor the absence of either a check or checkmating
       indicator is used for disambiguation purposes.
-    - ✗ This means that if two (or more) pieces of the same type can move to the
+    - ✓ This means that if two (or more) pieces of the same type can move to the
       same square the differences in checking status of the moves does not
       allieviate the need for the standard rank and file disabiguation described
       above.
-    - ✗ Note that a difference in checking status for the above may occur only
+    - ✓ Note that a difference in checking status for the above may occur only
       in the case of a discovered check.
     - ✗ Neither the checking or checkmating indicators are considered annotation
       as they do not communicate subjective information.
@@ -703,7 +703,7 @@ The following parts will be implemented in the future:
       checks.
     - ✗ There are no special markings used for drawing moves.
   - ✗ (8.2.3.7) Import and export SAN
-    - ✗ PGN export format always uses the above canonical SAN to represent moves
+    - ✓ PGN export format always uses the above canonical SAN to represent moves
       in the movetext section of a PGN game.
     - ✗ Import format is somewhat more relaxed and it makes allowances for moves
       that do not conform exactly to the canonical format.
