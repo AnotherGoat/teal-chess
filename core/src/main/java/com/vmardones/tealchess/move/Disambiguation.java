@@ -12,13 +12,19 @@ package com.vmardones.tealchess.move;
  * @see <a href="https://www.chessprogramming.org/Algebraic_Chess_Notation#Ambiguities">Ambiguities</a>
  */
 public enum Disambiguation {
-    /** First case of disambiguation.
-     * Used when the rank is the same, but the file can be used to distinguish both moves. */
+    /**
+     * First case of disambiguation.
+     * Used when the rank is the same, but the file can be used to distinguish both moves.
+     */
     FILE,
-    /** Second case of disambiguation.
-     * Used when the file is the same, but the rank can be used to distinguish both moves. */
+    /**
+     * Second case of disambiguation.
+     * Used when the file is the same, but the rank can be used to distinguish both moves.
+     */
     RANK,
-    /** Final case of disambiguation.
-     * Used when both the file and the rank are different. */
+    /**
+     * Final case of disambiguation.
+     * Used when both the file and the rank are different.
+     */
     FULL
 }

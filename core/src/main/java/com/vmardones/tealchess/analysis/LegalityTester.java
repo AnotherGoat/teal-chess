@@ -5,6 +5,7 @@
 
 package com.vmardones.tealchess.analysis;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -27,8 +28,8 @@ final class LegalityTester {
         moveMaker = new MoveMaker();
     }
 
-    Stream<Move> testPseudoLegals(Stream<Move> pseudoLegals) {
-        return pseudoLegals.map(this::testPseudoLegal).filter(Objects::nonNull);
+    List<Move> testPseudoLegals(Stream<Move> pseudoLegals) {
+        return pseudoLegals.map(this::testPseudoLegal).filter(Objects::nonNull).toList();
     }
 
     private @Nullable Move testPseudoLegal(Move move) {
