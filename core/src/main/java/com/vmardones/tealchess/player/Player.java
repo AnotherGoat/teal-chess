@@ -16,58 +16,25 @@ import com.vmardones.tealchess.piece.Piece;
 /**
  * The entity that controls the pieces in one side of the board. It can be controlled either by a
  * human or an AI.
+ *
+ * @param color  The player's side of the board.
+ * @param king   The player's king.
+ * @param pieces The player's pieces (including the king).
+ * @param legals The legal moves of the player.
+ * @param status The state of the player, which may limit their moves.
  */
-public abstract sealed class Player permits HumanPlayer {
-
-    protected final Color color;
-    protected final King king;
-    protected final List<Piece> pieces;
-    protected final List<LegalMove> legals;
-    protected final PlayerStatus status;
-
-    /* Player creation */
-
-    /**
-     * Create a new player.
-     *
-     * @param color The player's side of the board.
-     * @param king The player's king.
-     * @param pieces The player's pieces (including the king).
-     * @param legals The legal moves of the player.
-     * @param status The state of the player, which may limit their moves.
-     */
-    protected Player(Color color, King king, List<Piece> pieces, List<LegalMove> legals, PlayerStatus status) {
-        this.color = color;
-        this.king = king;
-        this.pieces = pieces;
-        this.legals = legals;
-        this.status = status;
-    }
+public record Player(Color color, King king, List<Piece> pieces, List<LegalMove> legals, PlayerStatus status) {
 
     /* Getters */
 
-    /**
-     * The color (side of the board) of this player.
-     * @return This player's color.
-     */
-    public Color color() {
-        return color;
-    }
-
-    public King king() {
-        return king;
-    }
-
+    @Override
     public List<Piece> pieces() {
         return unmodifiableList(pieces);
     }
 
+    @Override
     public List<LegalMove> legals() {
         return unmodifiableList(legals);
-    }
-
-    public PlayerStatus status() {
-        return status;
     }
 
     /* toString */

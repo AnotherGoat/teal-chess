@@ -14,7 +14,6 @@ import com.vmardones.tealchess.move.LegalMove;
 import com.vmardones.tealchess.piece.King;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.player.Color;
-import com.vmardones.tealchess.player.HumanPlayer;
 import com.vmardones.tealchess.player.Player;
 import com.vmardones.tealchess.player.PlayerStatus;
 
@@ -44,10 +43,10 @@ final class PlayerFactory {
 
     Player create(Color color) {
         if (color == sideToMove) {
-            return new HumanPlayer(color, king, pieces, legals, calculateStatus());
+            return new Player(color, king, pieces, legals, calculateStatus());
         }
 
-        return new HumanPlayer(color, opponentKing, opponentPieces, emptyList(), PlayerStatus.NORMAL);
+        return new Player(color, opponentKing, opponentPieces, emptyList(), PlayerStatus.NORMAL);
     }
 
     private PlayerStatus calculateStatus() {

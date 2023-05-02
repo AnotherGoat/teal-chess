@@ -11,6 +11,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.utils.Timer;
+import com.vmardones.tealchess.ai.RandomMoveChooser;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.game.Game;
@@ -44,7 +46,7 @@ final class TealChess extends ApplicationAdapter {
         }
 
         Gdx.app.log("Game", "Game started!\n");
-        game = new Game();
+        game = new Game().blackAi(new RandomMoveChooser());
         logCurrentPosition();
 
         stage = new Stage();
@@ -108,6 +110,25 @@ final class TealChess extends ApplicationAdapter {
             case CHECKED -> Gdx.app.log(LOG_TAG, "Check! " + sideToMove + " king is in danger!\n");
             case CHECKMATED -> Gdx.app.log(LOG_TAG, "Checkmate! " + sideToMove.opposite() + " player won!\n");
             case STALEMATED -> Gdx.app.log(LOG_TAG, "Stalemate! The game ends in a draw!\n");
+        }
+
+        // TODO: Reorganize the game loop
+        if (game.ai() != null && !game.player().legals().isEmpty()) {
+            boardGroup.setTouchable(Touchable.disabled);
+
+            Gdx.app.log("AI", "The AI is choosing a move!");
+
+            var task = new Timer.Task() {
+                @Override
+                public void run() {
+                    game.makeAiMove();
+                    boardGroup.board(game.board());
+                    logCurrentPosition();
+                    boardGroup.setTouchable(Touchable.enabled);
+                }
+            };
+
+            Timer.schedule(task, 0.5f);
         }
     }
 

@@ -9,6 +9,7 @@ import static java.util.stream.Collectors.toUnmodifiableSet;
 
 import java.util.Set;
 
+import com.vmardones.tealchess.ai.MoveChooser;
 import com.vmardones.tealchess.analysis.PositionAnalyzer;
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Coordinate;
@@ -16,6 +17,7 @@ import com.vmardones.tealchess.move.LegalMove;
 import com.vmardones.tealchess.move.MoveMaker;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.player.Player;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * A game of chess.
@@ -26,6 +28,8 @@ public final class Game {
     private final MoveMaker moveMaker;
     private final GameState state;
     private GameHistory history;
+    private @Nullable MoveChooser whiteAi;
+    private @Nullable MoveChooser blackAi;
 
     /**
      * The standard way to create a new game, starting from the initial position.
@@ -58,6 +62,22 @@ public final class Game {
         return position().sideToMove().isWhite() ? state.blackPlayer() : state.whitePlayer();
     }
 
+    public @Nullable MoveChooser ai() {
+        return position().sideToMove().isWhite() ? whiteAi : blackAi;
+    }
+
+    /* AI setters */
+
+    public Game whiteAi(MoveChooser value) {
+        whiteAi = value;
+        return this;
+    }
+
+    public Game blackAi(MoveChooser value) {
+        blackAi = value;
+        return this;
+    }
+
     /* Updating game state */
 
     /**
@@ -75,6 +95,16 @@ public final class Game {
         state.blackPlayer(positionAnalyzer.blackPlayer());
 
         history = history.add(state.save());
+    }
+
+    public void makeAiMove() {
+        var currentAi = ai();
+
+        if (currentAi == null) {
+            throw new UnsupportedOperationException("The current player doesn't have an AI set");
+        }
+
+        makeMove(currentAi.chooseMove(position(), player().legals()));
     }
 
     /* Analysis methods */
