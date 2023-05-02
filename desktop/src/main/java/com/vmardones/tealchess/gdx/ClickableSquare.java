@@ -97,7 +97,7 @@ final class ClickableSquare extends Actor {
     private class SquareListener extends ClickListener {
         @Override
         public void clicked(InputEvent event, float x, float y) {
-            fire(new SquareEvent(square));
+            fire(new SquareEvent(square, getX(), getY()));
         }
     }
 }

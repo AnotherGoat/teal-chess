@@ -11,14 +11,26 @@ import com.vmardones.tealchess.board.Square;
 final class SquareEvent extends Event {
 
     private final Square square;
+    private final float x;
+    private final float y;
 
-    SquareEvent(Square square) {
+    SquareEvent(Square square, float x, float y) {
         this.square = square;
+        this.x = x;
+        this.y = y;
     }
 
     /* Getters */
 
     Square square() {
         return square;
+    }
+
+    float x() {
+        return x;
+    }
+
+    float y() {
+        return y;
     }
 }

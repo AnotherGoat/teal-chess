@@ -14,14 +14,10 @@ import org.junit.jupiter.api.Test;
 final class PromotionChoiceTest {
 
     @Test
-    void sanStart() {
-        for (var choice : PromotionChoice.values()) {
-            assertThat(choice.san()).startsWith("=");
-        }
-    }
-
-    @Test
     void san() {
-        assertThat(PromotionChoice.QUEEN.san()).isEqualTo("=Q");
+        assertThat(PromotionChoice.QUEEN.san()).isEqualTo("Q");
+        assertThat(PromotionChoice.KNIGHT.san()).isEqualTo("N");
+        assertThat(PromotionChoice.ROOK.san()).isEqualTo("R");
+        assertThat(PromotionChoice.BISHOP.san()).isEqualTo("B");
     }
 }

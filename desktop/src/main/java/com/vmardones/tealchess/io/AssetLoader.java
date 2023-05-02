@@ -14,8 +14,6 @@ import com.badlogic.gdx.graphics.Texture;
 
 public final class AssetLoader extends AssetManager {
 
-    private static final String LIGHT_BACKGROUND = "#FFCE9E";
-    private static final String DARK_BACKGROUND = "#D18B47";
     public static final int SQUARE_SIZE = 72;
     private static final String PIECE_ICON_PATH = "art/piece";
     private static final List<String> PIECE_CODES =
@@ -29,9 +27,10 @@ public final class AssetLoader extends AssetManager {
     }
 
     public void reload() {
-        addAsset("light.png", Texture.class, createSquare(LIGHT_BACKGROUND));
-        addAsset("dark.png", Texture.class, createSquare(DARK_BACKGROUND));
-        addAsset("highlight.png", Texture.class, createHighlight());
+        addAsset("light.png", Texture.class, createSquare(Color.valueOf("#FFCE9E")));
+        addAsset("dark.png", Texture.class, createSquare(Color.valueOf("#D18B47")));
+        addAsset("highlight.png", Texture.class, createCircle(Color.TEAL, 6));
+        addAsset("promotion.png", Texture.class, createCircle(Color.LIGHT_GRAY, 2));
 
         PIECE_CODES.forEach(code -> {
             var texture = new Texture(loadPiecePixmap(code));
@@ -45,18 +44,18 @@ public final class AssetLoader extends AssetManager {
         theme = value;
     }
 
-    private Texture createSquare(String hexCode) {
+    private Texture createSquare(Color color) {
         var pixmap = new Pixmap(SQUARE_SIZE, SQUARE_SIZE, Pixmap.Format.RGB888);
-        pixmap.setColor(Color.valueOf(hexCode));
+        pixmap.setColor(color);
         pixmap.fill();
 
         return new Texture(pixmap);
     }
 
-    private static Texture createHighlight() {
+    private static Texture createCircle(Color color, int radiusScale) {
         var pixmap = new Pixmap(SQUARE_SIZE, SQUARE_SIZE, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.TEAL);
-        pixmap.fillCircle(SQUARE_SIZE / 2, SQUARE_SIZE / 2, SQUARE_SIZE / 6);
+        pixmap.setColor(color);
+        pixmap.fillCircle(SQUARE_SIZE / 2, SQUARE_SIZE / 2, SQUARE_SIZE / radiusScale);
 
         return new Texture(pixmap);
     }

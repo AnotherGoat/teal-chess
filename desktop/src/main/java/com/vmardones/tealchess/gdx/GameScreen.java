@@ -5,43 +5,46 @@
 
 package com.vmardones.tealchess.gdx;
 
+import java.util.List;
+
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.utils.Timer;
 import com.vmardones.tealchess.ai.RandomMoveChooser;
 import com.vmardones.tealchess.board.Coordinate;
-import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.game.Game;
 import com.vmardones.tealchess.io.AssetLoader;
+import com.vmardones.tealchess.move.LegalMove;
 import com.vmardones.tealchess.move.MoveFinder;
-import com.vmardones.tealchess.parser.PgnSerializer;
-import com.vmardones.tealchess.player.Color;
 import org.lwjgl.opengl.GL11;
 
 final class GameScreen extends ScreenAdapter {
 
-    private static final String LOG_TAG = "Game";
-
+    private final AssetLoader assetLoader;
+    private final GameLogger gameLogger;
     private boolean debugMode;
     private boolean highlightLegals;
     private boolean flipBoard;
     private Game game;
-    private Stage stage;
+    private final Stage stage;
     private BoardGroup boardGroup;
     private SelectionState selectionState;
+    private PromotionGroup promotionGroup;
+    private List<LegalMove> promotionMoves;
 
     GameScreen(AssetLoader assetLoader, boolean debugMode, boolean highlightLegals, boolean flipBoard) {
+        this.assetLoader = assetLoader;
+        gameLogger = new GameLogger();
         this.debugMode = debugMode;
         this.highlightLegals = highlightLegals;
         this.flipBoard = flipBoard;
 
         Gdx.app.log("Game", "Game started!\n");
         game = new Game().blackAi(new RandomMoveChooser());
-        logCurrentPosition();
+        gameLogger.log(game);
 
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
@@ -55,8 +58,8 @@ final class GameScreen extends ScreenAdapter {
 
         selectionState = new SourceSelection();
         stage.addListener(new SquareListener());
-
         stage.addListener(new KeyListener());
+        stage.addListener(new PromotionListener());
     }
 
     @Override
@@ -70,66 +73,29 @@ final class GameScreen extends ScreenAdapter {
         stage.dispose();
     }
 
-    // TODO: Move this method somewhere else
-    private void logCurrentPosition() {
-        var board = game.board();
-        var position = game.position();
-        var sideToMove = position.sideToMove();
-        var enPassantTarget = position.enPassantTarget();
-        var player = game.player();
-        var opponent = game.oppponent();
-        var moves = game.history().moves();
+    private void playAiTurn() {
+        boardGroup.setTouchable(Touchable.disabled);
 
-        Gdx.app.debug(LOG_TAG, "Current chessboard:\n" + board.unicode());
+        Gdx.app.log("AI", "The AI is choosing a move!");
 
-        Gdx.app.debug(LOG_TAG, "White king: " + board.king(Color.WHITE));
-        Gdx.app.debug(LOG_TAG, "White pieces: " + board.pieces(Color.WHITE));
-        Gdx.app.debug(LOG_TAG, "Black king: " + board.king(Color.BLACK));
-        Gdx.app.debug(LOG_TAG, "Black pieces: " + board.pieces(Color.BLACK));
-        Gdx.app.debug(LOG_TAG, "Castling rights: " + position.castlingRights().fen());
+        var task = new Timer.Task() {
+            @Override
+            public void run() {
+                game.makeAiMove();
+                boardGroup.board(game.board());
+                gameLogger.log(game);
+                boardGroup.setTouchable(Touchable.enabled);
+            }
+        };
 
-        if (enPassantTarget != null) {
-            Gdx.app.debug(LOG_TAG, "En passant target: " + enPassantTarget.unicode() + enPassantTarget.coordinate());
-        }
-
-        Gdx.app.debug(LOG_TAG, "Players: " + player + " vs. " + opponent);
-        Gdx.app.log(LOG_TAG, sideToMove + "'s turn!");
-        Gdx.app.debug(LOG_TAG, "Legal moves: " + player.legals());
-
-        Gdx.app.debug(LOG_TAG, "Move history: " + PgnSerializer.serializeMoves(moves));
-
-        switch (game.player().status()) {
-            case NORMAL -> Gdx.app.log(LOG_TAG, "The game continues like normal...\n");
-            case CHECKED -> Gdx.app.log(LOG_TAG, "Check! " + sideToMove + " king is in danger!\n");
-            case CHECKMATED -> Gdx.app.log(LOG_TAG, "Checkmate! " + sideToMove.opposite() + " player won!\n");
-            case STALEMATED -> Gdx.app.log(LOG_TAG, "Stalemate! The game ends in a draw!\n");
-        }
-
-        // TODO: Reorganize the game loop
-        if (game.ai() != null && !game.player().legals().isEmpty()) {
-            boardGroup.setTouchable(Touchable.disabled);
-
-            Gdx.app.log("AI", "The AI is choosing a move!");
-
-            var task = new Timer.Task() {
-                @Override
-                public void run() {
-                    game.makeAiMove();
-                    boardGroup.board(game.board());
-                    logCurrentPosition();
-                    boardGroup.setTouchable(Touchable.enabled);
-                }
-            };
-
-            Timer.schedule(task, 0.5f);
-        }
+        Timer.schedule(task, 0.5f);
     }
 
     private class SquareListener implements EventListener {
         @Override
         public boolean handle(Event event) {
             if (event instanceof SquareEvent squareEvent) {
-                selectionState.select(squareEvent.square());
+                selectionState.select(squareEvent);
                 return true;
             }
 
@@ -143,7 +109,7 @@ final class GameScreen extends ScreenAdapter {
     }
 
     private interface SelectionState {
-        void select(Square square);
+        void select(SquareEvent event);
 
         void unselect();
     }
@@ -153,8 +119,8 @@ final class GameScreen extends ScreenAdapter {
         private static final String LOG_TAG = "Source";
 
         @Override
-        public void select(Square square) {
-            var piece = square.piece();
+        public void select(SquareEvent event) {
+            var piece = event.square().piece();
 
             if (piece == null) {
                 Gdx.app.debug(LOG_TAG, "The source is empty\n");
@@ -200,7 +166,9 @@ final class GameScreen extends ScreenAdapter {
         private final Coordinate sourceCoordinate;
 
         @Override
-        public void select(Square square) {
+        public void select(SquareEvent event) {
+            var square = event.square();
+
             if (sourceCoordinate.equals(square.coordinate())) {
                 Gdx.app.debug(LOG_TAG, "A piece can't be moved to the same coordinate\n");
                 selectionState = new SourceSelection();
@@ -224,23 +192,28 @@ final class GameScreen extends ScreenAdapter {
             if (moves.size() == 1) {
                 Gdx.app.log(LOG_TAG, "Legal move found! Updating the chessboard...\n");
                 game.makeMove(moves.get(0));
-                selectionState = new SourceSelection();
 
+                selectionState = new SourceSelection();
                 boardGroup.board(game.board());
-                logCurrentPosition();
+                gameLogger.log(game);
+
+                if (game.ai() != null && !game.player().legals().isEmpty()) {
+                    playAiTurn();
+                }
+
                 return;
             }
 
             // TODO: Handle promotion choices
             Gdx.app.log(LOG_TAG, "Promoting a pawn! Please select the piece you want to promote it to\n");
 
-            var choice = MathUtils.random(3);
+            boardGroup.setTouchable(Touchable.disabled);
+            promotionMoves = moves;
 
-            game.makeMove(moves.get(choice));
-            selectionState = new SourceSelection();
-
-            boardGroup.board(game.board());
-            logCurrentPosition();
+            var x = boardGroup.getX() + event.x();
+            var y = boardGroup.getY() + event.y();
+            promotionGroup = new PromotionGroup(assetLoader, game.position().sideToMove(), x, y);
+            stage.addActor(promotionGroup);
         }
 
         @Override
@@ -283,6 +256,36 @@ final class GameScreen extends ScreenAdapter {
             }
 
             return false;
+        }
+    }
+
+    private class PromotionListener implements EventListener {
+        @Override
+        public boolean handle(Event event) {
+            if (!(event instanceof PromotionEvent promotionEvent)) {
+                return false;
+            }
+
+            promotionGroup.remove();
+
+            var choice = promotionEvent.promotionChoice();
+            var selectedMove = promotionMoves.stream()
+                    .filter(legal -> legal.move().promotionChoice() == choice)
+                    .findFirst()
+                    .orElseThrow(() -> new AssertionError("Unreachable statement"));
+
+            game.makeMove(selectedMove);
+            boardGroup.setTouchable(Touchable.enabled);
+
+            selectionState = new SourceSelection();
+            boardGroup.board(game.board());
+            gameLogger.log(game);
+
+            if (game.ai() != null && !game.player().legals().isEmpty()) {
+                playAiTurn();
+            }
+
+            return true;
         }
     }
 }
