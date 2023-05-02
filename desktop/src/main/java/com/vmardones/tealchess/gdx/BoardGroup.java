@@ -70,6 +70,10 @@ final class BoardGroup extends Group {
         squares.forEach(square -> square.highlight(false));
     }
 
+    void dark(boolean value) {
+        squares.forEach(square -> square.dark(value));
+    }
+
     private class ClearListener extends ClickListener {
         @Override
         public void clicked(InputEvent event, float x, float y) {

@@ -31,6 +31,7 @@ public final class AssetLoader extends AssetManager {
         addAsset("dark.png", Texture.class, createSquare(Color.valueOf("#D18B47")));
         addAsset("highlight.png", Texture.class, createCircle(Color.TEAL, 6));
         addAsset("promotion.png", Texture.class, createCircle(Color.LIGHT_GRAY, 2));
+        addAsset("dark_tint.png", Texture.class, createSquare(new Color(0, 0, 0, 0.5f)));
 
         PIECE_CODES.forEach(code -> {
             var texture = new Texture(loadPiecePixmap(code));
@@ -45,7 +46,7 @@ public final class AssetLoader extends AssetManager {
     }
 
     private Texture createSquare(Color color) {
-        var pixmap = new Pixmap(SQUARE_SIZE, SQUARE_SIZE, Pixmap.Format.RGB888);
+        var pixmap = new Pixmap(SQUARE_SIZE, SQUARE_SIZE, Pixmap.Format.RGBA8888);
         pixmap.setColor(color);
         pixmap.fill();
 

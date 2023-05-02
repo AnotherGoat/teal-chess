@@ -20,6 +20,7 @@ final class ClickableSquare extends Actor {
     private final AssetLoader assetLoader;
     private Square square;
     private boolean highlight;
+    private boolean dark;
 
     ClickableSquare(AssetLoader assetLoader, Square square) {
         this.assetLoader = assetLoader;
@@ -40,7 +41,7 @@ final class ClickableSquare extends Actor {
         var background = square.color().isWhite()
                 ? assetLoader.get("light.png", Texture.class)
                 : assetLoader.get("dark.png", Texture.class);
-        batch.draw(background, getX(), getY(), background.getWidth(), background.getHeight());
+        batch.draw(background, getX(), getY());
 
         var piece = square.piece();
 
@@ -58,6 +59,12 @@ final class ClickableSquare extends Actor {
             var texture = assetLoader.get("highlight.png", Texture.class);
 
             batch.draw(texture, getX(), getY());
+        }
+
+        if (dark) {
+            var tint = assetLoader.get("dark_tint.png", Texture.class);
+
+            batch.draw(tint, getX(), getY());
         }
     }
 
@@ -86,8 +93,12 @@ final class ClickableSquare extends Actor {
         setPosition(x, y);
     }
 
-    void highlight(boolean highlight) {
-        this.highlight = highlight;
+    void highlight(boolean value) {
+        highlight = value;
+    }
+
+    void dark(boolean value) {
+        dark = value;
     }
 
     Coordinate coordinate() {

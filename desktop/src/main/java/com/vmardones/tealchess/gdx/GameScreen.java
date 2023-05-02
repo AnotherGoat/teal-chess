@@ -207,6 +207,7 @@ final class GameScreen extends ScreenAdapter {
             // TODO: Handle promotion choices
             Gdx.app.log(LOG_TAG, "Promoting a pawn! Please select the piece you want to promote it to\n");
 
+            boardGroup.dark(true);
             boardGroup.setTouchable(Touchable.disabled);
             promotionMoves = moves;
 
@@ -275,6 +276,7 @@ final class GameScreen extends ScreenAdapter {
                     .orElseThrow(() -> new AssertionError("Unreachable statement"));
 
             game.makeMove(selectedMove);
+            boardGroup.dark(false);
             boardGroup.setTouchable(Touchable.enabled);
 
             selectionState = new SourceSelection();
