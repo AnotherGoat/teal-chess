@@ -16,14 +16,15 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Coordinate;
+import com.vmardones.tealchess.io.AssetLoader;
 
 final class BoardGroup extends Group {
 
-    private static final int SIZE = ClickableSquare.SIZE * Board.SIDE_LENGTH;
+    private static final int SIZE = AssetLoader.SQUARE_SIZE * Board.SIDE_LENGTH;
     private Board board;
     private final List<ClickableSquare> squares = new ArrayList<>();
 
-    BoardGroup(Board board) {
+    BoardGroup(AssetLoader assetLoader, Board board) {
         this.board = board;
 
         setSize(SIZE, SIZE);
@@ -32,10 +33,12 @@ final class BoardGroup extends Group {
         var y = (Gdx.graphics.getHeight() - getHeight()) / 2;
         setPosition(x, y);
 
-        board.squares().stream().map(ClickableSquare::new).forEach(square -> {
-            squares.add(square);
-            addActor(square);
-        });
+        board.squares().stream()
+                .map(square -> new ClickableSquare(assetLoader, square))
+                .forEach(square -> {
+                    squares.add(square);
+                    addActor(square);
+                });
 
         addListener(new ClearListener());
     }

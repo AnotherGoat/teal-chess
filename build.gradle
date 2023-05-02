@@ -62,7 +62,7 @@ allprojects {
         options.errorprone {
             option('NullAway:AnnotatedPackages', project.group)
             option('NullAway:ExcludedClassAnnotations', 'com.vmardones.tealchess.ExcludeFromNullAway')
-            option('NullAway:KnownInitializers', 'com.badlogic.gdx.ApplicationAdapter.create')
+            option('NullAway:KnownInitializers', 'com.badlogic.gdx.Game.create')
         }
     }
 
