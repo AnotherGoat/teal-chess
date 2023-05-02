@@ -14,5 +14,5 @@ public enum PlayerStatus {
     /** The player is in check but they can't protect their king. This means this player lost and the opponent wins. */
     CHECKMATED,
     /** The player's king isn't in checkmate but all of its pieces can't escape from the current situation, so the game ends in a tie. In other words, the opponent failed when trying to checkmate the player. */
-    STALEMATED;
+    STALEMATED
 }

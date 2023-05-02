@@ -42,22 +42,100 @@ final class NormalGeneratorTest {
         var generator = new NormalGenerator(position);
 
         var kingMoves = 5;
-
         assertThat(generator.generate()).hasSize(kingMoves).allMatch(move -> move.piece()
                 .isKing());
     }
 
     @Test
-    void knightMoves() {}
+    void knightMoves() {
+        var position = FenParser.parse("4k3/1p6/1P1r4/8/2N5/4n3/1q6/4K3 w - - 0 1");
+        var generator = new NormalGenerator(position);
+
+        var board = position.board();
+        var knight = board.pieceAt(Coordinate.of("c4"));
+
+        var expectedMoves = new Move[] {
+            Move.builder(knight, Coordinate.of("a3")).normal(),
+            Move.builder(knight, Coordinate.of("a5")).normal(),
+            Move.builder(knight, Coordinate.of("d2")).normal(),
+            Move.builder(knight, Coordinate.of("e5")).normal()
+        };
+
+        var unexpectedMoves = new Move[] {
+            Move.builder(knight, Coordinate.of("b6")).normal(),
+            Move.builder(knight, Coordinate.of("b2")).normal()
+        };
+
+        var kingMoves = 5;
+        assertThat(generator.generate())
+                .hasSize(kingMoves + 4)
+                .containsOnlyOnce(expectedMoves)
+                .doesNotContain(unexpectedMoves);
+    }
 
     @Test
-    void bishopMoves() {}
+    void bishopMoves() {
+        var position = FenParser.parse("4k3/6B1/1p6/1P6/3b4/8/8/4K3 b - - 0 1");
+        var generator = new NormalGenerator(position);
+
+        var board = position.board();
+        var bishop = board.pieceAt(Coordinate.of("d4"));
+
+        var expectedMoves = new Move[] {
+            Move.builder(bishop, Coordinate.of("c5")).normal(),
+            Move.builder(bishop, Coordinate.of("a1")).normal(),
+            Move.builder(bishop, Coordinate.of("b2")).normal(),
+            Move.builder(bishop, Coordinate.of("g1")).normal(),
+            Move.builder(bishop, Coordinate.of("f6")).normal()
+        };
+
+        var kingMoves = 5;
+        assertThat(generator.generate()).hasSize(kingMoves + 9).containsOnlyOnce(expectedMoves);
+    }
 
     @Test
-    void rookMoves() {}
+    void rookMoves() {
+        var position = FenParser.parse("4k3/3r4/8/6p1/3R2P1/8/8/4K3 w - - 0 1");
+        var generator = new NormalGenerator(position);
+
+        var board = position.board();
+        var rook = board.pieceAt(Coordinate.of("d4"));
+
+        var expectedMoves = new Move[] {
+            Move.builder(rook, Coordinate.of("d1")).normal(),
+            Move.builder(rook, Coordinate.of("b4")).normal(),
+            Move.builder(rook, Coordinate.of("d5")).normal(),
+            Move.builder(rook, Coordinate.of("d6")).normal(),
+            Move.builder(rook, Coordinate.of("f4")).normal()
+        };
+
+        var kingMoves = 5;
+        assertThat(generator.generate()).hasSize(kingMoves + 10).containsOnlyOnce(expectedMoves);
+    }
 
     @Test
-    void queenMoves() {}
+    void queenMoves() {
+        var position = FenParser.parse("4k3/1N6/8/R2q2p1/6P1/1p1B4/1P6/4K3 b - - 0 1");
+        var generator = new NormalGenerator(position);
+
+        var board = position.board();
+        var queen = board.pieceAt(Coordinate.of("d5"));
+
+        var expectedMoves = new Move[] {
+            Move.builder(queen, Coordinate.of("b5")).normal(),
+            Move.builder(queen, Coordinate.of("c6")).normal(),
+            Move.builder(queen, Coordinate.of("d8")).normal(),
+            Move.builder(queen, Coordinate.of("f7")).normal(),
+            Move.builder(queen, Coordinate.of("f5")).normal(),
+            Move.builder(queen, Coordinate.of("h1")).normal(),
+            Move.builder(queen, Coordinate.of("d4")).normal(),
+            Move.builder(queen, Coordinate.of("c4")).normal(),
+            Move.builder(queen, Coordinate.of("f3")).normal(),
+        };
+
+        var kingMoves = 5;
+        assertThat(generator.generate()).hasSize(kingMoves + 17).containsOnlyOnce(expectedMoves);
+    }
 
     @Test
     void blockedSlidingMoves() {

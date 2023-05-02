@@ -6,6 +6,7 @@
 package com.vmardones.tealchess.board;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.vmardones.tealchess.ExcludeFromNullAway;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -73,57 +74,58 @@ final class CoordinateTest {
 
     @Test
     void to() {
-        assertThat(Coordinate.of("b2").to(1, 1)).isNotNull();
         assertThat(Coordinate.of("b2").to(1, 1)).isEqualTo(Coordinate.of("c3"));
     }
 
     @Test
     void toOutside() {
-        assertThat(Coordinate.of("b1").to(-2, 1)).isNull();
+        assertThatThrownBy(() -> Coordinate.of("b1").to(-2, 1)).isInstanceOf(CoordinateException.class);
+    }
+
+    @Test
+    void toOrNull() {
+        assertThat(Coordinate.of("b2").toOrNull(1, 1)).isNotNull().isEqualTo(Coordinate.of("c3"));
+        assertThat(Coordinate.of("b1").toOrNull(-2, 1)).isNull();
     }
 
     @Test
     void up() {
-        assertThat(Coordinate.of("a1").up(2)).isNotNull();
         assertThat(Coordinate.of("a1").up(2)).isEqualTo(Coordinate.of("a3"));
     }
 
     @Test
     void upOutside() {
-        assertThat(Coordinate.of("c8").up(1)).isNull();
+        assertThatThrownBy(() -> Coordinate.of("c8").up(1)).isInstanceOf(CoordinateException.class);
     }
 
     @Test
     void down() {
-        assertThat(Coordinate.of("e4").down(2)).isNotNull();
         assertThat(Coordinate.of("e4").down(2)).isEqualTo(Coordinate.of("e2"));
     }
 
     @Test
     void downOutside() {
-        assertThat(Coordinate.of("g1").down(1)).isNull();
+        assertThatThrownBy(() -> Coordinate.of("g1").down(1)).isInstanceOf(CoordinateException.class);
     }
 
     @Test
     void left() {
-        assertThat(Coordinate.of("e5").left(2)).isNotNull();
         assertThat(Coordinate.of("e5").left(2)).isEqualTo(Coordinate.of("c5"));
     }
 
     @Test
     void leftOutside() {
-        assertThat(Coordinate.of("a6").left(1)).isNull();
+        assertThatThrownBy(() -> Coordinate.of("a6").left(1)).isInstanceOf(CoordinateException.class);
     }
 
     @Test
     void right() {
-        assertThat(Coordinate.of("b5").up(2)).isNotNull();
         assertThat(Coordinate.of("b5").up(2)).isEqualTo(Coordinate.of("b7"));
     }
 
     @Test
     void rightOutside() {
-        assertThat(Coordinate.of("h3").right(1)).isNull();
+        assertThatThrownBy(() -> Coordinate.of("h3").right(1)).isInstanceOf(CoordinateException.class);
     }
 
     @Test

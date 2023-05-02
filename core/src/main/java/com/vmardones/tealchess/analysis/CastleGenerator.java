@@ -69,10 +69,6 @@ final class CastleGenerator extends MoveGenerator {
         var rookOffset = kingSide ? 3 : -4;
         var rookCoordinate = kingCoordinate.right(rookOffset);
 
-        if (rookCoordinate == null) {
-            return null;
-        }
-
         var rook = (Rook) board.pieceAt(rookCoordinate);
 
         if (rook == null) {
@@ -82,10 +78,6 @@ final class CastleGenerator extends MoveGenerator {
         var direction = kingSide ? 1 : -1;
         var kingDestination = kingCoordinate.right(2 * direction);
         var rookDestination = kingCoordinate.right(direction);
-
-        if (kingDestination == null || rookDestination == null) {
-            return null;
-        }
 
         return Move.builder(king, kingDestination).castle(kingSide, rook, rookDestination);
     }
@@ -116,15 +108,11 @@ final class CastleGenerator extends MoveGenerator {
     private boolean isSquareFree(int offset) {
         var destination = king.coordinate().right(offset);
 
-        return destination != null && board.isEmpty(destination);
+        return board.isEmpty(destination);
     }
 
     private boolean squareHasRook(int offset) {
         var destination = king.coordinate().right(offset);
-
-        if (destination == null) {
-            return false;
-        }
 
         var piece = board.pieceAt(destination);
 
@@ -134,6 +122,6 @@ final class CastleGenerator extends MoveGenerator {
     private boolean isNotUnderAttack(int offset) {
         var destination = king.coordinate().right(offset);
 
-        return destination != null && !attackTester.isAttacked(destination);
+        return !attackTester.isAttacked(destination);
     }
 }

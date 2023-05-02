@@ -1,6 +1,6 @@
 # Teal Chess
 
-[<img src="screenshots/teal-chess.png" alt="Teal Chess" width="350"/>](assets/teal-chess.png)
+[<img src="screenshots/teal-chess.png" alt="Teal Chess" width="350"/>](screenshots/teal-chess.png)
 
 ## About this project
 

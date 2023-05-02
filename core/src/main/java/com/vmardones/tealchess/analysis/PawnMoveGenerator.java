@@ -82,13 +82,13 @@ final class PawnMoveGenerator extends MoveGenerator {
 
         var forward = pawn.coordinate().up(sideToMove.direction());
 
-        if (forward == null || board.pieceAt(forward) != null) {
+        if (board.pieceAt(forward) != null) {
             return null;
         }
 
         var destination = forward.up(sideToMove.direction());
 
-        if (destination == null || board.pieceAt(destination) != null) {
+        if (board.pieceAt(destination) != null) {
             return null;
         }
 
@@ -99,7 +99,7 @@ final class PawnMoveGenerator extends MoveGenerator {
 
         var direction = leftSide ? -1 : 1;
 
-        var destination = pawn.coordinate().to(direction, pawn.color().direction());
+        var destination = pawn.coordinate().toOrNull(direction, pawn.color().direction());
 
         if (destination == null) {
             return Stream.empty();
@@ -127,7 +127,7 @@ final class PawnMoveGenerator extends MoveGenerator {
         }
 
         var direction = leftSide ? -1 : 1;
-        var side = pawn.coordinate().right(direction);
+        var side = pawn.coordinate().toOrNull(direction, 0);
 
         if (side == null) {
             return null;
@@ -135,7 +135,7 @@ final class PawnMoveGenerator extends MoveGenerator {
 
         var destination = side.up(sideToMove.direction());
 
-        if (destination == null || !board.squareAt(destination).equals(enPassantTarget)) {
+        if (!board.squareAt(destination).equals(enPassantTarget)) {
             return null;
         }
 

@@ -111,17 +111,80 @@ public final class Coordinate implements San {
     /* Traslation operations */
 
     /**
-     * Moves the coordinate to a relative location.
+     * Moves the coordinate to a relative location, expected to be inside the board.
      *
      * @param x X axis movement, positive goes right.
      * @param y Y axis movement, positive goes up.
      * @return Coordinate after the move, only if it is inside the board.
+     * @throws CoordinateException If the coordinate is outside the board.
      */
-    public @Nullable Coordinate to(int x, int y) {
+    public Coordinate to(int x, int y) {
         try {
             var destination = COORDINATE_CACHE.get(index + horizontalClamp(x) - y * Board.SIDE_LENGTH);
 
-            if (illegalJump(x, destination)) {
+            if (illegalHorizontalJump(x, destination)) {
+                throw new CoordinateException();
+            }
+
+            return destination;
+        } catch (IndexOutOfBoundsException e) {
+            throw new CoordinateException();
+        }
+    }
+
+    /**
+     * Get the coordinate X spaces upwards from this one, expected to be inside the board.
+     *
+     * @param spaces Number of spaces to jump, it can also be negative to move backwards.
+     * @return Coordinate after the move, only if it is inside the board.
+     */
+    public Coordinate up(int spaces) {
+        return to(0, spaces);
+    }
+
+    /**
+     * Get the coordinate X spaces downwards from this one, expected to be inside the board.
+     *
+     * @param spaces Number of spaces to jump, it can also be negative to move backwards.
+     * @return Coordinate after the move, only if it is inside the board.
+     */
+    public Coordinate down(int spaces) {
+        return up(-spaces);
+    }
+
+    /**
+     * Get the coordinate X spaces to the left of this one, expected to be inside the board.
+     *
+     * @param spaces Number of spaces to jump, it can also be negative to move backwards.
+     * @return Coordinate after the move, only if it is inside the board.
+     */
+    public Coordinate left(int spaces) {
+        return right(-spaces);
+    }
+
+    /**
+     * Get the coordinate X spaces to the right of this one, expected to be inside the board.
+     *
+     * @param spaces Number of spaces to jump, it can also be negative to move backwards.
+     * @return Coordinate after the move, only if it is inside the board.
+     */
+    public Coordinate right(int spaces) {
+        return to(spaces, 0);
+    }
+
+    /**
+     * Moves the coordinate to a relative location.
+     * This alternative is meant to be used for rare cases where getting outside the board is fine.
+     *
+     * @param x X axis movement, positive goes right.
+     * @param y Y axis movement, positive goes up.
+     * @return Coordinate after the move, or null if it's outside the board.
+     */
+    public @Nullable Coordinate toOrNull(int x, int y) {
+        try {
+            var destination = COORDINATE_CACHE.get(index + horizontalClamp(x) - y * Board.SIDE_LENGTH);
+
+            if (illegalHorizontalJump(x, destination)) {
                 return null;
             }
 
@@ -129,46 +192,6 @@ public final class Coordinate implements San {
         } catch (IndexOutOfBoundsException e) {
             return null;
         }
-    }
-
-    /**
-     * Get the coordinate X spaces upwards from this one.
-     *
-     * @param spaces Number of spaces to jump, it can also be negative to move backwards.
-     * @return Coordinate after the move, only if it is inside the board.
-     */
-    public @Nullable Coordinate up(int spaces) {
-        return to(0, spaces);
-    }
-
-    /**
-     * Get the coordinate X spaces downwards from this one.
-     *
-     * @param spaces Number of spaces to jump, it can also be negative to move backwards.
-     * @return Coordinate after the move, only if it is inside the board.
-     */
-    public @Nullable Coordinate down(int spaces) {
-        return up(-spaces);
-    }
-
-    /**
-     * Get the coordinate X spaces to the left of this one.
-     *
-     * @param spaces Number of spaces to jump, it can also be negative to move backwards.
-     * @return Coordinate after the move, only if it is inside the board.
-     */
-    public @Nullable Coordinate left(int spaces) {
-        return right(-spaces);
-    }
-
-    /**
-     * Get the coordinate X spaces to the right of this one.
-     *
-     * @param spaces Number of spaces to jump, it can also be negative to move backwards.
-     * @return Coordinate after the move, only if it is inside the board.
-     */
-    public @Nullable Coordinate right(int spaces) {
-        return to(spaces, 0);
     }
 
     /* equals, hashCode and toString */
@@ -216,7 +239,7 @@ public final class Coordinate implements San {
         this.index = index;
     }
 
-    private boolean illegalJump(int x, Coordinate destination) {
+    private boolean illegalHorizontalJump(int x, Coordinate destination) {
         return (x < 0 && destination.fileIndex() > fileIndex()) || (x > 0 && destination.fileIndex() < fileIndex());
     }
 

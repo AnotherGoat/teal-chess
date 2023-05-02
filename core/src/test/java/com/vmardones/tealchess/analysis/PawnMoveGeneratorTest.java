@@ -47,7 +47,7 @@ final class PawnMoveGeneratorTest {
 
     @Test
     void whiteDoublePushes() {
-        var position = FenParser.parse("4k3/8/8/8/2Q1n3/8/P1P1P3/4K3 w - - 0 1");
+        var position = FenParser.parse("4k3/8/8/8/4Q1n1/2N5/P1P1P1P1/4K3 w - - 0 1");
         var generator = new PawnMoveGenerator(position);
 
         var board = position.board();
@@ -63,7 +63,7 @@ final class PawnMoveGeneratorTest {
 
     @Test
     void blackDoublePushes() {
-        var position = FenParser.parse("4k3/p1p1p3/8/2q1N3/8/8/8/4K3 b - - 0 1");
+        var position = FenParser.parse("4k3/p1p1p1p1/2n5/4q1N1/8/8/8/4K3 b - - 0 1");
         var generator = new PawnMoveGenerator(position);
 
         var board = position.board();
@@ -76,6 +76,9 @@ final class PawnMoveGeneratorTest {
                 .containsOnlyOnce(expectedMove)
                 .satisfiesOnlyOnce(move -> assertThat(move.type()).isEqualTo(MoveType.DOUBLE_PUSH));
     }
+
+    @Test
+    void blockedDoublePush() {}
 
     @Test
     void whitePawnCaptures() {

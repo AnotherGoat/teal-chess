@@ -29,7 +29,7 @@ final class DestinationFinder {
 
         if (!piece.sliding()) {
             return vectors.stream()
-                    .map(vector -> coordinate.to(vector.x(), vector.y()))
+                    .map(vector -> coordinate.toOrNull(vector.x(), vector.y()))
                     .filter(Objects::nonNull)
                     .map(board::squareAt);
         }
@@ -43,7 +43,7 @@ final class DestinationFinder {
 
         // TODO: Refactor this method to not use break and continue in such a confusing way
         for (var i = 1; i < Board.SIDE_LENGTH; i++) {
-            var destination = coordinate.to(vector.x() * i, vector.y() * i);
+            var destination = coordinate.toOrNull(vector.x() * i, vector.y() * i);
 
             if (destination == null) {
                 break;

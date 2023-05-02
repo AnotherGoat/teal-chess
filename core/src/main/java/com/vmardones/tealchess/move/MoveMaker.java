@@ -104,10 +104,6 @@ public final class MoveMaker {
 
         var enPassantTarget = move.destination().down(sideToMove.direction());
 
-        if (enPassantTarget == null) {
-            throw new AssertionError("Unreachable statement");
-        }
-
         return Square.create(enPassantTarget.san(), null);
     }
 

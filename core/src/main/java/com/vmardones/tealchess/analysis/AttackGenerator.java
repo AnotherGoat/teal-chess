@@ -47,7 +47,7 @@ final class AttackGenerator {
 
         var direction = leftSide ? -1 : 1;
 
-        var destination = pawn.coordinate().to(direction, pawn.color().direction());
+        var destination = pawn.coordinate().toOrNull(direction, pawn.color().direction());
 
         if (destination == null) {
             return null;
