@@ -1,47 +1,14 @@
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-
 plugins {
-    id 'jacoco'
-}
-
-jacoco {
-    toolVersion = jacocoVersion
-}
-
-tasks {
-    test {
-        useJUnitPlatform()
-
-        testLogging {
-            exceptionFormat = TestExceptionFormat.FULL
-        }
-
-        // Generate a report after completing all the tests
-        finalizedBy = [jacocoTestReport]
-    }
-
-    jacocoTestReport {
-        reports {
-            // XML reports are required to make Sonarqube understand the results
-            xml.required.set(true)
-            csv.required.set(true)
-        }
-    }
+    id 'java-library'
 }
 
 dependencies {
-    // Unit testing
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:$junitVersion"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    api project(':engine')
 
-    // Mocking
-    testImplementation "org.mockito:mockito-core:$mockitoVersion"
-    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+    // Game engine
+    api "com.badlogicgames.gdx:gdx:$gdxVersion"
 
-    // Better assertions
-    testImplementation "org.assertj:assertj-core:$assertjVersion"
-
-    // Testing equality
-    testImplementation "nl.jqno.equalsverifier:equalsverifier:$equalsVerifierVersion"
+    // Transcoding SVG files
+    implementation "org.apache.xmlgraphics:batik-transcoder:$batikVersion"
+    implementation "org.apache.xmlgraphics:batik-codec:$batikVersion"
 }

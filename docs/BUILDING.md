@@ -108,8 +108,9 @@ To run every unit test, run:
 ```
 
 A [JaCoCo](https://www.jacoco.org/jacoco/) test coverage report is generated
-after running the tests, which can be found at `core/build/reports/jacoco/test`.
-This generates HTML, XML and CSV reports containing the results.
+after running the tests, which can be found at
+`engine/build/reports/jacoco/test`. This generates HTML, XML and CSV reports
+containing the results.
 
 ### Generating Javadocs
 
@@ -120,8 +121,8 @@ documentation, run:
 ./gradlew javadoc
 ```
 
-The generated Javadocs can be found at `core/build/docs/javadoc` and
-`desktop/build/docs/javadoc`.
+The generated Javadocs can be found at `engine/build/docs/javadoc`,
+`core/build/docs/javadoc` and `desktop/build/docs/javadoc`.
 
 ### Using SonarQube
 

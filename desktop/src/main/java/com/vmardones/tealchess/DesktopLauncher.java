@@ -12,7 +12,7 @@ import picocli.CommandLine;
 public final class DesktopLauncher {
 
     /**
-     * Launch the game.
+     * Launch the desktop version of the game.
      *
      * @param args Command line arguments.
      */

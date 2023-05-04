@@ -1,4 +1,5 @@
 plugins {
+    id 'java-library'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
     id 'org.beryx.runtime' version '1.13.0'
 }
@@ -61,17 +62,12 @@ tasks.withType(AbstractArchiveTask).configureEach {
 dependencies {
     implementation project(':core')
 
-    // Transcoding SVG files
-    implementation "org.apache.xmlgraphics:batik-transcoder:$batikVersion"
-    implementation "org.apache.xmlgraphics:batik-codec:$batikVersion"
-
     // CLI
     implementation "info.picocli:picocli:$picocliVersion"
     annotationProcessor "info.picocli:picocli-codegen:$picocliVersion"
 
     // Game engine
-    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-    implementation "com.badlogicgames.gdx:gdx-lwjgl3-glfw-awt-macos:$gdxVersion"
+    api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    api "com.badlogicgames.gdx:gdx-lwjgl3-glfw-awt-macos:$gdxVersion"
 }
