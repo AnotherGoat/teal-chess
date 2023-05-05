@@ -19,12 +19,16 @@ import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Timer;
 import com.vmardones.tealchess.ai.RandomMoveChooser;
+import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.game.Game;
 import com.vmardones.tealchess.io.AssetLoader;
 import com.vmardones.tealchess.move.LegalMove;
 import com.vmardones.tealchess.move.MoveFinder;
 
 final class GameScreen extends ScreenAdapter {
+
+    private static final float ANIMATION_SPEED = 0.3f;
+    private static final float AI_DELAY = 0.75f;
 
     private final AssetLoader assetLoader;
     private final GameLogger gameLogger;
@@ -65,7 +69,7 @@ final class GameScreen extends ScreenAdapter {
         stage.addListener(new PromotionListener());
 
         if (game.ai() != null) {
-            playAiTurn();
+            playAiMove();
         }
     }
 
@@ -82,7 +86,7 @@ final class GameScreen extends ScreenAdapter {
         stage.dispose();
     }
 
-    private void playAiTurn() {
+    private void playAiMove() {
         boardGroup.setTouchable(Touchable.disabled);
 
         Gdx.app.log("AI", "The AI is choosing a move!");
@@ -98,17 +102,83 @@ final class GameScreen extends ScreenAdapter {
                     boardGroup.highlightChecked(game.king().coordinate());
                 }
 
-                boardGroup.board(game.board());
-                gameLogger.log(game);
-                boardGroup.setTouchable(Touchable.enabled);
-
-                if (game.ai() != null) {
-                    playAiTurn();
-                }
+                playSlidingAnimation(aiMove);
             }
         };
 
-        Timer.schedule(task, 0.75f);
+        Timer.schedule(task, AI_DELAY);
+    }
+
+    private void playSlidingAnimation(LegalMove move) {
+        var source = move.source();
+        var destination = move.destination();
+        var sourceSquare = boardGroup.squareAt(source);
+        var destinationSquare = boardGroup.squareAt(destination);
+
+        var sprite = sourceSquare.sprite();
+
+        if (sprite != null) {
+            sourceSquare.removeSprite();
+
+            var x1 = boardGroup.getX() + sourceSquare.getX();
+            var y1 = boardGroup.getY() + sourceSquare.getY();
+            var x2 = boardGroup.getX() + destinationSquare.getX();
+            var y2 = boardGroup.getY() + destinationSquare.getY();
+
+            var image = new Image(sprite);
+            image.setPosition(x1, y1);
+
+            var slide = Actions.moveTo(x2, y2, ANIMATION_SPEED, Interpolation.smoother);
+            var resumeGame = Actions.run(() -> {
+                boardGroup.setTouchable(Touchable.enabled);
+                boardGroup.board(game.board());
+                gameLogger.log(game);
+
+                if (game.ai() != null && !game.player().legals().isEmpty()) {
+                    playAiMove();
+                }
+            });
+            var remove = new RemoveActorAction();
+            var fullAction = Actions.sequence(slide, resumeGame, remove);
+
+            image.addAction(fullAction);
+            stage.addActor(image);
+
+            if (move.isCastling()) {
+                var castle = move.move();
+                var rook = castle.otherPiece();
+                var rookDestination = castle.rookDestination();
+
+                if (rook == null || rookDestination == null) {
+                    throw new AssertionError("Unreachable statement");
+                }
+
+                var rookSource = rook.coordinate();
+
+                var rookSourceSquare = boardGroup.squareAt(rookSource);
+                var rookDestinationSquare = boardGroup.squareAt(rookDestination);
+
+                var rookSprite = rookSourceSquare.sprite();
+
+                if (rookSprite != null) {
+                    rookSourceSquare.removeSprite();
+
+                    var rookX1 = boardGroup.getX() + rookSourceSquare.getX();
+                    var rookY1 = boardGroup.getY() + rookSourceSquare.getY();
+                    var rookX2 = boardGroup.getX() + rookDestinationSquare.getX();
+                    var rookY2 = boardGroup.getY() + rookDestinationSquare.getY();
+
+                    var rookImage = new Image(rookSprite);
+                    rookImage.setPosition(rookX1, rookY1);
+
+                    var rookSlide = Actions.moveTo(rookX2, rookY2, ANIMATION_SPEED, Interpolation.smoother);
+                    var rookAction = Actions.sequence(rookSlide, remove);
+
+                    rookImage.addAction(rookAction);
+                    stage.addActor(rookImage);
+                }
+            }
+        }
     }
 
     private class SquareListener implements EventListener {
@@ -161,13 +231,14 @@ final class GameScreen extends ScreenAdapter {
                 return;
             }
 
-            boardGroup.highlightSource(event.square().coordinate());
+            var coordinate = event.square().coordinate();
+            boardGroup.highlightSource(coordinate);
 
             if (highlightLegals) {
                 boardGroup.highlightDestinations(legalDestinations);
             }
 
-            selectionState = new DestinationSelection(event);
+            selectionState = new DestinationSelection(coordinate);
         }
 
         @Override
@@ -187,12 +258,11 @@ final class GameScreen extends ScreenAdapter {
     private class DestinationSelection implements SelectionState {
 
         private static final String LOG_TAG = "Destination";
-        private final SquareEvent sourceEvent;
+        private final Coordinate sourceCoordinate;
 
         @Override
         public void select(SquareEvent event) {
             var square = event.square();
-            var sourceCoordinate = sourceEvent.square().coordinate();
 
             if (sourceCoordinate.equals(square.coordinate())) {
                 Gdx.app.debug(LOG_TAG, "A piece can't be moved to the same coordinate\n");
@@ -227,36 +297,7 @@ final class GameScreen extends ScreenAdapter {
                     boardGroup.highlightChecked(game.king().coordinate());
                 }
 
-                var sprite = sourceEvent.sprite();
-
-                if (sprite != null) {
-                    sourceEvent.removeSprite();
-
-                    var x1 = boardGroup.getX() + sourceEvent.x();
-                    var y1 = boardGroup.getY() + sourceEvent.y();
-                    var x2 = boardGroup.getX() + event.x();
-                    var y2 = boardGroup.getY() + event.y();
-
-                    var image = new Image(sprite);
-                    image.setPosition(x1, y1);
-
-                    var slide = Actions.moveTo(x2, y2, 0.3f, Interpolation.smooth);
-                    var resumeGame = Actions.run(() -> {
-                        boardGroup.board(game.board());
-                        gameLogger.log(game);
-
-                        if (game.ai() != null && !game.player().legals().isEmpty()) {
-                            playAiTurn();
-                        }
-                    });
-                    var remove = new RemoveActorAction();
-
-                    var fullAction = Actions.sequence(slide, resumeGame, remove);
-
-                    image.addAction(fullAction);
-                    stage.addActor(image);
-                }
-
+                playSlidingAnimation(move);
                 return;
             }
 
@@ -279,8 +320,8 @@ final class GameScreen extends ScreenAdapter {
             selectionState = new SourceSelection();
         }
 
-        private DestinationSelection(SquareEvent sourceEvent) {
-            this.sourceEvent = sourceEvent;
+        private DestinationSelection(Coordinate sourceCoordinate) {
+            this.sourceCoordinate = sourceCoordinate;
         }
     }
 
@@ -340,16 +381,9 @@ final class GameScreen extends ScreenAdapter {
             }
 
             boardGroup.dark(false);
-            boardGroup.setTouchable(Touchable.enabled);
-
             selectionState = new SourceSelection();
-            boardGroup.board(game.board());
-            gameLogger.log(game);
 
-            if (game.ai() != null && !game.player().legals().isEmpty()) {
-                playAiTurn();
-            }
-
+            playSlidingAnimation(selectedMove);
             return true;
         }
     }

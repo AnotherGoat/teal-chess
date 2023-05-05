@@ -5,9 +5,7 @@
 
 package com.vmardones.tealchess.gdx;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -23,7 +21,7 @@ final class BoardGroup extends Group {
 
     private static final int SIZE = AssetLoader.SQUARE_SIZE * Board.SIDE_LENGTH;
     private Board board;
-    private final List<ClickableSquare> squares = new ArrayList<>();
+    private final Map<Coordinate, ClickableSquare> squares = new HashMap<>();
 
     BoardGroup(AssetLoader assetLoader, Board board) {
         this.board = board;
@@ -37,11 +35,15 @@ final class BoardGroup extends Group {
         board.squares().stream()
                 .map(square -> new ClickableSquare(assetLoader, square))
                 .forEach(square -> {
-                    squares.add(square);
+                    squares.put(square.coordinate(), square);
                     addActor(square);
                 });
 
         addListener(new ClearListener());
+    }
+
+    ClickableSquare squareAt(Coordinate coordinate) {
+        return squares.get(coordinate);
     }
 
     /* Setters */
@@ -49,9 +51,9 @@ final class BoardGroup extends Group {
     void board(Board value) {
         board = value;
 
-        for (var i = 0; i < squares.size(); i++) {
-            var newSquare = board.squares().get(i);
-            var clickableSquare = squares.get(i);
+        for (var entry : squares.entrySet()) {
+            var newSquare = board.squareAt(entry.getKey());
+            var clickableSquare = entry.getValue();
 
             if (!newSquare.equals(clickableSquare.square())) {
                 clickableSquare.square(newSquare);
@@ -60,11 +62,11 @@ final class BoardGroup extends Group {
     }
 
     void flip(boolean flip) {
-        squares.forEach(square -> square.flip(flip));
+        squares.values().forEach(square -> square.flip(flip));
     }
 
     void highlightSource(Coordinate source) {
-        for (var square : squares) {
+        for (var square : squares.values()) {
             if (square.coordinate().equals(source)) {
                 square.highlight(true);
                 break;
@@ -73,34 +75,34 @@ final class BoardGroup extends Group {
     }
 
     void hideSource() {
-        squares.forEach(square -> square.highlight(false));
+        squares.values().forEach(square -> square.highlight(false));
     }
 
     void highlightDestinations(Set<Coordinate> coordinates) {
-        squares.forEach(square -> square.destination(coordinates.contains(square.coordinate())));
+        squares.values().forEach(square -> square.destination(coordinates.contains(square.coordinate())));
     }
 
     void hideDestinations() {
-        squares.forEach(square -> square.destination(false));
+        squares.values().forEach(square -> square.destination(false));
     }
 
     void highlightChecked(Coordinate coordinate) {
-        squares.forEach(square -> square.checked(square.coordinate().equals(coordinate)));
+        squares.values().forEach(square -> square.checked(square.coordinate().equals(coordinate)));
     }
 
     void hideChecked() {
-        squares.forEach(squares -> squares.checked(false));
+        squares.values().forEach(square -> square.checked(false));
     }
 
     void dark(boolean value) {
-        squares.forEach(square -> square.dark(value));
+        squares.values().forEach(square -> square.dark(value));
     }
 
-    public void highlightMove(LegalMove move) {
+    void highlightMove(LegalMove move) {
         var source = move.source();
         var destination = move.destination();
 
-        for (var square : squares) {
+        for (var square : squares.values()) {
             var isPartOfTheMove =
                     square.coordinate().equals(source) || square.coordinate().equals(destination);
             square.move(isPartOfTheMove);

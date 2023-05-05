@@ -67,6 +67,10 @@ public final class LegalMove implements San {
         };
     }
 
+    public boolean isCastling() {
+        return move.type() == MoveType.KING_CASTLE || move.type() == MoveType.QUEEN_CASTLE;
+    }
+
     /* toString */
 
     @Override
