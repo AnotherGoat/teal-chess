@@ -12,10 +12,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Timer;
 import com.vmardones.tealchess.ai.RandomMoveChooser;
-import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.game.Game;
 import com.vmardones.tealchess.io.AssetLoader;
 import com.vmardones.tealchess.move.LegalMove;
@@ -71,6 +74,7 @@ final class GameScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0.15f, 0.15f, 0.15f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.draw();
+        stage.act(delta);
     }
 
     @Override
@@ -163,7 +167,7 @@ final class GameScreen extends ScreenAdapter {
                 boardGroup.highlightDestinations(legalDestinations);
             }
 
-            selectionState = new DestinationSelection(piece.coordinate());
+            selectionState = new DestinationSelection(event);
         }
 
         @Override
@@ -183,11 +187,12 @@ final class GameScreen extends ScreenAdapter {
     private class DestinationSelection implements SelectionState {
 
         private static final String LOG_TAG = "Destination";
-        private final Coordinate sourceCoordinate;
+        private final SquareEvent sourceEvent;
 
         @Override
         public void select(SquareEvent event) {
             var square = event.square();
+            var sourceCoordinate = sourceEvent.square().coordinate();
 
             if (sourceCoordinate.equals(square.coordinate())) {
                 Gdx.app.debug(LOG_TAG, "A piece can't be moved to the same coordinate\n");
@@ -222,11 +227,34 @@ final class GameScreen extends ScreenAdapter {
                     boardGroup.highlightChecked(game.king().coordinate());
                 }
 
-                boardGroup.board(game.board());
-                gameLogger.log(game);
+                var sprite = sourceEvent.sprite();
 
-                if (game.ai() != null && !game.player().legals().isEmpty()) {
-                    playAiTurn();
+                if (sprite != null) {
+                    sourceEvent.removeSprite();
+
+                    var x1 = boardGroup.getX() + sourceEvent.x() + 4;
+                    var y1 = boardGroup.getY() + sourceEvent.y() + 4;
+                    var x2 = boardGroup.getX() + event.x() + 4;
+                    var y2 = boardGroup.getY() + event.y() + 4;
+
+                    var image = new Image(sprite);
+                    image.setPosition(x1, y1);
+
+                    var slide = Actions.moveTo(x2, y2, 0.3f, Interpolation.smooth);
+                    var resumeGame = Actions.run(() -> {
+                        boardGroup.board(game.board());
+                        gameLogger.log(game);
+
+                        if (game.ai() != null && !game.player().legals().isEmpty()) {
+                            playAiTurn();
+                        }
+                    });
+                    var remove = new RemoveActorAction();
+
+                    var fullAction = Actions.sequence(slide, resumeGame, remove);
+
+                    image.addAction(fullAction);
+                    stage.addActor(image);
                 }
 
                 return;
@@ -251,8 +279,8 @@ final class GameScreen extends ScreenAdapter {
             selectionState = new SourceSelection();
         }
 
-        private DestinationSelection(Coordinate sourceCoordinate) {
-            this.sourceCoordinate = sourceCoordinate;
+        private DestinationSelection(SquareEvent sourceEvent) {
+            this.sourceEvent = sourceEvent;
         }
     }
 

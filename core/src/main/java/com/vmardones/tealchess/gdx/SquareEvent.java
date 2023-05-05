@@ -5,32 +5,38 @@
 
 package com.vmardones.tealchess.gdx;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.vmardones.tealchess.board.Square;
+import org.eclipse.jdt.annotation.Nullable;
 
 final class SquareEvent extends Event {
 
-    private final Square square;
-    private final float x;
-    private final float y;
+    private final ClickableSquare square;
 
-    SquareEvent(Square square, float x, float y) {
+    SquareEvent(ClickableSquare square) {
         this.square = square;
-        this.x = x;
-        this.y = y;
     }
 
     /* Getters */
 
     Square square() {
-        return square;
+        return square.square();
     }
 
     float x() {
-        return x;
+        return square.getX();
     }
 
     float y() {
-        return y;
+        return square.getY();
+    }
+
+    @Nullable Sprite sprite() {
+        return square.sprite();
+    }
+
+    void removeSprite() {
+        square.removeSprite();
     }
 }

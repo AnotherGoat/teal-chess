@@ -100,6 +100,10 @@ final class ClickableSquare extends Actor {
         return square;
     }
 
+    @Nullable Sprite sprite() {
+        return sprite;
+    }
+
     void square(Square value) {
         square = value;
 
@@ -111,9 +115,6 @@ final class ClickableSquare extends Actor {
             sprite = new Sprite(loadTexture(piece));
             sprite.setPosition(getX() + 4, getY() + 4);
         }
-
-        clearListeners();
-        addListener(new SquareListener());
     }
 
     void flip(boolean flip) {
@@ -152,14 +153,18 @@ final class ClickableSquare extends Actor {
         return square.coordinate();
     }
 
-    private class SquareListener extends ClickListener {
-        @Override
-        public void clicked(InputEvent event, float x, float y) {
-            fire(new SquareEvent(square, getX(), getY()));
-        }
+    void removeSprite() {
+        sprite = null;
     }
 
     private Texture loadTexture(Piece piece) {
         return assetLoader.get(piece.color().fen() + piece.firstChar() + ".png", Texture.class);
+    }
+
+    private class SquareListener extends ClickListener {
+        @Override
+        public void clicked(InputEvent event, float x, float y) {
+            fire(new SquareEvent(ClickableSquare.this));
+        }
     }
 }
