@@ -42,7 +42,7 @@ final class ClickableSquare extends Actor {
         var piece = square.piece();
         if (piece != null) {
             sprite = new Sprite(loadTexture(piece));
-            sprite.setPosition(x + 4, y + 4);
+            sprite.setPosition(x, y);
         }
 
         addListener(new SquareListener());
@@ -75,7 +75,7 @@ final class ClickableSquare extends Actor {
             var texture = sprite.getTexture();
 
             batch.setColor(0, 0, 0, 0.15f);
-            batch.draw(texture, getX() + 8, getY() + 4, (float) texture.getWidth() + 4, texture.getHeight());
+            batch.draw(texture, getX() + 2, getY(), (float) texture.getWidth() + 4, texture.getHeight());
 
             batch.setColor(Color.WHITE);
             sprite.draw(batch);
@@ -113,7 +113,7 @@ final class ClickableSquare extends Actor {
             sprite = null;
         } else {
             sprite = new Sprite(loadTexture(piece));
-            sprite.setPosition(getX() + 4, getY() + 4);
+            sprite.setPosition(getX(), getY());
         }
     }
 
@@ -127,6 +127,10 @@ final class ClickableSquare extends Actor {
         }
 
         setPosition(x, y);
+
+        if (sprite != null) {
+            sprite.setPosition(x, y);
+        }
     }
 
     void highlight(boolean value) {

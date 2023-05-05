@@ -232,10 +232,10 @@ final class GameScreen extends ScreenAdapter {
                 if (sprite != null) {
                     sourceEvent.removeSprite();
 
-                    var x1 = boardGroup.getX() + sourceEvent.x() + 4;
-                    var y1 = boardGroup.getY() + sourceEvent.y() + 4;
-                    var x2 = boardGroup.getX() + event.x() + 4;
-                    var y2 = boardGroup.getY() + event.y() + 4;
+                    var x1 = boardGroup.getX() + sourceEvent.x();
+                    var y1 = boardGroup.getY() + sourceEvent.y();
+                    var x2 = boardGroup.getX() + event.x();
+                    var y2 = boardGroup.getY() + event.y();
 
                     var image = new Image(sprite);
                     image.setPosition(x1, y1);

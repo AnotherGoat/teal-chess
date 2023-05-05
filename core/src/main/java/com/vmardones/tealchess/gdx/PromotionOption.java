@@ -40,7 +40,7 @@ final class PromotionOption extends Actor {
         batch.draw(background, getX(), getY(), background.getWidth(), background.getHeight());
 
         var piece = assetLoader.get(color.fen() + choice.san() + ".png", Texture.class);
-        batch.draw(piece, getX() + 4, getY() + 4);
+        batch.draw(piece, getX(), getY());
     }
 
     private class ChoiceListener extends ClickListener {

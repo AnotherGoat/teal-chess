@@ -15,10 +15,10 @@ import com.badlogic.gdx.graphics.Texture;
 public final class AssetLoader extends AssetManager {
 
     public static final int SQUARE_SIZE = 72;
+    private static final int HALF_SIZE = SQUARE_SIZE / 2;
     private static final String PIECE_ICON_PATH = "art/piece";
     private static final List<String> PIECE_CODES =
             List.of("wP", "wN", "wB", "wR", "wQ", "wK", "bP", "bN", "bB", "bR", "bQ", "bK");
-    private static final int PIECE_SIZE = 64;
 
     private PieceTheme theme;
 
@@ -60,7 +60,7 @@ public final class AssetLoader extends AssetManager {
     private static Texture createCircle(Color color, int radiusScale) {
         var pixmap = new Pixmap(SQUARE_SIZE, SQUARE_SIZE, Pixmap.Format.RGBA8888);
         pixmap.setColor(color);
-        pixmap.fillCircle(SQUARE_SIZE / 2, SQUARE_SIZE / 2, SQUARE_SIZE / radiusScale);
+        pixmap.fillCircle(HALF_SIZE, HALF_SIZE, SQUARE_SIZE / radiusScale);
 
         return new Texture(pixmap);
     }
@@ -72,13 +72,13 @@ public final class AssetLoader extends AssetManager {
 
         pixmap.setBlending(Pixmap.Blending.None);
         pixmap.setColor(1, 1, 1, 0);
-        pixmap.fillCircle(SQUARE_SIZE / 2, SQUARE_SIZE / 2, 2 + SQUARE_SIZE / 2);
+        pixmap.fillCircle(HALF_SIZE, HALF_SIZE, 2 + HALF_SIZE);
 
         return new Texture(pixmap);
     }
 
     private Pixmap loadPiecePixmap(String pieceCode) {
-        return SvgLoader.load(formatIconPath(pieceCode), PIECE_SIZE);
+        return SvgLoader.load(formatIconPath(pieceCode), SQUARE_SIZE);
     }
 
     private String formatIconPath(String pieceCode) {
