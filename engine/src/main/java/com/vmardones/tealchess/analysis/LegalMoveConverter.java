@@ -63,6 +63,7 @@ final class LegalMoveConverter {
         return new Ambiguities(knightMoves, bishopMoves, rookMoves, queenMoves);
     }
 
+    // TODO: Group this map by piece
     private Map<Coordinate, List<Move>> groupAmbiguousMoves(List<Move> confirmedLegals, Predicate<Move> condition) {
         var destinations = confirmedLegals.stream().filter(condition).collect(groupingBy(Move::destination));
         var keysToRemove = new HashSet<Coordinate>();

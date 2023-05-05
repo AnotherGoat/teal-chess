@@ -60,10 +60,15 @@ final class GameScreen extends ScreenAdapter {
         stage.addListener(new SquareListener());
         stage.addListener(new KeyListener());
         stage.addListener(new PromotionListener());
+
+        if (game.ai() != null) {
+            playAiTurn();
+        }
     }
 
     @Override
     public void render(float delta) {
+        Gdx.gl.glClearColor(0.15f, 0.15f, 0.15f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.draw();
     }
@@ -81,14 +86,25 @@ final class GameScreen extends ScreenAdapter {
         var task = new Timer.Task() {
             @Override
             public void run() {
-                game.makeAiMove();
+                var aiMove = game.makeAiMove();
+                boardGroup.highlightMove(aiMove);
+                boardGroup.hideChecked();
+
+                if (game.kingAttacked()) {
+                    boardGroup.highlightChecked(game.king().coordinate());
+                }
+
                 boardGroup.board(game.board());
                 gameLogger.log(game);
                 boardGroup.setTouchable(Touchable.enabled);
+
+                if (game.ai() != null) {
+                    playAiTurn();
+                }
             }
         };
 
-        Timer.schedule(task, 0.5f);
+        Timer.schedule(task, 0.75f);
     }
 
     private class SquareListener implements EventListener {
@@ -141,8 +157,10 @@ final class GameScreen extends ScreenAdapter {
                 return;
             }
 
+            boardGroup.highlightSource(event.square().coordinate());
+
             if (highlightLegals) {
-                boardGroup.highlightSquares(legalDestinations);
+                boardGroup.highlightDestinations(legalDestinations);
             }
 
             selectionState = new DestinationSelection(piece.coordinate());
@@ -154,8 +172,10 @@ final class GameScreen extends ScreenAdapter {
         }
 
         private SourceSelection() {
+            boardGroup.hideSource();
+
             if (highlightLegals) {
-                boardGroup.hideHighlights();
+                boardGroup.hideDestinations();
             }
         }
     }
@@ -191,9 +211,17 @@ final class GameScreen extends ScreenAdapter {
 
             if (moves.size() == 1) {
                 Gdx.app.log(LOG_TAG, "Legal move found! Updating the chessboard...\n");
-                game.makeMove(moves.get(0));
+                var move = moves.get(0);
+                game.makeMove(move);
 
                 selectionState = new SourceSelection();
+                boardGroup.highlightMove(move);
+
+                boardGroup.hideChecked();
+                if (game.kingAttacked()) {
+                    boardGroup.highlightChecked(game.king().coordinate());
+                }
+
                 boardGroup.board(game.board());
                 gameLogger.log(game);
 
@@ -276,6 +304,13 @@ final class GameScreen extends ScreenAdapter {
                     .orElseThrow(() -> new AssertionError("Unreachable statement"));
 
             game.makeMove(selectedMove);
+            boardGroup.highlightMove(selectedMove);
+
+            boardGroup.hideChecked();
+            if (game.kingAttacked()) {
+                boardGroup.highlightChecked(game.king().coordinate());
+            }
+
             boardGroup.dark(false);
             boardGroup.setTouchable(Touchable.enabled);
 

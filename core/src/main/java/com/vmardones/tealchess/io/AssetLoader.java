@@ -29,9 +29,13 @@ public final class AssetLoader extends AssetManager {
     public void reload() {
         addAsset("light.png", Texture.class, createSquare(Color.valueOf("#FFCE9E")));
         addAsset("dark.png", Texture.class, createSquare(Color.valueOf("#D18B47")));
-        addAsset("highlight.png", Texture.class, createCircle(Color.TEAL, 6));
+        addAsset("highlight.png", Texture.class, createSquare(Color.TEAL.mul(1, 1, 1, 0.6f)));
+        addAsset("destination.png", Texture.class, createCircle(Color.TEAL, 7));
+        addAsset("target.png", Texture.class, createTarget(Color.TEAL));
+        addAsset("last_move.png", Texture.class, createSquare(Color.FOREST.mul(1, 1, 1, 0.5f)));
+        addAsset("check.png", Texture.class, createSquare(Color.SCARLET.mul(1, 1, 1, 0.7f)));
         addAsset("promotion.png", Texture.class, createCircle(Color.LIGHT_GRAY, 2));
-        addAsset("dark_tint.png", Texture.class, createSquare(new Color(0, 0, 0, 0.5f)));
+        addAsset("dark_tint.png", Texture.class, createSquare(Color.BLACK.mul(1, 1, 1, 0.5f)));
 
         PIECE_CODES.forEach(code -> {
             var texture = new Texture(loadPiecePixmap(code));
@@ -57,6 +61,18 @@ public final class AssetLoader extends AssetManager {
         var pixmap = new Pixmap(SQUARE_SIZE, SQUARE_SIZE, Pixmap.Format.RGBA8888);
         pixmap.setColor(color);
         pixmap.fillCircle(SQUARE_SIZE / 2, SQUARE_SIZE / 2, SQUARE_SIZE / radiusScale);
+
+        return new Texture(pixmap);
+    }
+
+    private static Texture createTarget(Color color) {
+        var pixmap = new Pixmap(SQUARE_SIZE, SQUARE_SIZE, Pixmap.Format.RGBA8888);
+        pixmap.setColor(color);
+        pixmap.fill();
+
+        pixmap.setBlending(Pixmap.Blending.None);
+        pixmap.setColor(1, 1, 1, 0);
+        pixmap.fillCircle(SQUARE_SIZE / 2, SQUARE_SIZE / 2, 2 + SQUARE_SIZE / 2);
 
         return new Texture(pixmap);
     }

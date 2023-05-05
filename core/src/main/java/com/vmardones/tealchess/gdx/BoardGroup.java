@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.io.AssetLoader;
+import com.vmardones.tealchess.move.LegalMove;
 
 final class BoardGroup extends Group {
 
@@ -62,16 +63,48 @@ final class BoardGroup extends Group {
         squares.forEach(square -> square.flip(flip));
     }
 
-    void highlightSquares(Set<Coordinate> coordinates) {
-        squares.forEach(square -> square.highlight(coordinates.contains(square.coordinate())));
+    void highlightSource(Coordinate source) {
+        for (var square : squares) {
+            if (square.coordinate().equals(source)) {
+                square.highlight(true);
+                break;
+            }
+        }
     }
 
-    void hideHighlights() {
+    void hideSource() {
         squares.forEach(square -> square.highlight(false));
+    }
+
+    void highlightDestinations(Set<Coordinate> coordinates) {
+        squares.forEach(square -> square.destination(coordinates.contains(square.coordinate())));
+    }
+
+    void hideDestinations() {
+        squares.forEach(square -> square.destination(false));
+    }
+
+    void highlightChecked(Coordinate coordinate) {
+        squares.forEach(square -> square.checked(square.coordinate().equals(coordinate)));
+    }
+
+    void hideChecked() {
+        squares.forEach(squares -> squares.checked(false));
     }
 
     void dark(boolean value) {
         squares.forEach(square -> square.dark(value));
+    }
+
+    public void highlightMove(LegalMove move) {
+        var source = move.source();
+        var destination = move.destination();
+
+        for (var square : squares) {
+            var isPartOfTheMove =
+                    square.coordinate().equals(source) || square.coordinate().equals(destination);
+            square.move(isPartOfTheMove);
+        }
     }
 
     private class ClearListener extends ClickListener {

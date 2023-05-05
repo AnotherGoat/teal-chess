@@ -54,6 +54,7 @@ final class LegalMoveConverterTest {
     @Test
     void fullDisambiguation() {
         // Another rare case that requires a promoted horse
+        // TODO: Bad test case, it should be 4k3/1N1N4/8/8/8/1N6/8/4K3 w - - 0 1
         var position = FenParser.parse("4k3/1N6/4N3/8/8/1N6/8/4K3 w - - 0 1");
 
         var pseudoLegals = new PseudoLegalGenerator(position).generate();

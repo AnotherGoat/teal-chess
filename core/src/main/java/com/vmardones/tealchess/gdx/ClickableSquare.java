@@ -8,18 +8,25 @@ package com.vmardones.tealchess.gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.io.AssetLoader;
+import com.vmardones.tealchess.piece.Piece;
+import org.eclipse.jdt.annotation.Nullable;
 
 final class ClickableSquare extends Actor {
 
     private final AssetLoader assetLoader;
     private Square square;
+    private @Nullable Sprite sprite;
     private boolean highlight;
+    private boolean destination;
+    private boolean lastMove;
+    private boolean checked;
     private boolean dark;
 
     ClickableSquare(AssetLoader assetLoader, Square square) {
@@ -32,6 +39,12 @@ final class ClickableSquare extends Actor {
         var y = square.coordinate().rankIndex() * getHeight();
         setPosition(x, y);
 
+        var piece = square.piece();
+        if (piece != null) {
+            sprite = new Sprite(loadTexture(piece));
+            sprite.setPosition(x + 4, y + 4);
+        }
+
         addListener(new SquareListener());
     }
 
@@ -43,27 +56,40 @@ final class ClickableSquare extends Actor {
                 : assetLoader.get("dark.png", Texture.class);
         batch.draw(background, getX(), getY());
 
-        var piece = square.piece();
+        if (highlight) {
+            var tint = assetLoader.get("highlight.png", Texture.class);
+            batch.draw(tint, getX(), getY());
+        }
 
-        if (piece != null) {
-            var texture = assetLoader.get(piece.color().fen() + piece.firstChar() + ".png", Texture.class);
+        if (lastMove) {
+            var tint = assetLoader.get("last_move.png", Texture.class);
+            batch.draw(tint, getX(), getY());
+        }
+
+        if (checked) {
+            var tint = assetLoader.get("check.png", Texture.class);
+            batch.draw(tint, getX(), getY());
+        }
+
+        if (sprite != null) {
+            var texture = sprite.getTexture();
 
             batch.setColor(0, 0, 0, 0.15f);
             batch.draw(texture, getX() + 8, getY() + 4, (float) texture.getWidth() + 4, texture.getHeight());
 
             batch.setColor(Color.WHITE);
-            batch.draw(texture, getX() + 4, getY() + 4);
+            sprite.draw(batch);
         }
 
-        if (highlight) {
-            var texture = assetLoader.get("highlight.png", Texture.class);
-
+        if (destination) {
+            var texture = square.piece() == null
+                    ? assetLoader.get("destination.png", Texture.class)
+                    : assetLoader.get("target.png", Texture.class);
             batch.draw(texture, getX(), getY());
         }
 
         if (dark) {
             var tint = assetLoader.get("dark_tint.png", Texture.class);
-
             batch.draw(tint, getX(), getY());
         }
     }
@@ -76,6 +102,15 @@ final class ClickableSquare extends Actor {
 
     void square(Square value) {
         square = value;
+
+        var piece = square.piece();
+
+        if (piece == null) {
+            sprite = null;
+        } else {
+            sprite = new Sprite(loadTexture(piece));
+            sprite.setPosition(getX() + 4, getY() + 4);
+        }
 
         clearListeners();
         addListener(new SquareListener());
@@ -97,6 +132,18 @@ final class ClickableSquare extends Actor {
         highlight = value;
     }
 
+    void destination(boolean value) {
+        destination = value;
+    }
+
+    void move(boolean value) {
+        lastMove = value;
+    }
+
+    void checked(boolean value) {
+        checked = value;
+    }
+
     void dark(boolean value) {
         dark = value;
     }
@@ -110,5 +157,9 @@ final class ClickableSquare extends Actor {
         public void clicked(InputEvent event, float x, float y) {
             fire(new SquareEvent(square, getX(), getY()));
         }
+    }
+
+    private Texture loadTexture(Piece piece) {
+        return assetLoader.get(piece.color().fen() + piece.firstChar() + ".png", Texture.class);
     }
 }

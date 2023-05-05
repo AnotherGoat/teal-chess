@@ -15,8 +15,10 @@ import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.move.LegalMove;
 import com.vmardones.tealchess.move.MoveMaker;
+import com.vmardones.tealchess.piece.King;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.player.Player;
+import com.vmardones.tealchess.player.PlayerStatus;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
@@ -62,6 +64,14 @@ public final class Game {
         return position().sideToMove().isWhite() ? state.blackPlayer() : state.whitePlayer();
     }
 
+    public King king() {
+        return player().king();
+    }
+
+    public boolean kingAttacked() {
+        return player().status() == PlayerStatus.CHECKED || player().status() == PlayerStatus.CHECKMATED;
+    }
+
     public @Nullable MoveChooser ai() {
         return position().sideToMove().isWhite() ? whiteAi : blackAi;
     }
@@ -97,14 +107,16 @@ public final class Game {
         history = history.add(state.save());
     }
 
-    public void makeAiMove() {
+    public LegalMove makeAiMove() {
         var currentAi = ai();
 
         if (currentAi == null) {
             throw new UnsupportedOperationException("The current player doesn't have an AI set");
         }
 
-        makeMove(currentAi.chooseMove(position(), player().legals()));
+        var aiMove = currentAi.chooseMove(position(), player().legals());
+        makeMove(aiMove);
+        return aiMove;
     }
 
     /* Analysis methods */
