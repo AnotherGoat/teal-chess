@@ -5,7 +5,7 @@
 
 package com.vmardones.tealchess.piece;
 
-enum PieceType {
+public enum PieceType {
     PAWN("P"),
     KNIGHT("N"),
     BISHOP("B"),

@@ -56,6 +56,10 @@ public abstract sealed class Piece implements Fen, San, Unicode permits Bishop, 
 
     /* Getters */
 
+    public PieceType type() {
+        return type;
+    }
+
     public Coordinate coordinate() {
         return coordinate;
     }
@@ -133,6 +137,10 @@ public abstract sealed class Piece implements Fen, San, Unicode permits Bishop, 
 
     public boolean isEnemyOf(Piece other) {
         return !isAllyOf(other);
+    }
+
+    public boolean sameTypeAs(Piece other) {
+        return type == other.type;
     }
 
     /* Movement */

@@ -5,85 +5,68 @@
 
 package com.vmardones.tealchess.analysis;
 
-import static java.util.stream.Collectors.groupingBy;
-
 import java.util.*;
-import java.util.function.Predicate;
 
-import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.move.*;
+import com.vmardones.tealchess.piece.Piece;
+import com.vmardones.tealchess.piece.PieceType;
 
 final class LegalMoveConverter {
 
     private final Position position;
+    private final List<Piece> pieces;
     private final MoveMaker moveMaker = new MoveMaker();
 
     LegalMoveConverter(Position position) {
         this.position = position;
+        pieces = position.board().pieces(position.sideToMove());
     }
 
     List<LegalMove> transformToLegals(List<Move> confirmedLegals) {
+        var legalMoves = new ArrayList<LegalMove>();
 
-        var ambiguities = findAmbiguities(confirmedLegals);
-        var unambiguousLegals = new ArrayList<>(confirmedLegals);
-        unambiguousLegals.removeAll(ambiguities.allMoves());
-
-        var legalMoves =
-                new ArrayList<>(unambiguousLegals.stream().map(this::makeLegal).toList());
-
-        if (ambiguities.hasKnights()) {
-            addDisambiguation(ambiguities.knightMoves().values(), legalMoves);
-        }
-        if (ambiguities.hasBishops()) {
-            addDisambiguation(ambiguities.bishopMoves().values(), legalMoves);
-        }
-        if (ambiguities.hasRooks()) {
-            addDisambiguation(ambiguities.rookMoves().values(), legalMoves);
-        }
-        if (ambiguities.hasQueens()) {
-            addDisambiguation(ambiguities.queenMoves().values(), legalMoves);
+        for (var move : confirmedLegals) {
+            legalMoves.add(transformToLegal(move, confirmedLegals));
         }
 
         return legalMoves;
     }
 
-    private Ambiguities findAmbiguities(List<Move> confirmedLegals) {
+    private LegalMove transformToLegal(Move move, List<Move> confirmedLegals) {
+        var piece = move.piece();
 
-        var knightMoves =
-                groupAmbiguousMoves(confirmedLegals, move -> move.piece().isKnight());
-        var bishopMoves =
-                groupAmbiguousMoves(confirmedLegals, move -> move.piece().isBishop());
-        var rookMoves =
-                groupAmbiguousMoves(confirmedLegals, move -> move.piece().isRook());
-        var queenMoves =
-                groupAmbiguousMoves(confirmedLegals, move -> move.piece().isQueen());
-
-        return new Ambiguities(knightMoves, bishopMoves, rookMoves, queenMoves);
-    }
-
-    // TODO: Group this map by piece
-    private Map<Coordinate, List<Move>> groupAmbiguousMoves(List<Move> confirmedLegals, Predicate<Move> condition) {
-        var destinations = confirmedLegals.stream().filter(condition).collect(groupingBy(Move::destination));
-        var keysToRemove = new HashSet<Coordinate>();
-
-        for (var destination : destinations.entrySet()) {
-            var moves = destination.getValue();
-
-            if (moves.size() == 1) {
-                keysToRemove.add(destination.getKey());
-            }
+        if (piece.isPawn() || piece.isKing()) {
+            return makeLegal(move);
         }
 
-        keysToRemove.forEach(destinations::remove);
+        var type = piece.type();
 
-        return destinations;
+        if (countPieces(type) == 1) {
+            return makeLegal(move);
+        }
+
+        var similarMoves = findSimilarMoves(confirmedLegals, move);
+
+        if (similarMoves.isEmpty()) {
+            return makeLegal(move);
+        }
+
+        var disambiguation = findDisambiguation(move, similarMoves);
+
+        return makeLegal(move, disambiguation);
     }
 
     private LegalMove makeLegal(Move move) {
         var afterMove = moveMaker.make(position, move);
         var result = calculateResult(afterMove);
         return move.makeLegal(result);
+    }
+
+    private LegalMove makeLegal(Move move, Disambiguation disambiguation) {
+        var afterMove = moveMaker.make(position, move);
+        var result = calculateResult(afterMove);
+        return move.makeLegal(result, disambiguation);
     }
 
     private MoveResult calculateResult(Position afterMove) {
@@ -103,81 +86,48 @@ final class LegalMoveConverter {
         return MoveResult.findResult(attacked, cantMove);
     }
 
-    private void addDisambiguation(Collection<List<Move>> ambiguousCases, List<LegalMove> legalMoves) {
-        for (var moves : ambiguousCases) {
-
-            var firstSource = moves.get(0).source();
-            var firstFile = firstSource.file();
-            var firstRank = firstSource.rank();
-
-            var sameFile = moves.stream().allMatch(move -> move.source().file().equals(firstFile));
-            var sameRank = moves.stream().allMatch(move -> move.source().rank() == firstRank);
-
-            if (sameFile && sameRank) {
-                throw new AssertionError();
-            }
-
-            if (!sameFile && sameRank) {
-                for (var move : moves) {
-                    legalMoves.add(makeLegal(move, Disambiguation.FILE));
-                }
-            } else if (sameFile) {
-                for (var move : moves) {
-                    legalMoves.add(makeLegal(move, Disambiguation.RANK));
-                }
-            } else {
-                for (var move : moves) {
-                    legalMoves.add(makeLegal(move, Disambiguation.FULL));
-                }
-            }
-        }
+    private long countPieces(PieceType type) {
+        return pieces.stream()
+                .filter(otherPiece -> otherPiece.type().equals(type))
+                .count();
     }
 
-    private LegalMove makeLegal(Move move, Disambiguation disambiguation) {
-        var afterMove = moveMaker.make(position, move);
-        var result = calculateResult(afterMove);
-        return move.makeLegal(result, disambiguation);
+    private List<Move> findSimilarMoves(List<Move> moves, Move moveToCheck) {
+        var pieceType = moveToCheck.piece().type();
+        var destination = moveToCheck.destination();
+        var file = moveToCheck.source().file();
+        var rank = moveToCheck.source().rank();
+
+        return moves.stream()
+                .filter(move -> move.piece().type().equals(pieceType)
+                        && move.destination().equals(destination))
+                .filter(move ->
+                        move.source().file().equals(file) || move.source().rank() == rank)
+                .filter(move -> !move.equals(moveToCheck))
+                .toList();
     }
 
-    private record Ambiguities(
-            Map<Coordinate, List<Move>> knightMoves,
-            Map<Coordinate, List<Move>> bishopMoves,
-            Map<Coordinate, List<Move>> rookMoves,
-            Map<Coordinate, List<Move>> queenMoves) {
+    private Disambiguation findDisambiguation(Move moveToCheck, List<Move> otherMoves) {
+        var fileToCheck = moveToCheck.source().file();
+        var fileDisambiguates =
+                otherMoves.stream().map(move -> move.source().file()).noneMatch(file -> file.equals(fileToCheck));
 
-        private List<Move> allMoves() {
-            var ambiguousMoves = new ArrayList<Move>();
+        var rankToCheck = moveToCheck.source().rank();
+        var rankDisambiguates =
+                otherMoves.stream().map(move -> move.source().rank()).noneMatch(rank -> rank.equals(rankToCheck));
 
-            for (var moves : knightMoves.values()) {
-                ambiguousMoves.addAll(moves);
-            }
-            for (var moves : bishopMoves.values()) {
-                ambiguousMoves.addAll(moves);
-            }
-            for (var moves : rookMoves.values()) {
-                ambiguousMoves.addAll(moves);
-            }
-            for (var moves : queenMoves.values()) {
-                ambiguousMoves.addAll(moves);
-            }
-
-            return ambiguousMoves;
+        if (fileDisambiguates && rankDisambiguates) {
+            throw new AssertionError();
         }
 
-        private boolean hasKnights() {
-            return !knightMoves.isEmpty();
+        if (fileDisambiguates) {
+            return Disambiguation.FILE;
         }
 
-        private boolean hasBishops() {
-            return !bishopMoves.isEmpty();
+        if (rankDisambiguates) {
+            return Disambiguation.RANK;
         }
 
-        private boolean hasRooks() {
-            return !rookMoves.isEmpty();
-        }
-
-        private boolean hasQueens() {
-            return !queenMoves.isEmpty();
-        }
+        return Disambiguation.FULL;
     }
 }
