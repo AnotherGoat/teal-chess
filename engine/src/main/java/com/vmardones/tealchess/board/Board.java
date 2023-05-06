@@ -150,13 +150,16 @@ public final class Board implements Unicode {
     public String unicode() {
         var result = new StringBuilder();
 
-        for (Square square : squares) {
+        for (int i = 0; i < squares.size(); i++) {
+            var square = squares.get(i);
             result.append(square.unicode()).append(" ");
 
-            if ((square.coordinate().index() + 1) % Board.SIDE_LENGTH == 0) {
-                result.append("\n");
+            if ((i + 1) % Board.SIDE_LENGTH == 0) {
+                result.deleteCharAt(result.length() - 1).append("\n");
             }
         }
+
+        result.deleteCharAt(result.length() - 1);
 
         return result.toString();
     }

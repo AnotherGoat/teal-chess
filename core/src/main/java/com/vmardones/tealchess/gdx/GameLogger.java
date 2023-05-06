@@ -42,10 +42,10 @@ final class GameLogger {
         Gdx.app.debug(LOG_TAG, "Move history: " + PgnSerializer.serializeMoves(moves));
 
         switch (game.player().status()) {
-            case NORMAL -> Gdx.app.log(LOG_TAG, "The game continues like normal...\n");
-            case CHECKED -> Gdx.app.log(LOG_TAG, "Check! " + sideToMove + " king is in danger!\n");
-            case CHECKMATED -> Gdx.app.log(LOG_TAG, "Checkmate! " + sideToMove.opposite() + " player won!\n");
-            case STALEMATED -> Gdx.app.log(LOG_TAG, "Stalemate! The game ends in a draw!\n");
+            case NORMAL -> Gdx.app.log(LOG_TAG, "The game continues like normal...");
+            case CHECKED -> Gdx.app.log(LOG_TAG, "Check! " + sideToMove + " king is in danger!");
+            case CHECKMATED -> Gdx.app.log(LOG_TAG, "Checkmate! " + sideToMove.opposite() + " player won!");
+            case STALEMATED -> Gdx.app.log(LOG_TAG, "Stalemate! The game ends in a draw!");
         }
     }
 }

@@ -49,7 +49,7 @@ final class GameScreen extends ScreenAdapter {
         this.highlightLegals = highlightLegals;
         this.flipBoard = flipBoard;
 
-        Gdx.app.log("Game", "Game started!\n");
+        Gdx.app.log("Game", "Game started!");
         game = new Game().blackAi(new RandomMoveChooser());
         gameLogger.log(game);
 
@@ -138,8 +138,7 @@ final class GameScreen extends ScreenAdapter {
                     playAiMove();
                 }
             });
-            var remove = new RemoveActorAction();
-            var fullAction = Actions.sequence(slide, resumeGame, remove);
+            var fullAction = Actions.sequence(slide, resumeGame, new RemoveActorAction());
 
             image.addAction(fullAction);
             stage.addActor(image);
@@ -172,7 +171,7 @@ final class GameScreen extends ScreenAdapter {
                     rookImage.setPosition(rookX1, rookY1);
 
                     var rookSlide = Actions.moveTo(rookX2, rookY2, ANIMATION_SPEED, Interpolation.smoother);
-                    var rookAction = Actions.sequence(rookSlide, remove);
+                    var rookAction = Actions.sequence(rookSlide, new RemoveActorAction());
 
                     rookImage.addAction(rookAction);
                     stage.addActor(rookImage);
@@ -213,21 +212,21 @@ final class GameScreen extends ScreenAdapter {
             var piece = event.square().piece();
 
             if (piece == null) {
-                Gdx.app.debug(LOG_TAG, "The source is empty\n");
+                Gdx.app.debug(LOG_TAG, "The source is empty");
                 return;
             }
 
             Gdx.app.log(LOG_TAG, "The source contains " + piece);
 
             if (piece.color() == game.oppponent().color()) {
-                Gdx.app.debug(LOG_TAG, "The selected piece belongs to the opponent\n");
+                Gdx.app.debug(LOG_TAG, "The selected piece belongs to the opponent");
                 return;
             }
 
             var legalDestinations = game.findLegalDestinations(piece);
 
             if (legalDestinations.isEmpty()) {
-                Gdx.app.debug(LOG_TAG, "The selected piece has no legal moves\n");
+                Gdx.app.debug(LOG_TAG, "The selected piece has no legal moves");
                 return;
             }
 
@@ -265,7 +264,7 @@ final class GameScreen extends ScreenAdapter {
             var square = event.square();
 
             if (sourceCoordinate.equals(square.coordinate())) {
-                Gdx.app.debug(LOG_TAG, "A piece can't be moved to the same coordinate\n");
+                Gdx.app.debug(LOG_TAG, "A piece can't be moved to the same coordinate");
                 selectionState = new SourceSelection();
                 return;
             }
@@ -279,13 +278,13 @@ final class GameScreen extends ScreenAdapter {
             var moves = MoveFinder.choose(game.player().legals(), sourceCoordinate, square.coordinate());
 
             if (moves.isEmpty()) {
-                Gdx.app.debug(LOG_TAG, "The selected move is illegal\n");
+                Gdx.app.debug(LOG_TAG, "The selected move is illegal");
                 selectionState = new SourceSelection();
                 return;
             }
 
             if (moves.size() == 1) {
-                Gdx.app.log(LOG_TAG, "Legal move found! Updating the chessboard...\n");
+                Gdx.app.log(LOG_TAG, "Legal move found! Updating the chessboard...");
                 var move = moves.get(0);
                 game.makeMove(move);
 
@@ -301,8 +300,7 @@ final class GameScreen extends ScreenAdapter {
                 return;
             }
 
-            // TODO: Handle promotion choices
-            Gdx.app.log(LOG_TAG, "Promoting a pawn! Please select the piece you want to promote it to\n");
+            Gdx.app.log(LOG_TAG, "Promoting a pawn! Please select the piece you want to promote it to");
 
             boardGroup.dark(true);
             boardGroup.setTouchable(Touchable.disabled);
@@ -316,7 +314,7 @@ final class GameScreen extends ScreenAdapter {
 
         @Override
         public void unselect() {
-            Gdx.app.debug(LOG_TAG, "Pressed right click, undoing piece selection\n");
+            Gdx.app.debug(LOG_TAG, "Pressed right click, undoing piece selection");
             selectionState = new SourceSelection();
         }
 
@@ -331,7 +329,7 @@ final class GameScreen extends ScreenAdapter {
         @Override
         public boolean keyDown(InputEvent event, int keycode) {
             if (keycode == Input.Keys.D) {
-                Gdx.app.log(LOG_TAG, "Toggling debug mode\n");
+                Gdx.app.log(LOG_TAG, "Toggling debug mode");
                 debugMode = !debugMode;
 
                 if (debugMode) {
@@ -342,12 +340,12 @@ final class GameScreen extends ScreenAdapter {
 
                 return true;
             } else if (keycode == Input.Keys.H) {
-                Gdx.app.log(LOG_TAG, "Toggling legal move highlighting\n");
+                Gdx.app.log(LOG_TAG, "Toggling legal move highlighting");
                 highlightLegals = !highlightLegals;
                 // TODO: Handle hiding or showing legals when a piece is already selected
                 return true;
             } else if (keycode == Input.Keys.F) {
-                Gdx.app.log(LOG_TAG, "Flipping the board\n");
+                Gdx.app.log(LOG_TAG, "Flipping the board");
                 flipBoard = !flipBoard;
                 boardGroup.flip(flipBoard);
                 return true;
