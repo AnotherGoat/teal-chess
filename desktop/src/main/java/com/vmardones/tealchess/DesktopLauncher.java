@@ -5,8 +5,7 @@
 
 package com.vmardones.tealchess;
 
-import com.vmardones.tealchess.cli.MainCommand;
-import picocli.CommandLine;
+import com.vmardones.tealchess.gdx.Window;
 
 /** The chess game launcher. */
 public final class DesktopLauncher {
@@ -14,10 +13,10 @@ public final class DesktopLauncher {
     /**
      * Launch the desktop version of the game.
      *
-     * @param args Command line arguments.
+     * @param args Command line arguments (unused).
      */
     public static void main(String... args) {
-        new CommandLine(new MainCommand()).execute(args);
+        new Window();
     }
 
     @ExcludeFromGeneratedReport

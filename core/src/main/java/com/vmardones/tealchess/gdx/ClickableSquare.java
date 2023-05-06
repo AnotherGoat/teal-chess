@@ -20,7 +20,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 final class ClickableSquare extends Actor {
 
-    private final AssetLoader assetLoader;
+    private final AssetLoader assets;
     private Square square;
     private @Nullable Sprite sprite;
     private boolean highlight;
@@ -29,8 +29,8 @@ final class ClickableSquare extends Actor {
     private boolean checked;
     private boolean dark;
 
-    ClickableSquare(AssetLoader assetLoader, Square square) {
-        this.assetLoader = assetLoader;
+    ClickableSquare(AssetLoader assets, Square square) {
+        this.assets = assets;
         this.square = square;
 
         setSize(AssetLoader.SQUARE_SIZE, AssetLoader.SQUARE_SIZE);
@@ -52,22 +52,22 @@ final class ClickableSquare extends Actor {
     public void draw(Batch batch, float parentAlpha) {
 
         var background = square.color().isWhite()
-                ? assetLoader.get("light.png", Texture.class)
-                : assetLoader.get("dark.png", Texture.class);
+                ? assets.get("light.png", Texture.class)
+                : assets.get("dark.png", Texture.class);
         batch.draw(background, getX(), getY());
 
         if (highlight) {
-            var tint = assetLoader.get("highlight.png", Texture.class);
+            var tint = assets.get("highlight.png", Texture.class);
             batch.draw(tint, getX(), getY());
         }
 
         if (lastMove) {
-            var tint = assetLoader.get("last_move.png", Texture.class);
+            var tint = assets.get("last_move.png", Texture.class);
             batch.draw(tint, getX(), getY());
         }
 
         if (checked) {
-            var tint = assetLoader.get("check.png", Texture.class);
+            var tint = assets.get("check.png", Texture.class);
             batch.draw(tint, getX(), getY());
         }
 
@@ -83,13 +83,13 @@ final class ClickableSquare extends Actor {
 
         if (destination) {
             var texture = square.piece() == null
-                    ? assetLoader.get("destination.png", Texture.class)
-                    : assetLoader.get("target.png", Texture.class);
+                    ? assets.get("destination.png", Texture.class)
+                    : assets.get("target.png", Texture.class);
             batch.draw(texture, getX(), getY());
         }
 
         if (dark) {
-            var tint = assetLoader.get("dark_tint.png", Texture.class);
+            var tint = assets.get("dark_tint.png", Texture.class);
             batch.draw(tint, getX(), getY());
         }
     }
@@ -162,7 +162,7 @@ final class ClickableSquare extends Actor {
     }
 
     private Texture loadTexture(Piece piece) {
-        return assetLoader.get(piece.color().fen() + piece.firstChar() + ".png", Texture.class);
+        return assets.get(piece.color().fen() + piece.firstChar() + ".png", Texture.class);
     }
 
     private class SquareListener extends ClickListener {

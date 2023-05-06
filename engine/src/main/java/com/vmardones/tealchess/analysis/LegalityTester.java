@@ -21,11 +21,10 @@ import org.eclipse.jdt.annotation.Nullable;
 final class LegalityTester {
 
     private final Position position;
-    private final MoveMaker moveMaker;
+    private final MoveMaker moveMaker = new MoveMaker();
 
     LegalityTester(Position position) {
         this.position = position;
-        moveMaker = new MoveMaker();
     }
 
     List<Move> testPseudoLegals(Stream<Move> pseudoLegals) {

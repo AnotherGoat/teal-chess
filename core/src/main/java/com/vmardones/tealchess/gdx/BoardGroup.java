@@ -23,7 +23,7 @@ final class BoardGroup extends Group {
     private Board board;
     private final Map<Coordinate, ClickableSquare> squares = new HashMap<>();
 
-    BoardGroup(AssetLoader assetLoader, Board board) {
+    BoardGroup(AssetLoader assets, Board board) {
         this.board = board;
 
         setSize(SIZE, SIZE);
@@ -33,7 +33,7 @@ final class BoardGroup extends Group {
         setPosition(x, y);
 
         board.squares().stream()
-                .map(square -> new ClickableSquare(assetLoader, square))
+                .map(square -> new ClickableSquare(assets, square))
                 .forEach(square -> {
                     squares.put(square.coordinate(), square);
                     addActor(square);
@@ -43,7 +43,13 @@ final class BoardGroup extends Group {
     }
 
     ClickableSquare squareAt(Coordinate coordinate) {
-        return squares.get(coordinate);
+        var square = squares.get(coordinate);
+
+        if (square == null) {
+            throw new AssertionError();
+        }
+
+        return square;
     }
 
     /* Setters */

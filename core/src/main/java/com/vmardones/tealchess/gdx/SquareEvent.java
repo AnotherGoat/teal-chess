@@ -5,10 +5,8 @@
 
 package com.vmardones.tealchess.gdx;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.vmardones.tealchess.board.Square;
-import org.eclipse.jdt.annotation.Nullable;
 
 final class SquareEvent extends Event {
 
@@ -30,13 +28,5 @@ final class SquareEvent extends Event {
 
     float y() {
         return square.getY();
-    }
-
-    @Nullable Sprite sprite() {
-        return square.sprite();
-    }
-
-    void removeSprite() {
-        square.removeSprite();
     }
 }

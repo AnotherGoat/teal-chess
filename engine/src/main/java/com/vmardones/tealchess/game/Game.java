@@ -27,7 +27,7 @@ import org.eclipse.jdt.annotation.Nullable;
  */
 public final class Game {
 
-    private final MoveMaker moveMaker;
+    private final MoveMaker moveMaker = new MoveMaker();
     private final GameState state;
     private GameHistory history;
     private @Nullable MoveChooser whiteAi;
@@ -37,7 +37,6 @@ public final class Game {
      * The standard way to create a new game, starting from the initial position.
      */
     public Game() {
-        moveMaker = new MoveMaker();
         state = new GameState();
         history = new GameHistory(state.save());
     }

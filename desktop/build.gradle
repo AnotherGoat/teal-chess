@@ -62,10 +62,6 @@ tasks.withType(AbstractArchiveTask).configureEach {
 dependencies {
     implementation project(':core')
 
-    // CLI
-    implementation "info.picocli:picocli:$picocliVersion"
-    annotationProcessor "info.picocli:picocli-codegen:$picocliVersion"
-
     // Game engine
     api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
     api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"

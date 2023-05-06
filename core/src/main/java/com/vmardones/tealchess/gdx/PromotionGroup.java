@@ -14,12 +14,12 @@ final class PromotionGroup extends Group {
 
     private static final int WIDTH = AssetLoader.SQUARE_SIZE * PromotionChoice.values().length;
 
-    PromotionGroup(AssetLoader assetLoader, Color color, float x, float y) {
+    PromotionGroup(AssetLoader assets, Color color, float x, float y) {
         setSize(WIDTH, AssetLoader.SQUARE_SIZE);
         setPosition(x, y);
 
         for (var choice : PromotionChoice.values()) {
-            addActor(new PromotionOption(assetLoader, choice, color));
+            addActor(new PromotionOption(assets, choice, color));
         }
     }
 }

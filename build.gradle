@@ -26,7 +26,6 @@ allprojects {
         equalsVerifierVersion = '3.14.1'
 
         batikVersion = '1.16'
-        picocliVersion = '4.7.3'
         gdxVersion = '1.11.0'
     }
 
@@ -62,7 +61,6 @@ allprojects {
         options.errorprone {
             option('NullAway:AnnotatedPackages', project.group)
             option('NullAway:ExcludedClassAnnotations', 'com.vmardones.tealchess.ExcludeFromNullAway')
-            option('NullAway:KnownInitializers', 'com.badlogic.gdx.Game.create')
         }
     }
 

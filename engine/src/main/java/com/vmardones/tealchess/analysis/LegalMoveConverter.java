@@ -17,11 +17,10 @@ import com.vmardones.tealchess.move.*;
 final class LegalMoveConverter {
 
     private final Position position;
-    private final MoveMaker moveMaker;
+    private final MoveMaker moveMaker = new MoveMaker();
 
     LegalMoveConverter(Position position) {
         this.position = position;
-        moveMaker = new MoveMaker();
     }
 
     List<LegalMove> transformToLegals(List<Move> confirmedLegals) {
@@ -115,7 +114,7 @@ final class LegalMoveConverter {
             var sameRank = moves.stream().allMatch(move -> move.source().rank() == firstRank);
 
             if (sameFile && sameRank) {
-                throw new AssertionError("Unreachable statement");
+                throw new AssertionError();
             }
 
             if (!sameFile && sameRank) {

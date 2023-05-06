@@ -16,12 +16,12 @@ import com.vmardones.tealchess.player.Color;
 
 final class PromotionOption extends Actor {
 
-    private final AssetLoader assetLoader;
+    private final AssetLoader assets;
     private final PromotionChoice choice;
     private final Color color;
 
-    PromotionOption(AssetLoader assetLoader, PromotionChoice choice, Color color) {
-        this.assetLoader = assetLoader;
+    PromotionOption(AssetLoader assets, PromotionChoice choice, Color color) {
+        this.assets = assets;
         this.choice = choice;
         this.color = color;
 
@@ -36,10 +36,10 @@ final class PromotionOption extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        var background = assetLoader.get("promotion.png", Texture.class);
+        var background = assets.get("promotion.png", Texture.class);
         batch.draw(background, getX(), getY(), background.getWidth(), background.getHeight());
 
-        var piece = assetLoader.get(color.fen() + choice.san() + ".png", Texture.class);
+        var piece = assets.get(color.fen() + choice.san() + ".png", Texture.class);
         batch.draw(piece, getX(), getY());
     }
 

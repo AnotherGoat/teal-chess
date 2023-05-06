@@ -218,6 +218,6 @@ public final class FenParser {
                 .filter(piece -> piece.isKing() && piece.color() == color)
                 .map(King.class::cast)
                 .findFirst()
-                .orElseThrow(() -> new AssertionError("Unreachable statement"));
+                .orElseThrow(() -> new AssertionError());
     }
 }

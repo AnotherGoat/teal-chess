@@ -10,7 +10,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
 public final class Window {
 
-    public Window(boolean debugMode, boolean highlightLegals, boolean flipBoard) {
+    public Window() {
         var configuration = new Lwjgl3ApplicationConfiguration();
         configuration.setTitle("Teal Chess");
         configuration.setWindowedMode(1280, 720);
@@ -19,6 +19,6 @@ public final class Window {
         configuration.setForegroundFPS(60);
         configuration.disableAudio(true);
 
-        new Lwjgl3Application(new TealChess(debugMode, highlightLegals, flipBoard), configuration);
+        new Lwjgl3Application(new TealChess(), configuration);
     }
 }

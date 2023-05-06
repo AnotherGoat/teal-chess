@@ -5,12 +5,10 @@
 
 package com.vmardones.tealchess.gdx;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.*;
@@ -22,43 +20,40 @@ import com.vmardones.tealchess.ai.RandomMoveChooser;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.game.Game;
 import com.vmardones.tealchess.io.AssetLoader;
+import com.vmardones.tealchess.io.SettingsManager;
 import com.vmardones.tealchess.move.LegalMove;
 import com.vmardones.tealchess.move.MoveFinder;
+import org.eclipse.jdt.annotation.Nullable;
 
 final class GameScreen extends ScreenAdapter {
 
     private static final float ANIMATION_SPEED = 0.3f;
     private static final float AI_DELAY = 0.75f;
 
-    private final AssetLoader assetLoader;
-    private final GameLogger gameLogger;
-    private boolean debugMode;
-    private boolean highlightLegals;
-    private boolean flipBoard;
+    private final AssetLoader assets;
+    private final SettingsManager settings;
+    private final GameLogger gameLogger = new GameLogger();
     private Game game;
-    private final Stage stage;
+    private final Stage stage = new Stage();
     private BoardGroup boardGroup;
     private SelectionState selectionState;
-    private PromotionGroup promotionGroup;
-    private List<LegalMove> promotionMoves;
+    private @Nullable PromotionGroup promotionGroup;
+    private final List<LegalMove> promotionMoves = new ArrayList<>();
 
-    GameScreen(AssetLoader assetLoader, boolean debugMode, boolean highlightLegals, boolean flipBoard) {
-        this.assetLoader = assetLoader;
-        gameLogger = new GameLogger();
-        this.debugMode = debugMode;
-        this.highlightLegals = highlightLegals;
-        this.flipBoard = flipBoard;
+    GameScreen(AssetLoader assets, SettingsManager settings) {
+        this.assets = assets;
+        this.settings = settings;
 
         Gdx.app.log("Game", "Game started!");
         game = new Game().blackAi(new RandomMoveChooser());
         gameLogger.log(game);
 
-        stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        boardGroup = new BoardGroup(assetLoader, game.board());
-        if (flipBoard) {
-            boardGroup.flip(flipBoard);
+        boardGroup = new BoardGroup(assets, game.board());
+
+        if (settings.flipBoard()) {
+            boardGroup.flip(true);
         }
 
         stage.addActor(boardGroup);
@@ -149,7 +144,7 @@ final class GameScreen extends ScreenAdapter {
                 var rookDestination = castle.rookDestination();
 
                 if (rook == null || rookDestination == null) {
-                    throw new AssertionError("Unreachable statement");
+                    throw new AssertionError();
                 }
 
                 var rookSource = rook.coordinate();
@@ -233,7 +228,7 @@ final class GameScreen extends ScreenAdapter {
             var coordinate = event.square().coordinate();
             boardGroup.highlightSource(coordinate);
 
-            if (highlightLegals) {
+            if (settings.highlightLegals()) {
                 boardGroup.highlightDestinations(legalDestinations);
             }
 
@@ -248,7 +243,7 @@ final class GameScreen extends ScreenAdapter {
         private SourceSelection() {
             boardGroup.hideSource();
 
-            if (highlightLegals) {
+            if (settings.highlightLegals()) {
                 boardGroup.hideDestinations();
             }
         }
@@ -304,11 +299,11 @@ final class GameScreen extends ScreenAdapter {
 
             boardGroup.dark(true);
             boardGroup.setTouchable(Touchable.disabled);
-            promotionMoves = moves;
+            promotionMoves.addAll(moves);
 
             var x = boardGroup.getX() + event.x();
             var y = boardGroup.getY() + event.y();
-            promotionGroup = new PromotionGroup(assetLoader, game.position().sideToMove(), x, y);
+            promotionGroup = new PromotionGroup(assets, game.position().sideToMove(), x, y);
             stage.addActor(promotionGroup);
         }
 
@@ -330,9 +325,9 @@ final class GameScreen extends ScreenAdapter {
         public boolean keyDown(InputEvent event, int keycode) {
             if (keycode == Input.Keys.D) {
                 Gdx.app.log(LOG_TAG, "Toggling debug mode");
-                debugMode = !debugMode;
+                settings.toggleDebugMode();
 
-                if (debugMode) {
+                if (settings.debugMode()) {
                     Gdx.app.setLogLevel(Application.LOG_DEBUG);
                 } else {
                     Gdx.app.setLogLevel(Application.LOG_INFO);
@@ -341,13 +336,15 @@ final class GameScreen extends ScreenAdapter {
                 return true;
             } else if (keycode == Input.Keys.H) {
                 Gdx.app.log(LOG_TAG, "Toggling legal move highlighting");
-                highlightLegals = !highlightLegals;
+                settings.toggleHighlightLegals();
+
                 // TODO: Handle hiding or showing legals when a piece is already selected
                 return true;
             } else if (keycode == Input.Keys.F) {
                 Gdx.app.log(LOG_TAG, "Flipping the board");
-                flipBoard = !flipBoard;
-                boardGroup.flip(flipBoard);
+                settings.toggleFlipBoard();
+
+                boardGroup.flip(settings.flipBoard());
                 return true;
             }
 
@@ -362,13 +359,16 @@ final class GameScreen extends ScreenAdapter {
                 return false;
             }
 
-            promotionGroup.remove();
+            if (promotionGroup != null) {
+                promotionGroup.remove();
+            }
 
             var choice = promotionEvent.promotionChoice();
             var selectedMove = promotionMoves.stream()
                     .filter(legal -> legal.move().promotionChoice() == choice)
                     .findFirst()
-                    .orElseThrow(() -> new AssertionError("Unreachable statement"));
+                    .orElseThrow(AssertionError::new);
+            promotionMoves.clear();
 
             game.makeMove(selectedMove);
             boardGroup.highlightMove(selectedMove);

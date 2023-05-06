@@ -10,29 +10,23 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.vmardones.tealchess.io.AssetLoader;
 import com.vmardones.tealchess.io.PieceTheme;
+import com.vmardones.tealchess.io.SettingsManager;
 
 final class TealChess extends Game {
 
-    private final AssetLoader assetLoader;
-    private final boolean debugMode;
-    private final boolean highlightLegals;
-    private final boolean flipBoard;
-
-    TealChess(boolean debugMode, boolean highlightLegals, boolean flipBoard) {
-        assetLoader = new AssetLoader(PieceTheme.CBURNETT);
-        this.debugMode = debugMode;
-        this.highlightLegals = highlightLegals;
-        this.flipBoard = flipBoard;
-    }
+    private final AssetLoader assets = new AssetLoader(PieceTheme.CBURNETT);
+    private final SettingsManager settings = new SettingsManager();
 
     @Override
     public void create() {
-        if (debugMode) {
+        settings.load();
+
+        if (settings.debugMode()) {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
         }
 
-        assetLoader.reload();
+        assets.reload();
 
-        setScreen(new GameScreen(assetLoader, debugMode, highlightLegals, flipBoard));
+        setScreen(new GameScreen(assets, settings));
     }
 }

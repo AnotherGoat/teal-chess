@@ -42,7 +42,7 @@ public final class Square implements Unicode {
             var emptySquare = EMPTY_SQUARE_CACHE.get(coordinate);
 
             if (emptySquare == null) {
-                throw new AssertionError("Unreachable statement");
+                throw new AssertionError();
             }
 
             return emptySquare;
