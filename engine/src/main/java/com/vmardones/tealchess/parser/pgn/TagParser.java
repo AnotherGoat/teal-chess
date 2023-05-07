@@ -3,19 +3,26 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package com.vmardones.tealchess.parser;
+package com.vmardones.tealchess.parser.pgn;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jdt.annotation.Nullable;
 
-final class PgnTagParser {
+final class TagParser {
 
-    static Map<String, String> parseTags(List<String> tags) {
+    private static final List<String> sevenTagRoster =
+            List.of("Event", "Site", "Date", "Round", "White", "Black", "Result");
 
-        var tagMap = new HashMap<String, String>();
+    static Map<String, String> parse(List<String> tags) {
+        var collectedTags = collectTags(tags);
+        return sortSevenTagRoster(collectedTags);
+    }
+
+    private static Map<String, String> collectTags(List<String> tags) {
+        var collectedTags = new LinkedHashMap<String, String>();
 
         for (var line : tags) {
             var pair = parseTag(line);
@@ -23,18 +30,22 @@ final class PgnTagParser {
             if (pair != null) {
                 var tag = pair.tag();
 
-                if (tagMap.containsKey(tag)) {
+                if (collectedTags.containsKey(tag)) {
                     throw new PgnParseException("Duplicated tag: " + tag);
                 }
 
-                tagMap.put(tag, pair.value());
+                collectedTags.put(tag, pair.value());
             }
         }
 
-        return tagMap;
-    }
+        for (var tag : sevenTagRoster) {
+            if (!collectedTags.containsKey(tag)) {
+                throw new PgnParseException("The tag " + tag + " from the Seven Tag Roster is missing");
+            }
+        }
 
-    private PgnTagParser() {}
+        return collectedTags;
+    }
 
     private static @Nullable TagPair parseTag(String line) {
         line = line.trim();
@@ -69,6 +80,22 @@ final class PgnTagParser {
 
         return new TagPair(tag, value);
     }
+
+    private static Map<String, String> sortSevenTagRoster(Map<String, String> tags) {
+        var sortedTags = new LinkedHashMap<String, String>();
+
+        for (var tag : sevenTagRoster) {
+            var value = tags.get(tag);
+
+            sortedTags.put(tag, value);
+            tags.remove(tag);
+        }
+
+        sortedTags.putAll(tags);
+        return sortedTags;
+    }
+
+    private TagParser() {}
 
     private record TagPair(String tag, String value) {}
 }

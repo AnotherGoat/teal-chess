@@ -7,7 +7,7 @@ package com.vmardones.tealchess.move;
 
 // TODO: This is essentially the same as PlayerStatus, merge both classes
 
-import com.vmardones.tealchess.parser.San;
+import com.vmardones.tealchess.parser.pgn.San;
 
 /** Tells what happens after a move is made and whether that move is possible or not. Because illegal moves are never saved, the ILLEGAL and NONE results are only used when testing moves. */
 public enum MoveResult implements San {

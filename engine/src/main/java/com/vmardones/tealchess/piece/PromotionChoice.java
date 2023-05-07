@@ -5,7 +5,7 @@
 
 package com.vmardones.tealchess.piece;
 
-import com.vmardones.tealchess.parser.San;
+import com.vmardones.tealchess.parser.pgn.San;
 
 /**
  * Each of the choices that a pawn can be promoted to when it reaches the opposite side.

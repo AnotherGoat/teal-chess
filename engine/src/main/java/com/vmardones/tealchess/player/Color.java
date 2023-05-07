@@ -7,7 +7,7 @@ package com.vmardones.tealchess.player;
 
 import java.util.Locale;
 
-import com.vmardones.tealchess.parser.Fen;
+import com.vmardones.tealchess.parser.fen.Fen;
 
 /**
  * Represents a chess piece's color, which can be white or black.

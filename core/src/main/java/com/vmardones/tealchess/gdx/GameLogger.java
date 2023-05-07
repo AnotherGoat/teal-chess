@@ -8,8 +8,8 @@ package com.vmardones.tealchess.gdx;
 import com.badlogic.gdx.Gdx;
 import com.vmardones.tealchess.game.Game;
 import com.vmardones.tealchess.io.settings.SettingsManager;
-import com.vmardones.tealchess.parser.FenSerializer;
-import com.vmardones.tealchess.parser.PgnSerializer;
+import com.vmardones.tealchess.parser.fen.FenSerializer;
+import com.vmardones.tealchess.parser.pgn.PgnSerializer;
 import com.vmardones.tealchess.player.Color;
 
 final class GameLogger {

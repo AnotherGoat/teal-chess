@@ -10,9 +10,9 @@ import java.util.Locale;
 import java.util.Objects;
 
 import com.vmardones.tealchess.board.Coordinate;
-import com.vmardones.tealchess.parser.Fen;
-import com.vmardones.tealchess.parser.San;
 import com.vmardones.tealchess.parser.Unicode;
+import com.vmardones.tealchess.parser.fen.Fen;
+import com.vmardones.tealchess.parser.pgn.San;
 import com.vmardones.tealchess.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 

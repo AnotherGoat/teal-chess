@@ -7,7 +7,7 @@ package com.vmardones.tealchess.game;
 
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Square;
-import com.vmardones.tealchess.parser.FenParser;
+import com.vmardones.tealchess.parser.fen.FenParser;
 import com.vmardones.tealchess.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 

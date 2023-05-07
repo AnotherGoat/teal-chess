@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.move.Attack;
-import com.vmardones.tealchess.parser.FenParser;
+import com.vmardones.tealchess.parser.fen.FenParser;
 import org.junit.jupiter.api.Test;
 
 @ExcludeFromNullAway

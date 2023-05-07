@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
-import com.vmardones.tealchess.parser.San;
+import com.vmardones.tealchess.parser.pgn.San;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**

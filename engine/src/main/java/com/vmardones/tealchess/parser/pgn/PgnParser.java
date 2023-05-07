@@ -3,7 +3,7 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package com.vmardones.tealchess.parser;
+package com.vmardones.tealchess.parser.pgn;
 
 import java.util.Arrays;
 
@@ -22,7 +22,7 @@ public final class PgnParser {
         var tags = lines.subList(0, lines.size() - 1);
         var moveText = lines.get(lines.size() - 1);
 
-        var tagMap = PgnTagParser.parseTags(tags);
+        var tagMap = TagParser.parse(tags);
 
         return new Game(new MoveMaker());
     }

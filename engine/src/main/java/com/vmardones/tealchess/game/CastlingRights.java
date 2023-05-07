@@ -5,7 +5,7 @@
 
 package com.vmardones.tealchess.game;
 
-import com.vmardones.tealchess.parser.Fen;
+import com.vmardones.tealchess.parser.fen.Fen;
 import com.vmardones.tealchess.player.Color;
 
 /**

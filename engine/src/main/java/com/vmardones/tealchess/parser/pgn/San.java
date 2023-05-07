@@ -3,7 +3,7 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package com.vmardones.tealchess.parser;
+package com.vmardones.tealchess.parser.pgn;
 
 /**
  * An object that can be represented using Standard Algebraic Notation (SAN).

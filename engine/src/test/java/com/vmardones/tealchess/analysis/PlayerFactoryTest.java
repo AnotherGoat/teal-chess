@@ -8,7 +8,7 @@ package com.vmardones.tealchess.analysis;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.vmardones.tealchess.ExcludeFromNullAway;
-import com.vmardones.tealchess.parser.FenParser;
+import com.vmardones.tealchess.parser.fen.FenParser;
 import com.vmardones.tealchess.player.Color;
 import com.vmardones.tealchess.player.PlayerStatus;
 import org.junit.jupiter.api.Test;

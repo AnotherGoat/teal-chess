@@ -3,7 +3,7 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package com.vmardones.tealchess.parser;
+package com.vmardones.tealchess.parser.fen;
 
 import static java.util.Collections.unmodifiableList;
 

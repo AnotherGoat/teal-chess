@@ -11,7 +11,7 @@ import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.move.MoveType;
-import com.vmardones.tealchess.parser.FenParser;
+import com.vmardones.tealchess.parser.fen.FenParser;
 import com.vmardones.tealchess.piece.Pawn;
 import com.vmardones.tealchess.piece.PromotionChoice;
 import org.junit.jupiter.api.Test;

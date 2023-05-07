@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.game.Position;
-import com.vmardones.tealchess.parser.FenParser;
+import com.vmardones.tealchess.parser.fen.FenParser;
 import com.vmardones.tealchess.piece.*;
 import com.vmardones.tealchess.player.Color;
 import nl.jqno.equalsverifier.EqualsVerifier;
