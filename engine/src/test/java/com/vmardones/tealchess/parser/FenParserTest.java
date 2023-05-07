@@ -71,6 +71,13 @@ final class FenParserTest {
 
     @Test
     void tooManyKings() {
+        // 2 white kings
+        assertThatThrownBy(() -> FenParser.parse("4k3/8/8/8/8/4K3/8/4K3 - - - - -"))
+                .isInstanceOf(FenParseException.class)
+                .hasMessageContaining("2 kings")
+                .hasMessageContaining("4k3/8/8/8/8/4K3/8/4K3");
+
+        // 2 black kings
         assertThatThrownBy(() -> FenParser.parse("4k3/8/4k3/8/8/8/8/4K3 - - - - -"))
                 .isInstanceOf(FenParseException.class)
                 .hasMessageContaining("2 kings")

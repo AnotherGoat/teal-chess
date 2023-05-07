@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.board.Coordinate;
+import com.vmardones.tealchess.move.LegalMove;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.move.MoveResult;
 import com.vmardones.tealchess.piece.Pawn;
@@ -35,14 +36,15 @@ final class GameTest {
         var initialBoard = game.board();
 
         var piece = new Pawn("d4", Color.WHITE);
-        var move = Move.builder(piece, Coordinate.of("d5")).normal().makeLegal(MoveResult.CONTINUE);
+        var move = Move.builder(piece, Coordinate.of("d5")).normal();
+        var legalMove = new LegalMove(move, MoveResult.CONTINUE);
 
-        game.makeMove(move);
+        game.makeMove(legalMove);
 
         assertThat(game.board()).isNotEqualTo(initialBoard);
         assertThat(game.player().color()).isEqualTo(Color.BLACK);
         assertThat(game.oppponent().color()).isEqualTo(Color.WHITE);
-        assertThat(game.history().lastMove()).isEqualTo(move);
+        assertThat(game.history().lastMove()).isEqualTo(legalMove);
     }
 
     @Test
@@ -53,5 +55,13 @@ final class GameTest {
         var expectedDestinations = new Coordinate[] {Coordinate.of("f3"), Coordinate.of("h3")};
 
         assertThat(game.findLegalDestinations(knight)).hasSize(2).containsOnlyOnce(expectedDestinations);
+    }
+
+    // TODO: Add a method that starts the game from a FEN position, then test finding the black king
+    @Test
+    void findWhiteKing() {
+        var game = new Game();
+
+        assertThat(game.king()).isEqualTo(game.board().pieceAt("e1"));
     }
 }

@@ -74,10 +74,16 @@ final class CastlingRightsTest {
 
     @Test
     void someRightsFen() {
-        var rights = new CastlingRights(false, true, true, false);
-        assertThat(rights.fen()).isEqualTo("Qk");
+        var rights1 = new CastlingRights(false, true, true, true);
+        assertThat(rights1.fen()).isEqualTo("Qkq");
 
-        var otherRights = new CastlingRights(true, false, false, true);
-        assertThat(otherRights.fen()).isEqualTo("Kq");
+        var rights2 = new CastlingRights(false, false, true, true);
+        assertThat(rights2.fen()).isEqualTo("kq");
+
+        var rights3 = new CastlingRights(false, false, false, true);
+        assertThat(rights3.fen()).isEqualTo("q");
+
+        var rights4 = new CastlingRights(true, true, true, false);
+        assertThat(rights4.fen()).isEqualTo("KQk");
     }
 }

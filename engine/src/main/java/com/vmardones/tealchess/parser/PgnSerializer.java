@@ -8,7 +8,6 @@ package com.vmardones.tealchess.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vmardones.tealchess.ExcludeFromGeneratedReport;
 import com.vmardones.tealchess.move.LegalMove;
 
 /**
@@ -32,8 +31,5 @@ public final class PgnSerializer {
         return String.join(" ", moveText.toArray(new String[moves.size()]));
     }
 
-    @ExcludeFromGeneratedReport
-    private PgnSerializer() {
-        throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
-    }
+    private PgnSerializer() {}
 }

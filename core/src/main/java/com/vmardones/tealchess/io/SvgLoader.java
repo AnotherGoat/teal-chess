@@ -17,7 +17,6 @@ import org.apache.batik.transcoder.image.PNGTranscoder;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.vmardones.tealchess.ExcludeFromGeneratedReport;
 
 final class SvgLoader {
 
@@ -49,8 +48,5 @@ final class SvgLoader {
         }
     }
 
-    @ExcludeFromGeneratedReport
-    private SvgLoader() {
-        throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
-    }
+    private SvgLoader() {}
 }

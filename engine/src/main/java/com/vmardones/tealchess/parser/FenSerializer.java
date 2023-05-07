@@ -5,7 +5,6 @@
 
 package com.vmardones.tealchess.parser;
 
-import com.vmardones.tealchess.ExcludeFromGeneratedReport;
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.game.Position;
@@ -25,10 +24,7 @@ public final class FenSerializer {
         return String.join(" ", ranks, sideToMove, castles, enPassantTarget, halfmove, fullmove);
     }
 
-    @ExcludeFromGeneratedReport
-    private FenSerializer() {
-        throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
-    }
+    private FenSerializer() {}
 
     private static String serializeBoard(Board board) {
 

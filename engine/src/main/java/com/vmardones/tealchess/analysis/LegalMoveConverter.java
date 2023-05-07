@@ -10,7 +10,6 @@ import java.util.*;
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.move.*;
 import com.vmardones.tealchess.piece.Piece;
-import com.vmardones.tealchess.piece.PieceType;
 
 final class LegalMoveConverter {
 
@@ -40,9 +39,7 @@ final class LegalMoveConverter {
             return makeLegal(move);
         }
 
-        var type = piece.type();
-
-        if (countPieces(type) == 1) {
+        if (countSameType(piece) == 1) {
             return makeLegal(move);
         }
 
@@ -60,13 +57,13 @@ final class LegalMoveConverter {
     private LegalMove makeLegal(Move move) {
         var afterMove = moveMaker.make(position, move);
         var result = calculateResult(afterMove);
-        return move.makeLegal(result);
+        return new LegalMove(move, result);
     }
 
     private LegalMove makeLegal(Move move, Disambiguation disambiguation) {
         var afterMove = moveMaker.make(position, move);
         var result = calculateResult(afterMove);
-        return move.makeLegal(result, disambiguation);
+        return new LegalMove(move, result, disambiguation);
     }
 
     private MoveResult calculateResult(Position afterMove) {
@@ -86,21 +83,21 @@ final class LegalMoveConverter {
         return MoveResult.findResult(attacked, cantMove);
     }
 
-    private long countPieces(PieceType type) {
+    private long countSameType(Piece piece) {
         return pieces.stream()
-                .filter(otherPiece -> otherPiece.type().equals(type))
+                .filter(otherPiece -> otherPiece.sameTypeAs(piece))
                 .count();
     }
 
     private List<Move> findSimilarMoves(List<Move> moves, Move moveToCheck) {
-        var pieceType = moveToCheck.piece().type();
+        var piece = moveToCheck.piece();
         var destination = moveToCheck.destination();
         var file = moveToCheck.source().file();
         var rank = moveToCheck.source().rank();
 
         return moves.stream()
-                .filter(move -> move.piece().type().equals(pieceType)
-                        && move.destination().equals(destination))
+                .filter(move ->
+                        move.piece().sameTypeAs(piece) && move.destination().equals(destination))
                 .filter(move ->
                         move.source().file().equals(file) || move.source().rank() == rank)
                 .filter(move -> !move.equals(moveToCheck))

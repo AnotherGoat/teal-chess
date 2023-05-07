@@ -10,7 +10,6 @@ import static java.util.Collections.emptyList;
 import java.util.List;
 import java.util.function.Predicate;
 
-import com.vmardones.tealchess.ExcludeFromGeneratedReport;
 import com.vmardones.tealchess.board.Coordinate;
 
 public final class MoveFinder {
@@ -31,10 +30,7 @@ public final class MoveFinder {
         return legalMoves.stream().filter(isMovePossible(from, to)).toList();
     }
 
-    @ExcludeFromGeneratedReport
-    private MoveFinder() {
-        throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
-    }
+    private MoveFinder() {}
 
     private static Predicate<LegalMove> isMovePossible(Coordinate source, Coordinate destination) {
         return legal -> legal.source().equals(source) && legal.destination().equals(destination);

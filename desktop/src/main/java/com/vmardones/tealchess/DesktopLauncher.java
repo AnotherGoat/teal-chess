@@ -19,8 +19,5 @@ public final class DesktopLauncher {
         new Window();
     }
 
-    @ExcludeFromGeneratedReport
-    private DesktopLauncher() {
-        throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
-    }
+    private DesktopLauncher() {}
 }

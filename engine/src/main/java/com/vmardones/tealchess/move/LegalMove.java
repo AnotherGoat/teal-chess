@@ -21,11 +21,26 @@ public final class LegalMove implements San {
     private final MoveResult result;
     private final @Nullable Disambiguation disambiguation;
 
-    LegalMove(Move move, MoveResult result) {
-        this(move, result, null);
+    /**
+     * Convert a pseudo-legal move into a legal one. For this, a move result must be supplied.
+     * @param move The pseudo-legal move.
+     * @param result What happens to the opponent after the move is done.
+     */
+    public LegalMove(Move move, MoveResult result) {
+        this.move = move;
+        this.result = result;
+        disambiguation = null;
     }
 
-    LegalMove(Move move, MoveResult result, @Nullable Disambiguation disambiguation) {
+    /**
+     * Convert a pseudo-legal move into a legal one. For this, a move result must be supplied.
+     * This alternative also asks for a disambiguation type, which is needed for proper SAN movetext representation.
+     * For unambiguous cases, use the shorter version of this method.
+     * @param move The pseudo-legal move.
+     * @param result What happens to the opponent after the move is done.
+     * @param disambiguation Disambiguation type.
+     */
+    public LegalMove(Move move, MoveResult result, Disambiguation disambiguation) {
         this.move = move;
         this.result = result;
         this.disambiguation = disambiguation;

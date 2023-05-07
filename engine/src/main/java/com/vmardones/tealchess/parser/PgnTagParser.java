@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.vmardones.tealchess.ExcludeFromGeneratedReport;
 import org.eclipse.jdt.annotation.Nullable;
 
 final class PgnTagParser {
@@ -35,10 +34,7 @@ final class PgnTagParser {
         return tagMap;
     }
 
-    @ExcludeFromGeneratedReport
-    private PgnTagParser() {
-        throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
-    }
+    private PgnTagParser() {}
 
     private static @Nullable TagPair parseTag(String line) {
         line = line.trim();

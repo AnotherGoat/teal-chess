@@ -27,6 +27,7 @@ import org.eclipse.jdt.annotation.Nullable;
  */
 public final class Game {
 
+    // TODO: Prefer using dependency injection to make testing easier
     private final MoveMaker moveMaker = new MoveMaker();
     private final GameState state;
     private GameHistory history;

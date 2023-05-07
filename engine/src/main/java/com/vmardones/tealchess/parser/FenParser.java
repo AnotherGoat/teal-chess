@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import com.vmardones.tealchess.ExcludeFromGeneratedReport;
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.board.Square;
@@ -56,10 +55,7 @@ public final class FenParser {
         return buildPosition(ranks, sideToMove, castles, enPassantTarget, halfmove, fullmove);
     }
 
-    @ExcludeFromGeneratedReport
-    private FenParser() {
-        throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
-    }
+    private FenParser() {}
 
     private static boolean isPrintableAscii(String text) {
         return text.chars().allMatch(character -> character >= 0x20 && character < 0x7F);

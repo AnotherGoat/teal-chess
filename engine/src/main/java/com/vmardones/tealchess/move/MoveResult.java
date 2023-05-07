@@ -14,11 +14,11 @@ public enum MoveResult implements San {
     /** The move can be made and the game continues normally. */
     CONTINUE(""),
     /** Leaves the opponent in check. */
-    CHECKS("+"),
+    CHECK("+"),
     /** Checkmates the opponent. The game finishes. */
-    CHECKMATES("#"),
+    CHECKMATE("#"),
     /** Leaves the opponent without moves, but doesn't checkmate. The game finishes. */
-    STALEMATES("");
+    STALEMATE("");
 
     private final String endHash;
 
@@ -30,15 +30,15 @@ public enum MoveResult implements San {
      */
     public static MoveResult findResult(boolean attacked, boolean cantMove) {
         if (attacked && cantMove) {
-            return MoveResult.CHECKMATES;
+            return MoveResult.CHECKMATE;
         }
 
         if (!attacked && cantMove) {
-            return MoveResult.STALEMATES;
+            return MoveResult.STALEMATE;
         }
 
         if (attacked) {
-            return MoveResult.CHECKS;
+            return MoveResult.CHECK;
         }
 
         return MoveResult.CONTINUE;

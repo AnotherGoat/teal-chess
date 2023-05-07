@@ -7,7 +7,6 @@ package com.vmardones.tealchess.parser;
 
 import java.util.Arrays;
 
-import com.vmardones.tealchess.ExcludeFromGeneratedReport;
 import com.vmardones.tealchess.game.Game;
 
 /**
@@ -27,8 +26,5 @@ public final class PgnParser {
         return new Game();
     }
 
-    @ExcludeFromGeneratedReport
-    private PgnParser() {
-        throw new UnsupportedOperationException("This is an utility class, it cannot be instantiated!");
-    }
+    private PgnParser() {}
 }
