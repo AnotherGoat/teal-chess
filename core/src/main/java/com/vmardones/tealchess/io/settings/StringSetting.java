@@ -3,18 +3,17 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package com.vmardones.tealchess.io;
+package com.vmardones.tealchess.io.settings;
 
 import java.util.Locale;
 
-enum BooleanSetting {
-    DEBUG_MODE(false),
-    HIGHTLIGHT_LEGALS(true),
-    FLIP_BOARD(false);
+public enum StringSetting {
+    PGN(""),
+    FEN("");
 
-    private final boolean defaultValue;
+    private final String defaultValue;
 
-    BooleanSetting(boolean defaultValue) {
+    StringSetting(String defaultValue) {
         this.defaultValue = defaultValue;
     }
 
@@ -23,7 +22,7 @@ enum BooleanSetting {
         return name().toLowerCase(Locale.ROOT);
     }
 
-    boolean defaultValue() {
+    String defaultValue() {
         return defaultValue;
     }
 }

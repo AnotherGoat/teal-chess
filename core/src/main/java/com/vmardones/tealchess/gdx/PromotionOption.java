@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.vmardones.tealchess.io.AssetLoader;
+import com.vmardones.tealchess.io.assets.AssetLoader;
 import com.vmardones.tealchess.piece.PromotionChoice;
 import com.vmardones.tealchess.player.Color;
 

@@ -7,14 +7,23 @@ package com.vmardones.tealchess.gdx;
 
 import com.badlogic.gdx.Gdx;
 import com.vmardones.tealchess.game.Game;
+import com.vmardones.tealchess.io.settings.SettingsManager;
+import com.vmardones.tealchess.parser.FenSerializer;
 import com.vmardones.tealchess.parser.PgnSerializer;
 import com.vmardones.tealchess.player.Color;
 
 final class GameLogger {
 
     private static final String LOG_TAG = "Game";
+    private final SettingsManager settings;
+
+    public GameLogger(SettingsManager settings) {
+        this.settings = settings;
+    }
 
     void log(Game game) {
+        save(game);
+
         var board = game.board();
         Gdx.app.debug(LOG_TAG, "Current chessboard:\n" + board.unicode());
 
@@ -47,5 +56,10 @@ final class GameLogger {
             case CHECKMATED -> Gdx.app.log(LOG_TAG, "Checkmate! " + sideToMove.opposite() + " player won!");
             case STALEMATED -> Gdx.app.log(LOG_TAG, "Stalemate! The game ends in a draw!");
         }
+    }
+
+    void save(Game game) {
+        settings.pgn(PgnSerializer.serializeGame(game));
+        settings.fen(FenSerializer.serialize(game.position()));
     }
 }

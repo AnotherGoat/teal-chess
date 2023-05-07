@@ -8,6 +8,7 @@ package com.vmardones.tealchess.parser;
 import java.util.Arrays;
 
 import com.vmardones.tealchess.game.Game;
+import com.vmardones.tealchess.move.MoveMaker;
 
 /**
  * PGN (Portable Game Notation) parser.
@@ -23,7 +24,7 @@ public final class PgnParser {
 
         var tagMap = PgnTagParser.parseTags(tags);
 
-        return new Game();
+        return new Game(new MoveMaker());
     }
 
     private PgnParser() {}

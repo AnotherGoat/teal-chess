@@ -7,6 +7,10 @@ package com.vmardones.tealchess.game;
 
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 import com.vmardones.tealchess.ai.MoveChooser;
@@ -27,17 +31,41 @@ import org.eclipse.jdt.annotation.Nullable;
  */
 public final class Game {
 
-    // TODO: Prefer using dependency injection to make testing easier
-    private final MoveMaker moveMaker = new MoveMaker();
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+    private static final Map<String, String> INITIAL_TAGS = new LinkedHashMap<>();
+
+    static {
+        INITIAL_TAGS.put("Event", "Casual game");
+        INITIAL_TAGS.put("Site", "Teal Chess");
+        INITIAL_TAGS.put("Date", LocalDate.now().format(DATE_FORMATTER));
+        INITIAL_TAGS.put("Round", "?");
+        INITIAL_TAGS.put("White", "Anonymous");
+        INITIAL_TAGS.put("Black", "Anonymous");
+        INITIAL_TAGS.put("Result", "\\*");
+    }
+
+    private final MoveMaker moveMaker;
     private final GameState state;
     private GameHistory history;
+    private final Map<String, String> tags;
     private @Nullable MoveChooser whiteAi;
     private @Nullable MoveChooser blackAi;
 
     /**
      * The standard way to create a new game, starting from the initial position.
+     * @param moveMaker Responsible for making moves.
      */
-    public Game() {
+    public Game(MoveMaker moveMaker) {
+        this(moveMaker, INITIAL_TAGS);
+    }
+
+    /**
+     * Another way to create a game, which is used when loading a PGN file.
+     * @param tags Map containing the PGN tag-value pairs.
+     */
+    public Game(MoveMaker moveMaker, Map<String, String> tags) {
+        this.moveMaker = moveMaker;
+        this.tags = tags;
         state = new GameState();
         history = new GameHistory(state.save());
     }
@@ -54,6 +82,10 @@ public final class Game {
 
     public GameHistory history() {
         return history;
+    }
+
+    public Map<String, String> tags() {
+        return tags;
     }
 
     public Player player() {

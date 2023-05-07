@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.board.Square;
-import com.vmardones.tealchess.io.AssetLoader;
+import com.vmardones.tealchess.io.assets.AssetLoader;
 import com.vmardones.tealchess.piece.Piece;
 import org.eclipse.jdt.annotation.Nullable;
 

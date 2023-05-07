@@ -3,7 +3,7 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package com.vmardones.tealchess.io;
+package com.vmardones.tealchess.io.assets;
 
 import java.util.Locale;
 

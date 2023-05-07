@@ -19,10 +19,11 @@ import com.badlogic.gdx.utils.Timer;
 import com.vmardones.tealchess.ai.RandomMoveChooser;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.game.Game;
-import com.vmardones.tealchess.io.AssetLoader;
-import com.vmardones.tealchess.io.SettingsManager;
+import com.vmardones.tealchess.io.assets.AssetLoader;
+import com.vmardones.tealchess.io.settings.SettingsManager;
 import com.vmardones.tealchess.move.LegalMove;
 import com.vmardones.tealchess.move.MoveFinder;
+import com.vmardones.tealchess.move.MoveMaker;
 import org.eclipse.jdt.annotation.Nullable;
 
 final class GameScreen extends ScreenAdapter {
@@ -32,7 +33,7 @@ final class GameScreen extends ScreenAdapter {
 
     private final AssetLoader assets;
     private final SettingsManager settings;
-    private final GameLogger gameLogger = new GameLogger();
+    private final GameLogger gameLogger;
     private Game game;
     private final Stage stage = new Stage();
     private BoardGroup boardGroup;
@@ -45,7 +46,9 @@ final class GameScreen extends ScreenAdapter {
         this.settings = settings;
 
         Gdx.app.log("Game", "Game started!");
-        game = new Game().blackAi(new RandomMoveChooser());
+        game = new Game(new MoveMaker()).blackAi(new RandomMoveChooser());
+
+        gameLogger = new GameLogger(settings);
         gameLogger.log(game);
 
         Gdx.input.setInputProcessor(stage);

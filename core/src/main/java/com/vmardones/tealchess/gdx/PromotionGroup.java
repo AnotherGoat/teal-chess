@@ -6,7 +6,7 @@
 package com.vmardones.tealchess.gdx;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.vmardones.tealchess.io.AssetLoader;
+import com.vmardones.tealchess.io.assets.AssetLoader;
 import com.vmardones.tealchess.piece.PromotionChoice;
 import com.vmardones.tealchess.player.Color;
 

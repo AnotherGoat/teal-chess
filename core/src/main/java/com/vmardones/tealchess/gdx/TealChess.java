@@ -8,9 +8,9 @@ package com.vmardones.tealchess.gdx;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.vmardones.tealchess.io.AssetLoader;
-import com.vmardones.tealchess.io.PieceTheme;
-import com.vmardones.tealchess.io.SettingsManager;
+import com.vmardones.tealchess.io.assets.AssetLoader;
+import com.vmardones.tealchess.io.assets.PieceTheme;
+import com.vmardones.tealchess.io.settings.SettingsManager;
 
 final class TealChess extends Game {
 
