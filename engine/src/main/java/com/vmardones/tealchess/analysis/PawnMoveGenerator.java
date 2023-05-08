@@ -76,7 +76,7 @@ final class PawnMoveGenerator extends MoveGenerator {
     }
 
     private @Nullable Move generateDoublePush(Pawn pawn) {
-        if (pawn.coordinate().rank() != pawn.color().pawnRank()) {
+        if (!pawn.canDoublePush()) {
             return null;
         }
 

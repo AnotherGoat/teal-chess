@@ -126,7 +126,7 @@ public final class FenParser {
             return null;
         }
 
-        return Square.create(data, null);
+        return Square.create(Coordinate.of(data), null);
     }
 
     private static int parseHalfmove(String data) {
@@ -191,16 +191,16 @@ public final class FenParser {
             var fileCounter = 0;
 
             for (int j = 0; j < rank.length(); j++) {
-                var data = rank.charAt(j);
+                var symbol = rank.charAt(j);
 
-                if (Character.isDigit(data)) {
-                    fileCounter += Character.digit(data, 10);
+                if (Character.isDigit(symbol)) {
+                    fileCounter += Character.digit(symbol, 10);
                 } else {
                     var file = String.valueOf(Coordinate.FILES.charAt(fileCounter));
                     var rankIndex = Board.SIDE_LENGTH - i;
-                    var coordinate = file + rankIndex;
+                    var coordinate = Coordinate.of(file + rankIndex);
 
-                    pieces.add(Piece.fromSymbol(String.valueOf(data), coordinate));
+                    pieces.add(Piece.fromSymbol(String.valueOf(symbol), coordinate));
                     fileCounter++;
                 }
             }
@@ -214,6 +214,6 @@ public final class FenParser {
                 .filter(piece -> piece.isKing() && piece.color() == color)
                 .map(King.class::cast)
                 .findFirst()
-                .orElseThrow(() -> new AssertionError());
+                .orElseThrow(AssertionError::new);
     }
 }

@@ -21,8 +21,8 @@ import org.junit.jupiter.api.Test;
 final class BoardTest {
 
     Board.BoardBuilder builder;
-    King whiteKing = new King("e1", Color.WHITE);
-    King blackKing = new King("e8", Color.BLACK);
+    King whiteKing = new King(Coordinate.of("e1"), Color.WHITE);
+    King blackKing = new King(Coordinate.of("e8"), Color.BLACK);
 
     @BeforeEach
     void setUp() {
@@ -55,7 +55,7 @@ final class BoardTest {
 
     @Test
     void addPiece() {
-        var piece = new Queen("d7", Color.WHITE);
+        var piece = new Queen(Coordinate.of("d7"), Color.WHITE);
         var board = builder.with(piece).build();
 
         assertThat(board.pieces(Color.WHITE)).containsOnlyOnce(piece);
@@ -71,8 +71,8 @@ final class BoardTest {
 
     @Test
     void lastPieceTakesPrecedence() {
-        var firstPiece = new Pawn("a1", Color.WHITE);
-        var secondPiece = new Rook("a1", Color.WHITE);
+        var firstPiece = new Pawn(Coordinate.of("a1"), Color.WHITE);
+        var secondPiece = new Rook(Coordinate.of("a1"), Color.WHITE);
         var board = builder.with(firstPiece).with(secondPiece).build();
 
         assertThat(board.pieces(Color.WHITE)).doesNotContain(firstPiece).containsOnlyOnce(secondPiece);
@@ -80,7 +80,7 @@ final class BoardTest {
 
     @Test
     void withoutPiece() {
-        var piece = new Pawn("a5", Color.BLACK);
+        var piece = new Pawn(Coordinate.of("a5"), Color.BLACK);
         var board = builder.with(piece).without(piece).build();
 
         assertThat(board.pieces(Color.BLACK)).isNotEmpty().doesNotContain(piece);
@@ -96,8 +96,8 @@ final class BoardTest {
 
     @Test
     void alwaysAddsWhiteKing() {
-        var newWhiteKing = new King("h8", Color.WHITE);
-        var impostorQueen = new Queen("h8", Color.WHITE);
+        var newWhiteKing = new King(Coordinate.of("h8"), Color.WHITE);
+        var impostorQueen = new Queen(Coordinate.of("h8"), Color.WHITE);
 
         var board = Board.builder(newWhiteKing, blackKing).with(impostorQueen).build();
 
@@ -106,8 +106,8 @@ final class BoardTest {
 
     @Test
     void alwaysAddsBlackKing() {
-        var newBlackKing = new King("a1", Color.BLACK);
-        var impostorQueen = new Queen("a1", Color.BLACK);
+        var newBlackKing = new King(Coordinate.of("a1"), Color.BLACK);
+        var impostorQueen = new Queen(Coordinate.of("a1"), Color.BLACK);
 
         var board = Board.builder(whiteKing, newBlackKing).with(impostorQueen).build();
 

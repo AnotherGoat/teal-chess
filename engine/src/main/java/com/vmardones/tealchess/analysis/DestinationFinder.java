@@ -9,10 +9,10 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import com.vmardones.tealchess.board.Board;
-import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.piece.Vector;
+import org.eclipse.jdt.annotation.Nullable;
 
 final class DestinationFinder {
 
@@ -34,36 +34,46 @@ final class DestinationFinder {
                     .map(board::squareAt);
         }
 
-        return vectors.stream().flatMap(vector -> calculateSlides(piece, coordinate, vector));
+        return vectors.stream().flatMap(vector -> calculateSlides(piece, vector));
     }
 
-    private Stream<Square> calculateSlides(Piece piece, Coordinate coordinate, Vector vector) {
+    private Stream<Square> calculateSlides(Piece piece, Vector vector) {
 
         var destinations = Stream.<Square>builder();
 
         // TODO: Refactor this method to not use break and continue in such a confusing way
         for (var i = 1; i < Board.SIDE_LENGTH; i++) {
-            var destination = coordinate.toOrNull(vector.x() * i, vector.y() * i);
+            var destination = findSquare(piece, vector, i);
 
             if (destination == null) {
                 break;
             }
 
-            var square = board.squareAt(destination);
-            var destinationPiece = square.piece();
+            var destinationPiece = destination.piece();
 
             if (destinationPiece == null) {
-                destinations.add(square);
+                destinations.add(destination);
                 continue;
             }
 
             if (piece.isEnemyOf(destinationPiece)) {
-                destinations.add(square);
+                destinations.add(destination);
             }
 
             break;
         }
 
         return destinations.build();
+    }
+
+    private @Nullable Square findSquare(Piece piece, Vector vector, int distance) {
+        var start = piece.coordinate();
+        var destination = start.toOrNull(vector.x() * distance, vector.y() * distance);
+
+        if (destination == null) {
+            return null;
+        }
+
+        return board.squareAt(destination);
     }
 }

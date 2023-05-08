@@ -15,13 +15,12 @@ import com.vmardones.tealchess.parser.fen.Fen;
  */
 public enum Color implements Fen {
     /** The white side, at the bottom of the board. */
-    WHITE("w", 1, 2),
+    WHITE("w", 1),
     /** The black side, at the top of the board. */
-    BLACK("b", -1, 7);
+    BLACK("b", -1);
 
     private final String symbol;
     private final int direction;
-    private final int pawnRank;
 
     /* Alternate color construction */
 
@@ -70,14 +69,6 @@ public enum Color implements Fen {
         return symbol;
     }
 
-    /**
-     * The pawn rank is the rank which is filled with pawns in a standard chess initial position.
-     * @return The pawn rank.
-     */
-    public int pawnRank() {
-        return pawnRank;
-    }
-
     /* toString */
 
     @Override
@@ -85,9 +76,8 @@ public enum Color implements Fen {
         return name().charAt(0) + name().substring(1).toLowerCase(Locale.ROOT);
     }
 
-    Color(String symbol, int direction, int pawnRank) {
+    Color(String symbol, int direction) {
         this.symbol = symbol;
         this.direction = direction;
-        this.pawnRank = pawnRank;
     }
 }

@@ -14,64 +14,89 @@ import com.vmardones.tealchess.piece.Rook;
 import com.vmardones.tealchess.player.Color;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExcludeFromNullAway
+@ExtendWith(MockitoExtension.class)
 final class SquareTest {
+
+    @Mock
+    Coordinate coordinate;
 
     @Test
     void createOccupied() {
-        var piece = new Knight("a1", Color.BLACK);
-        assertThat(Square.create("a1", piece).piece()).isNotNull().isEqualTo(piece);
+        var piece = new Knight(coordinate, Color.BLACK);
+        assertThat(Square.create(coordinate, piece).piece()).isNotNull().isEqualTo(piece);
     }
 
     @Test
     void createEmpty() {
-        assertThat(Square.create("a1", null).piece()).isNull();
+        assertThat(Square.create(Coordinate.of("a1"), null).piece()).isNull();
     }
 
     @Test
     void cache() {
-        assertThat(Square.create("g5", null)).isSameAs(Square.create("g5", null));
+        var location = Coordinate.of("d3");
+        assertThat(Square.create(location, null)).isSameAs(Square.create(location, null));
     }
 
     @Test
     void getWhiteColor() {
-        assertThat(Square.create("a8", null).color()).isEqualTo(Color.WHITE);
+        var firstWhite = Coordinate.of("a8");
+        assertThat(Square.create(firstWhite, null).color()).isEqualTo(Color.WHITE);
+
+        var lastWhite = Coordinate.of("h1");
+        assertThat(Square.create(lastWhite, null).color()).isEqualTo(Color.WHITE);
     }
 
     @Test
     void getBlackColor() {
-        assertThat(Square.create("b8", null).color()).isEqualTo(Color.BLACK);
+        var firstBlack = Coordinate.of("b8");
+        assertThat(Square.create(firstBlack, null).color()).isEqualTo(Color.BLACK);
+
+        var lastBlack = Coordinate.of("g1");
+        assertThat(Square.create(lastBlack, null).color()).isEqualTo(Color.BLACK);
     }
 
     @Test
     void sameColor() {
-        assertThat(Square.create("a8", null).sameColorAs(Square.create("h1", null)))
+        var first = Coordinate.of("a1");
+        var second = Coordinate.of("b2");
+
+        assertThat(Square.create(first, null).sameColorAs(Square.create(second, null)))
                 .isTrue();
     }
 
     @Test
     void differentColor() {
-        assertThat(Square.create("a8", null).sameColorAs(Square.create("h8", null)))
+        var first = Coordinate.of("a1");
+        var second = Coordinate.of("b1");
+
+        assertThat(Square.create(first, null).sameColorAs(Square.create(second, null)))
                 .isFalse();
     }
 
     @Test
     void whitePieceUnicode() {
-        var piece = new Pawn("a1", Color.WHITE);
-        assertThat(Square.create("a1", piece).unicode()).isEqualTo("♙");
+        var piece = new Pawn(coordinate, Color.WHITE);
+        assertThat(Square.create(coordinate, piece).unicode()).isEqualTo("♙");
     }
 
     @Test
     void blackPieceUnicode() {
-        var piece = new Rook("a1", Color.BLACK);
-        assertThat(Square.create("a1", piece).unicode()).isEqualTo("♜");
+        var piece = new Rook(coordinate, Color.BLACK);
+        assertThat(Square.create(coordinate, piece).unicode()).isEqualTo("♜");
     }
 
     @Test
     void emptyUnicode() {
-        assertThat(Square.create("h1", null).unicode()).isEqualTo("□");
-        assertThat(Square.create("g1", null).unicode()).isEqualTo("■");
+        var white = Coordinate.of("a8");
+        assertThat(Square.create(white, null).unicode()).isEqualTo("□");
+
+        var black = Coordinate.of("b8");
+        assertThat(Square.create(black, null).unicode()).isEqualTo("■");
     }
 
     @Test

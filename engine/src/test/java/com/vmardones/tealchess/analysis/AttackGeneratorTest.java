@@ -8,6 +8,7 @@ package com.vmardones.tealchess.analysis;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.vmardones.tealchess.ExcludeFromNullAway;
+import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.move.Attack;
 import com.vmardones.tealchess.parser.fen.FenParser;
 import org.junit.jupiter.api.Test;
@@ -21,14 +22,14 @@ final class AttackGeneratorTest {
         var generator = new AttackGenerator(position);
 
         var board = position.board();
-        var king = board.pieceAt("e1");
+        var king = board.pieceAt(Coordinate.of("e1"));
 
         var expectedAttacks = new Attack[] {
-            new Attack(king, board.squareAt("d1")),
-            new Attack(king, board.squareAt("f1")),
-            new Attack(king, board.squareAt("d2")),
-            new Attack(king, board.squareAt("e2")),
-            new Attack(king, board.squareAt("f2"))
+            new Attack(king, board.squareAt(Coordinate.of("d1"))),
+            new Attack(king, board.squareAt(Coordinate.of("f1"))),
+            new Attack(king, board.squareAt(Coordinate.of("d2"))),
+            new Attack(king, board.squareAt(Coordinate.of("e2"))),
+            new Attack(king, board.squareAt(Coordinate.of("f2")))
         };
 
         assertThat(generator.calculateAttacks(true)).hasSize(5).containsOnlyOnce(expectedAttacks);
@@ -40,10 +41,11 @@ final class AttackGeneratorTest {
         var generator = new AttackGenerator(position);
 
         var board = position.board();
-        var pawn = board.pieceAt("c5");
+        var pawn = board.pieceAt(Coordinate.of("c5"));
 
-        var expectedAttacks =
-                new Attack[] {new Attack(pawn, board.squareAt("b4")), new Attack(pawn, board.squareAt("d4"))};
+        var expectedAttacks = new Attack[] {
+            new Attack(pawn, board.squareAt(Coordinate.of("b4"))), new Attack(pawn, board.squareAt(Coordinate.of("d4")))
+        };
         var kingAttacks = 5;
 
         assertThat(generator.calculateAttacks(true)).hasSize(kingAttacks + 2).containsOnlyOnce(expectedAttacks);
@@ -55,13 +57,13 @@ final class AttackGeneratorTest {
         var generator = new AttackGenerator(position);
 
         var board = position.board();
-        var knight = board.pieceAt("g4");
+        var knight = board.pieceAt(Coordinate.of("g4"));
 
         var expectedAttacks = new Attack[] {
-            new Attack(knight, board.squareAt("e3")),
-            new Attack(knight, board.squareAt("f2")),
-            new Attack(knight, board.squareAt("h2")),
-            new Attack(knight, board.squareAt("f6"))
+            new Attack(knight, board.squareAt(Coordinate.of("e3"))),
+            new Attack(knight, board.squareAt(Coordinate.of("f2"))),
+            new Attack(knight, board.squareAt(Coordinate.of("h2"))),
+            new Attack(knight, board.squareAt(Coordinate.of("f6")))
         };
         var kingAttacks = 5;
 
@@ -74,15 +76,15 @@ final class AttackGeneratorTest {
         var generator = new AttackGenerator(position);
 
         var board = position.board();
-        var bishop = board.pieceAt("d4");
+        var bishop = board.pieceAt(Coordinate.of("d4"));
 
         var expectedAttacks = new Attack[] {
-            new Attack(bishop, board.squareAt("a1")),
-            new Attack(bishop, board.squareAt("c3")),
-            new Attack(bishop, board.squareAt("a7")),
-            new Attack(bishop, board.squareAt("h8")),
-            new Attack(bishop, board.squareAt("g1")),
-            new Attack(bishop, board.squareAt("f2"))
+            new Attack(bishop, board.squareAt(Coordinate.of("a1"))),
+            new Attack(bishop, board.squareAt(Coordinate.of("c3"))),
+            new Attack(bishop, board.squareAt(Coordinate.of("a7"))),
+            new Attack(bishop, board.squareAt(Coordinate.of("h8"))),
+            new Attack(bishop, board.squareAt(Coordinate.of("g1"))),
+            new Attack(bishop, board.squareAt(Coordinate.of("f2")))
         };
         var kingAttacks = 5;
 
@@ -95,17 +97,17 @@ final class AttackGeneratorTest {
         var generator = new AttackGenerator(position);
 
         var board = position.board();
-        var rook = board.pieceAt("a4");
+        var rook = board.pieceAt(Coordinate.of("a4"));
 
         var expectedAttacks = new Attack[] {
-            new Attack(rook, board.squareAt("a1")),
-            new Attack(rook, board.squareAt("a3")),
-            new Attack(rook, board.squareAt("a7")),
-            new Attack(rook, board.squareAt("a8")),
-            new Attack(rook, board.squareAt("c4")),
-            new Attack(rook, board.squareAt("d4")),
-            new Attack(rook, board.squareAt("g4")),
-            new Attack(rook, board.squareAt("h4"))
+            new Attack(rook, board.squareAt(Coordinate.of("a1"))),
+            new Attack(rook, board.squareAt(Coordinate.of("a3"))),
+            new Attack(rook, board.squareAt(Coordinate.of("a7"))),
+            new Attack(rook, board.squareAt(Coordinate.of("a8"))),
+            new Attack(rook, board.squareAt(Coordinate.of("c4"))),
+            new Attack(rook, board.squareAt(Coordinate.of("d4"))),
+            new Attack(rook, board.squareAt(Coordinate.of("g4"))),
+            new Attack(rook, board.squareAt(Coordinate.of("h4")))
         };
         var kingAttacks = 5;
 
@@ -118,17 +120,17 @@ final class AttackGeneratorTest {
         var generator = new AttackGenerator(position);
 
         var board = position.board();
-        var queen = board.pieceAt("c7");
+        var queen = board.pieceAt(Coordinate.of("c7"));
 
         var expectedAttacks = new Attack[] {
-            new Attack(queen, board.squareAt("c8")),
-            new Attack(queen, board.squareAt("c1")),
-            new Attack(queen, board.squareAt("a7")),
-            new Attack(queen, board.squareAt("h7")),
-            new Attack(queen, board.squareAt("b8")),
-            new Attack(queen, board.squareAt("a5")),
-            new Attack(queen, board.squareAt("h2")),
-            new Attack(queen, board.squareAt("d8"))
+            new Attack(queen, board.squareAt(Coordinate.of("c8"))),
+            new Attack(queen, board.squareAt(Coordinate.of("c1"))),
+            new Attack(queen, board.squareAt(Coordinate.of("a7"))),
+            new Attack(queen, board.squareAt(Coordinate.of("h7"))),
+            new Attack(queen, board.squareAt(Coordinate.of("b8"))),
+            new Attack(queen, board.squareAt(Coordinate.of("a5"))),
+            new Attack(queen, board.squareAt(Coordinate.of("h2"))),
+            new Attack(queen, board.squareAt(Coordinate.of("d8")))
         };
         var kingAttacks = 5;
 

@@ -9,34 +9,42 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.vmardones.tealchess.ExcludeFromNullAway;
+import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.player.Color;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExcludeFromNullAway
+@ExtendWith(MockitoExtension.class)
 final class PieceTest {
+
+    @Mock
+    Coordinate coordinate;
 
     @Test
     void fromSymbol() {
-        assertThat(Piece.fromSymbol("p", "a1")).isEqualTo(new Pawn("a1", Color.BLACK));
-        assertThat(Piece.fromSymbol("N", "a1")).isEqualTo(new Knight("a1", Color.WHITE));
-        assertThat(Piece.fromSymbol("b", "a1")).isEqualTo(new Bishop("a1", Color.BLACK));
-        assertThat(Piece.fromSymbol("R", "a1")).isEqualTo(new Rook("a1", Color.WHITE));
-        assertThat(Piece.fromSymbol("q", "a1")).isEqualTo(new Queen("a1", Color.BLACK));
-        assertThat(Piece.fromSymbol("K", "a1")).isEqualTo(new King("a1", Color.WHITE));
+        assertThat(Piece.fromSymbol("p", coordinate)).isEqualTo(new Pawn(coordinate, Color.BLACK));
+        assertThat(Piece.fromSymbol("N", coordinate)).isEqualTo(new Knight(coordinate, Color.WHITE));
+        assertThat(Piece.fromSymbol("b", coordinate)).isEqualTo(new Bishop(coordinate, Color.BLACK));
+        assertThat(Piece.fromSymbol("R", coordinate)).isEqualTo(new Rook(coordinate, Color.WHITE));
+        assertThat(Piece.fromSymbol("q", coordinate)).isEqualTo(new Queen(coordinate, Color.BLACK));
+        assertThat(Piece.fromSymbol("K", coordinate)).isEqualTo(new King(coordinate, Color.WHITE));
     }
 
     @Test
     void fromUnknownSymbol() {
-        assertThatThrownBy(() -> Piece.fromSymbol("e", "e2"))
+        assertThatThrownBy(() -> Piece.fromSymbol("e", coordinate))
                 .isInstanceOf(PieceSymbolException.class)
                 .hasMessageContaining("piece symbol");
     }
 
     @Test
     void isAllyOf() {
-        var first = new Pawn("a1", Color.WHITE);
-        var second = new Rook("a1", Color.WHITE);
+        var first = new Pawn(coordinate, Color.WHITE);
+        var second = new Rook(coordinate, Color.WHITE);
 
         assertThat(first.isAllyOf(second)).isTrue();
         assertThat(first.isEnemyOf(second)).isFalse();
@@ -46,8 +54,8 @@ final class PieceTest {
 
     @Test
     void isEnemyOf() {
-        var first = new Bishop("a1", Color.WHITE);
-        var second = new Bishop("a1", Color.BLACK);
+        var first = new Bishop(coordinate, Color.WHITE);
+        var second = new Bishop(coordinate, Color.BLACK);
 
         assertThat(first.isAllyOf(second)).isFalse();
         assertThat(first.isEnemyOf(second)).isTrue();
@@ -57,8 +65,8 @@ final class PieceTest {
 
     @Test
     void isPawn() {
-        var pawn = new Pawn("a1", Color.WHITE);
-        var notPawn = new Knight("a1", Color.WHITE);
+        var pawn = new Pawn(coordinate, Color.WHITE);
+        var notPawn = new Knight(coordinate, Color.WHITE);
 
         assertThat(pawn.isPawn()).isTrue();
         assertThat(notPawn.isPawn()).isFalse();
@@ -66,8 +74,8 @@ final class PieceTest {
 
     @Test
     void isKnight() {
-        var knight = new Knight("a1", Color.BLACK);
-        var notKnight = new Bishop("a1", Color.BLACK);
+        var knight = new Knight(coordinate, Color.BLACK);
+        var notKnight = new Bishop(coordinate, Color.BLACK);
 
         assertThat(knight.isKnight()).isTrue();
         assertThat(notKnight.isKnight()).isFalse();
@@ -75,8 +83,8 @@ final class PieceTest {
 
     @Test
     void isBishop() {
-        var bishop = new Bishop("a1", Color.WHITE);
-        var notBishop = new Rook("a1", Color.WHITE);
+        var bishop = new Bishop(coordinate, Color.WHITE);
+        var notBishop = new Rook(coordinate, Color.WHITE);
 
         assertThat(bishop.isBishop()).isTrue();
         assertThat(notBishop.isBishop()).isFalse();
@@ -84,8 +92,8 @@ final class PieceTest {
 
     @Test
     void isRook() {
-        var rook = new Rook("a1", Color.BLACK);
-        var notRook = new Queen("a1", Color.BLACK);
+        var rook = new Rook(coordinate, Color.BLACK);
+        var notRook = new Queen(coordinate, Color.BLACK);
 
         assertThat(rook.isRook()).isTrue();
         assertThat(notRook.isRook()).isFalse();
@@ -93,8 +101,8 @@ final class PieceTest {
 
     @Test
     void isQueen() {
-        var queen = new Queen("a1", Color.WHITE);
-        var notQueen = new King("a1", Color.WHITE);
+        var queen = new Queen(coordinate, Color.WHITE);
+        var notQueen = new King(coordinate, Color.WHITE);
 
         assertThat(queen.isQueen()).isTrue();
         assertThat(notQueen.isQueen()).isFalse();
@@ -102,8 +110,8 @@ final class PieceTest {
 
     @Test
     void isKing() {
-        var king = new King("a1", Color.BLACK);
-        var notKing = new Pawn("a1", Color.BLACK);
+        var king = new King(coordinate, Color.BLACK);
+        var notKing = new Pawn(coordinate, Color.BLACK);
 
         assertThat(king.isKing()).isTrue();
         assertThat(notKing.isKing()).isFalse();
@@ -111,15 +119,13 @@ final class PieceTest {
 
     @Test
     void normalSan() {
-        var piece = new Rook("a1", Color.WHITE);
-
+        var piece = new Rook(coordinate, Color.WHITE);
         assertThat(piece.san()).isUpperCase().isEqualTo("R");
     }
 
     @Test
     void pawnSan() {
-        var pawn = new Pawn("a1", Color.WHITE);
-
+        var pawn = new Pawn(coordinate, Color.WHITE);
         assertThat(pawn.san()).isEmpty();
     }
 

@@ -25,10 +25,10 @@ final class LegalityTesterTest {
         var legalityTester = new LegalityTester(position);
 
         var board = position.board();
-        var knight = board.pieceAt("c8");
-        var bishop = board.pieceAt("c6");
-        var rook = board.pieceAt("e6");
-        var enemyRook = board.pieceAt("a8");
+        var knight = board.pieceAt(Coordinate.of("c8"));
+        var bishop = board.pieceAt(Coordinate.of("c6"));
+        var rook = board.pieceAt(Coordinate.of("e6"));
+        var enemyRook = board.pieceAt(Coordinate.of("a8"));
 
         var illegalMoves = Stream.of(
                 Move.builder(knight, Coordinate.of("b6")).normal(),
@@ -54,10 +54,10 @@ final class LegalityTesterTest {
 
         var board = position.board();
         var king = board.king(Color.BLACK);
-        var knight = board.pieceAt("c8");
-        var bishop = board.pieceAt("c4");
-        var rook = board.pieceAt("h5");
-        var enemyQueen = board.pieceAt("e2");
+        var knight = board.pieceAt(Coordinate.of("c8"));
+        var bishop = board.pieceAt(Coordinate.of("c4"));
+        var rook = board.pieceAt(Coordinate.of("h5"));
+        var enemyQueen = board.pieceAt(Coordinate.of("e2"));
 
         var legalMoves = new Move[] {
             Move.builder(king, Coordinate.of("d8")).normal(),

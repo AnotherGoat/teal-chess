@@ -22,6 +22,7 @@ final class CoordinateTest {
 
     @Test
     void index() {
+        assertThat(Coordinate.of("a8").index()).isZero();
         assertThat(Coordinate.of("h1").index()).isEqualTo(63);
     }
 

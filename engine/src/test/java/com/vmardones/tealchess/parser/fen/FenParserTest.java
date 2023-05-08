@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import com.vmardones.tealchess.ExcludeFromNullAway;
+import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.piece.*;
 import com.vmardones.tealchess.player.Color;
 import org.junit.jupiter.api.Test;
@@ -173,22 +174,37 @@ final class FenParserTest {
         var board = FenParser.parse("r1bk3r/p2pBpNp/n4n2/1p1NP2P/6P1/3P4/P1P1K3/q5b1 w - - 0 1")
                 .board();
 
-        assertThat(board.pieceAt("a1")).isEqualTo(new Queen("a1", Color.BLACK));
-        assertThat(board.pieceAt("b5")).isEqualTo(new Pawn("b5", Color.BLACK));
-        assertThat(board.pieceAt("c2")).isEqualTo(new Pawn("c2", Color.WHITE));
-        assertThat(board.pieceAt("d5")).isEqualTo(new Knight("d5", Color.WHITE));
-        assertThat(board.pieceAt("e2")).isEqualTo(new King("e2", Color.WHITE));
-        assertThat(board.pieceAt("f6")).isEqualTo(new Knight("f6", Color.BLACK));
-        assertThat(board.pieceAt("g1")).isEqualTo(new Bishop("g1", Color.BLACK));
-        assertThat(board.pieceAt("h8")).isEqualTo(new Rook("h8", Color.BLACK));
+        var a1 = Coordinate.of("a1");
+        assertThat(board.pieceAt(a1)).isEqualTo(new Queen(a1, Color.BLACK));
 
-        assertThat(board.pieceAt("a3")).isNull();
-        assertThat(board.pieceAt("b7")).isNull();
-        assertThat(board.pieceAt("c4")).isNull();
-        assertThat(board.pieceAt("d1")).isNull();
-        assertThat(board.pieceAt("e6")).isNull();
-        assertThat(board.pieceAt("f5")).isNull();
-        assertThat(board.pieceAt("g8")).isNull();
-        assertThat(board.pieceAt("h2")).isNull();
+        var b5 = Coordinate.of("b5");
+        assertThat(board.pieceAt(b5)).isEqualTo(new Pawn(b5, Color.BLACK));
+
+        var c2 = Coordinate.of("c2");
+        assertThat(board.pieceAt(c2)).isEqualTo(new Pawn(c2, Color.WHITE));
+
+        var d5 = Coordinate.of("d5");
+        assertThat(board.pieceAt(d5)).isEqualTo(new Knight(d5, Color.WHITE));
+
+        var e2 = Coordinate.of("e2");
+        assertThat(board.pieceAt(e2)).isEqualTo(new King(e2, Color.WHITE));
+
+        var f6 = Coordinate.of("f6");
+        assertThat(board.pieceAt(f6)).isEqualTo(new Knight(f6, Color.BLACK));
+
+        var g1 = Coordinate.of("g1");
+        assertThat(board.pieceAt(g1)).isEqualTo(new Bishop(g1, Color.BLACK));
+
+        var h8 = Coordinate.of("h8");
+        assertThat(board.pieceAt(h8)).isEqualTo(new Rook(h8, Color.BLACK));
+
+        assertThat(board.pieceAt(Coordinate.of("a3"))).isNull();
+        assertThat(board.pieceAt(Coordinate.of("b7"))).isNull();
+        assertThat(board.pieceAt(Coordinate.of("c4"))).isNull();
+        assertThat(board.pieceAt(Coordinate.of("d1"))).isNull();
+        assertThat(board.pieceAt(Coordinate.of("e6"))).isNull();
+        assertThat(board.pieceAt(Coordinate.of("f5"))).isNull();
+        assertThat(board.pieceAt(Coordinate.of("g8"))).isNull();
+        assertThat(board.pieceAt(Coordinate.of("h2"))).isNull();
     }
 }

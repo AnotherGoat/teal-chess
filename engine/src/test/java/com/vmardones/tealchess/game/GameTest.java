@@ -53,7 +53,7 @@ final class GameTest {
     @Test
     void findlegalDestinations() {
         var game = new Game(mock(MoveMaker.class));
-        var knight = game.board().pieceAt("g1");
+        var knight = game.board().pieceAt(Coordinate.of("g1"));
 
         var expectedDestinations = new Coordinate[] {Coordinate.of("f3"), Coordinate.of("h3")};
 
@@ -64,6 +64,6 @@ final class GameTest {
     @Test
     void findWhiteKing() {
         var game = new Game(mock(MoveMaker.class));
-        assertThat(game.king()).isEqualTo(game.board().pieceAt("e1"));
+        assertThat(game.king()).isEqualTo(game.board().pieceAt(Coordinate.of("e1")));
     }
 }

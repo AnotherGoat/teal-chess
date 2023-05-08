@@ -91,16 +91,6 @@ public final class Board implements Unicode {
     }
 
     /**
-     * Get the square located at a specific coordinate.
-     *
-     * @param coordinate The coordinate to search, in algebraic notation.
-     * @return The square found.
-     */
-    public Square squareAt(String coordinate) {
-        return squareAt(Coordinate.of(coordinate));
-    }
-
-    /**
      * Get the piece located at a specific coordinate.
      *
      * @param coordinate The coordinate to search.
@@ -108,16 +98,6 @@ public final class Board implements Unicode {
      */
     public @Nullable Piece pieceAt(Coordinate coordinate) {
         return squares.get(coordinate.index()).piece();
-    }
-
-    /**
-     * Get the piece located at a specific coordinate.
-     *
-     * @param coordinate The coordinate to search, in algebraic notation.
-     * @return The piece found.
-     */
-    public @Nullable Piece pieceAt(String coordinate) {
-        return pieceAt(Coordinate.of(coordinate));
     }
 
     /**
@@ -201,8 +181,11 @@ public final class Board implements Unicode {
 
     private List<Square> createSquares(BoardBuilder builder) {
         return IntStream.range(FIRST_SQUARE_INDEX, MAX_SQUARES)
-                .mapToObj(
-                        index -> Square.create(AlgebraicConverter.toAlgebraic(index), builder.configuration.get(index)))
+                .mapToObj(index -> {
+                    var algebraicNotation = AlgebraicConverter.toAlgebraic(index);
+                    var coordinate = Coordinate.of(algebraicNotation);
+                    return Square.create(coordinate, builder.configuration.get(index));
+                })
                 .toList();
     }
 

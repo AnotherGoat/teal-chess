@@ -22,7 +22,7 @@ import org.eclipse.jdt.annotation.Nullable;
  */
 public final class Square implements Unicode {
 
-    private static final Map<String, Square> EMPTY_SQUARE_CACHE = fillEmptySquareCache();
+    private static final Map<Coordinate, Square> EMPTY_SQUARE_CACHE = fillEmptySquareCache();
 
     private final Coordinate coordinate;
     private final Color color;
@@ -33,11 +33,11 @@ public final class Square implements Unicode {
     /**
      * Static factory method for creating a new square.
      *
-     * @param coordinate Coordinate of the square, in algebraic notation.
+     * @param coordinate Coordinate of the square.
      * @param piece The piece on the square.
      * @return A new square.
      */
-    public static Square create(String coordinate, @Nullable Piece piece) {
+    public static Square create(Coordinate coordinate, @Nullable Piece piece) {
         if (piece == null) {
             var emptySquare = EMPTY_SQUARE_CACHE.get(coordinate);
 
@@ -112,21 +112,18 @@ public final class Square implements Unicode {
         return Objects.hash(coordinate, color, piece);
     }
 
-    private static Map<String, Square> fillEmptySquareCache() {
-        record Entry(String coordinate, Square square) {}
+    private static Map<Coordinate, Square> fillEmptySquareCache() {
+        record Entry(Coordinate coordinate, Square square) {}
 
         return IntStream.range(Board.FIRST_SQUARE_INDEX, Board.MAX_SQUARES)
                 .mapToObj(AlgebraicConverter::toAlgebraic)
+                .map(Coordinate::of)
                 .map(coordinate -> new Entry(coordinate, new Square(coordinate)))
                 .collect(toMap(Entry::coordinate, Entry::square));
     }
 
-    private Square(String coordinate) {
+    private Square(Coordinate coordinate) {
         this(coordinate, null);
-    }
-
-    private Square(String coordinate, @Nullable Piece piece) {
-        this(Coordinate.of(coordinate), piece);
     }
 
     private Square(Coordinate coordinate, @Nullable Piece piece) {

@@ -39,7 +39,7 @@ public abstract sealed class Piece implements Fen, San, Unicode permits Bishop, 
      * @param coordinate The coordinate to put the piece in.
      * @return The piece with the asked symbol.
      */
-    public static Piece fromSymbol(String symbol, String coordinate) {
+    public static Piece fromSymbol(String symbol, Coordinate coordinate) {
         var color = Character.isUpperCase(symbol.charAt(0)) ? Color.WHITE : Color.BLACK;
         var upperCaseSymbol = symbol.toUpperCase(Locale.ROOT);
 
@@ -128,7 +128,7 @@ public abstract sealed class Piece implements Fen, San, Unicode permits Bishop, 
     /* Comparing pieces */
 
     public boolean isAllyOf(Piece other) {
-        return color() == other.color();
+        return color == other.color;
     }
 
     public boolean isEnemyOf(Piece other) {
@@ -148,7 +148,7 @@ public abstract sealed class Piece implements Fen, San, Unicode permits Bishop, 
      * @param destination The destination to move the piece to.
      * @return The piece after the move is completed.
      */
-    public abstract Piece moveTo(String destination);
+    public abstract Piece moveTo(Coordinate destination);
 
     /* equals, hashCode and toString */
 
@@ -179,9 +179,9 @@ public abstract sealed class Piece implements Fen, San, Unicode permits Bishop, 
         return unicode() + coordinate;
     }
 
-    protected Piece(PieceType type, String coordinate, Color color, List<Vector> moveVectors, boolean sliding) {
+    protected Piece(PieceType type, Coordinate coordinate, Color color, List<Vector> moveVectors, boolean sliding) {
         this.type = type;
-        this.coordinate = Coordinate.of(coordinate);
+        this.coordinate = coordinate;
         this.color = color;
         this.moveVectors = moveVectors;
         this.sliding = sliding;

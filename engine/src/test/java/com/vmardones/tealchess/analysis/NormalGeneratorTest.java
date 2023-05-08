@@ -144,9 +144,9 @@ final class NormalGeneratorTest {
         var generator = new NormalGenerator(position);
 
         var board = position.board();
-        var bishop = board.pieceAt("f6");
-        var rook = board.pieceAt("a1");
-        var queen = board.pieceAt("f2");
+        var bishop = board.pieceAt(Coordinate.of("f6"));
+        var rook = board.pieceAt(Coordinate.of("a1"));
+        var queen = board.pieceAt(Coordinate.of("f2"));
 
         var unexpectedMoves = new Move[] {
             Move.builder(bishop, Coordinate.of("d4")).normal(),

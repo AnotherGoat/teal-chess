@@ -61,7 +61,7 @@ public final class MoveMaker {
 
         var piece = move.piece();
         var otherPiece = move.otherPiece();
-        var destination = move.destination().toString();
+        var destination = move.destination();
         var movedPiece = piece.moveTo(destination);
 
         var builder = configureBuilder(position.board(), movedPiece);
@@ -71,7 +71,7 @@ public final class MoveMaker {
         var rookDestination = move.rookDestination();
 
         if (otherPiece != null && rookDestination != null) {
-            builder.with(otherPiece.moveTo(rookDestination.toString()));
+            builder.with(otherPiece.moveTo(rookDestination));
         }
 
         var promotionChoice = move.promotionChoice();
@@ -104,7 +104,7 @@ public final class MoveMaker {
 
         var enPassantTarget = move.destination().down(sideToMove.direction());
 
-        return Square.create(enPassantTarget.san(), null);
+        return Square.create(enPassantTarget, null);
     }
 
     private CastlingRights updateCastlingRights(Position position, Move move) {

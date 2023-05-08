@@ -25,7 +25,7 @@ final class PawnMoveGeneratorTest {
         var generator = new PawnMoveGenerator(position);
 
         var board = position.board();
-        var leftPawn = board.pieceAt("b3");
+        var leftPawn = board.pieceAt(Coordinate.of("b3"));
 
         var expectedMove = Move.builder(leftPawn, Coordinate.of("b4")).normal();
 
@@ -38,7 +38,7 @@ final class PawnMoveGeneratorTest {
         var generator = new PawnMoveGenerator(position);
 
         var board = position.board();
-        var leftPawn = board.pieceAt("b6");
+        var leftPawn = board.pieceAt(Coordinate.of("b6"));
 
         var expectedMove = Move.builder(leftPawn, Coordinate.of("b5")).normal();
 
@@ -51,7 +51,7 @@ final class PawnMoveGeneratorTest {
         var generator = new PawnMoveGenerator(position);
 
         var board = position.board();
-        var jumper = board.pieceAt("a2");
+        var jumper = board.pieceAt(Coordinate.of("a2"));
 
         var expectedMove = Move.builder(jumper, Coordinate.of("a4")).doublePush();
 
@@ -67,7 +67,7 @@ final class PawnMoveGeneratorTest {
         var generator = new PawnMoveGenerator(position);
 
         var board = position.board();
-        var jumper = board.pieceAt("a7");
+        var jumper = board.pieceAt(Coordinate.of("a7"));
 
         var expectedMove = Move.builder(jumper, Coordinate.of("a5")).doublePush();
 
@@ -86,11 +86,11 @@ final class PawnMoveGeneratorTest {
         var generator = new PawnMoveGenerator(position);
 
         var board = position.board();
-        var pawn = board.pieceAt("c4");
+        var pawn = board.pieceAt(Coordinate.of("c4"));
 
         var expectedCaptures = new Move[] {
-            Move.builder(pawn, Coordinate.of("b5")).capture(board.pieceAt("b5")),
-            Move.builder(pawn, Coordinate.of("d5")).capture(board.pieceAt("d5"))
+            Move.builder(pawn, Coordinate.of("b5")).capture(board.pieceAt(Coordinate.of("b5"))),
+            Move.builder(pawn, Coordinate.of("d5")).capture(board.pieceAt(Coordinate.of("d5")))
         };
 
         assertThat(generator.generate()).hasSize(2).containsOnlyOnce(expectedCaptures);
@@ -102,11 +102,11 @@ final class PawnMoveGeneratorTest {
         var generator = new PawnMoveGenerator(position);
 
         var board = position.board();
-        var pawn = board.pieceAt("c5");
+        var pawn = board.pieceAt(Coordinate.of("c5"));
 
         var expectedCaptures = new Move[] {
-            Move.builder(pawn, Coordinate.of("b4")).capture(board.pieceAt("b4")),
-            Move.builder(pawn, Coordinate.of("d4")).capture(board.pieceAt("d4"))
+            Move.builder(pawn, Coordinate.of("b4")).capture(board.pieceAt(Coordinate.of("b4"))),
+            Move.builder(pawn, Coordinate.of("d4")).capture(board.pieceAt(Coordinate.of("d4")))
         };
 
         assertThat(generator.generate()).hasSize(2).containsOnlyOnce(expectedCaptures);
@@ -119,11 +119,11 @@ final class PawnMoveGeneratorTest {
 
         // Only the left and right pawns can en passant
         var board = position.board();
-        var leftPawn = (Pawn) board.pieceAt("a5");
-        var rightPawn = (Pawn) board.pieceAt("c5");
-        var otherPawn = (Pawn) board.pieceAt("f5");
+        var leftPawn = (Pawn) board.pieceAt(Coordinate.of("a5"));
+        var rightPawn = (Pawn) board.pieceAt(Coordinate.of("c5"));
+        var otherPawn = (Pawn) board.pieceAt(Coordinate.of("f5"));
 
-        var attackedPawn = (Pawn) board.pieceAt("b5");
+        var attackedPawn = (Pawn) board.pieceAt(Coordinate.of("b5"));
 
         var expectedMoves = new Move[] {
             Move.builder(leftPawn, Coordinate.of("b6")).enPassant(attackedPawn),
@@ -146,11 +146,11 @@ final class PawnMoveGeneratorTest {
 
         // Only the left and right pawns can en passant
         var board = position.board();
-        var leftPawn = (Pawn) board.pieceAt("a4");
-        var rightPawn = (Pawn) board.pieceAt("c4");
-        var otherPawn = (Pawn) board.pieceAt("f4");
+        var leftPawn = (Pawn) board.pieceAt(Coordinate.of("a4"));
+        var rightPawn = (Pawn) board.pieceAt(Coordinate.of("c4"));
+        var otherPawn = (Pawn) board.pieceAt(Coordinate.of("f4"));
 
-        var attackedPawn = (Pawn) board.pieceAt("b4");
+        var attackedPawn = (Pawn) board.pieceAt(Coordinate.of("b4"));
 
         var expectedMoves = new Move[] {
             Move.builder(leftPawn, Coordinate.of("b3")).enPassant(attackedPawn),

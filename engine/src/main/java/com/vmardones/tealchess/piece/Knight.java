@@ -7,6 +7,7 @@ package com.vmardones.tealchess.piece;
 
 import java.util.List;
 
+import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.player.Color;
 
 /**
@@ -25,12 +26,12 @@ public final class Knight extends Piece {
             new Vector(-1, -2),
             new Vector(1, -2));
 
-    public Knight(String coordinate, Color color) {
+    public Knight(Coordinate coordinate, Color color) {
         super(PieceType.KNIGHT, coordinate, color, MOVES, false);
     }
 
     @Override
-    public Knight moveTo(String destination) {
+    public Knight moveTo(Coordinate destination) {
         return new Knight(destination, color);
     }
 

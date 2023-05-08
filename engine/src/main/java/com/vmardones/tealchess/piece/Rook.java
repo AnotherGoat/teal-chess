@@ -7,6 +7,7 @@ package com.vmardones.tealchess.piece;
 
 import java.util.List;
 
+import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.player.Color;
 
 /**
@@ -18,12 +19,12 @@ public final class Rook extends Piece {
     private static final List<Vector> MOVES =
             List.of(new Vector(0, 1), new Vector(-1, 0), new Vector(1, 0), new Vector(0, -1));
 
-    public Rook(String coordinate, Color color) {
+    public Rook(Coordinate coordinate, Color color) {
         super(PieceType.ROOK, coordinate, color, MOVES, true);
     }
 
     @Override
-    public Rook moveTo(String destination) {
+    public Rook moveTo(Coordinate destination) {
         return new Rook(destination, color);
     }
 

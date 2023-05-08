@@ -130,9 +130,9 @@ final class CastleGeneratorTest {
         var generator = new CastleGenerator(position);
 
         var board = position.board();
-        var king = (King) board.pieceAt("e8");
-        var kingSideRook = (Rook) board.pieceAt("h8");
-        var queenSideRook = (Rook) board.pieceAt("a8");
+        var king = (King) board.pieceAt(Coordinate.of("e8"));
+        var kingSideRook = (Rook) board.pieceAt(Coordinate.of("h8"));
+        var queenSideRook = (Rook) board.pieceAt(Coordinate.of("a8"));
 
         var expectedCastles = new Move[] {
             Move.builder(king, Coordinate.of("g8")).castle(true, kingSideRook, Coordinate.of("f8")),
@@ -149,8 +149,8 @@ final class CastleGeneratorTest {
         var generator = new CastleGenerator(position);
 
         var board = position.board();
-        var king = (King) board.pieceAt("e1");
-        var rook = (Rook) board.pieceAt("a1");
+        var king = (King) board.pieceAt(Coordinate.of("e1"));
+        var rook = (Rook) board.pieceAt(Coordinate.of("a1"));
 
         var expectedCastles =
                 new Move[] {Move.builder(king, Coordinate.of("c1")).castle(false, rook, Coordinate.of("d1"))};
