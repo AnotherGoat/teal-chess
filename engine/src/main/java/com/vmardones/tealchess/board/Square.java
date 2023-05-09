@@ -115,9 +115,8 @@ public final class Square implements Unicode {
     private static Map<Coordinate, Square> fillEmptySquareCache() {
         record Entry(Coordinate coordinate, Square square) {}
 
-        return IntStream.range(Board.FIRST_SQUARE_INDEX, Board.MAX_SQUARES)
-                .mapToObj(AlgebraicConverter::toAlgebraic)
-                .map(Coordinate::of)
+        return IntStream.range(0, AlgebraicConverter.NUMBER_OF_SQUARES)
+                .mapToObj(Coordinate::forIndex)
                 .map(coordinate -> new Entry(coordinate, new Square(coordinate)))
                 .collect(toMap(Entry::coordinate, Entry::square));
     }

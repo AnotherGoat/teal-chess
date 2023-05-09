@@ -15,7 +15,7 @@ public final class CoordinateException extends RuntimeException {
     @Serial
     private static final long serialVersionUID = -4216598041578910238L;
 
-    CoordinateException() {
-        super("The coordinate was expected to be inside the chessboard, but it wasn't");
+    CoordinateException(String message) {
+        super(message);
     }
 }

@@ -23,13 +23,11 @@ import org.eclipse.jdt.annotation.Nullable;
 public final class Board implements Unicode {
 
     /** The chessboard is a square grid composed of squares. This is the number of squares per side. */
-    public static final int SIDE_LENGTH = 8;
+    public static final int SIDE_LENGTH = AlgebraicConverter.SIDE_LENGTH;
     /**
      * The number of squares in the game board.
      */
-    public static final int MAX_SQUARES = SIDE_LENGTH * SIDE_LENGTH;
-
-    static final int FIRST_SQUARE_INDEX = 0;
+    public static final int NUMBER_OF_SQUARES = AlgebraicConverter.NUMBER_OF_SQUARES;
 
     private final List<Square> squares;
     private final King whiteKing;
@@ -134,7 +132,7 @@ public final class Board implements Unicode {
             var square = squares.get(i);
             result.append(square.unicode()).append(" ");
 
-            if ((i + 1) % Board.SIDE_LENGTH == 0) {
+            if ((i + 1) % SIDE_LENGTH == 0) {
                 result.deleteCharAt(result.length() - 1).append("\n");
             }
         }
@@ -180,10 +178,9 @@ public final class Board implements Unicode {
     }
 
     private List<Square> createSquares(BoardBuilder builder) {
-        return IntStream.range(FIRST_SQUARE_INDEX, MAX_SQUARES)
+        return IntStream.range(0, NUMBER_OF_SQUARES)
                 .mapToObj(index -> {
-                    var algebraicNotation = AlgebraicConverter.toAlgebraic(index);
-                    var coordinate = Coordinate.of(algebraicNotation);
+                    var coordinate = Coordinate.forIndex(index);
                     return Square.create(coordinate, builder.configuration.get(index));
                 })
                 .toList();

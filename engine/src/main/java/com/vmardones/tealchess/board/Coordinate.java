@@ -19,13 +19,7 @@ import org.eclipse.jdt.annotation.Nullable;
  */
 public final class Coordinate implements San {
 
-    /**
-     * All the files that a coordinate can have, as a single String.
-     */
-    public static final String FILES = "abcdefgh";
-
     private static final List<Coordinate> COORDINATE_CACHE = fillCoordinateCache();
-
     private final int index;
 
     /* Coordinate creation */
@@ -36,9 +30,20 @@ public final class Coordinate implements San {
      *
      * @param algebraicNotation The algebraic notation of the coordinate.
      * @return The created coordinate.
+     * @throws AlgebraicNotationException If the algebraic notation is incorrect.
      */
     public static Coordinate of(String algebraicNotation) {
         return COORDINATE_CACHE.get(AlgebraicConverter.toIndex(algebraicNotation));
+    }
+
+    /**
+     * Given an index from 0 to 7, find the corresponding file, starting from a to h.
+     * @param index The index to search.
+     * @return The file at the requested index.
+     * @throws AlgebraicNotationException If the index is negative or more than 7.
+     */
+    public static String fileByIndex(int index) {
+        return AlgebraicConverter.fileByIndex(index);
     }
 
     /* Getters */
@@ -64,7 +69,7 @@ public final class Coordinate implements San {
      * @return The index of the coordinate's file.
      */
     public int fileIndex() {
-        return index % Board.SIDE_LENGTH;
+        return index % AlgebraicConverter.SIDE_LENGTH;
     }
 
     /**
@@ -75,7 +80,7 @@ public final class Coordinate implements San {
      * @see <a href="https://www.chessprogramming.org/Ranks">Ranks</a>
      */
     public int rank() {
-        return Board.SIDE_LENGTH - index / Board.SIDE_LENGTH;
+        return AlgebraicConverter.SIDE_LENGTH - index / AlgebraicConverter.SIDE_LENGTH;
     }
 
     /**
@@ -120,15 +125,16 @@ public final class Coordinate implements San {
      */
     public Coordinate to(int x, int y) {
         try {
-            var destination = COORDINATE_CACHE.get(index + horizontalClamp(x) - y * Board.SIDE_LENGTH);
+            var destination = COORDINATE_CACHE.get(index + horizontalClamp(x) - y * AlgebraicConverter.SIDE_LENGTH);
 
             if (illegalHorizontalJump(x, destination)) {
-                throw new CoordinateException();
+                throw new CoordinateException(
+                        "Illegal horizontal jump, moving " + x + " units from file " + file() + " is impossible");
             }
 
             return destination;
         } catch (IndexOutOfBoundsException e) {
-            throw new CoordinateException();
+            throw new CoordinateException("Moving (" + x + ", " + y + ") units goes outside the board");
         }
     }
 
@@ -137,6 +143,7 @@ public final class Coordinate implements San {
      *
      * @param spaces Number of spaces to jump, it can also be negative to move backwards.
      * @return Coordinate after the move, only if it is inside the board.
+     * @throws CoordinateException If the coordinate is outside the board.
      */
     public Coordinate up(int spaces) {
         return to(0, spaces);
@@ -147,6 +154,7 @@ public final class Coordinate implements San {
      *
      * @param spaces Number of spaces to jump, it can also be negative to move backwards.
      * @return Coordinate after the move, only if it is inside the board.
+     * @throws CoordinateException If the coordinate is outside the board.
      */
     public Coordinate down(int spaces) {
         return up(-spaces);
@@ -157,6 +165,7 @@ public final class Coordinate implements San {
      *
      * @param spaces Number of spaces to jump, it can also be negative to move backwards.
      * @return Coordinate after the move, only if it is inside the board.
+     * @throws CoordinateException If the coordinate is outside the board.
      */
     public Coordinate left(int spaces) {
         return right(-spaces);
@@ -167,6 +176,7 @@ public final class Coordinate implements San {
      *
      * @param spaces Number of spaces to jump, it can also be negative to move backwards.
      * @return Coordinate after the move, only if it is inside the board.
+     * @throws CoordinateException If the coordinate is outside the board.
      */
     public Coordinate right(int spaces) {
         return to(spaces, 0);
@@ -182,7 +192,7 @@ public final class Coordinate implements San {
      */
     public @Nullable Coordinate toOrNull(int x, int y) {
         try {
-            var destination = COORDINATE_CACHE.get(index + horizontalClamp(x) - y * Board.SIDE_LENGTH);
+            var destination = COORDINATE_CACHE.get(index + horizontalClamp(x) - y * AlgebraicConverter.SIDE_LENGTH);
 
             if (illegalHorizontalJump(x, destination)) {
                 return null;
@@ -225,12 +235,16 @@ public final class Coordinate implements San {
         return san();
     }
 
+    static Coordinate forIndex(int index) {
+        return COORDINATE_CACHE.get(index);
+    }
+
     int index() {
         return index;
     }
 
     private static List<Coordinate> fillCoordinateCache() {
-        return IntStream.range(Board.FIRST_SQUARE_INDEX, Board.MAX_SQUARES)
+        return IntStream.range(0, AlgebraicConverter.NUMBER_OF_SQUARES)
                 .mapToObj(Coordinate::new)
                 .toList();
     }
@@ -244,6 +258,6 @@ public final class Coordinate implements San {
     }
 
     private int horizontalClamp(int x) {
-        return x % Board.SIDE_LENGTH;
+        return x % AlgebraicConverter.SIDE_LENGTH;
     }
 }

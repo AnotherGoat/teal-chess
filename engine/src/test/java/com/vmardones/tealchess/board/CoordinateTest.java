@@ -80,7 +80,16 @@ final class CoordinateTest {
 
     @Test
     void toOutside() {
-        assertThatThrownBy(() -> Coordinate.of("b1").to(-2, 1)).isInstanceOf(CoordinateException.class);
+        assertThatThrownBy(() -> Coordinate.of("h8").to(-3, 1))
+                .isInstanceOf(CoordinateException.class)
+                .hasMessageContaining("(-3, 1)");
+    }
+
+    @Test
+    void illegalHorizontalJump() {
+        assertThatThrownBy(() -> Coordinate.of("a5").to(-1, 0))
+                .isInstanceOf(CoordinateException.class)
+                .hasMessageContaining("moving -1 units from file a");
     }
 
     @Test
