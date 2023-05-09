@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Coordinate;
-import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.game.CastlingRights;
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.piece.*;
@@ -117,7 +116,7 @@ public final class FenParser {
         return new CastlingRights(data.contains("K"), data.contains("Q"), data.contains("k"), data.contains("q"));
     }
 
-    private static @Nullable Square parseEnPassantTarget(String data) {
+    private static @Nullable Coordinate parseEnPassantTarget(String data) {
         if (!EN_PASSANT_PATTERN.matcher(data).matches()) {
             throw new FenParseException("En passant target is not a valid target coordinate: " + data);
         }
@@ -126,7 +125,7 @@ public final class FenParser {
             return null;
         }
 
-        return Square.create(Coordinate.of(data), null);
+        return Coordinate.of(data);
     }
 
     private static int parseHalfmove(String data) {
@@ -165,7 +164,7 @@ public final class FenParser {
             List<String> ranks,
             Color sideToMove,
             CastlingRights castlingRights,
-            @Nullable Square enPassantTarget,
+            @Nullable Coordinate enPassantTarget,
             int halfmoveClock,
             int fullmoveCounter) {
 

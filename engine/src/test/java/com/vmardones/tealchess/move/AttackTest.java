@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 
 import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.board.Coordinate;
-import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.piece.Knight;
 import com.vmardones.tealchess.piece.Pawn;
 import org.junit.jupiter.api.Test;
@@ -35,10 +34,7 @@ final class AttackTest {
         var pawn = mock(Pawn.class);
         when(pawn.coordinate()).thenReturn(source);
 
-        var square = mock(Square.class);
-        when(square.coordinate()).thenReturn(source);
-
-        assertThatThrownBy(() -> new Attack(pawn, square))
+        assertThatThrownBy(() -> new Attack(pawn, source))
                 .isInstanceOf(IllegalMoveException.class)
                 .hasMessageContaining("cannot be the same");
     }
@@ -48,12 +44,9 @@ final class AttackTest {
         var knight = mock(Knight.class);
         when(knight.coordinate()).thenReturn(source);
 
-        var attackedSquare = mock(Square.class);
-        when(attackedSquare.coordinate()).thenReturn(destination);
-
         when(source.toString()).thenReturn("g2");
         when(destination.toString()).thenReturn("e3");
 
-        assertThat(new Attack(knight, attackedSquare)).hasToString("g2e3");
+        assertThat(new Attack(knight, destination)).hasToString("g2e3");
     }
 }

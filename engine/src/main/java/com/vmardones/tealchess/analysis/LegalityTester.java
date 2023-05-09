@@ -35,7 +35,7 @@ final class LegalityTester {
         var afterMove = moveMaker.make(position, move);
 
         var attackGenerator = new AttackGenerator(afterMove);
-        var opponentAttacks = attackGenerator.calculateAttacks(false).toList();
+        var opponentAttacks = attackGenerator.calculateAttacks(false);
         var attackTester = new AttackTester(afterMove, opponentAttacks);
 
         var king = afterMove.board().king(position.sideToMove());

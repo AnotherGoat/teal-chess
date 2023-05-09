@@ -152,8 +152,7 @@ final class MoveMakerTest {
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.board().pieceAt(Coordinate.of("a4"))).isInstanceOf(Pawn.class);
-        assertThat(afterMove.enPassantTarget()).isNotNull();
-        assertThat(afterMove.enPassantTarget().coordinate()).isEqualTo(Coordinate.of("a3"));
+        assertThat(afterMove.enPassantTarget()).isNotNull().isEqualTo(Coordinate.of("a3"));
         assertThat(afterMove.board().pieces(Color.WHITE))
                 .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(Pawn.class));
     }
@@ -167,8 +166,7 @@ final class MoveMakerTest {
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.board().pieceAt(Coordinate.of("a5"))).isInstanceOf(Pawn.class);
-        assertThat(afterMove.enPassantTarget()).isNotNull();
-        assertThat(afterMove.enPassantTarget().coordinate()).isEqualTo(Coordinate.of("a6"));
+        assertThat(afterMove.enPassantTarget()).isNotNull().isEqualTo(Coordinate.of("a6"));
         assertThat(afterMove.board().pieces(Color.BLACK))
                 .satisfiesOnlyOnce(piece -> assertThat(piece).isInstanceOf(Pawn.class));
     }

@@ -38,6 +38,51 @@ final class BoardTest {
     }
 
     @Test
+    void whitePieceUnicode() {
+        var board = builder.build();
+        assertThat(board.unicodeSquare(Coordinate.of("e1"))).isEqualTo("♔");
+    }
+
+    @Test
+    void blackPieceUnicode() {
+        var board = builder.build();
+        assertThat(board.unicodeSquare(Coordinate.of("e8"))).isEqualTo("♚");
+    }
+
+    @Test
+    void emptySquareUnicode() {
+        var board = builder.build();
+
+        var white = Coordinate.of("a8");
+        assertThat(board.unicodeSquare(white)).isEqualTo("□");
+
+        var black = Coordinate.of("b8");
+        assertThat(board.unicodeSquare(black)).isEqualTo("■");
+    }
+
+    @Test
+    void getWhiteColor() {
+        var board = builder.build();
+
+        var firstWhite = Coordinate.of("a8");
+        assertThat(board.colorOf(firstWhite)).isEqualTo(Color.WHITE);
+
+        var lastWhite = Coordinate.of("h1");
+        assertThat(board.colorOf(lastWhite)).isEqualTo(Color.WHITE);
+    }
+
+    @Test
+    void getBlackColor() {
+        var board = builder.build();
+
+        var firstBlack = Coordinate.of("b8");
+        assertThat(board.colorOf(firstBlack)).isEqualTo(Color.BLACK);
+
+        var lastBlack = Coordinate.of("g1");
+        assertThat(board.colorOf(lastBlack)).isEqualTo(Color.BLACK);
+    }
+
+    @Test
     void nextPositionBuilder() {
         var board = builder.build();
         var nextPositionBoard = board.nextPositionBuilder().build();
@@ -49,7 +94,7 @@ final class BoardTest {
     @Test
     void equalsContract() {
         EqualsVerifier.forClass(Board.class)
-                .withNonnullFields("squares", "whiteKing", "whitePieces", "blackKing", "blackPieces")
+                .withNonnullFields("pieces", "whiteKing", "whitePieces", "blackKing", "blackPieces")
                 .verify();
     }
 
@@ -115,10 +160,10 @@ final class BoardTest {
     }
 
     @Test
-    void unmodifiableSquares() {
-        var squares = FenParser.parse("4k3/8/8/8/8/8/8/4K3 w - - 0 1").board().squares();
+    void unmodifiablePieces() {
+        var pieces = FenParser.parse("4k3/8/8/8/8/8/8/4K3 w - - 0 1").board().mailbox();
 
-        assertThatThrownBy(squares::clear).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(pieces::clear).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test

@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import com.vmardones.tealchess.board.Board;
-import com.vmardones.tealchess.board.Square;
+import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.piece.Pawn;
@@ -25,7 +25,7 @@ final class PawnMoveGenerator extends MoveGenerator {
     private final Board board;
     private final Color sideToMove;
     private final List<Pawn> pawns;
-    private final @Nullable Square enPassantTarget;
+    private final @Nullable Coordinate enPassantTarget;
 
     PawnMoveGenerator(Position position) {
         super(position);
@@ -58,15 +58,15 @@ final class PawnMoveGenerator extends MoveGenerator {
         return new DestinationFinder(board).calculateDestinations(pawn).flatMap(square -> createPushes(pawn, square));
     }
 
-    private Stream<Move> createPushes(Pawn pawn, Square destination) {
+    private Stream<Move> createPushes(Pawn pawn, Coordinate destination) {
 
-        var destinationPiece = destination.piece();
+        var destinationPiece = board.pieceAt(destination);
 
         if (destinationPiece != null) {
             return Stream.empty();
         }
 
-        var move = Move.builder(pawn, destination.coordinate()).normal();
+        var move = Move.builder(pawn, destination).normal();
 
         if (pawn.canBePromoted()) {
             return Arrays.stream(PromotionChoice.values()).map(move::makePromotion);
@@ -135,7 +135,7 @@ final class PawnMoveGenerator extends MoveGenerator {
 
         var destination = side.up(sideToMove.direction());
 
-        if (!board.squareAt(destination).equals(enPassantTarget)) {
+        if (!destination.equals(enPassantTarget)) {
             return null;
         }
 

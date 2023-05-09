@@ -21,7 +21,7 @@ final class BoardGroup extends Group {
 
     private static final int SIZE = AssetLoader.SQUARE_SIZE * Board.SIDE_LENGTH;
     private Board board;
-    private final Map<Coordinate, ClickableSquare> squares = new HashMap<>();
+    private final Map<Coordinate, Square> squares = new HashMap<>();
 
     BoardGroup(AssetLoader assets, Board board) {
         this.board = board;
@@ -32,8 +32,13 @@ final class BoardGroup extends Group {
         var y = (Gdx.graphics.getHeight() - getHeight()) / 2;
         setPosition(x, y);
 
-        board.squares().stream()
-                .map(square -> new ClickableSquare(assets, square))
+        board.mailbox().entrySet().stream()
+                .map(entry -> {
+                    var coordinate = entry.getKey();
+                    var piece = entry.getValue();
+
+                    return new Square(assets, coordinate, board.colorOf(coordinate), piece);
+                })
                 .forEach(square -> {
                     squares.put(square.coordinate(), square);
                     addActor(square);
@@ -42,7 +47,7 @@ final class BoardGroup extends Group {
         addListener(new ClearListener());
     }
 
-    ClickableSquare squareAt(Coordinate coordinate) {
+    Square squareAt(Coordinate coordinate) {
         var square = squares.get(coordinate);
 
         if (square == null) {
@@ -58,11 +63,11 @@ final class BoardGroup extends Group {
         board = value;
 
         for (var entry : squares.entrySet()) {
-            var newSquare = board.squareAt(entry.getKey());
-            var clickableSquare = entry.getValue();
+            var newPiece = board.pieceAt(entry.getKey());
+            var square = entry.getValue();
 
-            if (!newSquare.equals(clickableSquare.square())) {
-                clickableSquare.square(newSquare);
+            if (!Objects.equals(newPiece, square.piece())) {
+                square.piece(newPiece);
             }
         }
     }

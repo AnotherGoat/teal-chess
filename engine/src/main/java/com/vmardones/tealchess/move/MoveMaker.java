@@ -7,7 +7,6 @@ package com.vmardones.tealchess.move;
 
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Coordinate;
-import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.game.CastlingRights;
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.piece.King;
@@ -97,14 +96,12 @@ public final class MoveMaker {
         return board.nextPositionBuilder(board.king(Color.WHITE), (King) movedPiece);
     }
 
-    private @Nullable Square updateEnPassantTarget(Move move, Color sideToMove) {
+    private @Nullable Coordinate updateEnPassantTarget(Move move, Color sideToMove) {
         if (move.type() != MoveType.DOUBLE_PUSH) {
             return null;
         }
 
-        var enPassantTarget = move.destination().down(sideToMove.direction());
-
-        return Square.create(enPassantTarget, null);
+        return move.destination().down(sideToMove.direction());
     }
 
     private CastlingRights updateCastlingRights(Position position, Move move) {

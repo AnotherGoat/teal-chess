@@ -5,7 +5,7 @@
 
 package com.vmardones.tealchess.analysis;
 
-import java.util.List;
+import java.util.Set;
 
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.game.Position;
@@ -19,9 +19,9 @@ import com.vmardones.tealchess.piece.King;
 final class AttackTester {
 
     private final King king;
-    private final List<Attack> opponentAttacks;
+    private final Set<Attack> opponentAttacks;
 
-    AttackTester(Position position, List<Attack> opponentAttacks) {
+    AttackTester(Position position, Set<Attack> opponentAttacks) {
         king = position.board().king(position.sideToMove());
         this.opponentAttacks = opponentAttacks;
     }
@@ -31,7 +31,6 @@ final class AttackTester {
     }
 
     boolean isAttacked(Coordinate target) {
-        return opponentAttacks.stream()
-                .anyMatch(attack -> target.equals(attack.target().coordinate()));
+        return opponentAttacks.stream().anyMatch(attack -> target.equals(attack.target()));
     }
 }

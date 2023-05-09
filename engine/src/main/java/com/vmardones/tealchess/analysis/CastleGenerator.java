@@ -28,8 +28,7 @@ final class CastleGenerator extends MoveGenerator {
 
     CastleGenerator(Position position) {
         super(position);
-        var opponentAttacks =
-                new AttackGenerator(position).calculateAttacks(true).toList();
+        var opponentAttacks = new AttackGenerator(position).calculateAttacks(true);
         attackTester = new AttackTester(position, opponentAttacks);
         board = position.board();
         sideToMove = position.sideToMove();

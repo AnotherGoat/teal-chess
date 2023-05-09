@@ -6,20 +6,26 @@
 package com.vmardones.tealchess.gdx;
 
 import com.badlogic.gdx.scenes.scene2d.Event;
-import com.vmardones.tealchess.board.Square;
+import com.vmardones.tealchess.board.Coordinate;
+import com.vmardones.tealchess.piece.Piece;
+import org.eclipse.jdt.annotation.Nullable;
 
 final class SquareEvent extends Event {
 
-    private final ClickableSquare square;
+    private final Square square;
 
-    SquareEvent(ClickableSquare square) {
+    SquareEvent(Square square) {
         this.square = square;
     }
 
     /* Getters */
 
-    Square square() {
-        return square.square();
+    Coordinate coordinate() {
+        return square.coordinate();
+    }
+
+    @Nullable Piece piece() {
+        return square.piece();
     }
 
     float x() {

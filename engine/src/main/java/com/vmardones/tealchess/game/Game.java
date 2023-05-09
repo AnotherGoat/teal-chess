@@ -34,6 +34,7 @@ public final class Game {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
     private static final Map<String, String> INITIAL_TAGS = new LinkedHashMap<>();
 
+    // TODO: Move the initial tags to the UI
     static {
         INITIAL_TAGS.put("Event", "Casual game");
         INITIAL_TAGS.put("Site", "Teal Chess");

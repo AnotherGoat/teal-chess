@@ -5,7 +5,6 @@
 
 package com.vmardones.tealchess.gdx;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -13,15 +12,17 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.vmardones.tealchess.board.Coordinate;
-import com.vmardones.tealchess.board.Square;
 import com.vmardones.tealchess.io.assets.AssetLoader;
 import com.vmardones.tealchess.piece.Piece;
+import com.vmardones.tealchess.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
-final class ClickableSquare extends Actor {
+final class Square extends Actor {
 
     private final AssetLoader assets;
-    private Square square;
+    private final Coordinate coordinate;
+    private final Color color;
+    private @Nullable Piece piece;
     private @Nullable Sprite sprite;
     private boolean highlight;
     private boolean destination;
@@ -29,17 +30,18 @@ final class ClickableSquare extends Actor {
     private boolean checked;
     private boolean dark;
 
-    ClickableSquare(AssetLoader assets, Square square) {
+    Square(AssetLoader assets, Coordinate coordinate, Color color, @Nullable Piece piece) {
         this.assets = assets;
-        this.square = square;
+        this.coordinate = coordinate;
+        this.color = color;
+        this.piece = piece;
 
         setSize(AssetLoader.SQUARE_SIZE, AssetLoader.SQUARE_SIZE);
 
-        var x = square.coordinate().fileIndex() * getWidth();
-        var y = square.coordinate().rankIndex() * getHeight();
+        var x = coordinate.fileIndex() * getWidth();
+        var y = coordinate.rankIndex() * getHeight();
         setPosition(x, y);
 
-        var piece = square.piece();
         if (piece != null) {
             sprite = new Sprite(loadTexture(piece));
             sprite.setPosition(x, y);
@@ -51,9 +53,8 @@ final class ClickableSquare extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
 
-        var background = square.color().isWhite()
-                ? assets.get("light.png", Texture.class)
-                : assets.get("dark.png", Texture.class);
+        var background =
+                color.isWhite() ? assets.get("light.png", Texture.class) : assets.get("dark.png", Texture.class);
         batch.draw(background, getX(), getY());
 
         if (highlight) {
@@ -77,12 +78,12 @@ final class ClickableSquare extends Actor {
             batch.setColor(0, 0, 0, 0.15f);
             batch.draw(texture, getX() + 2, getY(), (float) texture.getWidth() + 4, texture.getHeight());
 
-            batch.setColor(Color.WHITE);
+            batch.setColor(com.badlogic.gdx.graphics.Color.WHITE);
             sprite.draw(batch);
         }
 
         if (destination) {
-            var texture = square.piece() == null
+            var texture = piece == null
                     ? assets.get("destination.png", Texture.class)
                     : assets.get("target.png", Texture.class);
             batch.draw(texture, getX(), getY());
@@ -96,18 +97,16 @@ final class ClickableSquare extends Actor {
 
     /* Getters and setters */
 
-    Square square() {
-        return square;
+    Coordinate coordinate() {
+        return coordinate;
     }
 
-    @Nullable Sprite sprite() {
-        return sprite;
+    @Nullable Piece piece() {
+        return piece;
     }
 
-    void square(Square value) {
-        square = value;
-
-        var piece = square.piece();
+    void piece(@Nullable Piece value) {
+        piece = value;
 
         if (piece == null) {
             sprite = null;
@@ -117,9 +116,13 @@ final class ClickableSquare extends Actor {
         }
     }
 
+    @Nullable Sprite sprite() {
+        return sprite;
+    }
+
     void flip(boolean flip) {
-        var x = square.coordinate().fileIndex() * getWidth();
-        var y = square.coordinate().rankIndex() * getHeight();
+        var x = coordinate.fileIndex() * getWidth();
+        var y = coordinate.rankIndex() * getHeight();
 
         if (flip) {
             x = 7 * getWidth() - x;
@@ -153,10 +156,6 @@ final class ClickableSquare extends Actor {
         dark = value;
     }
 
-    Coordinate coordinate() {
-        return square.coordinate();
-    }
-
     void removeSprite() {
         sprite = null;
     }
@@ -168,7 +167,7 @@ final class ClickableSquare extends Actor {
     private class SquareListener extends ClickListener {
         @Override
         public void clicked(InputEvent event, float x, float y) {
-            fire(new SquareEvent(ClickableSquare.this));
+            fire(new SquareEvent(Square.this));
         }
     }
 }

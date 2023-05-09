@@ -15,4 +15,14 @@ Javadoc, please use this template:
 
 ## List of implementation details
 
-1. Board Representation: Square Centric (Mailbox, 8x8 Board)
+### Board Representation
+
+The board is represented using an hybrid solution, which keeps redundant associations to make algorithms simpler.
+
+Piece centric: The board keeps two sets with its pieces, separated by their color.
+Each piece knows its location, which is known as a coordinate.
+This allows skipping the "scan the board" step during move generation (see the `Board.pieces(Color)` method).
+
+Square centric: The board keeps a map (mailbox) that dispatches pieces or "null" pointers.
+The map has exactly 64 entries, which represent an 8x8 board. 
+This allows quickly finding pieces by their coordinates (see the `Board.pieceAt(Coordinate)` and `Board.mailbox()` methods).

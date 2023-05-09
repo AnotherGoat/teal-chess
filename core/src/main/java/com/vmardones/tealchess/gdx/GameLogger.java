@@ -37,7 +37,7 @@ final class GameLogger {
 
         var enPassantTarget = position.enPassantTarget();
         if (enPassantTarget != null) {
-            Gdx.app.debug(LOG_TAG, "En passant target: " + enPassantTarget.unicode() + enPassantTarget.coordinate());
+            Gdx.app.debug(LOG_TAG, "En passant target: " + board.unicodeSquare(enPassantTarget) + enPassantTarget);
         }
 
         var player = game.player();

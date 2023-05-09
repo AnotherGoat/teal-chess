@@ -6,7 +6,7 @@
 package com.vmardones.tealchess.parser.fen;
 
 import com.vmardones.tealchess.board.Board;
-import com.vmardones.tealchess.board.Square;
+import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.game.Position;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -30,11 +30,11 @@ public final class FenSerializer {
 
         var result = new StringBuilder();
 
-        var squares = board.squares();
+        var pieces = board.mailbox().values().stream().toList();
         var emptyCounter = 0;
 
-        for (int i = 0; i < squares.size(); i++) {
-            var piece = squares.get(i).piece();
+        for (int i = 0; i < pieces.size(); i++) {
+            var piece = pieces.get(i);
 
             if (piece == null) {
                 emptyCounter++;
@@ -55,7 +55,7 @@ public final class FenSerializer {
                     emptyCounter = 0;
                 }
 
-                if (squareCounter < squares.size()) {
+                if (squareCounter < pieces.size()) {
                     result.append("/");
                 }
             }
@@ -64,11 +64,11 @@ public final class FenSerializer {
         return result.toString();
     }
 
-    private static String serializeEnPassantTarget(@Nullable Square enPassantTarget) {
+    private static String serializeEnPassantTarget(@Nullable Coordinate enPassantTarget) {
         if (enPassantTarget == null) {
             return "-";
         }
 
-        return enPassantTarget.coordinate().san();
+        return enPassantTarget.san();
     }
 }

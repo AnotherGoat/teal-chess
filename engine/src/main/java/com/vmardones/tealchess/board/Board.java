@@ -5,10 +5,10 @@
 
 package com.vmardones.tealchess.board;
 
-import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableMap;
+import static java.util.stream.Collectors.toUnmodifiableSet;
 
 import java.util.*;
-import java.util.stream.IntStream;
 
 import com.vmardones.tealchess.parser.Unicode;
 import com.vmardones.tealchess.piece.King;
@@ -17,8 +17,10 @@ import com.vmardones.tealchess.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
- * The chessboard, made of 8x8 squares.
+ * The chessboard, composed of 8x8 squares.
+ * Each square is associated with a coordinate and can be individually checked.
  * @see <a href="https://www.chessprogramming.org/Chessboard">Chessboard</a>
+ * @see <a href="https://www.chessprogramming.org/Squares">Squares</a>
  */
 public final class Board implements Unicode {
 
@@ -29,11 +31,11 @@ public final class Board implements Unicode {
      */
     public static final int NUMBER_OF_SQUARES = AlgebraicConverter.NUMBER_OF_SQUARES;
 
-    private final List<Square> squares;
+    private final Map<Coordinate, @Nullable Piece> mailbox;
     private final King whiteKing;
-    private final List<Piece> whitePieces;
+    private final Set<Piece> whitePieces;
     private final King blackKing;
-    private final List<Piece> blackPieces;
+    private final Set<Piece> blackPieces;
 
     /* Building the board */
 
@@ -79,23 +81,13 @@ public final class Board implements Unicode {
     /* Checking the board */
 
     /**
-     * Get the square located at a specific coordinate.
-     *
-     * @param coordinate The coordinate to search.
-     * @return The square found.
-     */
-    public Square squareAt(Coordinate coordinate) {
-        return squares.get(coordinate.index());
-    }
-
-    /**
      * Get the piece located at a specific coordinate.
      *
      * @param coordinate The coordinate to search.
      * @return The piece found.
      */
     public @Nullable Piece pieceAt(Coordinate coordinate) {
-        return squares.get(coordinate.index()).piece();
+        return mailbox.get(coordinate);
     }
 
     /**
@@ -108,29 +100,65 @@ public final class Board implements Unicode {
         return pieceAt(coordinate) == null;
     }
 
-    /* Getters */
+    /**
+     * Represent a square using Unicode characters.
+     * This returns the piece's Unicode representation or a white/black square character for empty squares.
+     * @param coordinate The coordinate of the square.
+     * @return Unicode representation of the square.
+     */
+    public String unicodeSquare(Coordinate coordinate) {
+        var piece = pieceAt(coordinate);
 
-    public List<Square> squares() {
-        return unmodifiableList(squares);
+        if (piece == null) {
+            return colorOf(coordinate).isWhite() ? "□" : "■";
+        }
+
+        return piece.unicode();
     }
+
+    /**
+     * Find the color of the square at a specific coordinate.
+     * Mostly used to draw the board.
+     * @param coordinate The coordinate of the square.
+     * @return The color of the square.
+     */
+    public Color colorOf(Coordinate coordinate) {
+        var index = coordinate.index();
+
+        if ((index + index / SIDE_LENGTH) % 2 == 0) {
+            return Color.WHITE;
+        }
+
+        return Color.BLACK;
+    }
+
+    /* Getters */
 
     public King king(Color color) {
         return color.isWhite() ? whiteKing : blackKing;
     }
 
-    public List<Piece> pieces(Color color) {
-        var pieces = color.isWhite() ? whitePieces : blackPieces;
+    /**
+     * Get a map containing all the pieces in the board.
+     * The map is unmodifiable and sorted, starting from the a8 square and ending in the h1 square.
+     * If a square doesn't have a piece, the entry will have a null value.
+     * @return Unmodifiable and sorted map containing all the pieces.
+     */
+    public Map<Coordinate, @Nullable Piece> mailbox() {
+        return unmodifiableMap(mailbox);
+    }
 
-        return unmodifiableList(pieces);
+    public Set<Piece> pieces(Color color) {
+        return color.isWhite() ? whitePieces : blackPieces;
     }
 
     @Override
     public String unicode() {
         var result = new StringBuilder();
 
-        for (int i = 0; i < squares.size(); i++) {
-            var square = squares.get(i);
-            result.append(square.unicode()).append(" ");
+        for (int i = 0; i < NUMBER_OF_SQUARES; i++) {
+            var coordinate = Coordinate.forIndex(i);
+            result.append(unicodeSquare(coordinate)).append(" ");
 
             if ((i + 1) % SIDE_LENGTH == 0) {
                 result.deleteCharAt(result.length() - 1).append("\n");
@@ -155,7 +183,7 @@ public final class Board implements Unicode {
         }
 
         var other = (Board) o;
-        return squares.equals(other.squares)
+        return mailbox.equals(other.mailbox)
                 && whiteKing.equals(other.whiteKing)
                 && whitePieces.equals(other.whitePieces)
                 && blackKing.equals(other.blackKing)
@@ -164,33 +192,33 @@ public final class Board implements Unicode {
 
     @Override
     public int hashCode() {
-        return Objects.hash(squares, whitePieces, whiteKing, blackPieces, blackKing);
+        return Objects.hash(mailbox, whitePieces, whiteKing, blackPieces, blackKing);
     }
 
     private Board(BoardBuilder builder) {
-        squares = createSquares(builder);
+        mailbox = fillEmptySquares(builder.pieces);
 
         whiteKing = builder.whiteKing;
-        whitePieces = findPieces(squares, Color.WHITE);
+        whitePieces = filterPieces(builder.pieces.values(), Color.WHITE);
 
         blackKing = builder.blackKing;
-        blackPieces = findPieces(squares, Color.BLACK);
+        blackPieces = filterPieces(builder.pieces.values(), Color.BLACK);
     }
 
-    private List<Square> createSquares(BoardBuilder builder) {
-        return IntStream.range(0, NUMBER_OF_SQUARES)
-                .mapToObj(index -> {
-                    var coordinate = Coordinate.forIndex(index);
-                    return Square.create(coordinate, builder.configuration.get(index));
-                })
-                .toList();
+    private Map<Coordinate, @Nullable Piece> fillEmptySquares(Map<Coordinate, Piece> pieces) {
+
+        var filledPieces = new LinkedHashMap<Coordinate, @Nullable Piece>();
+
+        for (int i = 0; i < NUMBER_OF_SQUARES; i++) {
+            var coordinate = Coordinate.forIndex(i);
+            filledPieces.put(coordinate, pieces.get(coordinate));
+        }
+
+        return filledPieces;
     }
 
-    private List<Piece> findPieces(List<Square> gameBoard, Color color) {
-        return gameBoard.stream()
-                .map(Square::piece)
-                .filter(piece -> piece != null && piece.color() == color)
-                .toList();
+    private Set<Piece> filterPieces(Collection<Piece> pieces, Color color) {
+        return pieces.stream().filter(piece -> piece.color() == color).collect(toUnmodifiableSet());
     }
 
     /**
@@ -198,7 +226,7 @@ public final class Board implements Unicode {
      */
     public static class BoardBuilder {
 
-        private final Map<Integer, Piece> configuration = new HashMap<>();
+        private final Map<Coordinate, Piece> pieces = new HashMap<>();
         private final King whiteKing;
         private final King blackKing;
 
@@ -215,7 +243,7 @@ public final class Board implements Unicode {
                 return this;
             }
 
-            configuration.put(piece.coordinate().index(), piece);
+            pieces.put(piece.coordinate(), piece);
             return this;
         }
 
@@ -240,7 +268,7 @@ public final class Board implements Unicode {
                 return this;
             }
 
-            configuration.remove(piece.coordinate().index(), piece);
+            pieces.remove(piece.coordinate(), piece);
             return this;
         }
 
@@ -250,11 +278,11 @@ public final class Board implements Unicode {
          * @return The finished, unmodifiable board.
          */
         public Board build() {
-            if (!whiteKing.equals(configuration.get(whiteKing.coordinate().index()))) {
+            if (!whiteKing.equals(pieces.get(whiteKing.coordinate()))) {
                 with(whiteKing);
             }
 
-            if (!blackKing.equals(configuration.get(blackKing.coordinate().index()))) {
+            if (!blackKing.equals(pieces.get(blackKing.coordinate()))) {
                 with(blackKing);
             }
 

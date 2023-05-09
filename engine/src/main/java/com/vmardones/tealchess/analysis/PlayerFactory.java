@@ -8,6 +8,7 @@ package com.vmardones.tealchess.analysis;
 import static java.util.Collections.emptyList;
 
 import java.util.List;
+import java.util.Set;
 
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.move.LegalMove;
@@ -22,10 +23,10 @@ final class PlayerFactory {
     private final AttackTester attackTester;
     private final Color sideToMove;
     private final King king;
-    private final List<Piece> pieces;
+    private final Set<Piece> pieces;
     private final List<LegalMove> legals;
     private final King opponentKing;
-    private final List<Piece> opponentPieces;
+    private final Set<Piece> opponentPieces;
 
     PlayerFactory(Position position, List<LegalMove> legals) {
         sideToMove = position.sideToMove();
@@ -34,8 +35,7 @@ final class PlayerFactory {
         opponentKing = position.board().king(sideToMove.opposite());
         opponentPieces = position.board().pieces(sideToMove.opposite());
 
-        var opponentAttacks =
-                new AttackGenerator(position).calculateAttacks(true).toList();
+        var opponentAttacks = new AttackGenerator(position).calculateAttacks(true);
         attackTester = new AttackTester(position, opponentAttacks);
 
         this.legals = legals;

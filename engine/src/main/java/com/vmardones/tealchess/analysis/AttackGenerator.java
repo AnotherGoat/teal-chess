@@ -5,8 +5,10 @@
 
 package com.vmardones.tealchess.analysis;
 
-import java.util.List;
+import static java.util.stream.Collectors.toSet;
+
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import com.vmardones.tealchess.board.Board;
@@ -18,8 +20,8 @@ import org.eclipse.jdt.annotation.Nullable;
 final class AttackGenerator {
 
     private final Board board;
-    private final List<Piece> pieces;
-    private final List<Piece> opponentPieces;
+    private final Set<Piece> pieces;
+    private final Set<Piece> opponentPieces;
 
     AttackGenerator(Position position) {
         board = position.board();
@@ -27,10 +29,10 @@ final class AttackGenerator {
         opponentPieces = board.pieces(position.sideToMove().opposite());
     }
 
-    Stream<Attack> calculateAttacks(boolean opponentAttacks) {
+    Set<Attack> calculateAttacks(boolean opponentAttacks) {
         var attackingPieces = opponentAttacks ? opponentPieces : pieces;
 
-        return attackingPieces.stream().flatMap(this::calculatePieceAttacks);
+        return attackingPieces.stream().flatMap(this::calculatePieceAttacks).collect(toSet());
     }
 
     private Stream<Attack> calculatePieceAttacks(Piece piece) {
@@ -53,6 +55,6 @@ final class AttackGenerator {
             return null;
         }
 
-        return new Attack(pawn, board.squareAt(destination));
+        return new Attack(pawn, destination);
     }
 }

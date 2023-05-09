@@ -14,7 +14,7 @@ import com.vmardones.tealchess.piece.Piece;
 final class LegalMoveConverter {
 
     private final Position position;
-    private final List<Piece> pieces;
+    private final Set<Piece> pieces;
     private final MoveMaker moveMaker = new MoveMaker();
 
     LegalMoveConverter(Position position) {
@@ -73,8 +73,7 @@ final class LegalMoveConverter {
         var legalityTester = new LegalityTester(afterMove);
         var confirmedLegals = legalityTester.testPseudoLegals(pseudoLegals);
 
-        var opponentAttacks =
-                new AttackGenerator(afterMove).calculateAttacks(true).toList();
+        var opponentAttacks = new AttackGenerator(afterMove).calculateAttacks(true);
         var attackTester = new AttackTester(afterMove, opponentAttacks);
 
         var attacked = attackTester.isKingAttacked();

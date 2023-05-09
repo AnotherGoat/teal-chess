@@ -6,8 +6,10 @@
 package com.vmardones.tealchess.player;
 
 import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableSet;
 
 import java.util.List;
+import java.util.Set;
 
 import com.vmardones.tealchess.move.*;
 import com.vmardones.tealchess.piece.King;
@@ -23,13 +25,13 @@ import com.vmardones.tealchess.piece.Piece;
  * @param legals The legal moves of the player.
  * @param status The state of the player, which may limit their moves.
  */
-public record Player(Color color, King king, List<Piece> pieces, List<LegalMove> legals, PlayerStatus status) {
+public record Player(Color color, King king, Set<Piece> pieces, List<LegalMove> legals, PlayerStatus status) {
 
     /* Getters */
 
     @Override
-    public List<Piece> pieces() {
-        return unmodifiableList(pieces);
+    public Set<Piece> pieces() {
+        return unmodifiableSet(pieces);
     }
 
     @Override

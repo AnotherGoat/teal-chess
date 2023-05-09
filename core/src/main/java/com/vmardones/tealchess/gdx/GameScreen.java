@@ -207,7 +207,7 @@ final class GameScreen extends ScreenAdapter {
 
         @Override
         public void select(SquareEvent event) {
-            var piece = event.square().piece();
+            var piece = event.piece();
 
             if (piece == null) {
                 Gdx.app.debug(LOG_TAG, "The source is empty");
@@ -228,7 +228,7 @@ final class GameScreen extends ScreenAdapter {
                 return;
             }
 
-            var coordinate = event.square().coordinate();
+            var coordinate = event.coordinate();
             boardGroup.highlightSource(coordinate);
 
             if (settings.highlightLegals()) {
@@ -259,21 +259,23 @@ final class GameScreen extends ScreenAdapter {
 
         @Override
         public void select(SquareEvent event) {
-            var square = event.square();
+            var coordinate = event.coordinate();
 
-            if (sourceCoordinate.equals(square.coordinate())) {
+            if (sourceCoordinate.equals(coordinate)) {
                 Gdx.app.debug(LOG_TAG, "A piece can't be moved to the same coordinate");
                 selectionState = new SourceSelection();
                 return;
             }
 
-            if (square.piece() == null) {
+            var piece = event.piece();
+
+            if (piece == null) {
                 Gdx.app.log(LOG_TAG, "The destination is empty");
             } else {
-                Gdx.app.log(LOG_TAG, "The destination contains " + square.piece());
+                Gdx.app.log(LOG_TAG, "The destination contains " + piece);
             }
 
-            var moves = MoveFinder.choose(game.player().legals(), sourceCoordinate, square.coordinate());
+            var moves = MoveFinder.choose(game.player().legals(), sourceCoordinate, coordinate);
 
             if (moves.isEmpty()) {
                 Gdx.app.debug(LOG_TAG, "The selected move is illegal");
