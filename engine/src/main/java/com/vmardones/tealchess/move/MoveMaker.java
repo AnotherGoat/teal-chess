@@ -25,6 +25,8 @@ public final class MoveMaker {
     private static final Coordinate BLACK_KING_SIDE = Coordinate.of("h8");
     private static final Coordinate BLACK_QUEEN_SIDE = Coordinate.of("a8");
 
+    public MoveMaker() {}
+
     /**
      * When a move is made, a new chess position is created, due to the position being immutable.
      *

@@ -14,14 +14,16 @@ import com.vmardones.tealchess.board.Coordinate;
 
 public final class MoveFinder {
 
+    public MoveFinder() {}
+
     /**
-     * Given a list of legal moves, choose the first one that goes from the source to the destination.
+     * Given a list of legal moves, find the ones that go from the source to the destination.
      *
      * @param from Source coordinate.
      * @param to Destination coordinate.
      * @return Move that goes from the source to the destination, if possible.
      */
-    public static List<LegalMove> choose(List<LegalMove> legalMoves, Coordinate from, Coordinate to) {
+    public List<LegalMove> find(List<LegalMove> legalMoves, Coordinate from, Coordinate to) {
 
         if (from.equals(to)) {
             return emptyList();
@@ -30,9 +32,7 @@ public final class MoveFinder {
         return legalMoves.stream().filter(isMovePossible(from, to)).toList();
     }
 
-    private MoveFinder() {}
-
-    private static Predicate<LegalMove> isMovePossible(Coordinate source, Coordinate destination) {
+    private Predicate<LegalMove> isMovePossible(Coordinate source, Coordinate destination) {
         return legal -> legal.source().equals(source) && legal.destination().equals(destination);
     }
 }

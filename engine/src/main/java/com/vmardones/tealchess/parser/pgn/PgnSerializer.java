@@ -18,9 +18,9 @@ import com.vmardones.tealchess.move.LegalMove;
  */
 public final class PgnSerializer {
 
-    public static String serializeGame(Game game) {
+    public static String serialize(Game game) {
         var tags = serializeTags(game.tags());
-        var moves = serializeMoves(game.history().moves());
+        var moves = serializeMoves(game.moveHistory());
 
         return tags + "\n" + moves;
     }

@@ -13,22 +13,31 @@ import static org.mockito.Mockito.when;
 import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.move.LegalMove;
+import com.vmardones.tealchess.move.MoveFinder;
 import com.vmardones.tealchess.move.MoveMaker;
 import com.vmardones.tealchess.parser.fen.FenParser;
 import com.vmardones.tealchess.player.Color;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExcludeFromNullAway
+@ExtendWith(MockitoExtension.class)
 final class GameTest {
+
+    @Mock
+    MoveMaker moveMaker;
+
+    @Mock
+    MoveFinder moveFinder;
 
     @Test
     void initialPosition() {
-        var game = new Game(mock(MoveMaker.class), emptyMap());
+        var game = new Game(moveMaker, moveFinder, emptyMap());
 
         assertThat(game.board()).isEqualTo(Position.INITIAL_POSITION.board());
-        assertThat(game.player().color()).isEqualTo(Color.WHITE);
-        assertThat(game.oppponent().color()).isEqualTo(Color.BLACK);
-        assertThat(game.history().lastMove()).isNull();
+        assertThat(game.sideToMove()).isEqualTo(Color.WHITE);
     }
 
     @Test
@@ -42,18 +51,16 @@ final class GameTest {
 
         when(moveMaker.make(position1, legalMove)).thenReturn(position2);
 
-        var game = new Game(moveMaker, emptyMap());
+        var game = new Game(moveMaker, moveFinder, emptyMap());
         game.makeMove(legalMove);
 
         assertThat(game.board()).isNotEqualTo(initialBoard);
-        assertThat(game.player().color()).isEqualTo(Color.BLACK);
-        assertThat(game.oppponent().color()).isEqualTo(Color.WHITE);
-        assertThat(game.history().lastMove()).isEqualTo(legalMove);
+        assertThat(game.sideToMove()).isEqualTo(Color.BLACK);
     }
 
     @Test
     void findlegalDestinations() {
-        var game = new Game(mock(MoveMaker.class), emptyMap());
+        var game = new Game(moveMaker, moveFinder, emptyMap());
         var knight = game.board().pieceAt(Coordinate.of("g1"));
 
         var expectedDestinations = new Coordinate[] {Coordinate.of("f3"), Coordinate.of("h3")};
@@ -63,8 +70,8 @@ final class GameTest {
 
     // TODO: Add a method that starts the game from a FEN position, then test finding the black king
     @Test
-    void findWhiteKing() {
-        var game = new Game(mock(MoveMaker.class), emptyMap());
-        assertThat(game.king()).isEqualTo(game.board().pieceAt(Coordinate.of("e1")));
+    void findWhiteKingCoordinate() {
+        var game = new Game(moveMaker, moveFinder, emptyMap());
+        assertThat(game.kingCoordinate()).isEqualTo(Coordinate.of("e1"));
     }
 }

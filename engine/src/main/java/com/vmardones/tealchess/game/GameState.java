@@ -44,7 +44,7 @@ final class GameState {
         position = value;
     }
 
-    public Player whitePlayer() {
+    Player whitePlayer() {
         return whitePlayer;
     }
 
@@ -52,7 +52,7 @@ final class GameState {
         whitePlayer = value;
     }
 
-    public Player blackPlayer() {
+    Player blackPlayer() {
         return blackPlayer;
     }
 

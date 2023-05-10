@@ -17,12 +17,14 @@ import org.junit.jupiter.api.Test;
 
 final class MoveFinderTest {
 
+    MoveFinder moveFinder = new MoveFinder();
+
     @Test
     void sameCoordinate() {
         var moves = List.of(mock(LegalMove.class), mock(LegalMove.class), mock(LegalMove.class));
         var coordinate = mock(Coordinate.class);
 
-        assertThat(MoveFinder.choose(moves, coordinate, coordinate)).isEmpty();
+        assertThat(moveFinder.find(moves, coordinate, coordinate)).isEmpty();
     }
 
     @Test
@@ -41,7 +43,7 @@ final class MoveFinderTest {
 
         var moves = List.of(move1, move2);
 
-        assertThat(MoveFinder.choose(moves, source, destination)).isEqualTo(List.of(move2));
+        assertThat(moveFinder.find(moves, source, destination)).isEqualTo(List.of(move2));
     }
 
     @Test
@@ -55,7 +57,7 @@ final class MoveFinderTest {
 
         var moves = List.of(move);
 
-        assertThat(MoveFinder.choose(moves, source, destination)).isEmpty();
+        assertThat(moveFinder.find(moves, source, destination)).isEmpty();
     }
 
     @Test
@@ -64,7 +66,7 @@ final class MoveFinderTest {
         var destination = mock(Coordinate.class);
         var moves = new ArrayList<LegalMove>();
 
-        assertThat(MoveFinder.choose(moves, source, destination)).isEmpty();
+        assertThat(moveFinder.find(moves, source, destination)).isEmpty();
     }
 
     @Test
@@ -82,7 +84,7 @@ final class MoveFinderTest {
 
         var moves = List.of(move1, move2);
 
-        assertThat(MoveFinder.choose(moves, source, destination))
+        assertThat(moveFinder.find(moves, source, destination))
                 .containsOnlyOnce(move1)
                 .containsOnlyOnce(move2);
     }

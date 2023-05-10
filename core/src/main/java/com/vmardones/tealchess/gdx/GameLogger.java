@@ -8,7 +8,6 @@ package com.vmardones.tealchess.gdx;
 import com.badlogic.gdx.Gdx;
 import com.vmardones.tealchess.game.Game;
 import com.vmardones.tealchess.io.settings.SettingsManager;
-import com.vmardones.tealchess.parser.fen.FenSerializer;
 import com.vmardones.tealchess.parser.pgn.PgnSerializer;
 import com.vmardones.tealchess.player.Color;
 
@@ -32,25 +31,23 @@ final class GameLogger {
         Gdx.app.debug(LOG_TAG, "Black king: " + board.king(Color.BLACK));
         Gdx.app.debug(LOG_TAG, "Black pieces: " + board.pieces(Color.BLACK));
 
-        var position = game.position();
-        Gdx.app.debug(LOG_TAG, "Castling rights: " + position.castlingRights().fen());
+        Gdx.app.debug(LOG_TAG, "Castling rights: " + game.castlingRights().fen());
 
-        var enPassantTarget = position.enPassantTarget();
+        var enPassantTarget = game.enPassantTarget();
         if (enPassantTarget != null) {
             Gdx.app.debug(LOG_TAG, "En passant target: " + board.unicodeSquare(enPassantTarget) + enPassantTarget);
         }
 
-        var player = game.player();
-        Gdx.app.debug(LOG_TAG, "Players: " + player + " vs. " + game.oppponent());
+        Gdx.app.debug(LOG_TAG, "Players: " + game.playerInfo() + " vs. " + game.opponentInfo());
 
-        var sideToMove = position.sideToMove();
+        var sideToMove = game.sideToMove();
         Gdx.app.log(LOG_TAG, sideToMove + "'s turn!");
-        Gdx.app.debug(LOG_TAG, "Legal moves: " + player.legals());
+        Gdx.app.debug(LOG_TAG, "Legal moves: " + game.legalMoves());
 
-        var moves = game.history().moves();
+        var moves = game.moveHistory();
         Gdx.app.debug(LOG_TAG, "Move history: " + PgnSerializer.serializeMoves(moves));
 
-        switch (game.player().status()) {
+        switch (game.playerStatus()) {
             case NORMAL -> Gdx.app.log(LOG_TAG, "The game continues like normal...");
             case CHECKED -> Gdx.app.log(LOG_TAG, "Check! " + sideToMove + " king is in danger!");
             case CHECKMATED -> Gdx.app.log(LOG_TAG, "Checkmate! " + sideToMove.opposite() + " player won!");
@@ -59,7 +56,7 @@ final class GameLogger {
     }
 
     void save(Game game) {
-        settings.pgn(PgnSerializer.serializeGame(game));
-        settings.fen(FenSerializer.serialize(game.position()));
+        settings.pgn(game.pgn());
+        settings.fen(game.fen());
     }
 }

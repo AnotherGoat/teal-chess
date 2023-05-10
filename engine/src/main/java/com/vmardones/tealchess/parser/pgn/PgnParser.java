@@ -8,6 +8,7 @@ package com.vmardones.tealchess.parser.pgn;
 import java.util.Arrays;
 
 import com.vmardones.tealchess.game.Game;
+import com.vmardones.tealchess.move.MoveFinder;
 import com.vmardones.tealchess.move.MoveMaker;
 
 /**
@@ -25,7 +26,7 @@ public final class PgnParser {
         var tagMap = TagParser.parse(tags);
 
         // TODO: Add support for FEN tag, which allows starting games from other positions
-        return new Game(new MoveMaker(), tagMap);
+        return new Game(new MoveMaker(), new MoveFinder(), tagMap);
     }
 
     private PgnParser() {}

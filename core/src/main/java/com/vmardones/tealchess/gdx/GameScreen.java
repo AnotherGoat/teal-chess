@@ -65,7 +65,7 @@ final class GameScreen extends ScreenAdapter {
         this.logger = logger;
 
         Gdx.app.log("Game", "Game started!");
-        game = new Game(new MoveMaker(), INITIAL_TAGS).blackAi(new RandomMoveChooser());
+        game = new Game(new MoveMaker(), new MoveFinder(), INITIAL_TAGS).blackAi(new RandomMoveChooser());
 
         logger.log(game);
 
@@ -84,7 +84,7 @@ final class GameScreen extends ScreenAdapter {
         stage.addListener(new KeyListener());
         stage.addListener(new PromotionListener());
 
-        if (game.ai() != null) {
+        if (game.isAiTurn()) {
             playAiMove();
         }
     }
@@ -129,13 +129,13 @@ final class GameScreen extends ScreenAdapter {
         var task = new Timer.Task() {
             @Override
             public void run() {
-                if (game.ai() != null) {
+                if (game.isAiTurn()) {
                     var aiMove = game.makeAiMove();
                     boardGroup.highlightMove(aiMove);
                     boardGroup.hideChecked();
 
-                    if (game.kingAttacked()) {
-                        boardGroup.highlightChecked(game.king().coordinate());
+                    if (game.isKingAttacked()) {
+                        boardGroup.highlightChecked(game.kingCoordinate());
                     }
 
                     playSlidingAnimation(aiMove);
@@ -173,7 +173,7 @@ final class GameScreen extends ScreenAdapter {
                 boardGroup.board(game.board());
                 logger.log(game);
 
-                if (game.ai() != null && !game.player().legals().isEmpty()) {
+                if (game.isAiTurn() && game.hasLegalMoves()) {
                     playAiMove();
                 }
             });
@@ -182,7 +182,7 @@ final class GameScreen extends ScreenAdapter {
             moveAnimation.addAction(fullAction);
             stage.addActor(moveAnimation);
 
-            if (move.isCastling()) {
+            if (game.isCastling(move)) {
                 var castle = move.move();
                 var rook = castle.otherPiece();
                 var rookDestination = castle.rookDestination();
@@ -246,7 +246,7 @@ final class GameScreen extends ScreenAdapter {
 
         boardGroup.setTouchable(Touchable.enabled);
 
-        if (game.ai() != null && !game.player().legals().isEmpty()) {
+        if (game.isAiTurn() && game.hasLegalMoves()) {
             playAiMove();
         }
     }
@@ -256,7 +256,7 @@ final class GameScreen extends ScreenAdapter {
         removePromotionSelector();
         promotionMoves.clear();
 
-        game = new Game(new MoveMaker(), INITIAL_TAGS).blackAi(new RandomMoveChooser());
+        game = new Game(new MoveMaker(), new MoveFinder(), INITIAL_TAGS).blackAi(new RandomMoveChooser());
         logger.log(game);
 
         boardGroup.reset(game.board());
@@ -264,7 +264,7 @@ final class GameScreen extends ScreenAdapter {
         selectionState = new SourceSelection();
         boardGroup.setTouchable(Touchable.enabled);
 
-        if (game.ai() != null) {
+        if (game.isAiTurn()) {
             playAiMove();
         }
     }
@@ -307,7 +307,7 @@ final class GameScreen extends ScreenAdapter {
 
             Gdx.app.log(LOG_TAG, "The source contains " + piece);
 
-            if (piece.color() == game.oppponent().color()) {
+            if (game.isOpponentPiece(piece)) {
                 Gdx.app.debug(LOG_TAG, "The selected piece belongs to the opponent");
                 return;
             }
@@ -319,14 +319,14 @@ final class GameScreen extends ScreenAdapter {
                 return;
             }
 
-            var coordinate = event.coordinate();
-            boardGroup.highlightSource(coordinate);
+            var source = event.coordinate();
+            boardGroup.highlightSource(source);
 
             if (settings.highlightLegals()) {
                 boardGroup.highlightDestinations(legalDestinations);
             }
 
-            selectionState = new DestinationSelection(coordinate);
+            selectionState = new DestinationSelection(source);
         }
 
         @Override
@@ -346,13 +346,13 @@ final class GameScreen extends ScreenAdapter {
     private class DestinationSelection implements SelectionState {
 
         private static final String LOG_TAG = "Destination";
-        private final Coordinate sourceCoordinate;
+        private final Coordinate source;
 
         @Override
         public void select(SquareEvent event) {
-            var coordinate = event.coordinate();
+            var destination = event.coordinate();
 
-            if (sourceCoordinate.equals(coordinate)) {
+            if (source.equals(destination)) {
                 Gdx.app.debug(LOG_TAG, "A piece can't be moved to the same coordinate");
                 selectionState = new SourceSelection();
                 return;
@@ -366,7 +366,7 @@ final class GameScreen extends ScreenAdapter {
                 Gdx.app.log(LOG_TAG, "The destination contains " + piece);
             }
 
-            var moves = MoveFinder.choose(game.player().legals(), sourceCoordinate, coordinate);
+            var moves = game.findLegalMoves(source, destination);
 
             if (moves.isEmpty()) {
                 Gdx.app.debug(LOG_TAG, "The selected move is illegal");
@@ -383,8 +383,8 @@ final class GameScreen extends ScreenAdapter {
                 boardGroup.highlightMove(move);
 
                 boardGroup.hideChecked();
-                if (game.kingAttacked()) {
-                    boardGroup.highlightChecked(game.king().coordinate());
+                if (game.isKingAttacked()) {
+                    boardGroup.highlightChecked(game.kingCoordinate());
                 }
 
                 playSlidingAnimation(move);
@@ -399,7 +399,7 @@ final class GameScreen extends ScreenAdapter {
 
             var x = boardGroup.getX() + event.x();
             var y = boardGroup.getY() + event.y();
-            promotionGroup = new PromotionGroup(assets, game.position().sideToMove(), x, y);
+            promotionGroup = new PromotionGroup(assets, game.sideToMove(), x, y);
             stage.addActor(promotionGroup);
         }
 
@@ -409,8 +409,8 @@ final class GameScreen extends ScreenAdapter {
             selectionState = new SourceSelection();
         }
 
-        private DestinationSelection(Coordinate sourceCoordinate) {
-            this.sourceCoordinate = sourceCoordinate;
+        private DestinationSelection(Coordinate source) {
+            this.source = source;
         }
     }
 
@@ -466,8 +466,8 @@ final class GameScreen extends ScreenAdapter {
             boardGroup.highlightMove(selectedMove);
 
             boardGroup.hideChecked();
-            if (game.kingAttacked()) {
-                boardGroup.highlightChecked(game.king().coordinate());
+            if (game.isKingAttacked()) {
+                boardGroup.highlightChecked(game.kingCoordinate());
             }
 
             boardGroup.dark(false);

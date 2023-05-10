@@ -12,18 +12,12 @@ import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.parser.fen.FenParser;
 import com.vmardones.tealchess.piece.*;
 import com.vmardones.tealchess.player.Color;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @ExcludeFromNullAway
 final class MoveMakerTest {
 
-    MoveMaker moveMaker;
-
-    @BeforeEach
-    void setUp() {
-        moveMaker = new MoveMaker();
-    }
+    MoveMaker moveMaker = new MoveMaker();
 
     @Test
     void noDuplicateWhiteKings() {

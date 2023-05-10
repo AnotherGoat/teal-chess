@@ -16,24 +16,6 @@ public final class GameHistory {
 
     private final List<GameMemento> history;
 
-    /* Getters */
-
-    /**
-     * Find all the moves made in this game so far, alternating sides.
-     * @return The move list.
-     * @see <a href="https://www.chessprogramming.org/Move_List">Move List</a>
-     */
-    public List<LegalMove> moves() {
-        return history.stream()
-                .map(GameMemento::lastMove)
-                .filter(Objects::nonNull)
-                .toList();
-    }
-
-    public @Nullable LegalMove lastMove() {
-        return history.get(history.size() - 1).lastMove();
-    }
-
     /* equals and hashCode */
 
     @Override
@@ -57,6 +39,19 @@ public final class GameHistory {
 
     GameHistory(GameMemento initialState) {
         this(List.of(initialState));
+    }
+
+    /* Getters */
+
+    List<LegalMove> moves() {
+        return history.stream()
+                .map(GameMemento::lastMove)
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    @Nullable LegalMove lastMove() {
+        return history.get(history.size() - 1).lastMove();
     }
 
     GameHistory add(GameMemento state) {
