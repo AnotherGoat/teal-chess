@@ -66,13 +66,12 @@ final class PawnMoveGenerator extends MoveGenerator {
             return Stream.empty();
         }
 
-        var move = Move.builder(pawn, destination).normal();
-
         if (pawn.canBePromoted()) {
-            return Arrays.stream(PromotionChoice.values()).map(move::makePromotion);
+            return Arrays.stream(PromotionChoice.values())
+                    .map(choice -> Move.normalPromotion(pawn, destination, choice));
         }
 
-        return Stream.of(move);
+        return Stream.of(Move.normal(pawn, destination));
     }
 
     private @Nullable Move generateDoublePush(Pawn pawn) {
@@ -92,7 +91,7 @@ final class PawnMoveGenerator extends MoveGenerator {
             return null;
         }
 
-        return Move.builder(pawn, destination).doublePush();
+        return Move.doublePush(pawn, destination);
     }
 
     private Stream<Move> generateCaptures(Pawn pawn, boolean leftSide) {
@@ -111,13 +110,12 @@ final class PawnMoveGenerator extends MoveGenerator {
             return Stream.empty();
         }
 
-        var move = Move.builder(pawn, destination).capture(destinationPiece);
-
         if (pawn.canBePromoted()) {
-            return Arrays.stream(PromotionChoice.values()).map(move::makePromotion);
+            return Arrays.stream(PromotionChoice.values())
+                    .map(choice -> Move.capturePromotion(pawn, destinationPiece, choice));
         }
 
-        return Stream.of(move);
+        return Stream.of(Move.capture(pawn, destinationPiece));
     }
 
     private @Nullable Move generateEnPassant(Pawn pawn, boolean leftSide) {
@@ -145,6 +143,6 @@ final class PawnMoveGenerator extends MoveGenerator {
             return null;
         }
 
-        return Move.builder(pawn, destination).enPassant((Pawn) sidePiece);
+        return Move.enPassant(pawn, destination, (Pawn) sidePiece);
     }
 }

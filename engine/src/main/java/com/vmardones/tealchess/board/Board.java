@@ -260,15 +260,15 @@ public final class Board implements Unicode {
         /**
          * Remove a piece from the board. This action is silently ignored if the piece is null.
          *
-         * @param piece The piece to remove.
+         * @param coordinate The coordinate to remove a piece from.
          * @return The same instance of this builder, to continue the building process.
          */
-        public BoardBuilder without(@Nullable Piece piece) {
-            if (piece == null) {
+        public BoardBuilder without(@Nullable Coordinate coordinate) {
+            if (coordinate == null) {
                 return this;
             }
 
-            pieces.remove(piece.coordinate(), piece);
+            pieces.remove(coordinate);
             return this;
         }
 

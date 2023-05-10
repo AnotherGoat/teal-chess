@@ -26,11 +26,11 @@ final class NormalGeneratorTest {
         var king = board.king(Color.BLACK);
 
         var expectedMoves = new Move[] {
-            Move.builder(king, Coordinate.of("d8")).normal(),
-            Move.builder(king, Coordinate.of("f8")).normal(),
-            Move.builder(king, Coordinate.of("d7")).normal(),
-            Move.builder(king, Coordinate.of("e7")).normal(),
-            Move.builder(king, Coordinate.of("f7")).normal()
+            Move.normal(king, Coordinate.of("d8")),
+            Move.normal(king, Coordinate.of("f8")),
+            Move.normal(king, Coordinate.of("d7")),
+            Move.normal(king, Coordinate.of("e7")),
+            Move.normal(king, Coordinate.of("f7"))
         };
 
         assertThat(generator.generate()).hasSize(5).containsOnlyOnce(expectedMoves);
@@ -55,16 +55,14 @@ final class NormalGeneratorTest {
         var knight = board.pieceAt(Coordinate.of("c4"));
 
         var expectedMoves = new Move[] {
-            Move.builder(knight, Coordinate.of("a3")).normal(),
-            Move.builder(knight, Coordinate.of("a5")).normal(),
-            Move.builder(knight, Coordinate.of("d2")).normal(),
-            Move.builder(knight, Coordinate.of("e5")).normal()
+            Move.normal(knight, Coordinate.of("a3")),
+            Move.normal(knight, Coordinate.of("a5")),
+            Move.normal(knight, Coordinate.of("d2")),
+            Move.normal(knight, Coordinate.of("e5"))
         };
 
-        var unexpectedMoves = new Move[] {
-            Move.builder(knight, Coordinate.of("b6")).normal(),
-            Move.builder(knight, Coordinate.of("b2")).normal()
-        };
+        var unexpectedMoves =
+                new Move[] {Move.normal(knight, Coordinate.of("b6")), Move.normal(knight, Coordinate.of("b2"))};
 
         var kingMoves = 5;
         assertThat(generator.generate())
@@ -82,11 +80,11 @@ final class NormalGeneratorTest {
         var bishop = board.pieceAt(Coordinate.of("d4"));
 
         var expectedMoves = new Move[] {
-            Move.builder(bishop, Coordinate.of("c5")).normal(),
-            Move.builder(bishop, Coordinate.of("a1")).normal(),
-            Move.builder(bishop, Coordinate.of("b2")).normal(),
-            Move.builder(bishop, Coordinate.of("g1")).normal(),
-            Move.builder(bishop, Coordinate.of("f6")).normal()
+            Move.normal(bishop, Coordinate.of("c5")),
+            Move.normal(bishop, Coordinate.of("a1")),
+            Move.normal(bishop, Coordinate.of("b2")),
+            Move.normal(bishop, Coordinate.of("g1")),
+            Move.normal(bishop, Coordinate.of("f6"))
         };
 
         var kingMoves = 5;
@@ -102,11 +100,11 @@ final class NormalGeneratorTest {
         var rook = board.pieceAt(Coordinate.of("d4"));
 
         var expectedMoves = new Move[] {
-            Move.builder(rook, Coordinate.of("d1")).normal(),
-            Move.builder(rook, Coordinate.of("b4")).normal(),
-            Move.builder(rook, Coordinate.of("d5")).normal(),
-            Move.builder(rook, Coordinate.of("d6")).normal(),
-            Move.builder(rook, Coordinate.of("f4")).normal()
+            Move.normal(rook, Coordinate.of("d1")),
+            Move.normal(rook, Coordinate.of("b4")),
+            Move.normal(rook, Coordinate.of("d5")),
+            Move.normal(rook, Coordinate.of("d6")),
+            Move.normal(rook, Coordinate.of("f4"))
         };
 
         var kingMoves = 5;
@@ -122,15 +120,15 @@ final class NormalGeneratorTest {
         var queen = board.pieceAt(Coordinate.of("d5"));
 
         var expectedMoves = new Move[] {
-            Move.builder(queen, Coordinate.of("b5")).normal(),
-            Move.builder(queen, Coordinate.of("c6")).normal(),
-            Move.builder(queen, Coordinate.of("d8")).normal(),
-            Move.builder(queen, Coordinate.of("f7")).normal(),
-            Move.builder(queen, Coordinate.of("f5")).normal(),
-            Move.builder(queen, Coordinate.of("h1")).normal(),
-            Move.builder(queen, Coordinate.of("d4")).normal(),
-            Move.builder(queen, Coordinate.of("c4")).normal(),
-            Move.builder(queen, Coordinate.of("f3")).normal(),
+            Move.normal(queen, Coordinate.of("b5")),
+            Move.normal(queen, Coordinate.of("c6")),
+            Move.normal(queen, Coordinate.of("d8")),
+            Move.normal(queen, Coordinate.of("f7")),
+            Move.normal(queen, Coordinate.of("f5")),
+            Move.normal(queen, Coordinate.of("h1")),
+            Move.normal(queen, Coordinate.of("d4")),
+            Move.normal(queen, Coordinate.of("c4")),
+            Move.normal(queen, Coordinate.of("f3")),
         };
 
         var kingMoves = 5;
@@ -149,14 +147,14 @@ final class NormalGeneratorTest {
         var queen = board.pieceAt(Coordinate.of("f2"));
 
         var unexpectedMoves = new Move[] {
-            Move.builder(bishop, Coordinate.of("d4")).normal(),
-            Move.builder(bishop, Coordinate.of("c3")).normal(),
-            Move.builder(rook, Coordinate.of("a7")).normal(),
-            Move.builder(rook, Coordinate.of("a8")).normal(),
-            Move.builder(queen, Coordinate.of("d4")).normal(),
-            Move.builder(queen, Coordinate.of("c5")).normal(),
-            Move.builder(queen, Coordinate.of("f6")).normal(),
-            Move.builder(queen, Coordinate.of("f7")).normal()
+            Move.normal(bishop, Coordinate.of("d4")),
+            Move.normal(bishop, Coordinate.of("c3")),
+            Move.normal(rook, Coordinate.of("a7")),
+            Move.normal(rook, Coordinate.of("a8")),
+            Move.normal(queen, Coordinate.of("d4")),
+            Move.normal(queen, Coordinate.of("c5")),
+            Move.normal(queen, Coordinate.of("f6")),
+            Move.normal(queen, Coordinate.of("f7"))
         };
 
         assertThat(generator.generate()).isNotEmpty().doesNotContain(unexpectedMoves);

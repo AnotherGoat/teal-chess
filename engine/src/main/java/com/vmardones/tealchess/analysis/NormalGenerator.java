@@ -50,6 +50,6 @@ final class NormalGenerator extends MoveGenerator {
             return null;
         }
 
-        return Move.builder(piece, destination).normal();
+        return Move.normal(piece, destination);
     }
 }

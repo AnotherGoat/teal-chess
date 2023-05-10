@@ -33,9 +33,9 @@ final class CaptureGeneratorTest {
         var knight = board.pieceAt(Coordinate.of("c5"));
 
         var expectedCaptures = new Move[] {
-            Move.builder(knight, Coordinate.of("a4")).capture(board.pieceAt(Coordinate.of("a4"))),
-            Move.builder(knight, Coordinate.of("e4")).capture(board.pieceAt(Coordinate.of("e4"))),
-            Move.builder(knight, Coordinate.of("d7")).capture(board.pieceAt(Coordinate.of("d7")))
+            Move.capture(knight, board.pieceAt(Coordinate.of("a4"))),
+            Move.capture(knight, board.pieceAt(Coordinate.of("e4"))),
+            Move.capture(knight, board.pieceAt(Coordinate.of("d7")))
         };
 
         assertThat(generator.generate()).hasSize(3).containsOnlyOnce(expectedCaptures);
@@ -50,9 +50,9 @@ final class CaptureGeneratorTest {
         var bishop = board.pieceAt(Coordinate.of("d4"));
 
         var expectedCaptures = new Move[] {
-            Move.builder(bishop, Coordinate.of("a7")).capture(board.pieceAt(Coordinate.of("a7"))),
-            Move.builder(bishop, Coordinate.of("b2")).capture(board.pieceAt(Coordinate.of("b2"))),
-            Move.builder(bishop, Coordinate.of("e3")).capture(board.pieceAt(Coordinate.of("e3")))
+            Move.capture(bishop, board.pieceAt(Coordinate.of("a7"))),
+            Move.capture(bishop, board.pieceAt(Coordinate.of("b2"))),
+            Move.capture(bishop, board.pieceAt(Coordinate.of("e3")))
         };
 
         assertThat(generator.generate()).hasSize(3).containsOnlyOnce(expectedCaptures);
@@ -67,8 +67,8 @@ final class CaptureGeneratorTest {
         var rook = board.pieceAt(Coordinate.of("a4"));
 
         var expectedCaptures = new Move[] {
-            Move.builder(rook, Coordinate.of("a7")).capture(board.pieceAt(Coordinate.of("a7"))),
-            Move.builder(rook, Coordinate.of("a1")).capture(board.pieceAt(Coordinate.of("a1")))
+            Move.capture(rook, board.pieceAt(Coordinate.of("a7"))),
+            Move.capture(rook, board.pieceAt(Coordinate.of("a1")))
         };
 
         assertThat(generator.generate()).hasSize(2).containsOnlyOnce(expectedCaptures);
@@ -83,8 +83,8 @@ final class CaptureGeneratorTest {
         var queen = board.pieceAt(Coordinate.of("d5"));
 
         var expectedCaptures = new Move[] {
-            Move.builder(queen, Coordinate.of("a5")).capture(board.pieceAt(Coordinate.of("a5"))),
-            Move.builder(queen, Coordinate.of("g2")).capture(board.pieceAt(Coordinate.of("g2")))
+            Move.capture(queen, board.pieceAt(Coordinate.of("a5"))),
+            Move.capture(queen, board.pieceAt(Coordinate.of("g2")))
         };
 
         assertThat(generator.generate()).hasSize(2).containsOnlyOnce(expectedCaptures);
@@ -99,8 +99,8 @@ final class CaptureGeneratorTest {
         var queen = board.pieceAt(Coordinate.of("e8"));
 
         var expectedCaptures = new Move[] {
-            Move.builder(queen, Coordinate.of("d7")).capture(board.pieceAt(Coordinate.of("d7"))),
-            Move.builder(queen, Coordinate.of("f7")).capture(board.pieceAt(Coordinate.of("f7")))
+            Move.capture(queen, board.pieceAt(Coordinate.of("d7"))),
+            Move.capture(queen, board.pieceAt(Coordinate.of("f7")))
         };
 
         assertThat(generator.generate()).hasSize(2).containsOnlyOnce(expectedCaptures);

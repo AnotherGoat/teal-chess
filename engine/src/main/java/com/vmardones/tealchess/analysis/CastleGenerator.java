@@ -78,7 +78,7 @@ final class CastleGenerator extends MoveGenerator {
         var kingDestination = kingCoordinate.right(2 * direction);
         var rookDestination = kingCoordinate.right(direction);
 
-        return Move.builder(king, kingDestination).castle(kingSide, rook, rookDestination);
+        return Move.castle(kingSide, king, kingDestination, rook, rookDestination);
     }
 
     private boolean isKingSideCastlePossible() {

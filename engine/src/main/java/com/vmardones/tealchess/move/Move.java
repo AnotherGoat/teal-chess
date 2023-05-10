@@ -14,6 +14,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * The action of moving a piece. This class only represents pseudo-legal moves.
+ * Any legality checks must be done after using any of the static factory methods.
  * @see <a href="https://www.chessprogramming.org/Pseudo-Legal_Move">Pseudo-Legal Move</a>
  */
 public final class Move implements San {
@@ -28,31 +29,86 @@ public final class Move implements San {
 
     private final @Nullable PromotionChoice promotionChoice;
 
-    /* Building moves */
+    /* Creating moves */
 
     /**
-     * The standard and only method to build a move. This is because there are many move types that require different information, so the build simplifies the building process. Please note that the move builder never checks if the move is pseudo-legal or not. Any checks should be done outside, before using the builder, and any moves built using this builder are assumed to be pseudo-legal.
-     * @param piece Source square.
-     * @param destination Destination square.
-     * @return The move builder.
+     * Create a normal move, also known as a pawn push when made by a pawn.
+     * @param piece The piece that makes the move.
+     * @param destination The destination of the move.
+     * @return A normal move.
      */
-    public static MoveBuilder builder(Piece piece, Coordinate destination) {
-        return new MoveBuilder(piece, destination);
+    public static Move normal(Piece piece, Coordinate destination) {
+        var type = piece.isPawn() ? MoveType.PAWN_PUSH : MoveType.NORMAL;
+        return new Move(type, piece, destination, null, null, null);
     }
 
-    /* Transforming moves */
+    /**
+     * Create a capturing move.
+     * @param piece The piece that makes the move.
+     * @param capturedPiece The piece captured by this move.
+     * @return A capture.
+     */
+    public static Move capture(Piece piece, Piece capturedPiece) {
+        var type = piece.isPawn() ? MoveType.PAWN_CAPTURE : MoveType.CAPTURE;
+        return new Move(type, piece, capturedPiece.coordinate(), capturedPiece, null, null);
+    }
 
     /**
-     * Mark this move as a promotion move. This should only be used if the piece is a pawn.
-     * @param choice The piece that the pawn will be promoted to.
-     * @return A version of this move that promotes the piece.
+     * Create a pawn's special first move, also known as a dobule push.
+     * @param pawn The pawn that makes the move.
+     * @param destination The destination of the move.
+     * @return A double push.
      */
-    public Move makePromotion(PromotionChoice choice) {
-        if (!piece.isPawn()) {
-            throw new IllegalMoveException("Only pawns can be promoted to other pieces");
-        }
+    public static Move doublePush(Pawn pawn, Coordinate destination) {
+        return new Move(MoveType.DOUBLE_PUSH, pawn, destination, null, null, null);
+    }
 
-        return new Move(type, piece, destination, otherPiece, rookDestination, choice);
+    /**
+     * Create an en passant move.
+     * @param pawn The pawn that makes the move.
+     * @param destination The destination of the move.
+     * @param enPassantTarget The pawn captured by this move.
+     * @return An en passant move.
+     */
+    public static Move enPassant(Pawn pawn, Coordinate destination, Pawn enPassantTarget) {
+        return new Move(MoveType.EN_PASSANT, pawn, destination, enPassantTarget, null, null);
+    }
+
+    /**
+     * Create a castling move.
+     * @param kingSide Whether the castle is done king side (true) or queen side (false).
+     * @param king The moved king.
+     * @param kingDestination The destination of the king.
+     * @param rook The moved rook.
+     * @param rookDestination The destination of the rook.
+     * @return A castle move.
+     */
+    public static Move castle(
+            boolean kingSide, King king, Coordinate kingDestination, Rook rook, Coordinate rookDestination) {
+        var type = kingSide ? MoveType.KING_CASTLE : MoveType.QUEEN_CASTLE;
+        return new Move(type, king, kingDestination, rook, rookDestination, null);
+    }
+
+    /**
+     * Create a normal pawn move that ends in a promotion.
+     * @param pawn The moved pawn.
+     * @param destination The destination of the move.
+     * @param choice The piece that the pawn will be promoted to.
+     * @return A pawn push that ends in a promotion.
+     */
+    public static Move normalPromotion(Pawn pawn, Coordinate destination, PromotionChoice choice) {
+        return new Move(MoveType.PAWN_PUSH, pawn, destination, null, null, choice);
+    }
+
+    /**
+     * Create a capturing pawn move that ends in a promotion.
+     * @param pawn The moved pawn.
+     * @param capturedPiece The piece captured by this move.
+     * @param choice The piece that the pawn will be promoted to.
+     * @return A pawn capture that ends in a promotion.
+     */
+    public static Move capturePromotion(Pawn pawn, Piece capturedPiece, PromotionChoice choice) {
+        return new Move(MoveType.PAWN_CAPTURE, pawn, capturedPiece.coordinate(), capturedPiece, null, choice);
     }
 
     /* Getters */
@@ -139,8 +195,35 @@ public final class Move implements San {
         return san();
     }
 
-    private Move(MoveBuilder builder) {
-        this(builder.type, builder.piece, builder.destination, builder.otherPiece, builder.rookDestination, null);
+    Piece movedPiece() {
+        return piece.moveTo(destination);
+    }
+
+    @Nullable Coordinate otherPieceCoordinate() {
+        if (otherPiece == null) {
+            return null;
+        }
+
+        return otherPiece.coordinate();
+    }
+
+    @Nullable Rook movedCastleRook() {
+        if (otherPiece == null || !otherPiece.isRook() || rookDestination == null) {
+            return null;
+        }
+
+        return (Rook) otherPiece.moveTo(rookDestination);
+    }
+
+    @Nullable Piece promotedPawn() {
+        var movedPiece = movedPiece();
+
+        if (!movedPiece.isPawn() || promotionChoice == null) {
+            return null;
+        }
+
+        var movedPawn = (Pawn) movedPiece;
+        return movedPawn.promote(promotionChoice);
     }
 
     private Move(
@@ -150,72 +233,15 @@ public final class Move implements San {
             @Nullable Piece otherPiece,
             @Nullable Coordinate rookDestination,
             @Nullable PromotionChoice promotionChoice) {
+        if (piece.coordinate().equals(destination)) {
+            throw new IllegalMoveException("The source and destination cannot be the same coordinate");
+        }
+
         this.type = type;
         this.piece = piece;
         this.destination = destination;
         this.otherPiece = otherPiece;
         this.rookDestination = rookDestination;
         this.promotionChoice = promotionChoice;
-    }
-
-    /**
-     * The class responsible for building any kind of pseudo-legal chess moves. Any legality checks must be done after using this builder. Every method of this builder finishes the building process, to avoid unexpected behavior.
-     */
-    public static class MoveBuilder {
-
-        private MoveType type;
-        private final Piece piece;
-        private final Coordinate destination;
-
-        @Nullable private Piece otherPiece;
-
-        @Nullable private Coordinate rookDestination;
-
-        public Move normal() {
-            type = piece.isPawn() ? MoveType.PAWN_PUSH : MoveType.NORMAL;
-            return new Move(this);
-        }
-
-        public Move capture(Piece capturedPiece) {
-            type = piece.isPawn() ? MoveType.PAWN_CAPTURE : MoveType.CAPTURE;
-            otherPiece = capturedPiece;
-            return new Move(this);
-        }
-
-        public Move doublePush() {
-            if (!piece.isPawn()) {
-                throw new IllegalMoveException("Only pawns can make double push moves");
-            }
-
-            type = MoveType.DOUBLE_PUSH;
-            return new Move(this);
-        }
-
-        public Move enPassant(Pawn attackedPawn) {
-            if (!piece.isPawn()) {
-                throw new IllegalMoveException("Only pawns can make en passant moves");
-            }
-
-            type = MoveType.EN_PASSANT;
-            otherPiece = attackedPawn;
-            return new Move(this);
-        }
-
-        public Move castle(boolean kingSide, Rook rook, Coordinate rookDestination) {
-            if (!piece.isKing()) {
-                throw new IllegalMoveException("Only kings can make castling moves");
-            }
-
-            type = kingSide ? MoveType.KING_CASTLE : MoveType.QUEEN_CASTLE;
-            otherPiece = rook;
-            this.rookDestination = rookDestination;
-            return new Move(this);
-        }
-
-        private MoveBuilder(Piece piece, Coordinate destination) {
-            this.piece = piece;
-            this.destination = destination;
-            type = MoveType.NORMAL;
-        }
     }
 }

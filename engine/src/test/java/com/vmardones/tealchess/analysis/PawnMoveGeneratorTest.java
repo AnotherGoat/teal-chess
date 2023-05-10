@@ -27,7 +27,7 @@ final class PawnMoveGeneratorTest {
         var board = position.board();
         var leftPawn = board.pieceAt(Coordinate.of("b3"));
 
-        var expectedMove = Move.builder(leftPawn, Coordinate.of("b4")).normal();
+        var expectedMove = Move.normal(leftPawn, Coordinate.of("b4"));
 
         assertThat(generator.generate()).hasSize(1).containsOnlyOnce(expectedMove);
     }
@@ -40,7 +40,7 @@ final class PawnMoveGeneratorTest {
         var board = position.board();
         var leftPawn = board.pieceAt(Coordinate.of("b6"));
 
-        var expectedMove = Move.builder(leftPawn, Coordinate.of("b5")).normal();
+        var expectedMove = Move.normal(leftPawn, Coordinate.of("b5"));
 
         assertThat(generator.generate()).hasSize(1).containsOnlyOnce(expectedMove);
     }
@@ -51,9 +51,9 @@ final class PawnMoveGeneratorTest {
         var generator = new PawnMoveGenerator(position);
 
         var board = position.board();
-        var jumper = board.pieceAt(Coordinate.of("a2"));
+        var jumper = (Pawn) board.pieceAt(Coordinate.of("a2"));
 
-        var expectedMove = Move.builder(jumper, Coordinate.of("a4")).doublePush();
+        var expectedMove = Move.doublePush(jumper, Coordinate.of("a4"));
 
         assertThat(generator.generate())
                 .hasSize(4)
@@ -67,9 +67,9 @@ final class PawnMoveGeneratorTest {
         var generator = new PawnMoveGenerator(position);
 
         var board = position.board();
-        var jumper = board.pieceAt(Coordinate.of("a7"));
+        var jumper = (Pawn) board.pieceAt(Coordinate.of("a7"));
 
-        var expectedMove = Move.builder(jumper, Coordinate.of("a5")).doublePush();
+        var expectedMove = Move.doublePush(jumper, Coordinate.of("a5"));
 
         assertThat(generator.generate())
                 .hasSize(4)
@@ -89,8 +89,8 @@ final class PawnMoveGeneratorTest {
         var pawn = board.pieceAt(Coordinate.of("c4"));
 
         var expectedCaptures = new Move[] {
-            Move.builder(pawn, Coordinate.of("b5")).capture(board.pieceAt(Coordinate.of("b5"))),
-            Move.builder(pawn, Coordinate.of("d5")).capture(board.pieceAt(Coordinate.of("d5")))
+            Move.capture(pawn, board.pieceAt(Coordinate.of("b5"))),
+            Move.capture(pawn, board.pieceAt(Coordinate.of("d5")))
         };
 
         assertThat(generator.generate()).hasSize(2).containsOnlyOnce(expectedCaptures);
@@ -105,8 +105,8 @@ final class PawnMoveGeneratorTest {
         var pawn = board.pieceAt(Coordinate.of("c5"));
 
         var expectedCaptures = new Move[] {
-            Move.builder(pawn, Coordinate.of("b4")).capture(board.pieceAt(Coordinate.of("b4"))),
-            Move.builder(pawn, Coordinate.of("d4")).capture(board.pieceAt(Coordinate.of("d4")))
+            Move.capture(pawn, board.pieceAt(Coordinate.of("b4"))),
+            Move.capture(pawn, board.pieceAt(Coordinate.of("d4")))
         };
 
         assertThat(generator.generate()).hasSize(2).containsOnlyOnce(expectedCaptures);
@@ -126,14 +126,14 @@ final class PawnMoveGeneratorTest {
         var attackedPawn = (Pawn) board.pieceAt(Coordinate.of("b5"));
 
         var expectedMoves = new Move[] {
-            Move.builder(leftPawn, Coordinate.of("b6")).enPassant(attackedPawn),
-            Move.builder(rightPawn, Coordinate.of("b6")).enPassant(attackedPawn)
+            Move.enPassant(leftPawn, Coordinate.of("b6"), attackedPawn),
+            Move.enPassant(rightPawn, Coordinate.of("b6"), attackedPawn)
         };
 
         var unexpectedMoves = new Move[] {
-            Move.builder(rightPawn, Coordinate.of("d6")).enPassant(attackedPawn),
-            Move.builder(otherPawn, Coordinate.of("e6")).enPassant(attackedPawn),
-            Move.builder(otherPawn, Coordinate.of("g6")).enPassant(attackedPawn)
+            Move.enPassant(rightPawn, Coordinate.of("d6"), attackedPawn),
+            Move.enPassant(otherPawn, Coordinate.of("e6"), attackedPawn),
+            Move.enPassant(otherPawn, Coordinate.of("g6"), attackedPawn)
         };
 
         assertThat(generator.generate()).containsOnlyOnce(expectedMoves).doesNotContain(unexpectedMoves);
@@ -153,14 +153,14 @@ final class PawnMoveGeneratorTest {
         var attackedPawn = (Pawn) board.pieceAt(Coordinate.of("b4"));
 
         var expectedMoves = new Move[] {
-            Move.builder(leftPawn, Coordinate.of("b3")).enPassant(attackedPawn),
-            Move.builder(rightPawn, Coordinate.of("b3")).enPassant(attackedPawn)
+            Move.enPassant(leftPawn, Coordinate.of("b3"), attackedPawn),
+            Move.enPassant(rightPawn, Coordinate.of("b3"), attackedPawn)
         };
 
         var unexpectedMoves = new Move[] {
-            Move.builder(rightPawn, Coordinate.of("d3")).enPassant(attackedPawn),
-            Move.builder(otherPawn, Coordinate.of("e3")).enPassant(attackedPawn),
-            Move.builder(otherPawn, Coordinate.of("g3")).enPassant(attackedPawn)
+            Move.enPassant(rightPawn, Coordinate.of("d3"), attackedPawn),
+            Move.enPassant(otherPawn, Coordinate.of("e3"), attackedPawn),
+            Move.enPassant(otherPawn, Coordinate.of("g3"), attackedPawn)
         };
 
         assertThat(generator.generate()).containsOnlyOnce(expectedMoves).doesNotContain(unexpectedMoves);

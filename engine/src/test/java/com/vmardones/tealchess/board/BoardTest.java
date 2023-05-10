@@ -94,7 +94,7 @@ final class BoardTest {
     @Test
     void equalsContract() {
         EqualsVerifier.forClass(Board.class)
-                .withNonnullFields("pieces", "whiteKing", "whitePieces", "blackKing", "blackPieces")
+                .withNonnullFields("mailbox", "whiteKing", "whitePieces", "blackKing", "blackPieces")
                 .verify();
     }
 
@@ -126,7 +126,7 @@ final class BoardTest {
     @Test
     void withoutPiece() {
         var piece = new Pawn(Coordinate.of("a5"), Color.BLACK);
-        var board = builder.with(piece).without(piece).build();
+        var board = builder.with(piece).without(Coordinate.of("a5")).build();
 
         assertThat(board.pieces(Color.BLACK)).isNotEmpty().doesNotContain(piece);
     }

@@ -10,7 +10,6 @@ import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.game.CastlingRights;
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.piece.King;
-import com.vmardones.tealchess.piece.Pawn;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
@@ -58,29 +57,16 @@ public final class MoveMaker {
 
     private Board createBoard(Position position, Move move) {
 
-        var piece = move.piece();
-        var otherPiece = move.otherPiece();
-        var destination = move.destination();
-        var movedPiece = piece.moveTo(destination);
-
+        var movedPiece = move.movedPiece();
         var builder = configureBuilder(position.board(), movedPiece);
 
-        builder.without(piece).without(otherPiece).with(movedPiece);
-
-        var rookDestination = move.rookDestination();
-
-        if (otherPiece != null && rookDestination != null) {
-            builder.with(otherPiece.moveTo(rookDestination));
-        }
-
-        var promotionChoice = move.promotionChoice();
-
-        if (promotionChoice != null) {
-            var pawn = (Pawn) movedPiece;
-            builder.with(pawn.promote(promotionChoice));
-        }
-
-        return builder.build();
+        return builder.without(move.source())
+                .without(move.destination())
+                .without(move.otherPieceCoordinate())
+                .with(movedPiece)
+                .with(move.movedCastleRook())
+                .with(move.promotedPawn())
+                .build();
     }
 
     // TODO: Check if this code can be cleaned somehow

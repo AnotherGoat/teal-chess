@@ -31,18 +31,18 @@ final class LegalityTesterTest {
         var enemyRook = board.pieceAt(Coordinate.of("a8"));
 
         var illegalMoves = Stream.of(
-                Move.builder(knight, Coordinate.of("b6")).normal(),
-                Move.builder(knight, Coordinate.of("d6")).normal(),
-                Move.builder(knight, Coordinate.of("a7")).normal(),
-                Move.builder(knight, Coordinate.of("e7")).normal(),
-                Move.builder(bishop, Coordinate.of("b7")).normal(),
-                Move.builder(bishop, Coordinate.of("d5")).normal(),
-                Move.builder(bishop, Coordinate.of("e4")).normal(),
-                Move.builder(bishop, Coordinate.of("a8")).capture(enemyRook),
-                Move.builder(rook, Coordinate.of("d6")).normal(),
-                Move.builder(rook, Coordinate.of("f6")).normal(),
-                Move.builder(rook, Coordinate.of("g6")).normal(),
-                Move.builder(rook, Coordinate.of("h6")).normal());
+                Move.normal(knight, Coordinate.of("b6")),
+                Move.normal(knight, Coordinate.of("d6")),
+                Move.normal(knight, Coordinate.of("a7")),
+                Move.normal(knight, Coordinate.of("e7")),
+                Move.normal(bishop, Coordinate.of("b7")),
+                Move.normal(bishop, Coordinate.of("d5")),
+                Move.normal(bishop, Coordinate.of("e4")),
+                Move.capture(bishop, enemyRook),
+                Move.normal(rook, Coordinate.of("d6")),
+                Move.normal(rook, Coordinate.of("f6")),
+                Move.normal(rook, Coordinate.of("g6")),
+                Move.normal(rook, Coordinate.of("h6")));
 
         assertThat(legalityTester.testPseudoLegals(illegalMoves)).isEmpty();
     }
@@ -60,14 +60,14 @@ final class LegalityTesterTest {
         var enemyQueen = board.pieceAt(Coordinate.of("e2"));
 
         var legalMoves = new Move[] {
-            Move.builder(king, Coordinate.of("d8")).normal(),
-            Move.builder(king, Coordinate.of("d7")).normal(),
-            Move.builder(king, Coordinate.of("f8")).normal(),
-            Move.builder(king, Coordinate.of("f7")).normal(),
-            Move.builder(knight, Coordinate.of("e7")).normal(),
-            Move.builder(rook, Coordinate.of("e5")).normal(),
-            Move.builder(bishop, Coordinate.of("e6")).normal(),
-            Move.builder(bishop, Coordinate.of("e2")).capture(enemyQueen)
+            Move.normal(king, Coordinate.of("d8")),
+            Move.normal(king, Coordinate.of("d7")),
+            Move.normal(king, Coordinate.of("f8")),
+            Move.normal(king, Coordinate.of("f7")),
+            Move.normal(knight, Coordinate.of("e7")),
+            Move.normal(rook, Coordinate.of("e5")),
+            Move.normal(bishop, Coordinate.of("e6")),
+            Move.capture(bishop, enemyQueen)
         };
 
         var pseudoLegals = new PseudoLegalGenerator(position).generate();

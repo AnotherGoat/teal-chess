@@ -50,6 +50,6 @@ final class CaptureGenerator extends MoveGenerator {
             return null;
         }
 
-        return Move.builder(piece, destination).capture(destinationPiece);
+        return Move.capture(piece, destinationPiece);
     }
 }

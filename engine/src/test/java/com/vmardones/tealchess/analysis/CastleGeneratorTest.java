@@ -135,8 +135,8 @@ final class CastleGeneratorTest {
         var queenSideRook = (Rook) board.pieceAt(Coordinate.of("a8"));
 
         var expectedCastles = new Move[] {
-            Move.builder(king, Coordinate.of("g8")).castle(true, kingSideRook, Coordinate.of("f8")),
-            Move.builder(king, Coordinate.of("c8")).castle(false, queenSideRook, Coordinate.of("d8")),
+            Move.castle(true, king, Coordinate.of("g8"), kingSideRook, Coordinate.of("f8")),
+            Move.castle(false, king, Coordinate.of("c8"), queenSideRook, Coordinate.of("d8")),
         };
 
         assertThat(generator.generate()).hasSize(2).containsOnlyOnce(expectedCastles);
@@ -152,8 +152,7 @@ final class CastleGeneratorTest {
         var king = (King) board.pieceAt(Coordinate.of("e1"));
         var rook = (Rook) board.pieceAt(Coordinate.of("a1"));
 
-        var expectedCastles =
-                new Move[] {Move.builder(king, Coordinate.of("c1")).castle(false, rook, Coordinate.of("d1"))};
+        var expectedCastles = new Move[] {Move.castle(false, king, Coordinate.of("c1"), rook, Coordinate.of("d1"))};
 
         assertThat(generator.generate()).hasSize(1).containsOnlyOnce(expectedCastles);
     }

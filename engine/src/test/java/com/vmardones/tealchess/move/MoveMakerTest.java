@@ -30,7 +30,7 @@ final class MoveMakerTest {
         var initialPosition = FenParser.parse("4k3/8/8/8/8/8/8/4K3 w - - 0 1");
         var whiteKing = initialPosition.board().pieceAt(Coordinate.of("e1"));
 
-        var move = Move.builder(whiteKing, whiteKing.coordinate().up(1)).normal();
+        var move = Move.normal(whiteKing, whiteKing.coordinate().up(1));
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.board().king(Color.WHITE))
@@ -44,7 +44,7 @@ final class MoveMakerTest {
         var initialPosition = FenParser.parse("4k3/8/8/8/8/8/8/4K3 b - - 0 1");
         var blackKing = initialPosition.board().pieceAt(Coordinate.of("e8"));
 
-        var move = Move.builder(blackKing, blackKing.coordinate().down(1)).normal();
+        var move = Move.normal(blackKing, blackKing.coordinate().down(1));
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.board().king(Color.BLACK))
@@ -59,7 +59,7 @@ final class MoveMakerTest {
         var attacker = initialPosition.board().pieceAt(Coordinate.of("a8"));
         var capturablePiece = initialPosition.board().pieceAt(Coordinate.of("a1"));
 
-        var move = Move.builder(attacker, Coordinate.of("a1")).capture(capturablePiece);
+        var move = Move.capture(attacker, capturablePiece);
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.board().pieceAt(Coordinate.of("a1"))).isInstanceOf(Rook.class);
@@ -74,7 +74,7 @@ final class MoveMakerTest {
         var king = (King) initialPosition.board().pieceAt(Coordinate.of("e1"));
         var rook = (Rook) initialPosition.board().pieceAt(Coordinate.of("h1"));
 
-        var move = Move.builder(king, Coordinate.of("g1")).castle(true, rook, Coordinate.of("f1"));
+        var move = Move.castle(true, king, Coordinate.of("g1"), rook, Coordinate.of("f1"));
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.board().pieceAt(Coordinate.of("g1"))).isInstanceOf(King.class);
@@ -90,7 +90,7 @@ final class MoveMakerTest {
         var king = (King) initialPosition.board().pieceAt(Coordinate.of("e1"));
         var rook = (Rook) initialPosition.board().pieceAt(Coordinate.of("a1"));
 
-        var move = Move.builder(king, Coordinate.of("c1")).castle(false, rook, Coordinate.of("d1"));
+        var move = Move.castle(false, king, Coordinate.of("c1"), rook, Coordinate.of("d1"));
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.board().pieceAt(Coordinate.of("c1"))).isInstanceOf(King.class);
@@ -106,7 +106,7 @@ final class MoveMakerTest {
         var king = (King) initialPosition.board().pieceAt(Coordinate.of("e8"));
         var rook = (Rook) initialPosition.board().pieceAt(Coordinate.of("h8"));
 
-        var move = Move.builder(king, Coordinate.of("g8")).castle(true, rook, Coordinate.of("f8"));
+        var move = Move.castle(true, king, Coordinate.of("g8"), rook, Coordinate.of("f8"));
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.board().pieceAt(Coordinate.of("g8"))).isInstanceOf(King.class);
@@ -122,7 +122,7 @@ final class MoveMakerTest {
         var king = (King) initialPosition.board().pieceAt(Coordinate.of("e8"));
         var rook = (Rook) initialPosition.board().pieceAt(Coordinate.of("a8"));
 
-        var move = Move.builder(king, Coordinate.of("c8")).castle(false, rook, Coordinate.of("d8"));
+        var move = Move.castle(false, king, Coordinate.of("c8"), rook, Coordinate.of("d8"));
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.board().pieceAt(Coordinate.of("c8"))).isInstanceOf(King.class);
@@ -133,14 +133,27 @@ final class MoveMakerTest {
     }
 
     @Test
-    void makePromotion() {
+    void makeNormalPromotion() {
         var initialPosition = FenParser.parse("4k3/P7/8/8/8/8/8/4K3 w - - 0 1");
 
         var pawn = (Pawn) initialPosition.board().pieceAt(Coordinate.of("a7"));
-        var move = Move.builder(pawn, Coordinate.of("a8")).normal().makePromotion(PromotionChoice.BISHOP);
+        var move = Move.normalPromotion(pawn, Coordinate.of("a8"), PromotionChoice.BISHOP);
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.board().pieceAt(Coordinate.of("a8"))).isInstanceOf(Bishop.class);
+    }
+
+    @Test
+    void makeCapturePromotion() {
+        var initialPosition = FenParser.parse("1b2k3/2P5/8/8/8/8/8/4K3 w - - 0 1");
+
+        var pawn = (Pawn) initialPosition.board().pieceAt(Coordinate.of("c7"));
+        var capturablePiece = initialPosition.board().pieceAt(Coordinate.of("b8"));
+
+        var move = Move.capturePromotion(pawn, capturablePiece, PromotionChoice.QUEEN);
+        var afterMove = moveMaker.make(initialPosition, move);
+
+        assertThat(afterMove.board().pieceAt(Coordinate.of("b8"))).isInstanceOf(Queen.class);
     }
 
     @Test
@@ -148,7 +161,7 @@ final class MoveMakerTest {
         var initialPosition = FenParser.parse("4k3/8/8/8/8/8/P7/4K3 w - - 0 1");
         var pawn = (Pawn) initialPosition.board().pieceAt(Coordinate.of("a2"));
 
-        var move = Move.builder(pawn, Coordinate.of("a4")).doublePush();
+        var move = Move.doublePush(pawn, Coordinate.of("a4"));
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.board().pieceAt(Coordinate.of("a4"))).isInstanceOf(Pawn.class);
@@ -162,7 +175,7 @@ final class MoveMakerTest {
         var initialPosition = FenParser.parse("4k3/p7/8/8/8/8/8/4K3 b - - 0 1");
         var pawn = (Pawn) initialPosition.board().pieceAt(Coordinate.of("a7"));
 
-        var move = Move.builder(pawn, Coordinate.of("a5")).doublePush();
+        var move = Move.doublePush(pawn, Coordinate.of("a5"));
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.board().pieceAt(Coordinate.of("a5"))).isInstanceOf(Pawn.class);
@@ -176,7 +189,7 @@ final class MoveMakerTest {
         var initialPosition = FenParser.parse("4k3/8/8/8/8/3N4/8/4K3 w KQkq - 0 1");
         var knight = initialPosition.board().pieceAt(Coordinate.of("d3"));
 
-        var move = Move.builder(knight, Coordinate.of("b4")).normal();
+        var move = Move.normal(knight, Coordinate.of("b4"));
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.castlingRights()).isEqualTo(initialPosition.castlingRights());
@@ -187,7 +200,7 @@ final class MoveMakerTest {
         var initialPosition = FenParser.parse("4k3/8/8/8/8/8/8/4K3 w KQkq - 0 1");
         var king = initialPosition.board().pieceAt(Coordinate.of("e1"));
 
-        var move = Move.builder(king, Coordinate.of("e2")).normal();
+        var move = Move.normal(king, Coordinate.of("e2"));
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.castlingRights().whiteKingSide()).isFalse();
@@ -199,7 +212,7 @@ final class MoveMakerTest {
         var initialPosition = FenParser.parse("4k3/8/8/8/8/8/8/4K3 b KQkq - 0 1");
         var king = initialPosition.board().pieceAt(Coordinate.of("e8"));
 
-        var move = Move.builder(king, Coordinate.of("e7")).normal();
+        var move = Move.normal(king, Coordinate.of("e7"));
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.castlingRights().blackKingSide()).isFalse();
@@ -211,7 +224,7 @@ final class MoveMakerTest {
         var initialPosition = FenParser.parse("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
         var rook = initialPosition.board().pieceAt(Coordinate.of("h1"));
 
-        var move = Move.builder(rook, Coordinate.of("h3")).normal();
+        var move = Move.normal(rook, Coordinate.of("h3"));
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.castlingRights().whiteKingSide()).isFalse();
@@ -223,7 +236,7 @@ final class MoveMakerTest {
         var initialPosition = FenParser.parse("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
         var rook = initialPosition.board().pieceAt(Coordinate.of("a1"));
 
-        var move = Move.builder(rook, Coordinate.of("d1")).normal();
+        var move = Move.normal(rook, Coordinate.of("d1"));
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.castlingRights().whiteQueenSide()).isFalse();
@@ -235,7 +248,7 @@ final class MoveMakerTest {
         var initialPosition = FenParser.parse("r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 0 1");
         var rook = initialPosition.board().pieceAt(Coordinate.of("h8"));
 
-        var move = Move.builder(rook, Coordinate.of("g8")).normal();
+        var move = Move.normal(rook, Coordinate.of("g8"));
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.castlingRights().whiteKingSide()).isTrue();
@@ -247,7 +260,7 @@ final class MoveMakerTest {
         var initialPosition = FenParser.parse("r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 0 1");
         var rook = initialPosition.board().pieceAt(Coordinate.of("a8"));
 
-        var move = Move.builder(rook, Coordinate.of("a6")).normal();
+        var move = Move.normal(rook, Coordinate.of("a6"));
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.castlingRights().whiteQueenSide()).isTrue();
@@ -259,7 +272,7 @@ final class MoveMakerTest {
         var initialPosition = FenParser.parse("r3k3/8/8/8/5r2/8/8/4K3 b KQq - 0 1");
         var rook = initialPosition.board().pieceAt(Coordinate.of("f4"));
 
-        var move = Move.builder(rook, Coordinate.of("a4")).normal();
+        var move = Move.normal(rook, Coordinate.of("a4"));
         var afterMove = moveMaker.make(initialPosition, move);
 
         assertThat(afterMove.castlingRights()).isEqualTo(initialPosition.castlingRights());
