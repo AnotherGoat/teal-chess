@@ -105,6 +105,15 @@ final class Square extends Actor {
         return piece;
     }
 
+    void reset(@Nullable Piece newPiece) {
+        piece(newPiece);
+        highlight(false);
+        destination(false);
+        checked(false);
+        dark(false);
+        move(false);
+    }
+
     void piece(@Nullable Piece value) {
         piece = value;
 

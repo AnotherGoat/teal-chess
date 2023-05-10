@@ -16,6 +16,7 @@ final class TealChess extends Game {
 
     private final AssetLoader assets = new AssetLoader(PieceTheme.CBURNETT);
     private final SettingsManager settings = new SettingsManager();
+    private final GameLogger logger = new GameLogger(settings);
 
     @Override
     public void create() {
@@ -27,6 +28,6 @@ final class TealChess extends Game {
 
         assets.reload();
 
-        setScreen(new GameScreen(assets, settings));
+        setScreen(new GameScreen(assets, settings, logger));
     }
 }

@@ -72,6 +72,16 @@ final class BoardGroup extends Group {
         }
     }
 
+    void reset(Board newBoard) {
+        board = newBoard;
+
+        for (var entry : squares.entrySet()) {
+            var piece = board.pieceAt(entry.getKey());
+            var square = entry.getValue();
+            square.reset(piece);
+        }
+    }
+
     void flip(boolean flip) {
         squares.values().forEach(square -> square.flip(flip));
     }
@@ -118,6 +128,10 @@ final class BoardGroup extends Group {
                     square.coordinate().equals(source) || square.coordinate().equals(destination);
             square.move(isPartOfTheMove);
         }
+    }
+
+    void hideHighlightedMove() {
+        squares.values().forEach(square -> square.move(false));
     }
 
     private class ClearListener extends ClickListener {

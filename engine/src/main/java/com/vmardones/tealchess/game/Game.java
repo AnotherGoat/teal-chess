@@ -7,9 +7,6 @@ package com.vmardones.tealchess.game;
 
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,20 +28,6 @@ import org.eclipse.jdt.annotation.Nullable;
  */
 public final class Game {
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-    private static final Map<String, String> INITIAL_TAGS = new LinkedHashMap<>();
-
-    // TODO: Move the initial tags to the UI
-    static {
-        INITIAL_TAGS.put("Event", "Casual game");
-        INITIAL_TAGS.put("Site", "Teal Chess");
-        INITIAL_TAGS.put("Date", LocalDate.now().format(DATE_FORMATTER));
-        INITIAL_TAGS.put("Round", "?");
-        INITIAL_TAGS.put("White", "Anonymous");
-        INITIAL_TAGS.put("Black", "Anonymous");
-        INITIAL_TAGS.put("Result", "\\*");
-    }
-
     private final MoveMaker moveMaker;
     private final GameState state;
     private GameHistory history;
@@ -54,14 +37,7 @@ public final class Game {
 
     /**
      * The standard way to create a new game, starting from the initial position.
-     * @param moveMaker Responsible for making moves.
-     */
-    public Game(MoveMaker moveMaker) {
-        this(moveMaker, INITIAL_TAGS);
-    }
-
-    /**
-     * Another way to create a game, which is used when loading a PGN file.
+     * Also used when loading a PGN file.
      * @param tags Map containing the PGN tag-value pairs.
      */
     public Game(MoveMaker moveMaker, Map<String, String> tags) {

@@ -24,7 +24,8 @@ public final class PgnParser {
 
         var tagMap = TagParser.parse(tags);
 
-        return new Game(new MoveMaker());
+        // TODO: Add support for FEN tag, which allows starting games from other positions
+        return new Game(new MoveMaker(), tagMap);
     }
 
     private PgnParser() {}
