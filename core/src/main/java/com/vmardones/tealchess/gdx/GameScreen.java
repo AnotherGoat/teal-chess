@@ -52,7 +52,7 @@ final class GameScreen extends ScreenAdapter {
     private final GameLogger logger;
     private Game game;
     private final Stage stage = new Stage();
-    private BoardGroup boardGroup;
+    private final BoardGroup boardGroup;
     private @Nullable Image moveAnimation;
     private @Nullable Image castleAnimation;
     private SelectionState selectionState;
@@ -100,6 +100,25 @@ final class GameScreen extends ScreenAdapter {
     @Override
     public void dispose() {
         stage.dispose();
+    }
+
+    private void stopAnimations() {
+        if (moveAnimation != null) {
+            moveAnimation.remove();
+            moveAnimation = null;
+        }
+
+        if (castleAnimation != null) {
+            castleAnimation.remove();
+            castleAnimation = null;
+        }
+    }
+
+    private void removePromotionSelector() {
+        if (promotionGroup != null) {
+            promotionGroup.remove();
+            promotionGroup = null;
+        }
     }
 
     private void playAiMove() {
@@ -201,26 +220,41 @@ final class GameScreen extends ScreenAdapter {
         }
     }
 
+    private void toggleDebugMode() {
+        settings.toggleDebugMode();
+
+        if (settings.debugMode()) {
+            Gdx.app.setLogLevel(Application.LOG_DEBUG);
+        } else {
+            Gdx.app.setLogLevel(Application.LOG_INFO);
+        }
+    }
+
+    // TODO: Handle hiding or showing legals when a piece is already selected
+    private void toggleHighlightLegals() {
+        settings.toggleHighlightLegals();
+    }
+
+    private void flipTheBoard() {
+        settings.toggleFlipBoard();
+
+        stopAnimations();
+        boardGroup.board(game.board());
+        boardGroup.flip(settings.flipBoard());
+
+        logger.log(game);
+
+        boardGroup.setTouchable(Touchable.enabled);
+
+        if (game.ai() != null && !game.player().legals().isEmpty()) {
+            playAiMove();
+        }
+    }
+
     private void startNewGame() {
-
-        if (moveAnimation != null) {
-            moveAnimation.remove();
-            moveAnimation = null;
-        }
-
-        if (castleAnimation != null) {
-            castleAnimation.remove();
-            castleAnimation = null;
-        }
-
-        if (promotionGroup != null) {
-            promotionGroup.remove();
-            promotionGroup = null;
-        }
-
+        stopAnimations();
+        removePromotionSelector();
         promotionMoves.clear();
-
-        Gdx.app.log("Game", "Starting a new game!");
 
         game = new Game(new MoveMaker(), INITIAL_TAGS).blackAi(new RandomMoveChooser());
         logger.log(game);
@@ -385,35 +419,29 @@ final class GameScreen extends ScreenAdapter {
 
         @Override
         public boolean keyDown(InputEvent event, int keycode) {
-            if (keycode == Input.Keys.D) {
-                Gdx.app.log(LOG_TAG, "Toggling debug mode");
-                settings.toggleDebugMode();
-
-                if (settings.debugMode()) {
-                    Gdx.app.setLogLevel(Application.LOG_DEBUG);
-                } else {
-                    Gdx.app.setLogLevel(Application.LOG_INFO);
+            return switch (keycode) {
+                case Input.Keys.D -> {
+                    Gdx.app.log(LOG_TAG, "Toggling debug mode");
+                    toggleDebugMode();
+                    yield true;
                 }
-
-                return true;
-            } else if (keycode == Input.Keys.H) {
-                Gdx.app.log(LOG_TAG, "Toggling legal move highlighting");
-                settings.toggleHighlightLegals();
-
-                // TODO: Handle hiding or showing legals when a piece is already selected
-                return true;
-            } else if (keycode == Input.Keys.F) {
-                Gdx.app.log(LOG_TAG, "Flipping the board");
-                settings.toggleFlipBoard();
-
-                boardGroup.flip(settings.flipBoard());
-                return true;
-            } else if (keycode == Input.Keys.N) {
-                startNewGame();
-                return true;
-            }
-
-            return false;
+                case Input.Keys.H -> {
+                    Gdx.app.log(LOG_TAG, "Toggling legal move highlighting");
+                    toggleHighlightLegals();
+                    yield true;
+                }
+                case Input.Keys.F -> {
+                    Gdx.app.log(LOG_TAG, "Flipping the board");
+                    flipTheBoard();
+                    yield true;
+                }
+                case Input.Keys.N -> {
+                    Gdx.app.log(LOG_TAG, "Starting a new game!");
+                    startNewGame();
+                    yield true;
+                }
+                default -> false;
+            };
         }
     }
 
@@ -424,16 +452,14 @@ final class GameScreen extends ScreenAdapter {
                 return false;
             }
 
-            if (promotionGroup != null) {
-                promotionGroup.remove();
-                promotionGroup = null;
-            }
+            removePromotionSelector();
 
             var choice = promotionEvent.promotionChoice();
             var selectedMove = promotionMoves.stream()
                     .filter(legal -> legal.move().promotionChoice() == choice)
                     .findFirst()
                     .orElseThrow(AssertionError::new);
+
             promotionMoves.clear();
 
             game.makeMove(selectedMove);

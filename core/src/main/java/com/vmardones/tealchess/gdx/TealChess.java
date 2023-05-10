@@ -30,4 +30,10 @@ final class TealChess extends Game {
 
         setScreen(new GameScreen(assets, settings, logger));
     }
+
+    @Override
+    public void dispose() {
+        assets.dispose();
+        super.dispose();
+    }
 }
