@@ -69,7 +69,7 @@ final class GameScreen extends ScreenAdapter {
 
         Gdx.input.setInputProcessor(stage);
 
-        boardGroup = new BoardGroup(assets, game.board());
+        boardGroup = new BoardGroup(settings, assets, game.board());
 
         if (settings.flipBoard()) {
             boardGroup.flip(true);
@@ -147,7 +147,7 @@ final class GameScreen extends ScreenAdapter {
     }
 
     private void playSlidingAnimation(LegalMove move) {
-        if (!settings.playAnimations()) {
+        if (!settings.animatePieces()) {
             boardGroup.setTouchable(Touchable.enabled);
             boardGroup.board(game.board());
             logger.log(game);
@@ -243,11 +243,6 @@ final class GameScreen extends ScreenAdapter {
         }
     }
 
-    // TODO: Handle hiding or showing legals when a piece is already selected
-    private void toggleHighlightLegals() {
-        settings.toggleShowLegals();
-    }
-
     private void flipTheBoard() {
         settings.toggleFlipBoard();
 
@@ -334,10 +329,7 @@ final class GameScreen extends ScreenAdapter {
 
             var source = event.coordinate();
             boardGroup.highlightSource(source);
-
-            if (settings.showLegals()) {
-                boardGroup.highlightDestinations(legalDestinations);
-            }
+            boardGroup.highlightDestinations(legalDestinations);
 
             selectionState = new DestinationSelection(source);
         }
@@ -349,10 +341,7 @@ final class GameScreen extends ScreenAdapter {
 
         private SourceSelection() {
             boardGroup.hideSource();
-
-            if (settings.showLegals()) {
-                boardGroup.hideDestinations();
-            }
+            boardGroup.hideDestinations();
         }
     }
 
@@ -438,9 +427,9 @@ final class GameScreen extends ScreenAdapter {
                     toggleDebugMode();
                     yield true;
                 }
-                case Input.Keys.H -> {
+                case Input.Keys.L -> {
                     Gdx.app.log(LOG_TAG, "Toggling legal move highlighting");
-                    toggleHighlightLegals();
+                    settings.toggleShowLegals();
                     yield true;
                 }
                 case Input.Keys.F -> {
@@ -448,18 +437,51 @@ final class GameScreen extends ScreenAdapter {
                     flipTheBoard();
                     yield true;
                 }
+                case Input.Keys.M -> {
+                    Gdx.app.log(LOG_TAG, "Toggling last move highlighting");
+                    settings.toggleShowLastMove();
+                    yield true;
+                }
+                case Input.Keys.C -> {
+                    Gdx.app.log(LOG_TAG, "Toggling show coordinates");
+                    settings.toggleShowCoordinates();
+                    yield true;
+                }
+                case Input.Keys.P -> {
+                    Gdx.app.log(LOG_TAG, "Toggling show attacked pieces");
+                    // TODO: Show attacked pieces
+                    settings.toggleShowAttackedPieces();
+                    yield true;
+                }
                 case Input.Keys.N -> {
                     Gdx.app.log(LOG_TAG, "Starting a new game!");
                     startNewGame();
                     yield true;
                 }
-                    // TODO: Show attacked pieces
-                case Input.Keys.P -> true;
-                case Input.Keys.A -> {
-                    Gdx.app.log(LOG_TAG, "Toggling animations");
-                    settings.togglePlayAnimations();
+                case Input.Keys.T -> {
+                    if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
+                            || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)
+                            || Gdx.input.isKeyPressed(Input.Keys.META_SHIFT_ON)) {
+                        settings.previousBoardTheme();
+                        Gdx.app.log(LOG_TAG, "Changing to previous board theme: " + settings.boardTheme());
+                    } else {
+                        settings.nextBoardTheme();
+                        Gdx.app.log(LOG_TAG, "Changing to next board theme: " + settings.boardTheme());
+                    }
 
-                    if (!settings.playAnimations()) {
+                    assets.reloadBoardTheme();
+                    yield true;
+                }
+                case Input.Keys.S -> {
+                    Gdx.app.log(LOG_TAG, "Toggling piece shadows");
+                    settings.togglePieceShadows();
+                    yield true;
+                }
+                case Input.Keys.A -> {
+                    Gdx.app.log(LOG_TAG, "Toggling piece animations");
+                    settings.toggleAnimatePieces();
+
+                    if (!settings.animatePieces()) {
                         stopAnimations();
 
                         boardGroup.board(game.board());
@@ -474,6 +496,11 @@ final class GameScreen extends ScreenAdapter {
                         }
                     }
 
+                    yield true;
+                }
+                case Input.Keys.I -> {
+                    Gdx.app.log(LOG_TAG, "Toggling invisible pieces");
+                    settings.toggleInvisiblePieces();
                     yield true;
                 }
                 case Input.Keys.DPAD_UP -> {

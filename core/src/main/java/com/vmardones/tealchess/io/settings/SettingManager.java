@@ -10,7 +10,7 @@ import java.util.Locale;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.vmardones.tealchess.Initializer;
-import com.vmardones.tealchess.io.assets.ColorTheme;
+import com.vmardones.tealchess.io.assets.BoardTheme;
 import com.vmardones.tealchess.io.assets.PieceTheme;
 
 // TODO: Add an option to choose between ASCII and Unicode chess pieces
@@ -76,12 +76,28 @@ public final class SettingManager {
         toggle(BooleanSetting.SHOW_ATTACKED_PIECES);
     }
 
-    public boolean playAnimations() {
-        return get(BooleanSetting.PLAY_ANIMATIONS);
+    public boolean pieceShadows() {
+        return get(BooleanSetting.PIECE_SHADOWS);
     }
 
-    public void togglePlayAnimations() {
-        toggle(BooleanSetting.PLAY_ANIMATIONS);
+    public void togglePieceShadows() {
+        toggle(BooleanSetting.PIECE_SHADOWS);
+    }
+
+    public boolean animatePieces() {
+        return get(BooleanSetting.ANIMATE_PIECES);
+    }
+
+    public void toggleAnimatePieces() {
+        toggle(BooleanSetting.ANIMATE_PIECES);
+    }
+
+    public boolean invisiblePieces() {
+        return get(BooleanSetting.INVISIBLE_PIECES);
+    }
+
+    public void toggleInvisiblePieces() {
+        toggle(BooleanSetting.INVISIBLE_PIECES);
     }
 
     /* Float settings */
@@ -130,12 +146,20 @@ public final class SettingManager {
 
     /* Enum settings */
 
-    public ColorTheme colorTheme() {
-        return get(StringSetting.COLOR_THEME, ColorTheme.class);
+    public BoardTheme boardTheme() {
+        return get(StringSetting.BOARD_THEME, BoardTheme.class);
     }
 
-    public void colorTheme(ColorTheme value) {
-        set(StringSetting.COLOR_THEME, value);
+    public void boardTheme(BoardTheme value) {
+        set(StringSetting.BOARD_THEME, value);
+    }
+
+    public void previousBoardTheme() {
+        boardTheme(boardTheme().previous());
+    }
+
+    public void nextBoardTheme() {
+        boardTheme(boardTheme().next());
     }
 
     public PieceTheme pieceTheme() {

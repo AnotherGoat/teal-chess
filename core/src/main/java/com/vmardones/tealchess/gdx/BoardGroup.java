@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.io.assets.AssetLoader;
+import com.vmardones.tealchess.io.settings.SettingManager;
 import com.vmardones.tealchess.move.LegalMove;
 
 final class BoardGroup extends Group {
@@ -23,7 +24,7 @@ final class BoardGroup extends Group {
     private Board board;
     private final Map<Coordinate, Square> squares = new HashMap<>();
 
-    BoardGroup(AssetLoader assets, Board board) {
+    BoardGroup(SettingManager settings, AssetLoader assets, Board board) {
         this.board = board;
 
         setSize(SIZE, SIZE);
@@ -37,7 +38,7 @@ final class BoardGroup extends Group {
                     var coordinate = entry.getKey();
                     var piece = entry.getValue();
 
-                    return new Square(assets, coordinate, board.colorOf(coordinate), piece);
+                    return new Square(settings, assets, coordinate, board.colorOf(coordinate), piece);
                 })
                 .forEach(square -> {
                     squares.put(square.coordinate(), square);

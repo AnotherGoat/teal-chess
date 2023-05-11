@@ -14,7 +14,9 @@ enum BooleanSetting {
     SHOW_LAST_MOVE(true),
     SHOW_COORDINATES(true),
     SHOW_ATTACKED_PIECES(false),
-    PLAY_ANIMATIONS(true);
+    PIECE_SHADOWS(true),
+    ANIMATE_PIECES(true),
+    INVISIBLE_PIECES(false);
 
     private final boolean defaultValue;
 

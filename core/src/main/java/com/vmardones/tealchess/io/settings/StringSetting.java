@@ -10,7 +10,7 @@ import java.util.Locale;
 enum StringSetting {
     PGN(""),
     FEN(""),
-    COLOR_THEME("lichess_org"),
+    BOARD_THEME("lichess_org"),
     PIECE_THEME("cburnett");
 
     private final String defaultValue;

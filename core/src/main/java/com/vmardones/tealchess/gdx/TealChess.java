@@ -25,7 +25,7 @@ final class TealChess extends Game {
             Gdx.app.setLogLevel(Application.LOG_DEBUG);
         }
 
-        assets.reload();
+        assets.load();
 
         setScreen(new GameScreen(settings, assets, logger));
     }

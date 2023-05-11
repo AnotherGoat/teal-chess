@@ -33,29 +33,33 @@ public final class AssetLoader extends AssetManager {
     }
 
     @Initializer
-    public void reload() {
-        var colorTheme = settings.colorTheme();
-        var lightColor = Color.valueOf(colorTheme.lightColor());
-        var darkColor = Color.valueOf(colorTheme.darkColor());
+    public void load() {
+        reloadBoardTheme();
 
-        addAsset("light_font.ttf", BitmapFont.class, loadFont(lightColor.cpy().mul(1.2f)));
-        addAsset("dark_font.ttf", BitmapFont.class, loadFont(darkColor.cpy().mul(0.8f)));
-        addAsset("light.png", Texture.class, createSquare(lightColor));
-        addAsset("dark.png", Texture.class, createSquare(darkColor));
-
-        addAsset("highlight.png", Texture.class, createSquare(Color.TEAL.mul(1, 1, 1, 0.6f)));
+        addAsset("highlight.png", Texture.class, createSquare(Color.TEAL.cpy().mul(1, 1, 1, 0.6f)));
         addAsset("destination.png", Texture.class, createCircle(Color.TEAL, 7));
         addAsset("target.png", Texture.class, createTarget(Color.TEAL));
         addAsset("attack.png", Texture.class, createTarget(Color.SCARLET)); // TODO: Unused
-        addAsset("last_move.png", Texture.class, createSquare(Color.FOREST.mul(1, 1, 1, 0.5f)));
-        addAsset("check.png", Texture.class, createSquare(Color.SCARLET.mul(1, 1, 1, 0.7f)));
+        addAsset("last_move.png", Texture.class, createSquare(Color.FOREST.cpy().mul(1, 1, 1, 0.5f)));
+        addAsset("check.png", Texture.class, createSquare(Color.SCARLET.cpy().mul(1, 1, 1, 0.7f)));
         addAsset("promotion.png", Texture.class, createCircle(Color.LIGHT_GRAY, 2));
-        addAsset("dark_tint.png", Texture.class, createSquare(Color.BLACK.mul(1, 1, 1, 0.5f)));
+        addAsset("dark_tint.png", Texture.class, createSquare(Color.BLACK.cpy().mul(1, 1, 1, 0.5f)));
 
         PIECE_CODES.forEach(code -> {
             var texture = new Texture(loadPiecePixmap(code, settings.pieceTheme()));
             addAsset(code + ".png", Texture.class, texture);
         });
+    }
+
+    public void reloadBoardTheme() {
+        var boardTheme = settings.boardTheme();
+        var lightColor = Color.valueOf(boardTheme.lightColor());
+        var darkColor = Color.valueOf(boardTheme.darkColor());
+
+        addAsset("light_font.ttf", BitmapFont.class, loadFont(lightColor.cpy().mul(1.2f)));
+        addAsset("dark_font.ttf", BitmapFont.class, loadFont(darkColor.cpy().mul(0.8f)));
+        addAsset("light.png", Texture.class, createSquare(lightColor));
+        addAsset("dark.png", Texture.class, createSquare(darkColor));
     }
 
     private BitmapFont loadFont(Color color) {
