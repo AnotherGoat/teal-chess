@@ -9,8 +9,12 @@ import java.util.Locale;
 
 enum BooleanSetting {
     DEBUG_MODE(false),
-    HIGHTLIGHT_LEGALS(true),
-    FLIP_BOARD(false);
+    SHOW_LEGALS(true),
+    FLIP_BOARD(false),
+    SHOW_LAST_MOVE(true),
+    SHOW_COORDINATES(true),
+    SHOW_ATTACKED_PIECES(false),
+    PLAY_ANIMATIONS(true);
 
     private final boolean defaultValue;
 

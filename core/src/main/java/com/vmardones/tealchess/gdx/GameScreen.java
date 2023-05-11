@@ -32,8 +32,6 @@ import org.eclipse.jdt.annotation.Nullable;
 
 final class GameScreen extends ScreenAdapter {
 
-    private static final float ANIMATION_SPEED = 0.3f;
-    private static final float AI_DELAY = 0.75f;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
     private static final Map<String, String> INITIAL_TAGS = new LinkedHashMap<>();
 
@@ -143,7 +141,7 @@ final class GameScreen extends ScreenAdapter {
             }
         };
 
-        Timer.schedule(task, AI_DELAY);
+        Timer.schedule(task, settings.aiDelay());
     }
 
     private void playSlidingAnimation(LegalMove move) {
@@ -165,7 +163,7 @@ final class GameScreen extends ScreenAdapter {
             moveAnimation = new Image(sprite);
             moveAnimation.setPosition(x1, y1);
 
-            var slide = Actions.moveTo(x2, y2, ANIMATION_SPEED, Interpolation.smoother);
+            var slide = Actions.moveTo(x2, y2, settings.animationDuration(), Interpolation.smoother);
             var resumeGame = Actions.run(() -> {
                 moveAnimation = null;
 
@@ -209,7 +207,8 @@ final class GameScreen extends ScreenAdapter {
                     castleAnimation = new Image(rookSprite);
                     castleAnimation.setPosition(rookX1, rookY1);
 
-                    var rookSlide = Actions.moveTo(rookX2, rookY2, ANIMATION_SPEED, Interpolation.smoother);
+                    var rookSlide =
+                            Actions.moveTo(rookX2, rookY2, settings.animationDuration(), Interpolation.smoother);
                     var rookAction = Actions.sequence(
                             rookSlide, Actions.run(() -> castleAnimation = null), new RemoveActorAction());
 
@@ -232,7 +231,7 @@ final class GameScreen extends ScreenAdapter {
 
     // TODO: Handle hiding or showing legals when a piece is already selected
     private void toggleHighlightLegals() {
-        settings.toggleHighlightLegals();
+        settings.toggleShowLegals();
     }
 
     private void flipTheBoard() {
@@ -322,7 +321,7 @@ final class GameScreen extends ScreenAdapter {
             var source = event.coordinate();
             boardGroup.highlightSource(source);
 
-            if (settings.highlightLegals()) {
+            if (settings.showLegals()) {
                 boardGroup.highlightDestinations(legalDestinations);
             }
 
@@ -337,7 +336,7 @@ final class GameScreen extends ScreenAdapter {
         private SourceSelection() {
             boardGroup.hideSource();
 
-            if (settings.highlightLegals()) {
+            if (settings.showLegals()) {
                 boardGroup.hideDestinations();
             }
         }
@@ -393,7 +392,7 @@ final class GameScreen extends ScreenAdapter {
 
             Gdx.app.log(LOG_TAG, "Promoting a pawn! Please select the piece you want to promote it to");
 
-            boardGroup.dark(true);
+            boardGroup.makeDark(true);
             boardGroup.setTouchable(Touchable.disabled);
             promotionMoves.addAll(moves);
 
@@ -440,6 +439,26 @@ final class GameScreen extends ScreenAdapter {
                     startNewGame();
                     yield true;
                 }
+                case Input.Keys.DPAD_UP -> {
+                    settings.increaseAnimationDuration();
+                    Gdx.app.log(LOG_TAG, "Slowed down animations to " + settings.animationDuration() + "s");
+                    yield true;
+                }
+                case Input.Keys.DPAD_DOWN -> {
+                    settings.decreaseAnimationDuration();
+                    Gdx.app.log(LOG_TAG, "Sped up animations to " + settings.animationDuration() + "s");
+                    yield true;
+                }
+                case Input.Keys.DPAD_RIGHT -> {
+                    settings.increaseAiDelay();
+                    Gdx.app.log(LOG_TAG, "Increased AI delay to " + settings.aiDelay() + "s");
+                    yield true;
+                }
+                case Input.Keys.DPAD_LEFT -> {
+                    settings.decreaseAiDelay();
+                    Gdx.app.log(LOG_TAG, "Decreased AI delay to " + settings.aiDelay() + "s");
+                    yield true;
+                }
                 default -> false;
             };
         }
@@ -470,7 +489,7 @@ final class GameScreen extends ScreenAdapter {
                 boardGroup.highlightChecked(game.kingCoordinate());
             }
 
-            boardGroup.dark(false);
+            boardGroup.makeDark(false);
             selectionState = new SourceSelection();
 
             playSlidingAnimation(selectedMove);

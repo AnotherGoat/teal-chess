@@ -115,7 +115,7 @@ final class BoardGroup extends Group {
         squares.values().forEach(square -> square.checked(false));
     }
 
-    void dark(boolean value) {
+    void makeDark(boolean value) {
         squares.values().forEach(square -> square.dark(value));
     }
 

@@ -32,6 +32,7 @@ public final class AssetLoader extends AssetManager {
         addAsset("highlight.png", Texture.class, createSquare(Color.TEAL.mul(1, 1, 1, 0.6f)));
         addAsset("destination.png", Texture.class, createCircle(Color.TEAL, 7));
         addAsset("target.png", Texture.class, createTarget(Color.TEAL));
+        addAsset("attack.png", Texture.class, createTarget(Color.SCARLET)); // TODO: Unused
         addAsset("last_move.png", Texture.class, createSquare(Color.FOREST.mul(1, 1, 1, 0.5f)));
         addAsset("check.png", Texture.class, createSquare(Color.SCARLET.mul(1, 1, 1, 0.7f)));
         addAsset("promotion.png", Texture.class, createCircle(Color.LIGHT_GRAY, 2));

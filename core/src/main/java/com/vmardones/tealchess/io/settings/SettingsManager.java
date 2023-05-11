@@ -31,12 +31,12 @@ public final class SettingsManager {
         toggle(BooleanSetting.DEBUG_MODE);
     }
 
-    public boolean highlightLegals() {
-        return get(BooleanSetting.HIGHTLIGHT_LEGALS);
+    public boolean showLegals() {
+        return get(BooleanSetting.SHOW_LEGALS);
     }
 
-    public void toggleHighlightLegals() {
-        toggle(BooleanSetting.HIGHTLIGHT_LEGALS);
+    public void toggleShowLegals() {
+        toggle(BooleanSetting.SHOW_LEGALS);
     }
 
     public boolean flipBoard() {
@@ -45,6 +45,30 @@ public final class SettingsManager {
 
     public void toggleFlipBoard() {
         toggle(BooleanSetting.FLIP_BOARD);
+    }
+
+    public float animationDuration() {
+        return get(FloatSetting.ANIMATION_DURATION);
+    }
+
+    public void increaseAnimationDuration() {
+        increase(FloatSetting.ANIMATION_DURATION);
+    }
+
+    public void decreaseAnimationDuration() {
+        decrease(FloatSetting.ANIMATION_DURATION);
+    }
+
+    public float aiDelay() {
+        return get(FloatSetting.AI_DELAY);
+    }
+
+    public void increaseAiDelay() {
+        increase(FloatSetting.AI_DELAY);
+    }
+
+    public void decreaseAiDelay() {
+        decrease(FloatSetting.AI_DELAY);
     }
 
     public String pgn() {
@@ -71,8 +95,8 @@ public final class SettingsManager {
         return preferences.getString(setting.key(), setting.defaultValue());
     }
 
-    private void toggle(BooleanSetting setting) {
-        set(setting, !get(setting));
+    private float get(FloatSetting setting) {
+        return preferences.getFloat(setting.key(), setting.defaultValue());
     }
 
     private void set(BooleanSetting setting, boolean value) {
@@ -83,5 +107,28 @@ public final class SettingsManager {
     private void set(StringSetting setting, String value) {
         preferences.putString(setting.key(), value);
         preferences.flush();
+    }
+
+    private void set(FloatSetting setting, float value) {
+        preferences.putFloat(setting.key(), value);
+        preferences.flush();
+    }
+
+    private void toggle(BooleanSetting setting) {
+        set(setting, !get(setting));
+    }
+
+    private void increase(FloatSetting setting) {
+        var oldValue = get(setting);
+        var newValue = setting.clamp(oldValue + setting.step());
+
+        set(setting, newValue);
+    }
+
+    private void decrease(FloatSetting setting) {
+        var oldValue = get(setting);
+        var newValue = setting.clamp(oldValue - setting.step());
+
+        set(setting, newValue);
     }
 }
