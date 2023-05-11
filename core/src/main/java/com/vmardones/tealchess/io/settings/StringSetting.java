@@ -8,9 +8,10 @@ package com.vmardones.tealchess.io.settings;
 import java.util.Locale;
 
 enum StringSetting {
-    PIECE_THEME("cburnett"),
     PGN(""),
-    FEN("");
+    FEN(""),
+    COLOR_THEME("lichess_org"),
+    PIECE_THEME("cburnett");
 
     private final String defaultValue;
 

@@ -6,6 +6,7 @@
 package com.vmardones.tealchess.io.assets;
 
 import java.util.List;
+import java.util.Locale;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
@@ -26,9 +27,6 @@ public final class AssetLoader extends AssetManager {
     private static final int FONT_SIZE = 14;
 
     private final SettingManager settings;
-    private PieceTheme theme;
-    private final Color lightColor = Color.valueOf("#FFCE9E");
-    private final Color darkColor = Color.valueOf("#D18B47");
 
     public AssetLoader(SettingManager settings) {
         this.settings = settings;
@@ -36,13 +34,15 @@ public final class AssetLoader extends AssetManager {
 
     @Initializer
     public void reload() {
-        theme = settings.theme();
+        var colorTheme = settings.colorTheme();
+        var lightColor = Color.valueOf(colorTheme.lightColor());
+        var darkColor = Color.valueOf(colorTheme.darkColor());
 
-        addAsset("light_font.ttf", BitmapFont.class, loadFont(lightColor));
-        addAsset("dark_font.ttf", BitmapFont.class, loadFont(darkColor));
-
+        addAsset("light_font.ttf", BitmapFont.class, loadFont(lightColor.cpy().mul(1.2f)));
+        addAsset("dark_font.ttf", BitmapFont.class, loadFont(darkColor.cpy().mul(0.8f)));
         addAsset("light.png", Texture.class, createSquare(lightColor));
         addAsset("dark.png", Texture.class, createSquare(darkColor));
+
         addAsset("highlight.png", Texture.class, createSquare(Color.TEAL.mul(1, 1, 1, 0.6f)));
         addAsset("destination.png", Texture.class, createCircle(Color.TEAL, 7));
         addAsset("target.png", Texture.class, createTarget(Color.TEAL));
@@ -53,7 +53,7 @@ public final class AssetLoader extends AssetManager {
         addAsset("dark_tint.png", Texture.class, createSquare(Color.BLACK.mul(1, 1, 1, 0.5f)));
 
         PIECE_CODES.forEach(code -> {
-            var texture = new Texture(loadPiecePixmap(code));
+            var texture = new Texture(loadPiecePixmap(code, settings.pieceTheme()));
             addAsset(code + ".png", Texture.class, texture);
         });
     }
@@ -63,10 +63,6 @@ public final class AssetLoader extends AssetManager {
     }
 
     /* Getters and setters */
-
-    public void theme(PieceTheme value) {
-        theme = value;
-    }
 
     private Texture createSquare(Color color) {
         var pixmap = new Pixmap(SQUARE_SIZE, SQUARE_SIZE, Pixmap.Format.RGBA8888);
@@ -96,11 +92,11 @@ public final class AssetLoader extends AssetManager {
         return new Texture(pixmap);
     }
 
-    private Pixmap loadPiecePixmap(String pieceCode) {
-        return SvgLoader.load(formatIconPath(pieceCode), SQUARE_SIZE);
+    private Pixmap loadPiecePixmap(String pieceCode, PieceTheme theme) {
+        return SvgLoader.load(formatIconPath(pieceCode, theme), SQUARE_SIZE);
     }
 
-    private String formatIconPath(String pieceCode) {
-        return "%s/%s/%s.svg".formatted(PIECE_ICON_PATH, theme, pieceCode);
+    private String formatIconPath(String pieceCode, PieceTheme theme) {
+        return "%s/%s/%s.svg".formatted(PIECE_ICON_PATH, theme.name().toLowerCase(Locale.ROOT), pieceCode);
     }
 }

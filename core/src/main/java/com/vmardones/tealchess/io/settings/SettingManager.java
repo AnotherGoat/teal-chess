@@ -5,9 +5,12 @@
 
 package com.vmardones.tealchess.io.settings;
 
+import java.util.Locale;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.vmardones.tealchess.Initializer;
+import com.vmardones.tealchess.io.assets.ColorTheme;
 import com.vmardones.tealchess.io.assets.PieceTheme;
 
 // TODO: Add an option to choose between ASCII and Unicode chess pieces
@@ -23,7 +26,7 @@ public final class SettingManager {
         preferences = Gdx.app.getPreferences(SETTINGS_FILE);
     }
 
-    /* Getters and setters */
+    /* Boolean settings */
 
     public boolean debugMode() {
         return get(BooleanSetting.DEBUG_MODE);
@@ -81,6 +84,8 @@ public final class SettingManager {
         toggle(BooleanSetting.PLAY_ANIMATIONS);
     }
 
+    /* Float settings */
+
     public float animationDuration() {
         return get(FloatSetting.ANIMATION_DURATION);
     }
@@ -105,6 +110,8 @@ public final class SettingManager {
         decrease(FloatSetting.AI_DELAY);
     }
 
+    /* String settings */
+
     public String pgn() {
         return get(StringSetting.PGN);
     }
@@ -121,12 +128,22 @@ public final class SettingManager {
         set(StringSetting.FEN, value);
     }
 
-    public PieceTheme theme() {
-        return PieceTheme.of(get(StringSetting.PIECE_THEME));
+    /* Enum settings */
+
+    public ColorTheme colorTheme() {
+        return get(StringSetting.COLOR_THEME, ColorTheme.class);
     }
 
-    public void theme(PieceTheme value) {
-        set(StringSetting.PIECE_THEME, value.toString());
+    public void colorTheme(ColorTheme value) {
+        set(StringSetting.COLOR_THEME, value);
+    }
+
+    public PieceTheme pieceTheme() {
+        return get(StringSetting.PIECE_THEME, PieceTheme.class);
+    }
+
+    public void pieceTheme(PieceTheme value) {
+        set(StringSetting.PIECE_THEME, value);
     }
 
     private boolean get(BooleanSetting setting) {
@@ -139,6 +156,11 @@ public final class SettingManager {
 
     private float get(FloatSetting setting) {
         return preferences.getFloat(setting.key(), setting.defaultValue());
+    }
+
+    private <E extends Enum<E>> E get(StringSetting setting, Class<E> clazz) {
+        var value = preferences.getString(setting.key(), setting.defaultValue());
+        return Enum.valueOf(clazz, value.toUpperCase(Locale.ROOT));
     }
 
     private void set(BooleanSetting setting, boolean value) {
@@ -154,6 +176,10 @@ public final class SettingManager {
     private void set(FloatSetting setting, float value) {
         preferences.putFloat(setting.key(), value);
         preferences.flush();
+    }
+
+    private <E extends Enum<E>> void set(StringSetting setting, E value) {
+        set(setting, value.name().toLowerCase(Locale.ROOT));
     }
 
     private void toggle(BooleanSetting setting) {
