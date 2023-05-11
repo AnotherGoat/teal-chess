@@ -8,6 +8,7 @@ package com.vmardones.tealchess.io.settings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.vmardones.tealchess.Initializer;
+import com.vmardones.tealchess.io.assets.PieceTheme;
 
 // TODO: Add an option to choose between ASCII and Unicode chess pieces
 public final class SettingManager {
@@ -23,6 +24,7 @@ public final class SettingManager {
     }
 
     /* Getters and setters */
+
     public boolean debugMode() {
         return get(BooleanSetting.DEBUG_MODE);
     }
@@ -45,6 +47,30 @@ public final class SettingManager {
 
     public void toggleFlipBoard() {
         toggle(BooleanSetting.FLIP_BOARD);
+    }
+
+    public boolean showLastMove() {
+        return get(BooleanSetting.SHOW_LAST_MOVE);
+    }
+
+    public void toggleShowLastMove() {
+        toggle(BooleanSetting.SHOW_LAST_MOVE);
+    }
+
+    public boolean showCoordinates() {
+        return get(BooleanSetting.SHOW_COORDINATES);
+    }
+
+    public void toggleShowCoordinates() {
+        toggle(BooleanSetting.SHOW_COORDINATES);
+    }
+
+    public boolean showAttackedPieces() {
+        return get(BooleanSetting.SHOW_ATTACKED_PIECES);
+    }
+
+    public void toggleShowAttackedPieces() {
+        toggle(BooleanSetting.SHOW_ATTACKED_PIECES);
     }
 
     public boolean playAnimations() {
@@ -93,6 +119,14 @@ public final class SettingManager {
 
     public void fen(String value) {
         set(StringSetting.FEN, value);
+    }
+
+    public PieceTheme theme() {
+        return PieceTheme.of(get(StringSetting.PIECE_THEME));
+    }
+
+    public void theme(PieceTheme value) {
+        set(StringSetting.PIECE_THEME, value.toString());
     }
 
     private boolean get(BooleanSetting setting) {

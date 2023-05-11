@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.vmardones.tealchess.Initializer;
+import com.vmardones.tealchess.io.settings.SettingManager;
 
 public final class AssetLoader extends AssetManager {
 
@@ -23,15 +25,19 @@ public final class AssetLoader extends AssetManager {
     private static final String FONT_NAME = "NotoSans-SemiBold";
     private static final int FONT_SIZE = 14;
 
+    private final SettingManager settings;
     private PieceTheme theme;
     private final Color lightColor = Color.valueOf("#FFCE9E");
     private final Color darkColor = Color.valueOf("#D18B47");
 
-    public AssetLoader(PieceTheme theme) {
-        this.theme = theme;
+    public AssetLoader(SettingManager settings) {
+        this.settings = settings;
     }
 
+    @Initializer
     public void reload() {
+        theme = settings.theme();
+
         addAsset("light_font.ttf", BitmapFont.class, loadFont(lightColor));
         addAsset("dark_font.ttf", BitmapFont.class, loadFont(darkColor));
 

@@ -57,9 +57,9 @@ final class GameScreen extends ScreenAdapter {
     private @Nullable PromotionGroup promotionGroup;
     private final List<LegalMove> promotionMoves = new ArrayList<>();
 
-    GameScreen(AssetLoader assets, SettingManager settings, GameLogger logger) {
-        this.assets = assets;
+    GameScreen(SettingManager settings, AssetLoader assets, GameLogger logger) {
         this.settings = settings;
+        this.assets = assets;
         this.logger = logger;
 
         Gdx.app.log("Game", "Game started!");

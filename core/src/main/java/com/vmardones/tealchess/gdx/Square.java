@@ -61,6 +61,7 @@ final class Square extends Actor {
         addListener(new SquareListener());
     }
 
+    // TODO: Check settings here to see if something can be drawn or not
     @Override
     public void draw(Batch batch, float parentAlpha) {
 

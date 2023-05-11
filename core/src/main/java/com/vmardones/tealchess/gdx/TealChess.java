@@ -14,8 +14,8 @@ import com.vmardones.tealchess.io.settings.SettingManager;
 
 final class TealChess extends Game {
 
-    private final AssetLoader assets = new AssetLoader(PieceTheme.CBURNETT);
     private final SettingManager settings = new SettingManager();
+    private final AssetLoader assets = new AssetLoader(settings);
     private final GameLogger logger = new GameLogger(settings);
 
     @Override
@@ -28,7 +28,7 @@ final class TealChess extends Game {
 
         assets.reload();
 
-        setScreen(new GameScreen(assets, settings, logger));
+        setScreen(new GameScreen(settings, assets, logger));
     }
 
     @Override

@@ -7,7 +7,8 @@ package com.vmardones.tealchess.io.settings;
 
 import java.util.Locale;
 
-public enum StringSetting {
+enum StringSetting {
+    PIECE_THEME("cburnett"),
     PGN(""),
     FEN("");
 
