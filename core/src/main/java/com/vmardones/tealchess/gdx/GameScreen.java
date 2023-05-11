@@ -100,6 +100,7 @@ final class GameScreen extends ScreenAdapter {
         stage.dispose();
     }
 
+    // TODO: Check if animations are enabled before using this method
     private void stopAnimations() {
         if (moveAnimation != null) {
             moveAnimation.remove();

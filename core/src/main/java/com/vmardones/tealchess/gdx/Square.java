@@ -7,6 +7,7 @@ package com.vmardones.tealchess.gdx;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -22,6 +23,7 @@ final class Square extends Actor {
     private final AssetLoader assets;
     private final Coordinate coordinate;
     private final Color color;
+    private final BitmapFont font;
     private @Nullable Piece piece;
     private @Nullable Sprite sprite;
     private boolean highlight;
@@ -29,6 +31,8 @@ final class Square extends Actor {
     private boolean lastMove;
     private boolean checked;
     private boolean dark;
+    private boolean file;
+    private boolean rank;
 
     Square(AssetLoader assets, Coordinate coordinate, Color color, @Nullable Piece piece) {
         this.assets = assets;
@@ -41,6 +45,13 @@ final class Square extends Actor {
         var x = coordinate.fileIndex() * getWidth();
         var y = coordinate.rankIndex() * getHeight();
         setPosition(x, y);
+
+        font = color.isWhite()
+                ? assets.get("dark_font.ttf", BitmapFont.class)
+                : assets.get("light_font.ttf", BitmapFont.class);
+
+        file = coordinate.rank() == 1;
+        rank = coordinate.file().equals("h");
 
         if (piece != null) {
             sprite = new Sprite(loadTexture(piece));
@@ -56,6 +67,22 @@ final class Square extends Actor {
         var background =
                 color.isWhite() ? assets.get("light.png", Texture.class) : assets.get("dark.png", Texture.class);
         batch.draw(background, getX(), getY());
+
+        if (file) {
+            var height = font.getCapHeight();
+            var padding = 6;
+            font.draw(batch, coordinate.file(), getX() + padding, getY() + height + padding);
+        }
+
+        if (rank) {
+            var height = font.getCapHeight();
+            var padding = 6;
+            font.draw(
+                    batch,
+                    String.valueOf(coordinate.rank()),
+                    getX() + getWidth() - height - 2,
+                    getY() + getHeight() - padding);
+        }
 
         if (highlight) {
             var tint = assets.get("highlight.png", Texture.class);
@@ -134,14 +161,17 @@ final class Square extends Actor {
         var y = coordinate.rankIndex() * getHeight();
 
         if (flip) {
-            x = 7 * getWidth() - x;
-            y = 7 * getHeight() - y;
+            setPosition(7 * getWidth() - x, 7 * getHeight() - y);
+            file = coordinate.rank() == 8;
+            rank = coordinate.file().equals("a");
+        } else {
+            setPosition(x, y);
+            file = coordinate.rank() == 1;
+            rank = coordinate.file().equals("h");
         }
 
-        setPosition(x, y);
-
         if (sprite != null) {
-            sprite.setPosition(x, y);
+            sprite.setPosition(getX(), getY());
         }
     }
 

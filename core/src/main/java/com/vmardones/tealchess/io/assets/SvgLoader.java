@@ -23,11 +23,11 @@ final class SvgLoader {
     private static final String LOG_TAG = "Assets";
     private static final PNGTranscoder TRANSCODER = new PNGTranscoder();
 
-    public static Pixmap load(String path, int sideSize) {
+    static Pixmap load(String path, int sideSize) {
         return load(path, sideSize, sideSize);
     }
 
-    public static Pixmap load(String path, int width, int height) {
+    static Pixmap load(String path, int width, int height) {
         TRANSCODER.addTranscodingHint(SVGAbstractTranscoder.KEY_WIDTH, (float) width);
         TRANSCODER.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, (float) height);
 

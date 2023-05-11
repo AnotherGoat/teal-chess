@@ -8,6 +8,9 @@ dependencies {
     // Game engine
     api "com.badlogicgames.gdx:gdx:$gdxVersion"
 
+    // Loading fonts
+    api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+    
     // Transcoding SVG files
     implementation "org.apache.xmlgraphics:batik-transcoder:$batikVersion"
     implementation "org.apache.xmlgraphics:batik-codec:$batikVersion"

@@ -11,6 +11,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 public final class AssetLoader extends AssetManager {
 
@@ -19,6 +20,8 @@ public final class AssetLoader extends AssetManager {
     private static final String PIECE_ICON_PATH = "art/piece";
     private static final List<String> PIECE_CODES =
             List.of("wP", "wN", "wB", "wR", "wQ", "wK", "bP", "bN", "bB", "bR", "bQ", "bK");
+    private static final String FONT_NAME = "NotoSans-SemiBold";
+    private static final int FONT_SIZE = 14;
 
     private PieceTheme theme;
     private final Color lightColor = Color.valueOf("#FFCE9E");
@@ -29,6 +32,9 @@ public final class AssetLoader extends AssetManager {
     }
 
     public void reload() {
+        addAsset("light_font.ttf", BitmapFont.class, loadFont(lightColor));
+        addAsset("dark_font.ttf", BitmapFont.class, loadFont(darkColor));
+
         addAsset("light.png", Texture.class, createSquare(lightColor));
         addAsset("dark.png", Texture.class, createSquare(darkColor));
         addAsset("highlight.png", Texture.class, createSquare(Color.TEAL.mul(1, 1, 1, 0.6f)));
@@ -46,18 +52,14 @@ public final class AssetLoader extends AssetManager {
         });
     }
 
-    /* Setters */
+    private BitmapFont loadFont(Color color) {
+        return FontLoader.load(FONT_NAME, FONT_SIZE, color);
+    }
+
+    /* Getters and setters */
 
     public void theme(PieceTheme value) {
         theme = value;
-    }
-
-    public Color lightColor() {
-        return lightColor;
-    }
-
-    public Color darkColor() {
-        return darkColor;
     }
 
     private Texture createSquare(Color color) {
