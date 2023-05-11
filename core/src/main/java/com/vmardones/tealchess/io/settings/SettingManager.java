@@ -10,12 +10,12 @@ import com.badlogic.gdx.Preferences;
 import com.vmardones.tealchess.Initializer;
 
 // TODO: Add an option to choose between ASCII and Unicode chess pieces
-public final class SettingsManager {
+public final class SettingManager {
 
     private static final String SETTINGS_FILE = "TealChess";
     private Preferences preferences;
 
-    public SettingsManager() {}
+    public SettingManager() {}
 
     @Initializer
     public void load() {
@@ -45,6 +45,14 @@ public final class SettingsManager {
 
     public void toggleFlipBoard() {
         toggle(BooleanSetting.FLIP_BOARD);
+    }
+
+    public boolean playAnimations() {
+        return get(BooleanSetting.PLAY_ANIMATIONS);
+    }
+
+    public void togglePlayAnimations() {
+        toggle(BooleanSetting.PLAY_ANIMATIONS);
     }
 
     public float animationDuration() {

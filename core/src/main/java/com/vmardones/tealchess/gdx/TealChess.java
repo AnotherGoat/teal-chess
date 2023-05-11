@@ -10,12 +10,12 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.vmardones.tealchess.io.assets.AssetLoader;
 import com.vmardones.tealchess.io.assets.PieceTheme;
-import com.vmardones.tealchess.io.settings.SettingsManager;
+import com.vmardones.tealchess.io.settings.SettingManager;
 
 final class TealChess extends Game {
 
     private final AssetLoader assets = new AssetLoader(PieceTheme.CBURNETT);
-    private final SettingsManager settings = new SettingsManager();
+    private final SettingManager settings = new SettingManager();
     private final GameLogger logger = new GameLogger(settings);
 
     @Override

@@ -9,7 +9,7 @@ import java.util.Locale;
 
 enum FloatSetting {
     ANIMATION_DURATION(0.3f, 0.1f, 0.7f, 0.1f),
-    AI_DELAY(0.7f, 0.1f, 1.5f, 0.1f);
+    AI_DELAY(0.7f, 0, 1.5f, 0.1f);
 
     private final float defaultValue;
     private final float min;

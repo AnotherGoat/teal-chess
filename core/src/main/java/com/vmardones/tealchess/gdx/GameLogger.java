@@ -7,16 +7,16 @@ package com.vmardones.tealchess.gdx;
 
 import com.badlogic.gdx.Gdx;
 import com.vmardones.tealchess.game.Game;
-import com.vmardones.tealchess.io.settings.SettingsManager;
+import com.vmardones.tealchess.io.settings.SettingManager;
 import com.vmardones.tealchess.parser.pgn.PgnSerializer;
 import com.vmardones.tealchess.player.Color;
 
 final class GameLogger {
 
     private static final String LOG_TAG = "Game";
-    private final SettingsManager settings;
+    private final SettingManager settings;
 
-    public GameLogger(SettingsManager settings) {
+    public GameLogger(SettingManager settings) {
         this.settings = settings;
     }
 

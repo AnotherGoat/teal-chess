@@ -24,7 +24,7 @@ import com.vmardones.tealchess.ai.RandomMoveChooser;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.game.Game;
 import com.vmardones.tealchess.io.assets.AssetLoader;
-import com.vmardones.tealchess.io.settings.SettingsManager;
+import com.vmardones.tealchess.io.settings.SettingManager;
 import com.vmardones.tealchess.move.LegalMove;
 import com.vmardones.tealchess.move.MoveFinder;
 import com.vmardones.tealchess.move.MoveMaker;
@@ -46,7 +46,7 @@ final class GameScreen extends ScreenAdapter {
     }
 
     private final AssetLoader assets;
-    private final SettingsManager settings;
+    private final SettingManager settings;
     private final GameLogger logger;
     private Game game;
     private final Stage stage = new Stage();
@@ -57,7 +57,7 @@ final class GameScreen extends ScreenAdapter {
     private @Nullable PromotionGroup promotionGroup;
     private final List<LegalMove> promotionMoves = new ArrayList<>();
 
-    GameScreen(AssetLoader assets, SettingsManager settings, GameLogger logger) {
+    GameScreen(AssetLoader assets, SettingManager settings, GameLogger logger) {
         this.assets = assets;
         this.settings = settings;
         this.logger = logger;
@@ -141,10 +141,23 @@ final class GameScreen extends ScreenAdapter {
             }
         };
 
+        // TODO: Calculate next AI move at the same time, not after the delay is finished
         Timer.schedule(task, settings.aiDelay());
     }
 
     private void playSlidingAnimation(LegalMove move) {
+        if (!settings.playAnimations()) {
+            boardGroup.setTouchable(Touchable.enabled);
+            boardGroup.board(game.board());
+            logger.log(game);
+
+            if (game.isAiTurn() && game.hasLegalMoves()) {
+                playAiMove();
+            }
+
+            return;
+        }
+
         var source = move.source();
         var destination = move.destination();
         var sourceSquare = boardGroup.squareAt(source);
@@ -437,6 +450,29 @@ final class GameScreen extends ScreenAdapter {
                 case Input.Keys.N -> {
                     Gdx.app.log(LOG_TAG, "Starting a new game!");
                     startNewGame();
+                    yield true;
+                }
+                    // TODO: Show attacked pieces
+                case Input.Keys.P -> true;
+                case Input.Keys.A -> {
+                    Gdx.app.log(LOG_TAG, "Toggling animations");
+                    settings.togglePlayAnimations();
+
+                    if (!settings.playAnimations()) {
+                        stopAnimations();
+
+                        boardGroup.board(game.board());
+                        boardGroup.flip(settings.flipBoard());
+
+                        logger.log(game);
+
+                        boardGroup.setTouchable(Touchable.enabled);
+
+                        if (game.isAiTurn() && game.hasLegalMoves()) {
+                            playAiMove();
+                        }
+                    }
+
                     yield true;
                 }
                 case Input.Keys.DPAD_UP -> {
