@@ -5,16 +5,22 @@
 
 package com.vmardones.tealchess.gdx.game;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.vmardones.tealchess.io.assets.AssetLoader;
+import com.vmardones.tealchess.io.export.PlainTextExporter;
+import com.vmardones.tealchess.io.export.ScreenshotTaker;
 import com.vmardones.tealchess.io.settings.SettingManager;
 
 public class KeyListener extends InputListener {
 
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final String LOG_TAG = "Key";
     private final GameScreen screen;
     private final SettingManager settings;
@@ -139,7 +145,35 @@ public class KeyListener extends InputListener {
                 Gdx.app.log(LOG_TAG, "Decreased AI delay to " + settings.aiDelay() + "s");
                 yield true;
             }
+            case Input.Keys.F9 -> {
+                var filename = formattedDateTime() + ".fen";
+                var fullPath = PlainTextExporter.save(filename, screen.exportFen());
+                Gdx.app.log(LOG_TAG, "FEN exported as " + fullPath);
+                yield true;
+            }
+            case Input.Keys.F10 -> {
+                var filename = formattedDateTime() + ".pgn";
+                var fullPath = PlainTextExporter.save(filename, screen.exportPgn());
+                Gdx.app.log(LOG_TAG, "PGN exported as " + fullPath);
+                yield true;
+            }
+            case Input.Keys.F11 -> {
+                var screenshotName = "Board - " + formattedDateTime();
+                var fullPath = screen.screenshotBoard(screenshotName);
+                Gdx.app.log(LOG_TAG, "Board screenshot saved as " + fullPath);
+                yield true;
+            }
+            case Input.Keys.F12 -> {
+                var screenshotName = "Full - " + formattedDateTime();
+                var fullPath = ScreenshotTaker.save(screenshotName);
+                Gdx.app.log(LOG_TAG, "Screenshot saved as " + fullPath);
+                yield true;
+            }
             default -> false;
         };
+    }
+
+    private String formattedDateTime() {
+        return DATE_FORMATTER.format(LocalDateTime.now());
     }
 }

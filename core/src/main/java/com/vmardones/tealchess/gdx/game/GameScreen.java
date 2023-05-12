@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.vmardones.tealchess.ai.RandomMoveChooser;
 import com.vmardones.tealchess.game.Game;
 import com.vmardones.tealchess.io.assets.AssetLoader;
+import com.vmardones.tealchess.io.export.ScreenshotTaker;
 import com.vmardones.tealchess.io.settings.SettingManager;
 import com.vmardones.tealchess.move.LegalMove;
 import com.vmardones.tealchess.move.MoveFinder;
@@ -128,6 +129,19 @@ public final class GameScreen extends ScreenAdapter {
 
     void flipChessboard() {
         board.flip(settings.flipBoard());
+    }
+
+    String exportFen() {
+        return game.fen();
+    }
+
+    String exportPgn() {
+        return game.pgn();
+    }
+
+    String screenshotBoard(String name) {
+        return ScreenshotTaker.save(
+                name, (int) board.getX(), (int) board.getY(), (int) board.getWidth(), (int) board.getHeight());
     }
 
     private Game createNewGame() {

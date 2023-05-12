@@ -739,7 +739,7 @@ The following parts will be implemented in the future:
   data fields.
 - ✓ The first four fields of the FEN specification are the same as the first
   four fields of the EPD specification.
-- ✗ A text file composed exclusively of FEN data records should have a file name
+- ✓ A text file composed exclusively of FEN data records should have a file name
   with the suffix ".fen".
 - ✓ (16.1.3) Data fields
   - ✓ FEN specifies the piece placement, the active color, the castling
