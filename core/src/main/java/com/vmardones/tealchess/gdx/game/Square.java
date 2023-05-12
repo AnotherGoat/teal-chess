@@ -27,9 +27,10 @@ final class Square extends Actor {
     private final Color color;
     private @Nullable Piece piece;
     private @Nullable Sprite sprite;
-    private boolean highlight;
+    private boolean source;
     private boolean destination;
     private boolean lastMove;
+    private boolean attacked;
     private boolean checked;
     private boolean dark;
     private boolean file;
@@ -59,7 +60,6 @@ final class Square extends Actor {
         addListener(new SquareListener());
     }
 
-    // TODO: Check settings here to see if something can be drawn or not
     @Override
     public void draw(Batch batch, float parentAlpha) {
 
@@ -67,28 +67,29 @@ final class Square extends Actor {
                 color.isWhite() ? assets.get("light.png", Texture.class) : assets.get("dark.png", Texture.class);
         batch.draw(background, getX(), getY());
 
-        var font = color.isWhite()
-                ? assets.get("dark_font.ttf", BitmapFont.class)
-                : assets.get("light_font.ttf", BitmapFont.class);
+        if (settings.showCoordinates()) {
+            var font = color.isWhite()
+                    ? assets.get("dark_font.ttf", BitmapFont.class)
+                    : assets.get("light_font.ttf", BitmapFont.class);
 
-        if (settings.showCoordinates() && file) {
             var height = font.getCapHeight();
             var padding = 6;
-            font.draw(batch, coordinate.file(), getX() + padding, getY() + height + padding);
+
+            if (settings.showAllCoordinates() || file) {
+                font.draw(batch, coordinate.file(), getX() + padding, getY() + height + padding);
+            }
+
+            if (settings.showAllCoordinates() || rank) {
+                font.draw(
+                        batch,
+                        String.valueOf(coordinate.rank()),
+                        getX() + getWidth() - height - 2,
+                        getY() + getHeight() - padding);
+            }
         }
 
-        if (settings.showCoordinates() && rank) {
-            var height = font.getCapHeight();
-            var padding = 6;
-            font.draw(
-                    batch,
-                    String.valueOf(coordinate.rank()),
-                    getX() + getWidth() - height - 2,
-                    getY() + getHeight() - padding);
-        }
-
-        if (highlight) {
-            var tint = assets.get("highlight.png", Texture.class);
+        if (source) {
+            var tint = assets.get("source.png", Texture.class);
             batch.draw(tint, getX(), getY());
         }
 
@@ -121,6 +122,11 @@ final class Square extends Actor {
             batch.draw(texture, getX(), getY());
         }
 
+        if (settings.showAttackedPieces() && !checked && attacked) {
+            var texture = assets.get("attack.png", Texture.class);
+            batch.draw(texture, getX(), getY());
+        }
+
         if (dark) {
             var tint = assets.get("dark_tint.png", Texture.class);
             batch.draw(tint, getX(), getY());
@@ -139,7 +145,7 @@ final class Square extends Actor {
 
     void reset(@Nullable Piece newPiece) {
         piece(newPiece);
-        highlight(false);
+        source(false);
         destination(false);
         checked(false);
         dark(false);
@@ -180,8 +186,8 @@ final class Square extends Actor {
         }
     }
 
-    void highlight(boolean value) {
-        highlight = value;
+    void source(boolean value) {
+        source = value;
     }
 
     void destination(boolean value) {
@@ -190,6 +196,10 @@ final class Square extends Actor {
 
     void move(boolean value) {
         lastMove = value;
+    }
+
+    void attacked(boolean value) {
+        attacked = value;
     }
 
     void checked(boolean value) {

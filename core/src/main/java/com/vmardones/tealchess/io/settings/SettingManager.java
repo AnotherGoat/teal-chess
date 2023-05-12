@@ -68,6 +68,14 @@ public final class SettingManager {
         toggle(BooleanSetting.SHOW_COORDINATES);
     }
 
+    public boolean showAllCoordinates() {
+        return get(BooleanSetting.SHOW_ALL_COORDINATES);
+    }
+
+    public void toggleShowAllCoordinates() {
+        toggle(BooleanSetting.SHOW_ALL_COORDINATES);
+    }
+
     public boolean showAttackedPieces() {
         return get(BooleanSetting.SHOW_ATTACKED_PIECES);
     }

@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.vmardones.tealchess.ai.MoveChooser;
+import com.vmardones.tealchess.analysis.AttackMapGenerator;
 import com.vmardones.tealchess.analysis.PositionAnalyzer;
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Coordinate;
@@ -183,6 +184,11 @@ public final class Game implements Fen, Pgn {
 
     public List<LegalMove> findLegalMoves(Coordinate source, Coordinate destination) {
         return moveFinder.find(player().legals(), source, destination);
+    }
+
+    // TODO: Use dependency injection instead
+    public Set<Coordinate> findOpponentAttacks() {
+        return new AttackMapGenerator(position()).generate(true);
     }
 
     /* Serialization methods */

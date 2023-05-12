@@ -13,6 +13,7 @@ enum BooleanSetting {
     FLIP_BOARD(false),
     SHOW_LAST_MOVE(true),
     SHOW_COORDINATES(true),
+    SHOW_ALL_COORDINATES(false),
     SHOW_ATTACKED_PIECES(false),
     PIECE_SHADOWS(true),
     ANIMATE_PIECES(true),

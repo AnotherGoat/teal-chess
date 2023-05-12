@@ -36,10 +36,10 @@ public final class AssetLoader extends AssetManager {
     public void load() {
         reloadBoardTheme();
 
-        addAsset("highlight.png", Texture.class, createSquare(Color.TEAL.cpy().mul(1, 1, 1, 0.6f)));
+        addAsset("source.png", Texture.class, createSquare(Color.TEAL.cpy().mul(1, 1, 1, 0.6f)));
         addAsset("destination.png", Texture.class, createCircle(Color.TEAL, 7));
         addAsset("target.png", Texture.class, createTarget(Color.TEAL));
-        addAsset("attack.png", Texture.class, createTarget(Color.SCARLET)); // TODO: Unused
+        addAsset("attack.png", Texture.class, createTarget(Color.SCARLET));
         addAsset("last_move.png", Texture.class, createSquare(Color.FOREST.cpy().mul(1, 1, 1, 0.5f)));
         addAsset("check.png", Texture.class, createSquare(Color.SCARLET.cpy().mul(1, 1, 1, 0.7f)));
         addAsset("promotion.png", Texture.class, createCircle(Color.LIGHT_GRAY, 2));

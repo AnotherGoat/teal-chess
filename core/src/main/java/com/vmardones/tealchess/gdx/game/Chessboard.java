@@ -18,6 +18,7 @@ import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.io.assets.AssetLoader;
 import com.vmardones.tealchess.io.settings.SettingManager;
 import com.vmardones.tealchess.move.LegalMove;
+import com.vmardones.tealchess.player.Color;
 
 final class Chessboard extends Group {
 
@@ -89,20 +90,20 @@ final class Chessboard extends Group {
         squares.values().forEach(square -> square.flip(flip));
     }
 
-    void highlightSource(Coordinate source) {
+    void showSource(Coordinate source) {
         for (var square : squares.values()) {
             if (square.coordinate().equals(source)) {
-                square.highlight(true);
+                square.source(true);
                 break;
             }
         }
     }
 
     void hideSource() {
-        squares.values().forEach(square -> square.highlight(false));
+        squares.values().forEach(square -> square.source(false));
     }
 
-    void highlightDestinations(Set<Coordinate> coordinates) {
+    void showDestinations(Set<Coordinate> coordinates) {
         squares.values().forEach(square -> square.destination(coordinates.contains(square.coordinate())));
     }
 
@@ -110,7 +111,7 @@ final class Chessboard extends Group {
         squares.values().forEach(square -> square.destination(false));
     }
 
-    void highlightChecked(Coordinate coordinate) {
+    void showChecked(Coordinate coordinate) {
         squares.values().forEach(square -> square.checked(square.coordinate().equals(coordinate)));
     }
 
@@ -118,11 +119,7 @@ final class Chessboard extends Group {
         squares.values().forEach(square -> square.checked(false));
     }
 
-    void makeDark(boolean value) {
-        squares.values().forEach(square -> square.dark(value));
-    }
-
-    void highlightMove(LegalMove move) {
+    void showMove(LegalMove move) {
         var source = move.source();
         var destination = move.destination();
 
@@ -133,8 +130,26 @@ final class Chessboard extends Group {
         }
     }
 
-    void hideHighlightedMove() {
-        squares.values().forEach(square -> square.move(false));
+    void showAttacks(Color sideToMove, Set<Coordinate> opponentAttacks) {
+        for (var square : squares.values()) {
+            var piece = square.piece();
+
+            if (piece == null) {
+                square.attacked(false);
+                continue;
+            }
+
+            var attacked = piece.color() == sideToMove && opponentAttacks.contains(square.coordinate());
+            square.attacked(attacked);
+        }
+    }
+
+    void hideAttacks() {
+        squares.values().forEach(square -> square.attacked(false));
+    }
+
+    void makeDark(boolean value) {
+        squares.values().forEach(square -> square.dark(value));
     }
 
     private class ClearListener extends ClickListener {

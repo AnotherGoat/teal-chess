@@ -93,6 +93,19 @@ public final class GameScreen extends ScreenAdapter {
         stage.dispose();
     }
 
+    void playFirstTurn() {
+        squareSelector.resetState();
+        board.setTouchable(Touchable.enabled);
+        board.showAttacks(game.sideToMove(), game.findOpponentAttacks());
+
+        Gdx.app.log("Game", "Game started!");
+        logger.log(game);
+
+        if (game.isAiTurn() && game.hasLegalMoves()) {
+            playAiMove();
+        }
+    }
+
     void startNewGame() {
         animator.stopAnimations();
         removePromotionSelector();
@@ -121,18 +134,6 @@ public final class GameScreen extends ScreenAdapter {
         return new Game(new MoveMaker(), new MoveFinder(), INITIAL_TAGS).blackAi(new RandomMoveChooser());
     }
 
-    void playFirstTurn() {
-        squareSelector.resetState();
-        board.setTouchable(Touchable.enabled);
-
-        Gdx.app.log("Game", "Game started!");
-        logger.log(game);
-
-        if (game.isAiTurn() && game.hasLegalMoves()) {
-            playAiMove();
-        }
-    }
-
     private void playAiMove() {
         board.setTouchable(Touchable.disabled);
 
@@ -144,12 +145,15 @@ public final class GameScreen extends ScreenAdapter {
             public void run() {
                 if (game.isAiTurn()) {
                     game.makeMove(aiMove);
-                    board.highlightMove(aiMove);
+                    board.showMove(aiMove);
                     board.hideChecked();
 
                     if (game.isKingAttacked()) {
-                        board.highlightChecked(game.kingCoordinate());
+                        board.showChecked(game.kingCoordinate());
                     }
+
+                    board.hideAttacks();
+                    board.showAttacks(game.sideToMove(), game.findOpponentAttacks());
 
                     playSlidingAnimation(aiMove);
                 }
@@ -233,12 +237,15 @@ public final class GameScreen extends ScreenAdapter {
 
             var selectedMove = promotionEvent.move();
             game.makeMove(selectedMove);
-            board.highlightMove(selectedMove);
+            board.showMove(selectedMove);
 
             board.hideChecked();
             if (game.isKingAttacked()) {
-                board.highlightChecked(game.kingCoordinate());
+                board.showChecked(game.kingCoordinate());
             }
+
+            board.hideAttacks();
+            board.showAttacks(game.sideToMove(), game.findOpponentAttacks());
 
             board.makeDark(false);
             squareSelector.resetState();
@@ -257,7 +264,7 @@ public final class GameScreen extends ScreenAdapter {
 
             switch (simpleEvent.type()) {
                 case NEXT_TURN -> playNextTurn();
-                case CLEAR_SELECTION -> squareSelector.resetState();
+                case CLEAR_SELECTION -> squareSelector.unselect();
             }
 
             return true;

@@ -69,11 +69,14 @@ public class KeyListener extends InputListener {
                 Gdx.app.log(LOG_TAG, "Toggling show coordinates to " + settings.showCoordinates());
                 yield true;
             }
+            case Input.Keys.K -> {
+                settings.toggleShowAllCoordinates();
+                Gdx.app.log(LOG_TAG, "Toggling show all coordinates to " + settings.showAllCoordinates());
+                yield true;
+            }
             case Input.Keys.P -> {
                 settings.toggleShowAttackedPieces();
                 Gdx.app.log(LOG_TAG, "Toggling show attacked pieces to " + settings.showAttackedPieces());
-
-                // TODO: Show attacked pieces
                 yield true;
             }
             case Input.Keys.N -> {

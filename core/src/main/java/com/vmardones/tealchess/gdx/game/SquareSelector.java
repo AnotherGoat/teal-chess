@@ -66,8 +66,8 @@ final class SquareSelector extends Actor {
             }
 
             var source = square.coordinate();
-            board.highlightSource(source);
-            board.highlightDestinations(legalDestinations);
+            board.showSource(source);
+            board.showDestinations(legalDestinations);
 
             selectionState = new DestinationSelection(source);
         }
@@ -116,12 +116,15 @@ final class SquareSelector extends Actor {
                 game.makeMove(move);
 
                 resetState();
-                board.highlightMove(move);
+                board.showMove(move);
 
                 board.hideChecked();
                 if (game.isKingAttacked()) {
-                    board.highlightChecked(game.kingCoordinate());
+                    board.showChecked(game.kingCoordinate());
                 }
+
+                board.hideAttacks();
+                board.showAttacks(game.sideToMove(), game.findOpponentAttacks());
 
                 fire(new MoveEvent(move));
                 return;
