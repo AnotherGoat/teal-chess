@@ -79,7 +79,7 @@ public final class AssetLoader extends AssetManager {
     private static Texture createCircle(Color color, int radiusScale) {
         var pixmap = new Pixmap(SQUARE_SIZE, SQUARE_SIZE, Pixmap.Format.RGBA8888);
         pixmap.setColor(color);
-        pixmap.fillCircle(HALF_SIZE, HALF_SIZE, SQUARE_SIZE / radiusScale);
+        pixmap.fillCircle(HALF_SIZE, HALF_SIZE, SQUARE_SIZE / radiusScale - 1);
 
         return new Texture(pixmap);
     }

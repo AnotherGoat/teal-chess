@@ -8,6 +8,7 @@ package com.vmardones.tealchess.gdx;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.vmardones.tealchess.gdx.game.GameScreen;
 import com.vmardones.tealchess.io.assets.AssetLoader;
 import com.vmardones.tealchess.io.settings.SettingManager;
 
@@ -15,7 +16,6 @@ final class TealChess extends Game {
 
     private final SettingManager settings = new SettingManager();
     private final AssetLoader assets = new AssetLoader(settings);
-    private final GameLogger logger = new GameLogger(settings);
 
     @Override
     public void create() {
@@ -27,7 +27,7 @@ final class TealChess extends Game {
 
         assets.load();
 
-        setScreen(new GameScreen(settings, assets, logger));
+        setScreen(new GameScreen(settings, assets));
     }
 
     @Override

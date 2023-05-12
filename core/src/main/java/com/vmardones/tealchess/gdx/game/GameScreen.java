@@ -3,7 +3,7 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package com.vmardones.tealchess.gdx;
+package com.vmardones.tealchess.gdx.game;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -14,11 +14,7 @@ import java.util.Map;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Timer;
 import com.vmardones.tealchess.ai.RandomMoveChooser;
 import com.vmardones.tealchess.board.Coordinate;
@@ -30,7 +26,7 @@ import com.vmardones.tealchess.move.MoveFinder;
 import com.vmardones.tealchess.move.MoveMaker;
 import org.eclipse.jdt.annotation.Nullable;
 
-final class GameScreen extends ScreenAdapter {
+public final class GameScreen extends ScreenAdapter {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
     private static final Map<String, String> INITIAL_TAGS = new LinkedHashMap<>();
@@ -50,41 +46,47 @@ final class GameScreen extends ScreenAdapter {
     private final GameLogger logger;
     private Game game;
     private final Stage stage = new Stage();
-    private final BoardGroup boardGroup;
-    private @Nullable Image moveAnimation;
-    private @Nullable Image castleAnimation;
+    private final BoardGroup board;
+    private final PieceAnimator animator;
     private SelectionState selectionState;
     private @Nullable PromotionGroup promotionGroup;
     private final List<LegalMove> promotionMoves = new ArrayList<>();
 
-    GameScreen(SettingManager settings, AssetLoader assets, GameLogger logger) {
+    public GameScreen(SettingManager settings, AssetLoader assets) {
         this.settings = settings;
         this.assets = assets;
-        this.logger = logger;
+        logger = new GameLogger(settings);
 
-        Gdx.app.log("Game", "Game started!");
-        game = new Game(new MoveMaker(), new MoveFinder(), INITIAL_TAGS).blackAi(new RandomMoveChooser());
+        game = createNewGame();
+        board = new BoardGroup(settings, assets, game.board());
+        animator = new PieceAnimator(settings, board);
 
-        logger.log(game);
-
-        Gdx.input.setInputProcessor(stage);
-
-        boardGroup = new BoardGroup(settings, assets, game.board());
-
-        if (settings.flipBoard()) {
-            boardGroup.flip(true);
-        }
-
-        stage.addActor(boardGroup);
-
-        selectionState = new SourceSelection();
+        stage.addActor(animator);
         stage.addListener(new SquareListener());
         stage.addListener(new KeyListener());
         stage.addListener(new PromotionListener());
 
-        if (game.isAiTurn()) {
-            playAiMove();
+        stage.addListener(event -> {
+            if (!(event instanceof SimpleEvent simpleEvent)) {
+                return false;
+            }
+
+            switch (simpleEvent.type()) {
+                case NEXT_TURN -> playNextTurn();
+                case CLEAR_SELECTION -> selectionState.unselect();
+            }
+
+            return true;
+        });
+
+        if (settings.flipBoard()) {
+            board.flip(true);
         }
+
+        stage.addActor(board);
+        Gdx.input.setInputProcessor(stage);
+
+        playFirstTurn();
     }
 
     @Override
@@ -100,41 +102,38 @@ final class GameScreen extends ScreenAdapter {
         stage.dispose();
     }
 
-    // TODO: Check if animations are enabled before using this method
-    private void stopAnimations() {
-        if (moveAnimation != null) {
-            moveAnimation.remove();
-            moveAnimation = null;
-        }
-
-        if (castleAnimation != null) {
-            castleAnimation.remove();
-            castleAnimation = null;
-        }
+    private Game createNewGame() {
+        return new Game(new MoveMaker(), new MoveFinder(), INITIAL_TAGS).blackAi(new RandomMoveChooser());
     }
 
-    private void removePromotionSelector() {
-        if (promotionGroup != null) {
-            promotionGroup.remove();
-            promotionGroup = null;
+    private void playFirstTurn() {
+        selectionState = new SourceSelection();
+        board.setTouchable(Touchable.enabled);
+
+        Gdx.app.log("Game", "Game started!");
+        logger.log(game);
+
+        if (game.isAiTurn() && game.hasLegalMoves()) {
+            playAiMove();
         }
     }
 
     private void playAiMove() {
-        boardGroup.setTouchable(Touchable.disabled);
+        board.setTouchable(Touchable.disabled);
 
         Gdx.app.log("AI", "The AI is choosing a move!");
+        var aiMove = game.chooseAiMove();
 
         var task = new Timer.Task() {
             @Override
             public void run() {
                 if (game.isAiTurn()) {
-                    var aiMove = game.makeAiMove();
-                    boardGroup.highlightMove(aiMove);
-                    boardGroup.hideChecked();
+                    game.makeMove(aiMove);
+                    board.highlightMove(aiMove);
+                    board.hideChecked();
 
                     if (game.isKingAttacked()) {
-                        boardGroup.highlightChecked(game.kingCoordinate());
+                        board.highlightChecked(game.kingCoordinate());
                     }
 
                     playSlidingAnimation(aiMove);
@@ -148,88 +147,31 @@ final class GameScreen extends ScreenAdapter {
 
     private void playSlidingAnimation(LegalMove move) {
         if (!settings.animatePieces()) {
-            boardGroup.setTouchable(Touchable.enabled);
-            boardGroup.board(game.board());
-            logger.log(game);
-
-            if (game.isAiTurn() && game.hasLegalMoves()) {
-                playAiMove();
-            }
-
+            playNextTurn();
             return;
         }
 
-        var source = move.source();
-        var destination = move.destination();
-        var sourceSquare = boardGroup.squareAt(source);
-        var destinationSquare = boardGroup.squareAt(destination);
-
-        var sprite = sourceSquare.sprite();
-
-        if (sprite != null) {
-            sourceSquare.removeSprite();
-
-            var x1 = boardGroup.getX() + sourceSquare.getX();
-            var y1 = boardGroup.getY() + sourceSquare.getY();
-            var x2 = boardGroup.getX() + destinationSquare.getX();
-            var y2 = boardGroup.getY() + destinationSquare.getY();
-
-            moveAnimation = new Image(sprite);
-            moveAnimation.setPosition(x1, y1);
-
-            var slide = Actions.moveTo(x2, y2, settings.animationDuration(), Interpolation.smoother);
-            var resumeGame = Actions.run(() -> {
-                moveAnimation = null;
-
-                boardGroup.setTouchable(Touchable.enabled);
-                boardGroup.board(game.board());
-                logger.log(game);
-
-                if (game.isAiTurn() && game.hasLegalMoves()) {
-                    playAiMove();
-                }
-            });
-            var fullAction = Actions.sequence(slide, resumeGame, new RemoveActorAction());
-
-            moveAnimation.addAction(fullAction);
+        var moveAnimation = animator.animateMove(move);
+        if (moveAnimation != null) {
             stage.addActor(moveAnimation);
+        }
 
-            if (game.isCastling(move)) {
-                var castle = move.move();
-                var rook = castle.otherPiece();
-                var rookDestination = castle.rookDestination();
+        if (game.isCastling(move)) {
+            var castleAnimation = animator.animateCastle(move.move());
 
-                if (rook == null || rookDestination == null) {
-                    throw new AssertionError();
-                }
-
-                var rookSource = rook.coordinate();
-
-                var rookSourceSquare = boardGroup.squareAt(rookSource);
-                var rookDestinationSquare = boardGroup.squareAt(rookDestination);
-
-                var rookSprite = rookSourceSquare.sprite();
-
-                if (rookSprite != null) {
-                    rookSourceSquare.removeSprite();
-
-                    var rookX1 = boardGroup.getX() + rookSourceSquare.getX();
-                    var rookY1 = boardGroup.getY() + rookSourceSquare.getY();
-                    var rookX2 = boardGroup.getX() + rookDestinationSquare.getX();
-                    var rookY2 = boardGroup.getY() + rookDestinationSquare.getY();
-
-                    castleAnimation = new Image(rookSprite);
-                    castleAnimation.setPosition(rookX1, rookY1);
-
-                    var rookSlide =
-                            Actions.moveTo(rookX2, rookY2, settings.animationDuration(), Interpolation.smoother);
-                    var rookAction = Actions.sequence(
-                            rookSlide, Actions.run(() -> castleAnimation = null), new RemoveActorAction());
-
-                    castleAnimation.addAction(rookAction);
-                    stage.addActor(castleAnimation);
-                }
+            if (castleAnimation != null) {
+                stage.addActor(castleAnimation);
             }
+        }
+    }
+
+    private void playNextTurn() {
+        board.setTouchable(Touchable.enabled);
+        board.update(game.board());
+        logger.log(game);
+
+        if (game.isAiTurn() && game.hasLegalMoves()) {
+            playAiMove();
         }
     }
 
@@ -243,38 +185,34 @@ final class GameScreen extends ScreenAdapter {
         }
     }
 
-    private void flipTheBoard() {
-        settings.toggleFlipBoard();
-
-        stopAnimations();
-        boardGroup.board(game.board());
-        boardGroup.flip(settings.flipBoard());
-
-        logger.log(game);
-
-        boardGroup.setTouchable(Touchable.enabled);
-
-        if (game.isAiTurn() && game.hasLegalMoves()) {
-            playAiMove();
+    private void removePromotionSelector() {
+        if (promotionGroup != null) {
+            promotionGroup.remove();
+            promotionGroup = null;
         }
     }
 
+    private void flipTheBoard() {
+        settings.toggleFlipBoard();
+
+        if (animator.hasAnimations()) {
+            animator.stopAnimations();
+            playNextTurn();
+        }
+
+        board.flip(settings.flipBoard());
+    }
+
     private void startNewGame() {
-        stopAnimations();
+        animator.stopAnimations();
+
         removePromotionSelector();
         promotionMoves.clear();
 
-        game = new Game(new MoveMaker(), new MoveFinder(), INITIAL_TAGS).blackAi(new RandomMoveChooser());
-        logger.log(game);
+        game = createNewGame();
+        board.reset(game.board());
 
-        boardGroup.reset(game.board());
-
-        selectionState = new SourceSelection();
-        boardGroup.setTouchable(Touchable.enabled);
-
-        if (game.isAiTurn()) {
-            playAiMove();
-        }
+        playFirstTurn();
     }
 
     private class SquareListener implements EventListener {
@@ -282,11 +220,6 @@ final class GameScreen extends ScreenAdapter {
         public boolean handle(Event event) {
             if (event instanceof SquareEvent squareEvent) {
                 selectionState.select(squareEvent);
-                return true;
-            }
-
-            if (event instanceof ClearSelectionEvent) {
-                selectionState.unselect();
                 return true;
             }
 
@@ -328,8 +261,8 @@ final class GameScreen extends ScreenAdapter {
             }
 
             var source = event.coordinate();
-            boardGroup.highlightSource(source);
-            boardGroup.highlightDestinations(legalDestinations);
+            board.highlightSource(source);
+            board.highlightDestinations(legalDestinations);
 
             selectionState = new DestinationSelection(source);
         }
@@ -340,8 +273,8 @@ final class GameScreen extends ScreenAdapter {
         }
 
         private SourceSelection() {
-            boardGroup.hideSource();
-            boardGroup.hideDestinations();
+            board.hideSource();
+            board.hideDestinations();
         }
     }
 
@@ -382,11 +315,11 @@ final class GameScreen extends ScreenAdapter {
                 game.makeMove(move);
 
                 selectionState = new SourceSelection();
-                boardGroup.highlightMove(move);
+                board.highlightMove(move);
 
-                boardGroup.hideChecked();
+                board.hideChecked();
                 if (game.isKingAttacked()) {
-                    boardGroup.highlightChecked(game.kingCoordinate());
+                    board.highlightChecked(game.kingCoordinate());
                 }
 
                 playSlidingAnimation(move);
@@ -395,12 +328,12 @@ final class GameScreen extends ScreenAdapter {
 
             Gdx.app.log(LOG_TAG, "Promoting a pawn! Please select the piece you want to promote it to");
 
-            boardGroup.makeDark(true);
-            boardGroup.setTouchable(Touchable.disabled);
+            board.makeDark(true);
+            board.setTouchable(Touchable.disabled);
             promotionMoves.addAll(moves);
 
-            var x = boardGroup.getX() + event.x();
-            var y = boardGroup.getY() + event.y();
+            var x = board.getX() + event.x();
+            var y = board.getY() + event.y();
             promotionGroup = new PromotionGroup(assets, game.sideToMove(), x, y);
             stage.addActor(promotionGroup);
         }
@@ -482,18 +415,8 @@ final class GameScreen extends ScreenAdapter {
                     settings.toggleAnimatePieces();
 
                     if (!settings.animatePieces()) {
-                        stopAnimations();
-
-                        boardGroup.board(game.board());
-                        boardGroup.flip(settings.flipBoard());
-
-                        logger.log(game);
-
-                        boardGroup.setTouchable(Touchable.enabled);
-
-                        if (game.isAiTurn() && game.hasLegalMoves()) {
-                            playAiMove();
-                        }
+                        animator.stopAnimations();
+                        playNextTurn();
                     }
 
                     yield true;
@@ -546,14 +469,14 @@ final class GameScreen extends ScreenAdapter {
             promotionMoves.clear();
 
             game.makeMove(selectedMove);
-            boardGroup.highlightMove(selectedMove);
+            board.highlightMove(selectedMove);
 
-            boardGroup.hideChecked();
+            board.hideChecked();
             if (game.isKingAttacked()) {
-                boardGroup.highlightChecked(game.kingCoordinate());
+                board.highlightChecked(game.kingCoordinate());
             }
 
-            boardGroup.makeDark(false);
+            board.makeDark(false);
             selectionState = new SourceSelection();
 
             playSlidingAnimation(selectedMove);

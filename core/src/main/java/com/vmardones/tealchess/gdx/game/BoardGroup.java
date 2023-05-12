@@ -3,12 +3,13 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package com.vmardones.tealchess.gdx;
+package com.vmardones.tealchess.gdx.game;
 
 import java.util.*;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -20,6 +21,7 @@ import com.vmardones.tealchess.move.LegalMove;
 
 final class BoardGroup extends Group {
 
+    private static final Event CLEAR_SELECTION = new SimpleEvent(EventType.CLEAR_SELECTION);
     private static final int SIZE = AssetLoader.SQUARE_SIZE * Board.SIDE_LENGTH;
     private Board board;
     private final Map<Coordinate, Square> squares = new HashMap<>();
@@ -60,8 +62,8 @@ final class BoardGroup extends Group {
 
     /* Setters */
 
-    void board(Board value) {
-        board = value;
+    void update(Board newBoard) {
+        board = newBoard;
 
         for (var entry : squares.entrySet()) {
             var newPiece = board.pieceAt(entry.getKey());
@@ -141,7 +143,7 @@ final class BoardGroup extends Group {
             var button = event.getButton();
 
             if (button == Input.Buttons.RIGHT) {
-                fire(new ClearSelectionEvent());
+                fire(CLEAR_SELECTION);
             }
         }
 

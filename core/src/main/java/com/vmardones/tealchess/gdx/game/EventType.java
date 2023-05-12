@@ -3,4 +3,9 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package com.vmardones.tealchess.gdx;
+package com.vmardones.tealchess.gdx.game;
+
+enum EventType {
+    NEXT_TURN,
+    CLEAR_SELECTION
+}

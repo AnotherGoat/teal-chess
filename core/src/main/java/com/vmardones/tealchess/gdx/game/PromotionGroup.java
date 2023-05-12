@@ -3,7 +3,7 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package com.vmardones.tealchess.gdx;
+package com.vmardones.tealchess.gdx.game;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.vmardones.tealchess.io.assets.AssetLoader;

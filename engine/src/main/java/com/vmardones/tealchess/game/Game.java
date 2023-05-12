@@ -157,16 +157,14 @@ public final class Game implements Fen, Pgn {
         history = history.add(state.save());
     }
 
-    public LegalMove makeAiMove() {
+    public LegalMove chooseAiMove() {
         var currentAi = ai();
 
         if (currentAi == null) {
             throw new UnsupportedOperationException("The current player doesn't have an AI set");
         }
 
-        var aiMove = currentAi.chooseMove(position(), player().legals());
-        makeMove(aiMove);
-        return aiMove;
+        return currentAi.chooseMove(position(), player().legals());
     }
 
     /* Analysis methods */
