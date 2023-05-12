@@ -20,11 +20,11 @@ final class PieceAnimator extends Actor {
 
     private static final Event NEXT_TURN = new SimpleEvent(EventType.NEXT_TURN);
     private final SettingManager settings;
-    private final BoardGroup board;
+    private final Chessboard board;
     private @Nullable Image moveAnimation;
     private @Nullable Image castleAnimation;
 
-    PieceAnimator(SettingManager settings, BoardGroup board) {
+    PieceAnimator(SettingManager settings, Chessboard board) {
         this.settings = settings;
         this.board = board;
     }

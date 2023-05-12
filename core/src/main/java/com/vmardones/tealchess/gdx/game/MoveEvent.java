@@ -8,11 +8,11 @@ package com.vmardones.tealchess.gdx.game;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.vmardones.tealchess.move.LegalMove;
 
-final class PromotionEvent extends Event {
+final class MoveEvent extends Event {
 
     private final LegalMove move;
 
-    PromotionEvent(LegalMove move) {
+    MoveEvent(LegalMove move) {
         this.move = move;
     }
 

@@ -7,9 +7,7 @@ package com.vmardones.tealchess.gdx.game;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.*;
@@ -17,7 +15,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.utils.Timer;
 import com.vmardones.tealchess.ai.RandomMoveChooser;
-import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.game.Game;
 import com.vmardones.tealchess.io.assets.AssetLoader;
 import com.vmardones.tealchess.io.settings.SettingManager;
@@ -46,11 +43,10 @@ public final class GameScreen extends ScreenAdapter {
     private final GameLogger logger;
     private Game game;
     private final Stage stage = new Stage();
-    private final BoardGroup board;
+    private final Chessboard board;
     private final PieceAnimator animator;
-    private SelectionState selectionState;
-    private @Nullable PromotionGroup promotionGroup;
-    private final List<LegalMove> promotionMoves = new ArrayList<>();
+    private final SquareSelector squareSelector;
+    private @Nullable PromotionChooser promotionChooser;
 
     public GameScreen(SettingManager settings, AssetLoader assets) {
         this.settings = settings;
@@ -58,34 +54,29 @@ public final class GameScreen extends ScreenAdapter {
         logger = new GameLogger(settings);
 
         game = createNewGame();
-        board = new BoardGroup(settings, assets, game.board());
-        animator = new PieceAnimator(settings, board);
 
-        stage.addActor(animator);
-        stage.addListener(new SquareListener());
-        stage.addListener(new KeyListener());
-        stage.addListener(new PromotionListener());
-
-        stage.addListener(event -> {
-            if (!(event instanceof SimpleEvent simpleEvent)) {
-                return false;
-            }
-
-            switch (simpleEvent.type()) {
-                case NEXT_TURN -> playNextTurn();
-                case CLEAR_SELECTION -> selectionState.unselect();
-            }
-
-            return true;
-        });
+        board = new Chessboard(settings, assets, game.board());
 
         if (settings.flipBoard()) {
             board.flip(true);
         }
 
         stage.addActor(board);
-        Gdx.input.setInputProcessor(stage);
 
+        animator = new PieceAnimator(settings, board);
+        stage.addActor(animator);
+
+        squareSelector = new SquareSelector(board);
+        stage.addActor(squareSelector);
+
+        stage.addListener(new KeyListener(this, settings, assets, animator));
+        stage.addListener(new SquareListener());
+        stage.addListener(new AskPromotionListener());
+        stage.addListener(new PromotionListener());
+        stage.addListener(new SimpleEventListener());
+        stage.addListener(new MoveEventListener());
+
+        Gdx.input.setInputProcessor(stage);
         playFirstTurn();
     }
 
@@ -102,12 +93,36 @@ public final class GameScreen extends ScreenAdapter {
         stage.dispose();
     }
 
+    void startNewGame() {
+        animator.stopAnimations();
+        removePromotionSelector();
+
+        game = createNewGame();
+        board.reset(game.board());
+
+        playFirstTurn();
+    }
+
+    void playNextTurn() {
+        board.setTouchable(Touchable.enabled);
+        board.update(game.board());
+        logger.log(game);
+
+        if (game.isAiTurn() && game.hasLegalMoves()) {
+            playAiMove();
+        }
+    }
+
+    void flipChessboard() {
+        board.flip(settings.flipBoard());
+    }
+
     private Game createNewGame() {
         return new Game(new MoveMaker(), new MoveFinder(), INITIAL_TAGS).blackAi(new RandomMoveChooser());
     }
 
-    private void playFirstTurn() {
-        selectionState = new SourceSelection();
+    void playFirstTurn() {
+        squareSelector.resetState();
         board.setTouchable(Touchable.enabled);
 
         Gdx.app.log("Game", "Game started!");
@@ -165,61 +180,18 @@ public final class GameScreen extends ScreenAdapter {
         }
     }
 
-    private void playNextTurn() {
-        board.setTouchable(Touchable.enabled);
-        board.update(game.board());
-        logger.log(game);
-
-        if (game.isAiTurn() && game.hasLegalMoves()) {
-            playAiMove();
-        }
-    }
-
-    private void toggleDebugMode() {
-        settings.toggleDebugMode();
-
-        if (settings.debugMode()) {
-            Gdx.app.setLogLevel(Application.LOG_DEBUG);
-        } else {
-            Gdx.app.setLogLevel(Application.LOG_INFO);
-        }
-    }
-
     private void removePromotionSelector() {
-        if (promotionGroup != null) {
-            promotionGroup.remove();
-            promotionGroup = null;
+        if (promotionChooser != null) {
+            promotionChooser.remove();
+            promotionChooser = null;
         }
-    }
-
-    private void flipTheBoard() {
-        settings.toggleFlipBoard();
-
-        if (animator.hasAnimations()) {
-            animator.stopAnimations();
-            playNextTurn();
-        }
-
-        board.flip(settings.flipBoard());
-    }
-
-    private void startNewGame() {
-        animator.stopAnimations();
-
-        removePromotionSelector();
-        promotionMoves.clear();
-
-        game = createNewGame();
-        board.reset(game.board());
-
-        playFirstTurn();
     }
 
     private class SquareListener implements EventListener {
         @Override
         public boolean handle(Event event) {
             if (event instanceof SquareEvent squareEvent) {
-                selectionState.select(squareEvent);
+                squareSelector.select(game, squareEvent);
                 return true;
             }
 
@@ -227,227 +199,26 @@ public final class GameScreen extends ScreenAdapter {
         }
     }
 
-    private interface SelectionState {
-        void select(SquareEvent event);
-
-        void unselect();
-    }
-
-    private class SourceSelection implements SelectionState {
-
-        private static final String LOG_TAG = "Source";
-
+    private class AskPromotionListener implements EventListener {
         @Override
-        public void select(SquareEvent event) {
-            var piece = event.piece();
-
-            if (piece == null) {
-                Gdx.app.debug(LOG_TAG, "The source is empty");
-                return;
+        public boolean handle(Event event) {
+            if (!(event instanceof AskPromotionEvent askPromotionEvent)) {
+                return false;
             }
-
-            Gdx.app.log(LOG_TAG, "The source contains " + piece);
-
-            if (game.isOpponentPiece(piece)) {
-                Gdx.app.debug(LOG_TAG, "The selected piece belongs to the opponent");
-                return;
-            }
-
-            var legalDestinations = game.findLegalDestinations(piece);
-
-            if (legalDestinations.isEmpty()) {
-                Gdx.app.debug(LOG_TAG, "The selected piece has no legal moves");
-                return;
-            }
-
-            var source = event.coordinate();
-            board.highlightSource(source);
-            board.highlightDestinations(legalDestinations);
-
-            selectionState = new DestinationSelection(source);
-        }
-
-        @Override
-        public void unselect() {
-            // No need to do anything in this state, because nothing has been selected yet
-        }
-
-        private SourceSelection() {
-            board.hideSource();
-            board.hideDestinations();
-        }
-    }
-
-    private class DestinationSelection implements SelectionState {
-
-        private static final String LOG_TAG = "Destination";
-        private final Coordinate source;
-
-        @Override
-        public void select(SquareEvent event) {
-            var destination = event.coordinate();
-
-            if (source.equals(destination)) {
-                Gdx.app.debug(LOG_TAG, "A piece can't be moved to the same coordinate");
-                selectionState = new SourceSelection();
-                return;
-            }
-
-            var piece = event.piece();
-
-            if (piece == null) {
-                Gdx.app.log(LOG_TAG, "The destination is empty");
-            } else {
-                Gdx.app.log(LOG_TAG, "The destination contains " + piece);
-            }
-
-            var moves = game.findLegalMoves(source, destination);
-
-            if (moves.isEmpty()) {
-                Gdx.app.debug(LOG_TAG, "The selected move is illegal");
-                selectionState = new SourceSelection();
-                return;
-            }
-
-            if (moves.size() == 1) {
-                Gdx.app.log(LOG_TAG, "Legal move found! Updating the chessboard...");
-                var move = moves.get(0);
-                game.makeMove(move);
-
-                selectionState = new SourceSelection();
-                board.highlightMove(move);
-
-                board.hideChecked();
-                if (game.isKingAttacked()) {
-                    board.highlightChecked(game.kingCoordinate());
-                }
-
-                playSlidingAnimation(move);
-                return;
-            }
-
-            Gdx.app.log(LOG_TAG, "Promoting a pawn! Please select the piece you want to promote it to");
 
             board.makeDark(true);
             board.setTouchable(Touchable.disabled);
-            promotionMoves.addAll(moves);
 
-            var x = board.getX() + event.x();
-            var y = board.getY() + event.y();
-            promotionGroup = new PromotionGroup(assets, game.sideToMove(), x, y);
-            stage.addActor(promotionGroup);
-        }
+            var square = askPromotionEvent.square();
 
-        @Override
-        public void unselect() {
-            Gdx.app.debug(LOG_TAG, "Pressed right click, undoing piece selection");
-            selectionState = new SourceSelection();
-        }
+            var x = board.getX() + square.getX();
+            var y = board.getY() + square.getY();
+            var promotionMoves = askPromotionEvent.promotionMoves();
 
-        private DestinationSelection(Coordinate source) {
-            this.source = source;
-        }
-    }
+            promotionChooser = new PromotionChooser(assets, game.sideToMove(), x, y, promotionMoves);
+            stage.addActor(promotionChooser);
 
-    private class KeyListener extends InputListener {
-        private static final String LOG_TAG = "Key";
-
-        @Override
-        public boolean keyDown(InputEvent event, int keycode) {
-            return switch (keycode) {
-                case Input.Keys.D -> {
-                    Gdx.app.log(LOG_TAG, "Toggling debug mode");
-                    toggleDebugMode();
-                    yield true;
-                }
-                case Input.Keys.L -> {
-                    Gdx.app.log(LOG_TAG, "Toggling legal move highlighting");
-                    settings.toggleShowLegals();
-                    yield true;
-                }
-                case Input.Keys.F -> {
-                    Gdx.app.log(LOG_TAG, "Flipping the board");
-                    flipTheBoard();
-                    yield true;
-                }
-                case Input.Keys.M -> {
-                    Gdx.app.log(LOG_TAG, "Toggling last move highlighting");
-                    settings.toggleShowLastMove();
-                    yield true;
-                }
-                case Input.Keys.C -> {
-                    Gdx.app.log(LOG_TAG, "Toggling show coordinates");
-                    settings.toggleShowCoordinates();
-                    yield true;
-                }
-                case Input.Keys.P -> {
-                    Gdx.app.log(LOG_TAG, "Toggling show attacked pieces");
-                    // TODO: Show attacked pieces
-                    settings.toggleShowAttackedPieces();
-                    yield true;
-                }
-                case Input.Keys.N -> {
-                    Gdx.app.log(LOG_TAG, "Starting a new game!");
-                    startNewGame();
-                    yield true;
-                }
-                case Input.Keys.T -> {
-                    if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
-                            || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)
-                            || Gdx.input.isKeyPressed(Input.Keys.META_SHIFT_ON)) {
-                        settings.previousBoardTheme();
-                        Gdx.app.log(LOG_TAG, "Changing to previous board theme: " + settings.boardTheme());
-                    } else {
-                        settings.nextBoardTheme();
-                        Gdx.app.log(LOG_TAG, "Changing to next board theme: " + settings.boardTheme());
-                    }
-
-                    assets.reloadBoardTheme();
-                    yield true;
-                }
-                case Input.Keys.S -> {
-                    Gdx.app.log(LOG_TAG, "Toggling piece shadows");
-                    settings.togglePieceShadows();
-                    yield true;
-                }
-                case Input.Keys.A -> {
-                    Gdx.app.log(LOG_TAG, "Toggling piece animations");
-                    settings.toggleAnimatePieces();
-
-                    if (!settings.animatePieces()) {
-                        animator.stopAnimations();
-                        playNextTurn();
-                    }
-
-                    yield true;
-                }
-                case Input.Keys.I -> {
-                    Gdx.app.log(LOG_TAG, "Toggling invisible pieces");
-                    settings.toggleInvisiblePieces();
-                    yield true;
-                }
-                case Input.Keys.DPAD_UP -> {
-                    settings.increaseAnimationDuration();
-                    Gdx.app.log(LOG_TAG, "Slowed down animations to " + settings.animationDuration() + "s");
-                    yield true;
-                }
-                case Input.Keys.DPAD_DOWN -> {
-                    settings.decreaseAnimationDuration();
-                    Gdx.app.log(LOG_TAG, "Sped up animations to " + settings.animationDuration() + "s");
-                    yield true;
-                }
-                case Input.Keys.DPAD_RIGHT -> {
-                    settings.increaseAiDelay();
-                    Gdx.app.log(LOG_TAG, "Increased AI delay to " + settings.aiDelay() + "s");
-                    yield true;
-                }
-                case Input.Keys.DPAD_LEFT -> {
-                    settings.decreaseAiDelay();
-                    Gdx.app.log(LOG_TAG, "Decreased AI delay to " + settings.aiDelay() + "s");
-                    yield true;
-                }
-                default -> false;
-            };
+            return true;
         }
     }
 
@@ -460,14 +231,7 @@ public final class GameScreen extends ScreenAdapter {
 
             removePromotionSelector();
 
-            var choice = promotionEvent.promotionChoice();
-            var selectedMove = promotionMoves.stream()
-                    .filter(legal -> legal.move().promotionChoice() == choice)
-                    .findFirst()
-                    .orElseThrow(AssertionError::new);
-
-            promotionMoves.clear();
-
+            var selectedMove = promotionEvent.move();
             game.makeMove(selectedMove);
             board.highlightMove(selectedMove);
 
@@ -477,9 +241,37 @@ public final class GameScreen extends ScreenAdapter {
             }
 
             board.makeDark(false);
-            selectionState = new SourceSelection();
+            squareSelector.resetState();
 
             playSlidingAnimation(selectedMove);
+            return true;
+        }
+    }
+
+    private class SimpleEventListener implements EventListener {
+        @Override
+        public boolean handle(Event event) {
+            if (!(event instanceof SimpleEvent simpleEvent)) {
+                return false;
+            }
+
+            switch (simpleEvent.type()) {
+                case NEXT_TURN -> playNextTurn();
+                case CLEAR_SELECTION -> squareSelector.resetState();
+            }
+
+            return true;
+        }
+    }
+
+    private class MoveEventListener implements EventListener {
+        @Override
+        public boolean handle(Event event) {
+            if (!(event instanceof MoveEvent moveEvent)) {
+                return false;
+            }
+
+            playSlidingAnimation(moveEvent.move());
             return true;
         }
     }

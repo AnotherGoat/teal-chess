@@ -6,9 +6,6 @@
 package com.vmardones.tealchess.gdx.game;
 
 import com.badlogic.gdx.scenes.scene2d.Event;
-import com.vmardones.tealchess.board.Coordinate;
-import com.vmardones.tealchess.piece.Piece;
-import org.eclipse.jdt.annotation.Nullable;
 
 final class SquareEvent extends Event {
 
@@ -20,19 +17,7 @@ final class SquareEvent extends Event {
 
     /* Getters */
 
-    Coordinate coordinate() {
-        return square.coordinate();
-    }
-
-    @Nullable Piece piece() {
-        return square.piece();
-    }
-
-    float x() {
-        return square.getX();
-    }
-
-    float y() {
-        return square.getY();
+    public Square square() {
+        return square;
     }
 }

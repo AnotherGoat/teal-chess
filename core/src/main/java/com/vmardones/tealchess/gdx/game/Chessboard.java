@@ -19,14 +19,14 @@ import com.vmardones.tealchess.io.assets.AssetLoader;
 import com.vmardones.tealchess.io.settings.SettingManager;
 import com.vmardones.tealchess.move.LegalMove;
 
-final class BoardGroup extends Group {
+final class Chessboard extends Group {
 
     private static final Event CLEAR_SELECTION = new SimpleEvent(EventType.CLEAR_SELECTION);
     private static final int SIZE = AssetLoader.SQUARE_SIZE * Board.SIDE_LENGTH;
     private Board board;
     private final Map<Coordinate, Square> squares = new HashMap<>();
 
-    BoardGroup(SettingManager settings, AssetLoader assets, Board board) {
+    Chessboard(SettingManager settings, AssetLoader assets, Board board) {
         this.board = board;
 
         setSize(SIZE, SIZE);
