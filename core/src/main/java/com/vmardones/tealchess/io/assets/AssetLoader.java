@@ -34,20 +34,28 @@ public final class AssetLoader extends AssetManager {
 
     @Initializer
     public void load() {
-        reloadBoardTheme();
+        var boardTheme = settings.boardTheme();
+        var lightColor = Color.valueOf(boardTheme.lightColor());
+        var darkColor = Color.valueOf(boardTheme.darkColor());
 
-        addAsset("source.png", Texture.class, createSquare(Color.TEAL.cpy().mul(1, 1, 1, 0.6f)));
-        addAsset("destination.png", Texture.class, createCircle(Color.TEAL, 7));
-        addAsset("target.png", Texture.class, createTarget(Color.TEAL));
-        addAsset("attack.png", Texture.class, createTarget(Color.SCARLET));
-        addAsset("last_move.png", Texture.class, createSquare(Color.FOREST.cpy().mul(1, 1, 1, 0.5f)));
-        addAsset("check.png", Texture.class, createSquare(Color.SCARLET.cpy().mul(1, 1, 1, 0.7f)));
-        addAsset("promotion.png", Texture.class, createCircle(Color.LIGHT_GRAY, 2));
-        addAsset("dark_tint.png", Texture.class, createSquare(Color.BLACK.cpy().mul(1, 1, 1, 0.5f)));
+        addFont("light_font", loadFont(lightColor.cpy().mul(1.2f)));
+        addFont("dark_font", loadFont(darkColor.cpy().mul(0.8f)));
+        addTexture("light", createSquare(lightColor));
+        addTexture("dark", createSquare(darkColor));
+
+        addTexture("source", createSquare(Color.TEAL, 0.6f));
+        addTexture("destination", createCircle(Color.TEAL, 7));
+        addTexture("target", createTarget(Color.TEAL));
+        addTexture("attack", createTarget(Color.FIREBRICK));
+        addTexture("last_move", createSquare(Color.FOREST, 0.5f));
+        addTexture("check", createSquare(Color.FIREBRICK, 0.7f));
+        addTexture("promotion", createCircle(Color.LIGHT_GRAY, 2, 0.9f));
+        addTexture("dark_tint", createSquare(Color.BLACK, 0.5f));
 
         PIECE_CODES.forEach(code -> {
-            var texture = new Texture(loadPiecePixmap(code, settings.pieceTheme()));
-            addAsset(code + ".png", Texture.class, texture);
+            var pixmap = loadPiecePixmap(code, settings.pieceTheme());
+            addTexture(code, new Texture(pixmap));
+            pixmap.dispose();
         });
     }
 
@@ -56,35 +64,77 @@ public final class AssetLoader extends AssetManager {
         var lightColor = Color.valueOf(boardTheme.lightColor());
         var darkColor = Color.valueOf(boardTheme.darkColor());
 
-        addAsset("light_font.ttf", BitmapFont.class, loadFont(lightColor.cpy().mul(1.2f)));
-        addAsset("dark_font.ttf", BitmapFont.class, loadFont(darkColor.cpy().mul(0.8f)));
-        addAsset("light.png", Texture.class, createSquare(lightColor));
-        addAsset("dark.png", Texture.class, createSquare(darkColor));
+        unload("light_font.ttf");
+        addFont("light_font", loadFont(lightColor.cpy().mul(1.2f)));
+
+        unload("dark_font.ttf");
+        addFont("dark_font", loadFont(darkColor.cpy().mul(0.8f)));
+
+        unload("light.png");
+        addTexture("light", createSquare(lightColor));
+
+        unload("dark.png");
+        addTexture("dark", createSquare(darkColor));
+    }
+
+    /* Getters */
+    public BitmapFont font(String fileName) {
+        return get(fileName + ".ttf", BitmapFont.class);
+    }
+
+    public Texture texture(String fileName) {
+        return get(fileName + ".png", Texture.class);
+    }
+
+    private void addFont(String fileName, BitmapFont font) {
+        addAsset(fileName + ".ttf", BitmapFont.class, font);
+    }
+
+    private void addTexture(String fileName, Texture texture) {
+        addAsset(fileName + ".png", Texture.class, texture);
     }
 
     private BitmapFont loadFont(Color color) {
         return FontLoader.load(FONT_NAME, FONT_SIZE, color);
     }
 
-    /* Getters and setters */
+    private Color applyAlpha(Color color, float alpha) {
+        return color.cpy().mul(1, 1, 1, alpha);
+    }
 
     private Texture createSquare(Color color) {
+        return createSquare(color, 1);
+    }
+
+    private Texture createSquare(Color color, float alpha) {
+        var drawColor = applyAlpha(color, alpha);
+
         var pixmap = new Pixmap(SQUARE_SIZE, SQUARE_SIZE, Pixmap.Format.RGBA8888);
-        pixmap.setColor(color);
+        pixmap.setColor(drawColor);
         pixmap.fill();
 
-        return new Texture(pixmap);
+        var texture = new Texture(pixmap);
+        pixmap.dispose();
+        return texture;
     }
 
-    private static Texture createCircle(Color color, int radiusScale) {
+    private Texture createCircle(Color color, int radiusScale) {
+        return createCircle(color, radiusScale, 1);
+    }
+
+    private Texture createCircle(Color color, int radiusScale, float alpha) {
+        var drawColor = applyAlpha(color, alpha);
+
         var pixmap = new Pixmap(SQUARE_SIZE, SQUARE_SIZE, Pixmap.Format.RGBA8888);
-        pixmap.setColor(color);
+        pixmap.setColor(drawColor);
         pixmap.fillCircle(HALF_SIZE, HALF_SIZE, SQUARE_SIZE / radiusScale - 1);
 
-        return new Texture(pixmap);
+        var texture = new Texture(pixmap);
+        pixmap.dispose();
+        return texture;
     }
 
-    private static Texture createTarget(Color color) {
+    private Texture createTarget(Color color) {
         var pixmap = new Pixmap(SQUARE_SIZE, SQUARE_SIZE, Pixmap.Format.RGBA8888);
         pixmap.setColor(color);
         pixmap.fill();
@@ -93,7 +143,9 @@ public final class AssetLoader extends AssetManager {
         pixmap.setColor(1, 1, 1, 0);
         pixmap.fillCircle(HALF_SIZE, HALF_SIZE, 2 + HALF_SIZE);
 
-        return new Texture(pixmap);
+        var texture = new Texture(pixmap);
+        pixmap.dispose();
+        return texture;
     }
 
     private Pixmap loadPiecePixmap(String pieceCode, PieceTheme theme) {

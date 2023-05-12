@@ -7,7 +7,6 @@ package com.vmardones.tealchess.gdx.game;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -63,14 +62,11 @@ final class Square extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
 
-        var background =
-                color.isWhite() ? assets.get("light.png", Texture.class) : assets.get("dark.png", Texture.class);
+        var background = color.isWhite() ? assets.texture("light") : assets.texture("dark");
         batch.draw(background, getX(), getY());
 
         if (settings.showCoordinates()) {
-            var font = color.isWhite()
-                    ? assets.get("dark_font.ttf", BitmapFont.class)
-                    : assets.get("light_font.ttf", BitmapFont.class);
+            var font = color.isWhite() ? assets.font("dark_font") : assets.font("light_font");
 
             var height = font.getCapHeight();
             var padding = 6;
@@ -89,17 +85,17 @@ final class Square extends Actor {
         }
 
         if (source) {
-            var tint = assets.get("source.png", Texture.class);
+            var tint = assets.texture("source");
             batch.draw(tint, getX(), getY());
         }
 
         if (settings.showLastMove() && lastMove) {
-            var tint = assets.get("last_move.png", Texture.class);
+            var tint = assets.texture("last_move");
             batch.draw(tint, getX(), getY());
         }
 
         if (checked) {
-            var tint = assets.get("check.png", Texture.class);
+            var tint = assets.texture("check");
             batch.draw(tint, getX(), getY());
         }
 
@@ -116,19 +112,17 @@ final class Square extends Actor {
         }
 
         if (settings.showLegals() && destination) {
-            var texture = piece == null
-                    ? assets.get("destination.png", Texture.class)
-                    : assets.get("target.png", Texture.class);
+            var texture = piece == null ? assets.texture("destination") : assets.texture("target");
             batch.draw(texture, getX(), getY());
         }
 
         if (settings.showAttackedPieces() && !checked && attacked) {
-            var texture = assets.get("attack.png", Texture.class);
+            var texture = assets.texture("attack");
             batch.draw(texture, getX(), getY());
         }
 
         if (dark) {
-            var tint = assets.get("dark_tint.png", Texture.class);
+            var tint = assets.texture("dark_tint");
             batch.draw(tint, getX(), getY());
         }
     }
@@ -215,7 +209,7 @@ final class Square extends Actor {
     }
 
     private Texture loadTexture(Piece piece) {
-        return assets.get(piece.color().fen() + piece.firstChar() + ".png", Texture.class);
+        return assets.texture(piece.color().fen() + piece.firstChar());
     }
 
     private class SquareListener extends ClickListener {

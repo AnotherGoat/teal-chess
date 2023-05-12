@@ -5,7 +5,6 @@
 
 package com.vmardones.tealchess.gdx.game;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -39,10 +38,10 @@ final class PromotionOption extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        var background = assets.get("promotion.png", Texture.class);
+        var background = assets.texture("promotion");
         batch.draw(background, getX(), getY(), background.getWidth(), background.getHeight());
 
-        var piece = assets.get(color.fen() + choice.san() + ".png", Texture.class);
+        var piece = assets.texture(color.fen() + choice.san());
         batch.draw(piece, getX(), getY());
     }
 

@@ -95,8 +95,8 @@ public final class GameScreen extends ScreenAdapter {
     }
 
     void playFirstTurn() {
+        board.setTouchable(game.hasLegalMoves() ? Touchable.enabled : Touchable.disabled);
         squareSelector.resetState();
-        board.setTouchable(Touchable.enabled);
         board.showAttacks(game.sideToMove(), game.findOpponentAttacks());
 
         Gdx.app.log("Game", "Game started!");
@@ -118,7 +118,7 @@ public final class GameScreen extends ScreenAdapter {
     }
 
     void playNextTurn() {
-        board.setTouchable(Touchable.enabled);
+        board.setTouchable(game.hasLegalMoves() ? Touchable.enabled : Touchable.disabled);
         board.update(game.board());
         logger.log(game);
 

@@ -11,8 +11,8 @@ public final class PlainTextExporter {
 
     private static final String PLAIN_TEXT_PATH = "teal-chess/text/";
 
-    public static String save(String filename, String text) {
-        var fullPath = PLAIN_TEXT_PATH + filename;
+    public static String save(String fileName, String text) {
+        var fullPath = PLAIN_TEXT_PATH + fileName;
         Gdx.files.external(fullPath).writeString(text + "\n", false);
         return fullPath;
     }

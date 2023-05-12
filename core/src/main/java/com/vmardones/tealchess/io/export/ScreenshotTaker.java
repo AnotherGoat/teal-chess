@@ -15,11 +15,11 @@ public final class ScreenshotTaker {
 
     private static final String SCREENSHOT_PATH = "teal-chess/screenshots/";
 
-    public static String save(String filename) {
-        return save(filename, 0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());
+    public static String save(String fileName) {
+        return save(fileName, 0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());
     }
 
-    public static String save(String filename, int x, int y, int width, int height) {
+    public static String save(String fileName, int x, int y, int width, int height) {
         var pixmap = Pixmap.createFromFrameBuffer(x, y, width, height);
         var pixels = pixmap.getPixels();
 
@@ -28,7 +28,7 @@ public final class ScreenshotTaker {
             pixels.put(i, (byte) 255);
         }
 
-        var path = SCREENSHOT_PATH + filename + ".png";
+        var path = SCREENSHOT_PATH + fileName + ".png";
         PixmapIO.writePNG(Gdx.files.external(path), pixmap, Deflater.DEFAULT_COMPRESSION, true);
         pixmap.dispose();
 

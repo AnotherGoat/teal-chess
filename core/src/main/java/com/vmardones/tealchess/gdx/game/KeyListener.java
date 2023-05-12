@@ -146,14 +146,14 @@ public class KeyListener extends InputListener {
                 yield true;
             }
             case Input.Keys.F9 -> {
-                var filename = formattedDateTime() + ".fen";
-                var fullPath = PlainTextExporter.save(filename, screen.exportFen());
+                var fileName = formattedDateTime() + ".fen";
+                var fullPath = PlainTextExporter.save(fileName, screen.exportFen());
                 Gdx.app.log(LOG_TAG, "FEN exported as " + fullPath);
                 yield true;
             }
             case Input.Keys.F10 -> {
-                var filename = formattedDateTime() + ".pgn";
-                var fullPath = PlainTextExporter.save(filename, screen.exportPgn());
+                var fileName = formattedDateTime() + ".pgn";
+                var fullPath = PlainTextExporter.save(fileName, screen.exportPgn());
                 Gdx.app.log(LOG_TAG, "PGN exported as " + fullPath);
                 yield true;
             }
