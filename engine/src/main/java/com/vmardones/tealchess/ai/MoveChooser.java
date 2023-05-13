@@ -10,6 +10,6 @@ import java.util.List;
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.move.LegalMove;
 
-public sealed interface MoveChooser permits RandomMoveChooser {
+public sealed interface MoveChooser permits MiniMaxMoveChooser, RandomMoveChooser {
     LegalMove chooseMove(Position position, List<LegalMove> legals);
 }

@@ -14,7 +14,8 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.utils.Timer;
-import com.vmardones.tealchess.ai.RandomMoveChooser;
+import com.vmardones.tealchess.ai.MiniMaxMoveChooser;
+import com.vmardones.tealchess.ai.PieceValueEvaluator;
 import com.vmardones.tealchess.game.Game;
 import com.vmardones.tealchess.io.assets.AssetLoader;
 import com.vmardones.tealchess.io.export.ScreenshotTaker;
@@ -145,7 +146,8 @@ public final class GameScreen extends ScreenAdapter {
     }
 
     private Game createNewGame() {
-        return new Game(new MoveMaker(), new MoveFinder(), INITIAL_TAGS).blackAi(new RandomMoveChooser());
+        return new Game(new MoveMaker(), new MoveFinder(), INITIAL_TAGS)
+                .blackAi(new MiniMaxMoveChooser(new PieceValueEvaluator(), 2));
     }
 
     private void playAiMove() {

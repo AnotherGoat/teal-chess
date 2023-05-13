@@ -83,6 +83,10 @@ public abstract sealed class Piece implements Fen, San, Unicode permits Bishop, 
         return type.firstChar();
     }
 
+    public int value() {
+        return type.value();
+    }
+
     @Override
     public String fen() {
         return color.isBlack() ? firstChar().toLowerCase(Locale.ROOT) : firstChar();
