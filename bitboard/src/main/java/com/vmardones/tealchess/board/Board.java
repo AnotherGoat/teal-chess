@@ -14,8 +14,13 @@ import org.eclipse.jdt.annotation.Nullable;
 
 public final class Board {
 
+    /**
+     * The number of squares in the game board.
+     */
+    public static final int NUMBER_OF_SQUARES = 64;
+
     // Arrays of bitboards: https://www.chessprogramming.org/Bitboard_Board-Definition#Array
-    private final long[][] pieces;
+    private final long[][] bitboards;
     private final @Nullable Piece[] mailbox;
 
     /* Building the board */
@@ -58,36 +63,38 @@ public final class Board {
     /* Getters */
 
     public long pawns(Side side) {
-        return pieces[PieceType.PAWN.ordinal()][side.ordinal()];
+        return bitboards[PieceType.PAWN.ordinal()][side.ordinal()];
     }
 
     public long knights(Side side) {
-        return pieces[PieceType.KNIGHT.ordinal()][side.ordinal()];
+        return bitboards[PieceType.KNIGHT.ordinal()][side.ordinal()];
     }
 
     public long bishops(Side side) {
-        return pieces[PieceType.BISHOP.ordinal()][side.ordinal()];
+        return bitboards[PieceType.BISHOP.ordinal()][side.ordinal()];
     }
 
     public long rooks(Side side) {
-        return pieces[PieceType.ROOK.ordinal()][side.ordinal()];
+        return bitboards[PieceType.ROOK.ordinal()][side.ordinal()];
     }
 
     public long queens(Side side) {
-        return pieces[PieceType.QUEEN.ordinal()][side.ordinal()];
+        return bitboards[PieceType.QUEEN.ordinal()][side.ordinal()];
     }
 
     public long kings(Side side) {
-        return pieces[PieceType.KING.ordinal()][side.ordinal()];
+        return bitboards[PieceType.KING.ordinal()][side.ordinal()];
     }
 
     private Board(BoardBuilder boardBuilder) {
+        bitboards = new long[][] {};
         mailbox = boardBuilder.mailbox;
     }
 
     public static class BoardBuilder {
 
-        private final @Nullable Piece[] mailbox = new Piece[64];
+        private final long[][] bitboards = new long[PieceType.values().length][Side.values().length];
+        private final @Nullable Piece[] mailbox = new Piece[NUMBER_OF_SQUARES];
         private final Piece whiteKing;
         private final Piece blackKing;
 
@@ -104,7 +111,15 @@ public final class Board {
                 return this;
             }
 
-            mailbox[piece.coordinate()] = piece;
+            var typeIndex = piece.type().ordinal();
+            var sideIndex = piece.side().ordinal();
+
+            var bitboard = bitboards[typeIndex][sideIndex];
+
+            var coordinate = piece.coordinate();
+
+            bitboards[typeIndex][sideIndex] = BitboardManipulator.set(bitboard, coordinate);
+            mailbox[coordinate] = piece;
             return this;
         }
 
@@ -126,6 +141,18 @@ public final class Board {
          * @return The same instance of this builder, to continue the building process.
          */
         public BoardBuilder without(int coordinate) {
+            var piece = mailbox[coordinate];
+
+            if (piece == null) {
+                return this;
+            }
+
+            var typeIndex = piece.type().ordinal();
+            var sideIndex = piece.side().ordinal();
+
+            var bitboard = bitboards[typeIndex][sideIndex];
+
+            bitboards[typeIndex][sideIndex] = BitboardManipulator.clear(bitboard, coordinate);
             mailbox[coordinate] = null;
             return this;
         }
