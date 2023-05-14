@@ -169,7 +169,7 @@ public final class Board implements Unicode {
     public String unicode() {
         var result = new StringBuilder();
 
-        for (int i = 0; i < NUMBER_OF_SQUARES; i++) {
+        for (var i = 0; i < NUMBER_OF_SQUARES; i++) {
             result.append(squareAsUnicode(i)).append(" ");
 
             if ((i + 1) % SIDE_LENGTH == 0) {
@@ -193,11 +193,11 @@ public final class Board implements Unicode {
                 .with(new Piece(KNIGHT, WHITE, g1))
                 .with(new Piece(ROOK, WHITE, h1));
 
-        for (int i = 8; i < 16; i++) {
+        for (var i = 8; i < 16; i++) {
             builder.with(new Piece(PAWN, WHITE, i));
         }
 
-        for (int i = 48; i < 56; i++) {
+        for (var i = 48; i < 56; i++) {
             builder.with(new Piece(PAWN, BLACK, i));
         }
 

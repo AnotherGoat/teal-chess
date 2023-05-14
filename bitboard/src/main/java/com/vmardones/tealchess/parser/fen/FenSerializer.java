@@ -6,8 +6,8 @@
 package com.vmardones.tealchess.parser.fen;
 
 import com.vmardones.tealchess.board.Board;
-import com.vmardones.tealchess.board.Coordinate;
-import com.vmardones.tealchess.game.Position;
+import com.vmardones.tealchess.coordinate.AlgebraicConverter;
+import com.vmardones.tealchess.position.Position;
 import org.eclipse.jdt.annotation.Nullable;
 
 public final class FenSerializer {
@@ -30,45 +30,45 @@ public final class FenSerializer {
 
         var result = new StringBuilder();
 
-        var pieces = board.mailbox().values().stream().toList();
+        var mailbox = board.mailbox();
         var emptyCounter = 0;
 
-        for (int i = 0; i < pieces.size(); i++) {
-            var piece = pieces.get(i);
+        for (var rank = Board.SIDE_LENGTH - 1; rank >= 0; rank--) {
+            for (var file = 0; file < Board.SIDE_LENGTH; file++) {
 
-            if (piece == null) {
-                emptyCounter++;
-            } else {
-                if (emptyCounter != 0) {
-                    result.append(emptyCounter);
-                    emptyCounter = 0;
+                var coordinate = AlgebraicConverter.toCoordinate(file, rank);
+                var piece = mailbox[coordinate];
+
+                if (piece == null) {
+                    emptyCounter++;
+                } else {
+                    if (emptyCounter != 0) {
+                        result.append(emptyCounter);
+                        emptyCounter = 0;
+                    }
+
+                    result.append(piece.fen());
                 }
-
-                result.append(piece.fen());
             }
 
-            var squareCounter = i + 1;
+            if (emptyCounter != 0) {
+                result.append(emptyCounter);
+                emptyCounter = 0;
+            }
 
-            if (squareCounter % Board.SIDE_LENGTH == 0) {
-                if (emptyCounter != 0) {
-                    result.append(emptyCounter);
-                    emptyCounter = 0;
-                }
-
-                if (squareCounter < pieces.size()) {
-                    result.append("/");
-                }
+            if (rank > 0) {
+                result.append("/");
             }
         }
 
         return result.toString();
     }
 
-    private static String serializeEnPassantTarget(@Nullable Coordinate enPassantTarget) {
+    private static String serializeEnPassantTarget(@Nullable Integer enPassantTarget) {
         if (enPassantTarget == null) {
             return "-";
         }
 
-        return enPassantTarget.san();
+        return AlgebraicConverter.toAlgebraic(enPassantTarget);
     }
 }

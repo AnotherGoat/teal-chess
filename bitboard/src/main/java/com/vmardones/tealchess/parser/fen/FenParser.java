@@ -174,11 +174,11 @@ public final class FenParser {
 
         List<Piece> pieces = new ArrayList<>();
 
-        for (int i = 0; i < ranks.size(); i++) {
+        for (var i = 0; i < ranks.size(); i++) {
             var rank = ranks.get(i);
             var fileCounter = 0;
 
-            for (int j = 0; j < rank.length(); j++) {
+            for (var j = 0; j < rank.length(); j++) {
                 var symbol = rank.charAt(j);
 
                 if (Character.isDigit(symbol)) {

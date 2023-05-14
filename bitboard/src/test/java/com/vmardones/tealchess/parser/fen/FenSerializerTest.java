@@ -7,11 +7,9 @@ package com.vmardones.tealchess.parser.fen;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.vmardones.tealchess.ExcludeFromNullAway;
-import com.vmardones.tealchess.game.Position;
+import com.vmardones.tealchess.position.Position;
 import org.junit.jupiter.api.Test;
 
-@ExcludeFromNullAway
 final class FenSerializerTest {
 
     @Test
