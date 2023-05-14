@@ -5,146 +5,271 @@
 
 package com.vmardones.tealchess.board;
 
+import static com.vmardones.tealchess.board.Board.INITIAL_BOARD;
+import static com.vmardones.tealchess.color.Color.BLACK;
+import static com.vmardones.tealchess.color.Color.WHITE;
 import static com.vmardones.tealchess.coordinate.Coordinate.*;
+import static com.vmardones.tealchess.piece.PieceType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.stream.IntStream;
 
-import com.vmardones.tealchess.color.Color;
+import com.vmardones.tealchess.board.Board.BoardBuilder;
+import com.vmardones.tealchess.coordinate.Coordinate;
 import com.vmardones.tealchess.piece.Piece;
-import com.vmardones.tealchess.piece.PieceType;
 import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 final class BoardTest {
 
-    Board initialBoard = Board.INITIAL_BOARD;
-    Board board = Board.builder(4, 60).build();
-    Color white = Color.WHITE;
-    Color black = Color.BLACK;
+    Board board = Board.builder(e1, e8).build();
+    BoardBuilder builder;
+
+    @BeforeEach
+    void setUp() {
+        builder = Board.builder(e1, e8);
+    }
 
     @Test
     void equalsContract() {
-        EqualsVerifier.forClass(Board.class).verify();
+        EqualsVerifier.forClass(Board.class)
+                .withNonnullFields("whiteKing", "blackKing")
+                .verify();
     }
 
     @Test
     void initialWhitePawns() {
         var expectedBitboard = 0b11111111_00000000L;
-        assertThat(initialBoard.pawns(white)).isEqualTo(expectedBitboard);
+        assertThat(INITIAL_BOARD.pawns(WHITE)).isEqualTo(expectedBitboard);
     }
 
     @Test
     void initialBlackPawns() {
         var expectedBitboard = 0b11111111_00000000_00000000_00000000_00000000_00000000_00000000L;
-        assertThat(initialBoard.pawns(black)).isEqualTo(expectedBitboard);
+        assertThat(INITIAL_BOARD.pawns(BLACK)).isEqualTo(expectedBitboard);
     }
 
     @Test
     void initialWhiteKnights() {
         var expectedBitboard = 0b01000010L;
-        assertThat(initialBoard.knights(white)).isEqualTo(expectedBitboard);
+        assertThat(INITIAL_BOARD.knights(WHITE)).isEqualTo(expectedBitboard);
     }
 
     @Test
     void initialBlackKnights() {
         var expectedBitboard = 0b01000010_00000000_00000000_00000000_00000000_00000000_00000000_00000000L;
-        assertThat(initialBoard.knights(black)).isEqualTo(expectedBitboard);
+        assertThat(INITIAL_BOARD.knights(BLACK)).isEqualTo(expectedBitboard);
     }
 
     @Test
     void initialWhiteBishops() {
         var expectedBitboard = 0b00100100L;
-        assertThat(initialBoard.bishops(white)).isEqualTo(expectedBitboard);
+        assertThat(INITIAL_BOARD.bishops(WHITE)).isEqualTo(expectedBitboard);
     }
 
     @Test
     void initialBlackBishops() {
         var expectedBitboard = 0b00100100_00000000_00000000_00000000_00000000_00000000_00000000_00000000L;
-        assertThat(initialBoard.bishops(black)).isEqualTo(expectedBitboard);
+        assertThat(INITIAL_BOARD.bishops(BLACK)).isEqualTo(expectedBitboard);
     }
 
     @Test
     void initialWhiteRooks() {
         var expectedBitboard = 0b10000001L;
-        assertThat(initialBoard.rooks(white)).isEqualTo(expectedBitboard);
+        assertThat(INITIAL_BOARD.rooks(WHITE)).isEqualTo(expectedBitboard);
     }
 
     @Test
     void initialBlackRooks() {
         var expectedBitboard = 0b10000001_00000000_00000000_00000000_00000000_00000000_00000000_00000000L;
-        assertThat(initialBoard.rooks(black)).isEqualTo(expectedBitboard);
+        assertThat(INITIAL_BOARD.rooks(BLACK)).isEqualTo(expectedBitboard);
     }
 
     @Test
     void initialWhiteQueen() {
         var expectedBitboard = 0b00001000L;
-        assertThat(initialBoard.queens(white)).isEqualTo(expectedBitboard);
+        assertThat(INITIAL_BOARD.queens(WHITE)).isEqualTo(expectedBitboard);
     }
 
     @Test
     void initialBlackQueen() {
         var expectedBitboard = 0b00001000_00000000_00000000_00000000_00000000_00000000_00000000_00000000L;
-        assertThat(initialBoard.queens(black)).isEqualTo(expectedBitboard);
+        assertThat(INITIAL_BOARD.queens(BLACK)).isEqualTo(expectedBitboard);
     }
 
     @Test
     void initialWhiteKing() {
         var expectedBitboard = 0b00010000L;
-        assertThat(initialBoard.kings(white)).isEqualTo(expectedBitboard);
+        assertThat(INITIAL_BOARD.kings(WHITE)).isEqualTo(expectedBitboard);
     }
 
     @Test
     void initialBlackKing() {
         var expectedBitboard = 0b00010000_00000000_00000000_00000000_00000000_00000000_00000000_00000000L;
-        assertThat(initialBoard.kings(black)).isEqualTo(expectedBitboard);
+        assertThat(INITIAL_BOARD.kings(BLACK)).isEqualTo(expectedBitboard);
     }
 
     @Test
     void initialEmptySquares() {
-        IntStream.range(16, 48).forEach(coordinate -> assertThat(initialBoard.pieceAt(coordinate))
+        IntStream.range(16, 48).forEach(coordinate -> assertThat(INITIAL_BOARD.pieceAt(coordinate))
                 .isNull());
     }
 
     @Test
     void initialWhitePawnRank() {
-        IntStream.range(8, 16).forEach(coordinate -> assertThat(initialBoard.pieceAt(coordinate))
-                .isEqualTo(new Piece(PieceType.PAWN, white, coordinate)));
+        IntStream.range(8, 16).forEach(coordinate -> assertThat(INITIAL_BOARD.pieceAt(coordinate))
+                .isEqualTo(new Piece(PAWN, WHITE, coordinate)));
     }
 
     @Test
     void initialBlackPawnRank() {
-        IntStream.range(48, 56).forEach(coordinate -> assertThat(initialBoard.pieceAt(coordinate))
-                .isEqualTo(new Piece(PieceType.PAWN, black, coordinate)));
+        IntStream.range(48, 56).forEach(coordinate -> assertThat(INITIAL_BOARD.pieceAt(coordinate))
+                .isEqualTo(new Piece(PAWN, BLACK, coordinate)));
     }
 
     @Test
     void initialWhiteBackRank() {
-        assertThat(initialBoard.pieceAt(a1)).isEqualTo(new Piece(PieceType.ROOK, white, a1));
-        assertThat(initialBoard.pieceAt(b1)).isEqualTo(new Piece(PieceType.KNIGHT, white, b1));
-        assertThat(initialBoard.pieceAt(c1)).isEqualTo(new Piece(PieceType.BISHOP, white, c1));
-        assertThat(initialBoard.pieceAt(d1)).isEqualTo(new Piece(PieceType.QUEEN, white, d1));
-        assertThat(initialBoard.pieceAt(e1)).isEqualTo(new Piece(PieceType.KING, white, e1));
-        assertThat(initialBoard.pieceAt(f1)).isEqualTo(new Piece(PieceType.BISHOP, white, f1));
-        assertThat(initialBoard.pieceAt(g1)).isEqualTo(new Piece(PieceType.KNIGHT, white, g1));
-        assertThat(initialBoard.pieceAt(h1)).isEqualTo(new Piece(PieceType.ROOK, white, h1));
+        assertThat(INITIAL_BOARD.pieceAt(a1)).isEqualTo(new Piece(ROOK, WHITE, a1));
+        assertThat(INITIAL_BOARD.pieceAt(b1)).isEqualTo(new Piece(KNIGHT, WHITE, b1));
+        assertThat(INITIAL_BOARD.pieceAt(c1)).isEqualTo(new Piece(BISHOP, WHITE, c1));
+        assertThat(INITIAL_BOARD.pieceAt(d1)).isEqualTo(new Piece(QUEEN, WHITE, d1));
+        assertThat(INITIAL_BOARD.pieceAt(e1)).isEqualTo(new Piece(KING, WHITE, e1));
+        assertThat(INITIAL_BOARD.pieceAt(f1)).isEqualTo(new Piece(BISHOP, WHITE, f1));
+        assertThat(INITIAL_BOARD.pieceAt(g1)).isEqualTo(new Piece(KNIGHT, WHITE, g1));
+        assertThat(INITIAL_BOARD.pieceAt(h1)).isEqualTo(new Piece(ROOK, WHITE, h1));
     }
 
     @Test
     void initialBlackBackRank() {
-        assertThat(initialBoard.pieceAt(a8)).isEqualTo(new Piece(PieceType.ROOK, black, a8));
-        assertThat(initialBoard.pieceAt(b8)).isEqualTo(new Piece(PieceType.KNIGHT, black, b8));
-        assertThat(initialBoard.pieceAt(c8)).isEqualTo(new Piece(PieceType.BISHOP, black, c8));
-        assertThat(initialBoard.pieceAt(d8)).isEqualTo(new Piece(PieceType.QUEEN, black, d8));
-        assertThat(initialBoard.pieceAt(e8)).isEqualTo(new Piece(PieceType.KING, black, e8));
-        assertThat(initialBoard.pieceAt(f8)).isEqualTo(new Piece(PieceType.BISHOP, black, f8));
-        assertThat(initialBoard.pieceAt(g8)).isEqualTo(new Piece(PieceType.KNIGHT, black, g8));
-        assertThat(initialBoard.pieceAt(h8)).isEqualTo(new Piece(PieceType.ROOK, black, h8));
+        assertThat(INITIAL_BOARD.pieceAt(a8)).isEqualTo(new Piece(ROOK, BLACK, a8));
+        assertThat(INITIAL_BOARD.pieceAt(b8)).isEqualTo(new Piece(KNIGHT, BLACK, b8));
+        assertThat(INITIAL_BOARD.pieceAt(c8)).isEqualTo(new Piece(BISHOP, BLACK, c8));
+        assertThat(INITIAL_BOARD.pieceAt(d8)).isEqualTo(new Piece(QUEEN, BLACK, d8));
+        assertThat(INITIAL_BOARD.pieceAt(e8)).isEqualTo(new Piece(KING, BLACK, e8));
+        assertThat(INITIAL_BOARD.pieceAt(f8)).isEqualTo(new Piece(BISHOP, BLACK, f8));
+        assertThat(INITIAL_BOARD.pieceAt(g8)).isEqualTo(new Piece(KNIGHT, BLACK, g8));
+        assertThat(INITIAL_BOARD.pieceAt(h8)).isEqualTo(new Piece(ROOK, BLACK, h8));
     }
 
     @Test
     void isEmpty() {
         assertThat(board.isEmpty(a1)).isTrue();
         assertThat(board.isEmpty(h8)).isTrue();
+    }
+
+    @Test
+    void getWhiteColor() {
+        assertThat(board.colorOf(a8)).isEqualTo(WHITE);
+        assertThat(board.colorOf(h1)).isEqualTo(WHITE);
+    }
+
+    @Test
+    void getBlackColor() {
+        assertThat(board.colorOf(b8)).isEqualTo(BLACK);
+        assertThat(board.colorOf(g1)).isEqualTo(BLACK);
+    }
+
+    @Test
+    void whitePieceUnicode() {
+        assertThat(board.squareAsUnicode(e1)).isEqualTo("♔");
+    }
+
+    @Test
+    void blackPieceUnicode() {
+        assertThat(board.squareAsUnicode(e8)).isEqualTo("♚");
+    }
+
+    @Test
+    void emptySquareUnicode() {
+        assertThat(board.squareAsUnicode(g4)).isEqualTo("□");
+        assertThat(board.squareAsUnicode(h4)).isEqualTo("■");
+    }
+
+    @Test
+    void nextPositionBuilder() {
+        var nextBoard = board.nextPositionBuilder().build();
+
+        assertThat(board.king(WHITE)).isEqualTo(nextBoard.king(WHITE));
+        assertThat(board.king(BLACK)).isEqualTo(nextBoard.king(BLACK));
+    }
+
+    @Test
+    void addPiece() {
+        var piece = new Piece(QUEEN, WHITE, d7);
+        var newBoard = builder.with(piece).build();
+
+        assertThat(newBoard.pieceAt(d7)).isEqualTo(piece);
+    }
+
+    @Test
+    void addNullPiece() {
+        var board1 = builder.build();
+        var board2 = board1.nextPositionBuilder().with(null).build();
+
+        assertThat(board1).isEqualTo(board2);
+    }
+
+    @Test
+    void lastPieceTakesPrecedence() {
+        var piece1 = new Piece(PAWN, WHITE, a1);
+        var piece2 = new Piece(ROOK, WHITE, Coordinate.a1);
+        var newBoard = builder.with(piece1).with(piece2).build();
+
+        assertThat(newBoard.pieceAt(Coordinate.a1)).isEqualTo(piece2);
+    }
+
+    @Test
+    void withoutPiece() {
+        var piece = new Piece(PAWN, BLACK, a5);
+        var newBoard = builder.with(piece).without(a5).build();
+
+        assertThat(newBoard.pieceAt(a5)).isNull();
+    }
+
+    @Test
+    void withoutNonExistantPiece() {
+        var board1 = builder.build();
+        var board2 = board1.nextPositionBuilder().without(c6).build();
+
+        assertThat(board1).isEqualTo(board2);
+    }
+
+    @Test
+    void alwaysAddsWhiteKing() {
+        var whiteKing = new Piece(KING, WHITE, e1);
+        var impostorQueen = new Piece(QUEEN, WHITE, e1);
+        var newBoard = builder.with(impostorQueen).build();
+
+        assertThat(newBoard.pieceAt(e1)).isNotEqualTo(impostorQueen).isEqualTo(whiteKing);
+    }
+
+    @Test
+    void alwaysAddsBlackKing() {
+        var blackKing = new Piece(KING, BLACK, e8);
+        var impostorQueen = new Piece(QUEEN, BLACK, e8);
+        var newBoard = builder.with(impostorQueen).build();
+
+        assertThat(newBoard.pieceAt(e8)).isNotEqualTo(impostorQueen).isEqualTo(blackKing);
+    }
+
+    @Test
+    void clonedMailbox() {
+        var mailbox1 = board.mailbox();
+        var mailbox2 = board.mailbox();
+
+        assertThat(mailbox1).isNotSameAs(mailbox2).isEqualTo(mailbox2);
+    }
+
+    @Test
+    void unicode() {
+        assertThat(INITIAL_BOARD.unicode())
+                .containsOnlyOnce("♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜")
+                .containsOnlyOnce("♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟")
+                .contains("□ ■ □ ■ □ ■ □ ■")
+                .contains("■ □ ■ □ ■ □ ■ □")
+                .containsOnlyOnce("♙ ♙ ♙ ♙ ♙ ♙ ♙ ♙")
+                .containsOnlyOnce("♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖")
+                .contains("\n");
     }
 }

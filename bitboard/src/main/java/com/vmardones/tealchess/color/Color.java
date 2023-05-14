@@ -13,7 +13,9 @@ import com.vmardones.tealchess.parser.fen.Fen;
  * @see <a href="https://www.chessprogramming.org/Color">Color</a>
  */
 public enum Color implements Fen, Unicode {
+    /** The white side, at the bottom of the board. */
     WHITE("w", "□"),
+    /** The black side, at the top of the board. */
     BLACK("b", "■");
 
     private final String symbol;

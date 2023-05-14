@@ -17,7 +17,9 @@ import com.vmardones.tealchess.color.Color;
 import com.vmardones.tealchess.color.ColorSymbolException;
 import com.vmardones.tealchess.coordinate.AlgebraicConverter;
 import com.vmardones.tealchess.piece.*;
+import com.vmardones.tealchess.position.CastlingRights;
 import com.vmardones.tealchess.position.Position;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * FEN (Forsyth-Edwards Notation) parser.
@@ -44,10 +46,13 @@ public final class FenParser {
 
         var ranks = parseRanks(parts[0]);
         var sideToMove = parseSideToMove(parts[1]);
-        var halfmove = parseHalfmoveClock(parts[4]);
-        int fullmove = parseFullmoveCounter(parts[5]);
+        var castlingRights = parseCastlingRights(parts[2]);
+        var enPassantTarget = parseEnPassantTarget(parts[3]);
+        var halfmoveClock = parseHalfmoveClock(parts[4]);
+        int fullmoveCounter = parseFullmoveCounter(parts[5]);
+        var board = buildBoard(ranks);
 
-        return buildPosition(ranks, sideToMove, halfmove, fullmove);
+        return new Position(board, sideToMove, castlingRights, enPassantTarget, halfmoveClock, fullmoveCounter);
     }
 
     private static boolean isPrintableAscii(String text) {
@@ -98,6 +103,30 @@ public final class FenParser {
         }
     }
 
+    private static CastlingRights parseCastlingRights(String data) {
+        if (!CASTLING_PATTERN.matcher(data).matches()) {
+            throw new FenParseException("Castling availability is incorrect: " + data);
+        }
+
+        if (data.equals("-")) {
+            return new CastlingRights();
+        }
+
+        return new CastlingRights(data.contains("K"), data.contains("Q"), data.contains("k"), data.contains("q"));
+    }
+
+    private static @Nullable Integer parseEnPassantTarget(String data) {
+        if (!EN_PASSANT_PATTERN.matcher(data).matches()) {
+            throw new FenParseException("En passant target is not a valid target coordinate: " + data);
+        }
+
+        if (data.equals("-")) {
+            return null;
+        }
+
+        return AlgebraicConverter.toCoordinate(data);
+    }
+
     private static int parseHalfmoveClock(String data) {
         int halfmoveClock;
 
@@ -128,13 +157,6 @@ public final class FenParser {
         }
 
         return fullmoveCounter;
-    }
-
-    private static Position buildPosition(
-            List<String> ranks, Color sideToMove, int halfmoveClock, int fullmoveCounter) {
-
-        var board = buildBoard(ranks);
-        return new Position(board, sideToMove, halfmoveClock, fullmoveCounter);
     }
 
     private static Board buildBoard(List<String> ranks) {

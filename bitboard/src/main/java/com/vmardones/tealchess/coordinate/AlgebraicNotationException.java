@@ -10,12 +10,12 @@ import java.io.Serial;
 /**
  * Exception thrown when incorrect algebraic notation is used.
  */
-public final class AlgebraicConverterException extends RuntimeException {
+public final class AlgebraicNotationException extends RuntimeException {
 
     @Serial
     private static final long serialVersionUID = -8460280404931066099L;
 
-    AlgebraicConverterException(String message) {
+    AlgebraicNotationException(String message) {
         super(message);
     }
 }

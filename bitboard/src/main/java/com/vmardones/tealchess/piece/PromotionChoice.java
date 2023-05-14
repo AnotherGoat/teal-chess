@@ -11,21 +11,25 @@ import com.vmardones.tealchess.parser.pgn.San;
  * Each of the choices that a pawn can be promoted to when it reaches the opposite side.
  */
 public enum PromotionChoice implements San {
-    QUEEN("Q"),
-    KNIGHT("N"),
-    ROOK("R"),
-    BISHOP("B");
+    QUEEN(PieceType.QUEEN),
+    KNIGHT(PieceType.KNIGHT),
+    ROOK(PieceType.ROOK),
+    BISHOP(PieceType.BISHOP);
 
-    private final String san;
+    private final PieceType type;
 
     /* Getters */
 
     @Override
     public String san() {
-        return san;
+        return type.whiteFen();
     }
 
-    PromotionChoice(String san) {
-        this.san = san;
+    PieceType type() {
+        return type;
+    }
+
+    PromotionChoice(PieceType type) {
+        this.type = type;
     }
 }

@@ -25,39 +25,6 @@ final class PawnTest {
     Coordinate coordinate;
 
     @Test
-    void fen() {
-        assertThat(new Pawn(coordinate, Color.WHITE).fen()).isEqualTo("P");
-        assertThat(new Pawn(coordinate, Color.BLACK).fen()).isEqualTo("p");
-    }
-
-    @Test
-    void whiteMoves() {
-        var whitePawn = new Pawn(coordinate, Color.WHITE);
-        assertThat(whitePawn.moveVectors()).hasSize(1).containsOnlyOnce(new Vector(0, 1));
-    }
-
-    @Test
-    void blackMoves() {
-        var blackPawn = new Pawn(coordinate, Color.BLACK);
-        assertThat(blackPawn.moveVectors()).hasSize(1).containsOnlyOnce(new Vector(0, -1));
-    }
-
-    @Test
-    void illegalMove() {
-        var pawn = new Pawn(coordinate, Color.WHITE);
-        assertThat(pawn.moveVectors()).isNotEmpty().doesNotContain(new Vector(1, 0));
-    }
-
-    @Test
-    void moveTo() {
-        var pawnToMove = new Pawn(coordinate, Color.WHITE);
-        var destination = mock(Coordinate.class);
-
-        assertThat(pawnToMove.moveTo(destination)).isInstanceOf(Pawn.class).matches(pawn -> pawn.coordinate()
-                .equals(destination));
-    }
-
-    @Test
     void canWhiteDoublePush() {
         when(coordinate.rank()).thenReturn(2);
 

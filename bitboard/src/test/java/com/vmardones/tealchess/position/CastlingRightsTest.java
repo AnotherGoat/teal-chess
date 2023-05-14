@@ -3,15 +3,14 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package com.vmardones.tealchess.game;
+package com.vmardones.tealchess.position;
 
+import static com.vmardones.tealchess.color.Color.BLACK;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.vmardones.tealchess.ExcludeFromNullAway;
-import com.vmardones.tealchess.player.Color;
+import com.vmardones.tealchess.color.Color;
 import org.junit.jupiter.api.Test;
 
-@ExcludeFromNullAway
 final class CastlingRightsTest {
 
     @Test
@@ -33,7 +32,7 @@ final class CastlingRightsTest {
     @Test
     void disableBlack() {
         var rights = new CastlingRights(true, true, true, true);
-        assertThat(rights.disable(Color.BLACK)).isEqualTo(new CastlingRights(true, true, false, false));
+        assertThat(rights.disable(BLACK)).isEqualTo(new CastlingRights(true, true, false, false));
     }
 
     @Test
@@ -45,7 +44,7 @@ final class CastlingRightsTest {
     @Test
     void disableBlackKingSide() {
         var rights = new CastlingRights(true, true, true, true);
-        assertThat(rights.disableKingSide(Color.BLACK)).isEqualTo(new CastlingRights(true, true, false, true));
+        assertThat(rights.disableKingSide(BLACK)).isEqualTo(new CastlingRights(true, true, false, true));
     }
 
     @Test
@@ -57,7 +56,7 @@ final class CastlingRightsTest {
     @Test
     void disableBlackQueenSide() {
         var rights = new CastlingRights(true, true, true, true);
-        assertThat(rights.disableQueenSide(Color.BLACK)).isEqualTo(new CastlingRights(true, true, true, false));
+        assertThat(rights.disableQueenSide(BLACK)).isEqualTo(new CastlingRights(true, true, true, false));
     }
 
     @Test

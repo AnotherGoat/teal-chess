@@ -3,10 +3,10 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package com.vmardones.tealchess.game;
+package com.vmardones.tealchess.position;
 
+import com.vmardones.tealchess.color.Color;
 import com.vmardones.tealchess.parser.fen.Fen;
-import com.vmardones.tealchess.player.Color;
 
 /**
  * Specifies the precondition of what castle moves could be possible, based on what kings and rooks have been moved.

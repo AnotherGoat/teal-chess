@@ -16,31 +16,14 @@ import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.player.Color;
 import org.eclipse.jdt.annotation.Nullable;
 
-/**
- * The chessboard, composed of 8x8 squares.
- * Each square is associated with a coordinate and can be individually checked.
- * @see <a href="https://www.chessprogramming.org/Chessboard">Chessboard</a>
- * @see <a href="https://www.chessprogramming.org/Squares">Squares</a>
- */
+
 public final class Board implements Unicode {
 
     private final Map<Coordinate, @Nullable Piece> mailbox;
-    private final King whiteKing;
     private final Set<Piece> whitePieces;
-    private final King blackKing;
     private final Set<Piece> blackPieces;
 
-    /**
-     * A special builder intended to be used when players make a move. This can only be used after the
-     * board has been initialized at least once. It keeps the current state of the board and lets you
-     * specify only the differences from the previous position.
-     * Only use this version if none of the kings weren't moved in the previous position.
-     *
-     * @return The next position builder.
-     */
-    public BoardBuilder nextPositionBuilder() {
-        return new BoardBuilder(this, whiteKing, blackKing);
-    }
+
 
     /**
      * A special builder intended to be used when players make a move. This can only be used after the
@@ -57,10 +40,6 @@ public final class Board implements Unicode {
     }
 
     /* Getters */
-
-    public King king(Color color) {
-        return color.isWhite() ? whiteKing : blackKing;
-    }
 
     /**
      * Get a map containing all the pieces in the board.
@@ -102,29 +81,13 @@ public final class Board implements Unicode {
         return pieces.stream().filter(piece -> piece.color() == color).collect(toUnmodifiableSet());
     }
 
-    /**
-     * Responsible for building the board, a complex object.
-     */
     public static class BoardBuilder {
-
-        private final Map<Coordinate, Piece> pieces = new HashMap<>();
-        private final King whiteKing;
-        private final King blackKing;
-
         private BoardBuilder(Board board, King whiteKing, King blackKing) {
             this(whiteKing, blackKing);
 
             for (var color : Color.values()) {
                 board.pieces(color).forEach(this::with);
             }
-        }
-
-        private BoardBuilder(King whiteKing, King blackKing) {
-            this.whiteKing = whiteKing;
-            with(whiteKing);
-
-            this.blackKing = blackKing;
-            with(blackKing);
         }
     }
 }

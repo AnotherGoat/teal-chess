@@ -5,6 +5,7 @@
 
 package com.vmardones.tealchess.coordinate;
 
+// TODO: Mention little-endian rank-file mapping
 /**
  * A coordinate is one of the 64 places where a square can be found. It's usually identified by
  * the chess algebraic notation, which consists of the coordinate's rank (a-h) folowed by its file (1-8).

@@ -13,9 +13,6 @@ import com.vmardones.tealchess.player.Color;
 
 public final class Pawn extends Piece {
 
-    private static final List<Vector> WHITE_MOVES = List.of(new Vector(0, 1));
-    private static final List<Vector> BLACK_MOVES = List.of(new Vector(0, -1));
-
     public Pawn(Coordinate coordinate, Color color) {
         super(PieceType.PAWN, coordinate, color, color.isWhite() ? WHITE_MOVES : BLACK_MOVES, false);
     }
