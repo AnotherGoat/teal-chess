@@ -126,31 +126,6 @@ public final class Board implements Unicode {
         return result.toString();
     }
 
-    /* equals, hashCode and toString */
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        var other = (Board) o;
-        return mailbox.equals(other.mailbox)
-                && whiteKing.equals(other.whiteKing)
-                && whitePieces.equals(other.whitePieces)
-                && blackKing.equals(other.blackKing)
-                && blackPieces.equals(other.blackPieces);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(mailbox, whitePieces, whiteKing, blackPieces, blackKing);
-    }
-
     private Board(BoardBuilder builder) {
         mailbox = fillEmptySquares(builder.pieces);
 

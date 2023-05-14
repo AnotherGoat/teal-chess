@@ -12,6 +12,7 @@ import java.util.stream.IntStream;
 import com.vmardones.tealchess.color.Color;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.piece.PieceType;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 final class BoardTest {
@@ -19,6 +20,11 @@ final class BoardTest {
     Board initialBoard = Board.INITIAL_BOARD;
     Color white = Color.WHITE;
     Color black = Color.BLACK;
+
+    @Test
+    void equalsContract() {
+        EqualsVerifier.forClass(Board.class).verify();
+    }
 
     @Test
     void initialWhitePawns() {

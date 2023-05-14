@@ -92,13 +92,6 @@ final class BoardTest {
     }
 
     @Test
-    void equalsContract() {
-        EqualsVerifier.forClass(Board.class)
-                .withNonnullFields("mailbox", "whiteKing", "whitePieces", "blackKing", "blackPieces")
-                .verify();
-    }
-
-    @Test
     void addPiece() {
         var piece = new Queen(Coordinate.of("d7"), Color.WHITE);
         var board = builder.with(piece).build();

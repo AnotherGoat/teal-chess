@@ -162,7 +162,7 @@ public final class FenParser {
                 if (Character.isDigit(symbol)) {
                     fileCounter += Character.digit(symbol, 10);
                 } else {
-                    var rankIndex = Board.SIDE_LENGTH - i;
+                    var rankIndex = AlgebraicConverter.rankToIndex(Board.SIDE_LENGTH - i);
                     var coordinate = AlgebraicConverter.toCoordinate(fileCounter, rankIndex);
 
                     pieces.add(Piece.fromSymbol(String.valueOf(symbol), coordinate));

@@ -5,7 +5,9 @@
 
 package com.vmardones.tealchess.board;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import com.vmardones.tealchess.color.Color;
 import com.vmardones.tealchess.piece.Piece;
@@ -130,6 +132,27 @@ public final class Board {
     private Board(BoardBuilder builder) {
         bitboards = builder.bitboards;
         mailbox = builder.mailbox;
+    }
+
+    /* equals and hashCode */
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        var other = (Board) o;
+        return Arrays.deepEquals(bitboards, other.bitboards) && Arrays.equals(mailbox, other.mailbox);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Arrays.deepHashCode(bitboards), Arrays.hashCode(mailbox));
     }
 
     public static class BoardBuilder {
