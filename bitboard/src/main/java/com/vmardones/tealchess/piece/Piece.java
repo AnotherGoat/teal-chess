@@ -8,8 +8,9 @@ package com.vmardones.tealchess.piece;
 import java.util.Locale;
 
 import com.vmardones.tealchess.color.Color;
+import com.vmardones.tealchess.parser.Unicode;
 
-public record Piece(PieceType type, Color color, int coordinate) {
+public record Piece(PieceType type, Color color, int coordinate) implements Unicode {
 
     /* Static factory methods */
 
@@ -53,5 +54,17 @@ public record Piece(PieceType type, Color color, int coordinate) {
 
     public boolean isKing() {
         return type == PieceType.KING;
+    }
+
+    @Override
+    public String unicode() {
+        return color.isWhite() ? type.whiteUnicode() : type.blackUnicode();
+    }
+
+    /* toString */
+
+    @Override
+    public String toString() {
+        return unicode() + coordinate;
     }
 }

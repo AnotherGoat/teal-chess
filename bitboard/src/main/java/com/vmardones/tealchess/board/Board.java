@@ -10,11 +10,13 @@ import java.util.List;
 import java.util.Objects;
 
 import com.vmardones.tealchess.color.Color;
+import com.vmardones.tealchess.coordinate.Coordinate;
+import com.vmardones.tealchess.parser.Unicode;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.piece.PieceType;
 import org.eclipse.jdt.annotation.Nullable;
 
-public final class Board {
+public final class Board implements Unicode {
 
     /** The chessboard is a square grid composed of squares. This is the number of squares per side. */
     public static final int SIDE_LENGTH = 8;
@@ -73,6 +75,36 @@ public final class Board {
         return pieceAt(coordinate) == null;
     }
 
+    /**
+     * Find the color of the square at a specific coordinate.
+     * Mostly used to draw the board.
+     * @param coordinate The coordinate of the square.
+     * @return The color of the square.
+     */
+    public Color colorOf(int coordinate) {
+        if ((coordinate + coordinate / SIDE_LENGTH) % 2 == 0) {
+            return Color.WHITE;
+        }
+
+        return Color.BLACK;
+    }
+
+    /**
+     * Represent a square using Unicode characters.
+     * This returns the piece's Unicode representation or a white/black square character for empty squares.
+     * @param coordinate The coordinate of the square.
+     * @return Unicode representation of the square.
+     */
+    public String squareAsUnicode(int coordinate) {
+        var piece = pieceAt(coordinate);
+
+        if (piece == null) {
+            return colorOf(coordinate).unicode();
+        }
+
+        return piece.unicode();
+    }
+
     /* Getters */
 
     public long pawns(Color color) {
@@ -99,16 +131,33 @@ public final class Board {
         return bitboards[PieceType.KING.ordinal()][color.ordinal()];
     }
 
-    private static Board createInitialBoard() {
-        var builder = Board.builder(4, 60);
+    @Override
+    public String unicode() {
+        var result = new StringBuilder();
 
-        builder.with(new Piece(PieceType.ROOK, Color.WHITE, 0))
-                .with(new Piece(PieceType.KNIGHT, Color.WHITE, 1))
-                .with(new Piece(PieceType.BISHOP, Color.WHITE, 2))
-                .with(new Piece(PieceType.QUEEN, Color.WHITE, 3))
-                .with(new Piece(PieceType.BISHOP, Color.WHITE, 5))
-                .with(new Piece(PieceType.KNIGHT, Color.WHITE, 6))
-                .with(new Piece(PieceType.ROOK, Color.WHITE, 7));
+        for (int i = 0; i < NUMBER_OF_SQUARES; i++) {
+            result.append(squareAsUnicode(i)).append(" ");
+
+            if ((i + 1) % SIDE_LENGTH == 0) {
+                result.deleteCharAt(result.length() - 1).append("\n");
+            }
+        }
+
+        result.deleteCharAt(result.length() - 1);
+
+        return result.toString();
+    }
+
+    private static Board createInitialBoard() {
+        var builder = Board.builder(Coordinate.e1, Coordinate.e8);
+
+        builder.with(new Piece(PieceType.ROOK, Color.WHITE, Coordinate.a1))
+                .with(new Piece(PieceType.KNIGHT, Color.WHITE, Coordinate.b1))
+                .with(new Piece(PieceType.BISHOP, Color.WHITE, Coordinate.c1))
+                .with(new Piece(PieceType.QUEEN, Color.WHITE, Coordinate.d1))
+                .with(new Piece(PieceType.BISHOP, Color.WHITE, Coordinate.f1))
+                .with(new Piece(PieceType.KNIGHT, Color.WHITE, Coordinate.g1))
+                .with(new Piece(PieceType.ROOK, Color.WHITE, Coordinate.h1));
 
         for (int i = 8; i < 16; i++) {
             builder.with(new Piece(PieceType.PAWN, Color.WHITE, i));
@@ -118,13 +167,13 @@ public final class Board {
             builder.with(new Piece(PieceType.PAWN, Color.BLACK, i));
         }
 
-        builder.with(new Piece(PieceType.ROOK, Color.BLACK, 56))
-                .with(new Piece(PieceType.KNIGHT, Color.BLACK, 57))
-                .with(new Piece(PieceType.BISHOP, Color.BLACK, 58))
-                .with(new Piece(PieceType.QUEEN, Color.BLACK, 59))
-                .with(new Piece(PieceType.BISHOP, Color.BLACK, 61))
-                .with(new Piece(PieceType.KNIGHT, Color.BLACK, 62))
-                .with(new Piece(PieceType.ROOK, Color.BLACK, 63));
+        builder.with(new Piece(PieceType.ROOK, Color.BLACK, Coordinate.a8))
+                .with(new Piece(PieceType.KNIGHT, Color.BLACK, Coordinate.b8))
+                .with(new Piece(PieceType.BISHOP, Color.BLACK, Coordinate.c8))
+                .with(new Piece(PieceType.QUEEN, Color.BLACK, Coordinate.d8))
+                .with(new Piece(PieceType.BISHOP, Color.BLACK, Coordinate.f8))
+                .with(new Piece(PieceType.KNIGHT, Color.BLACK, Coordinate.g8))
+                .with(new Piece(PieceType.ROOK, Color.BLACK, Coordinate.h8));
 
         return builder.build();
     }

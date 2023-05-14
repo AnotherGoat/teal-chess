@@ -5,6 +5,7 @@
 
 package com.vmardones.tealchess.board;
 
+import static com.vmardones.tealchess.coordinate.Coordinate.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.stream.IntStream;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.Test;
 final class BoardTest {
 
     Board initialBoard = Board.INITIAL_BOARD;
+    Board board = Board.builder(4, 60).build();
     Color white = Color.WHITE;
     Color black = Color.BLACK;
 
@@ -118,25 +120,31 @@ final class BoardTest {
 
     @Test
     void initialWhiteBackRank() {
-        assertThat(initialBoard.pieceAt(0)).isEqualTo(new Piece(PieceType.ROOK, white, 0));
-        assertThat(initialBoard.pieceAt(1)).isEqualTo(new Piece(PieceType.KNIGHT, white, 1));
-        assertThat(initialBoard.pieceAt(2)).isEqualTo(new Piece(PieceType.BISHOP, white, 2));
-        assertThat(initialBoard.pieceAt(3)).isEqualTo(new Piece(PieceType.QUEEN, white, 3));
-        assertThat(initialBoard.pieceAt(4)).isEqualTo(new Piece(PieceType.KING, white, 4));
-        assertThat(initialBoard.pieceAt(5)).isEqualTo(new Piece(PieceType.BISHOP, white, 5));
-        assertThat(initialBoard.pieceAt(6)).isEqualTo(new Piece(PieceType.KNIGHT, white, 6));
-        assertThat(initialBoard.pieceAt(7)).isEqualTo(new Piece(PieceType.ROOK, white, 7));
+        assertThat(initialBoard.pieceAt(a1)).isEqualTo(new Piece(PieceType.ROOK, white, a1));
+        assertThat(initialBoard.pieceAt(b1)).isEqualTo(new Piece(PieceType.KNIGHT, white, b1));
+        assertThat(initialBoard.pieceAt(c1)).isEqualTo(new Piece(PieceType.BISHOP, white, c1));
+        assertThat(initialBoard.pieceAt(d1)).isEqualTo(new Piece(PieceType.QUEEN, white, d1));
+        assertThat(initialBoard.pieceAt(e1)).isEqualTo(new Piece(PieceType.KING, white, e1));
+        assertThat(initialBoard.pieceAt(f1)).isEqualTo(new Piece(PieceType.BISHOP, white, f1));
+        assertThat(initialBoard.pieceAt(g1)).isEqualTo(new Piece(PieceType.KNIGHT, white, g1));
+        assertThat(initialBoard.pieceAt(h1)).isEqualTo(new Piece(PieceType.ROOK, white, h1));
     }
 
     @Test
     void initialBlackBackRank() {
-        assertThat(initialBoard.pieceAt(56)).isEqualTo(new Piece(PieceType.ROOK, black, 56));
-        assertThat(initialBoard.pieceAt(57)).isEqualTo(new Piece(PieceType.KNIGHT, black, 57));
-        assertThat(initialBoard.pieceAt(58)).isEqualTo(new Piece(PieceType.BISHOP, black, 58));
-        assertThat(initialBoard.pieceAt(59)).isEqualTo(new Piece(PieceType.QUEEN, black, 59));
-        assertThat(initialBoard.pieceAt(60)).isEqualTo(new Piece(PieceType.KING, black, 60));
-        assertThat(initialBoard.pieceAt(61)).isEqualTo(new Piece(PieceType.BISHOP, black, 61));
-        assertThat(initialBoard.pieceAt(62)).isEqualTo(new Piece(PieceType.KNIGHT, black, 62));
-        assertThat(initialBoard.pieceAt(63)).isEqualTo(new Piece(PieceType.ROOK, black, 63));
+        assertThat(initialBoard.pieceAt(a8)).isEqualTo(new Piece(PieceType.ROOK, black, a8));
+        assertThat(initialBoard.pieceAt(b8)).isEqualTo(new Piece(PieceType.KNIGHT, black, b8));
+        assertThat(initialBoard.pieceAt(c8)).isEqualTo(new Piece(PieceType.BISHOP, black, c8));
+        assertThat(initialBoard.pieceAt(d8)).isEqualTo(new Piece(PieceType.QUEEN, black, d8));
+        assertThat(initialBoard.pieceAt(e8)).isEqualTo(new Piece(PieceType.KING, black, e8));
+        assertThat(initialBoard.pieceAt(f8)).isEqualTo(new Piece(PieceType.BISHOP, black, f8));
+        assertThat(initialBoard.pieceAt(g8)).isEqualTo(new Piece(PieceType.KNIGHT, black, g8));
+        assertThat(initialBoard.pieceAt(h8)).isEqualTo(new Piece(PieceType.ROOK, black, h8));
+    }
+
+    @Test
+    void isEmpty() {
+        assertThat(board.isEmpty(a1)).isTrue();
+        assertThat(board.isEmpty(h8)).isTrue();
     }
 }

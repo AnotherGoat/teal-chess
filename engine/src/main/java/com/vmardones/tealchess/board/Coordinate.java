@@ -12,11 +12,7 @@ import java.util.stream.IntStream;
 import com.vmardones.tealchess.parser.pgn.San;
 import org.eclipse.jdt.annotation.Nullable;
 
-/**
- * A coordinate is one of the 64 places where a square can be found. It's usually identified by
- * the chess algebraic notation, which consists of the coordinate's rank (a-h) folowed by its file
- * (1-8).
- */
+
 public final class Coordinate implements San {
 
     private static final List<Coordinate> COORDINATE_CACHE = fillCoordinateCache();

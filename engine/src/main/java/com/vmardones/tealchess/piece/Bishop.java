@@ -10,10 +10,6 @@ import java.util.List;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.player.Color;
 
-/**
- * The bishop piece. It can move diagonally.
- * @see <a href="https://www.chessprogramming.org/Bishop">Bishop</a>
- */
 public final class Bishop extends Piece {
 
     private static final List<Vector> MOVES =

@@ -10,12 +10,6 @@ import java.util.List;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.player.Color;
 
-/**
- * The king piece. The most important piece in the game, must be defended at all costs. It moves
- * like the queen, but only one space at a time. It also cannot move into a coordinate where it could
- * be captured.
- * @see <a href="https://www.chessprogramming.org/King">King</a>
- */
 public final class King extends Piece {
 
     private static final List<Vector> MOVES = List.of(
@@ -35,10 +29,5 @@ public final class King extends Piece {
     @Override
     public King moveTo(Coordinate destination) {
         return new King(destination, color);
-    }
-
-    @Override
-    public String unicode() {
-        return color.isWhite() ? "♔" : "♚";
     }
 }

@@ -5,17 +5,19 @@
 
 package com.vmardones.tealchess.color;
 
+import com.vmardones.tealchess.parser.Unicode;
 import com.vmardones.tealchess.parser.fen.Fen;
 
 /**
  * Represents a chess piece's or square's color, which can be white or black.
  * @see <a href="https://www.chessprogramming.org/Color">Color</a>
  */
-public enum Color implements Fen {
-    WHITE("w"),
-    BLACK("b");
+public enum Color implements Fen, Unicode {
+    WHITE("w", "□"),
+    BLACK("b", "■");
 
     private final String symbol;
+    private final String unicodeSymbol;
 
     /* Static factory methods */
 
@@ -49,7 +51,13 @@ public enum Color implements Fen {
         return symbol;
     }
 
-    Color(String symbol) {
+    @Override
+    public String unicode() {
+        return unicodeSymbol;
+    }
+
+    Color(String symbol, String unicodeSymbol) {
         this.symbol = symbol;
+        this.unicodeSymbol = unicodeSymbol;
     }
 }

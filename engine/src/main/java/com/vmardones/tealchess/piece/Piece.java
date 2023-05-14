@@ -20,7 +20,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * A chess piece, which players can move in the board.
  * @see <a href="https://www.chessprogramming.org/Pieces">Pieces</a>
  */
-public abstract sealed class Piece implements Fen, San, Unicode permits Bishop, King, Knight, Pawn, Queen, Rook {
+public abstract sealed class Piece implements Fen, San {
 
     protected final PieceType type;
     protected final Coordinate coordinate;
@@ -126,10 +126,7 @@ public abstract sealed class Piece implements Fen, San, Unicode permits Bishop, 
         return Objects.hash(type, coordinate, color, sliding, moveVectors);
     }
 
-    @Override
-    public String toString() {
-        return unicode() + coordinate;
-    }
+
 
     protected Piece(PieceType type, Coordinate coordinate, Color color, List<Vector> moveVectors, boolean sliding) {
         this.type = type;

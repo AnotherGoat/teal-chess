@@ -9,11 +9,6 @@ import java.util.List;
 
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.player.Color;
-
-/**
- * The rook piece. It can move horizontally and vertically.
- * @see <a href="https://www.chessprogramming.org/Rook">Rook</a>
- */
 public final class Rook extends Piece {
 
     private static final List<Vector> MOVES =

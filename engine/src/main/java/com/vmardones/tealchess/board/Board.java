@@ -56,38 +56,6 @@ public final class Board implements Unicode {
         return new BoardBuilder(this, whiteKing, blackKing);
     }
 
-    /**
-     * Represent a square using Unicode characters.
-     * This returns the piece's Unicode representation or a white/black square character for empty squares.
-     * @param coordinate The coordinate of the square.
-     * @return Unicode representation of the square.
-     */
-    public String unicodeSquare(Coordinate coordinate) {
-        var piece = pieceAt(coordinate);
-
-        if (piece == null) {
-            return colorOf(coordinate).isWhite() ? "□" : "■";
-        }
-
-        return piece.unicode();
-    }
-
-    /**
-     * Find the color of the square at a specific coordinate.
-     * Mostly used to draw the board.
-     * @param coordinate The coordinate of the square.
-     * @return The color of the square.
-     */
-    public Color colorOf(Coordinate coordinate) {
-        var index = coordinate.index();
-
-        if ((index + index / SIDE_LENGTH) % 2 == 0) {
-            return Color.WHITE;
-        }
-
-        return Color.BLACK;
-    }
-
     /* Getters */
 
     public King king(Color color) {
@@ -106,24 +74,6 @@ public final class Board implements Unicode {
 
     public Set<Piece> pieces(Color color) {
         return color.isWhite() ? whitePieces : blackPieces;
-    }
-
-    @Override
-    public String unicode() {
-        var result = new StringBuilder();
-
-        for (int i = 0; i < NUMBER_OF_SQUARES; i++) {
-            var coordinate = Coordinate.forIndex(i);
-            result.append(unicodeSquare(coordinate)).append(" ");
-
-            if ((i + 1) % SIDE_LENGTH == 0) {
-                result.deleteCharAt(result.length() - 1).append("\n");
-            }
-        }
-
-        result.deleteCharAt(result.length() - 1);
-
-        return result.toString();
     }
 
     private Board(BoardBuilder builder) {

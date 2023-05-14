@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.color.Color;
 import com.vmardones.tealchess.color.ColorSymbolException;
-import com.vmardones.tealchess.parser.AlgebraicConverter;
+import com.vmardones.tealchess.coordinate.AlgebraicConverter;
 import com.vmardones.tealchess.piece.*;
 import com.vmardones.tealchess.position.Position;
 

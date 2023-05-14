@@ -29,13 +29,7 @@ final class BoardTest {
         builder = Board.builder(whiteKing, blackKing);
     }
 
-    @Test
-    void isEmpty() {
-        var board = builder.build();
 
-        assertThat(board.isEmpty(Coordinate.of("a1"))).isTrue();
-        assertThat(board.isEmpty(Coordinate.of("h8"))).isTrue();
-    }
 
     @Test
     void whitePieceUnicode() {

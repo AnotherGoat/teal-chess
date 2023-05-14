@@ -10,10 +10,7 @@ import java.util.List;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.player.Color;
 
-/**
- * The knight piece. It moves in an L shape.
- * @see <a href="https://www.chessprogramming.org/Knight">Knight</a>
- */
+
 public final class Knight extends Piece {
 
     private static final List<Vector> MOVES = List.of(
@@ -35,8 +32,4 @@ public final class Knight extends Piece {
         return new Knight(destination, color);
     }
 
-    @Override
-    public String unicode() {
-        return color.isWhite() ? "♘" : "♞";
-    }
 }
