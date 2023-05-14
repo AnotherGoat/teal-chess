@@ -12,20 +12,6 @@ import org.junit.jupiter.api.Test;
 @ExcludeFromNullAway
 final class ColorTest {
 
-
-
-
-
-    @Test
-    void whiteOpposite() {
-        assertThat(white.opposite()).isEqualTo(black);
-    }
-
-    @Test
-    void blackOpposite() {
-        assertThat(black.opposite()).isEqualTo(white);
-    }
-
     @Test
     void whiteDirection() {
         assertThat(white.direction()).isPositive().isEqualTo(1);
@@ -45,7 +31,6 @@ final class ColorTest {
     void blackOppositeDirection() {
         assertThat(black.oppositeDirection()).isPositive().isEqualTo(1);
     }
-
 
     @Test
     void asString() {

@@ -48,6 +48,13 @@ public enum Color implements Fen, Unicode {
         return !isWhite();
     }
 
+    public Color opposite() {
+        return switch (this) {
+            case WHITE -> BLACK;
+            case BLACK -> WHITE;
+        };
+    }
+
     @Override
     public String fen() {
         return symbol;

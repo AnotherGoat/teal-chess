@@ -5,7 +5,6 @@
 
 package com.vmardones.tealchess.piece;
 
-import java.util.List;
 import java.util.Locale;
 
 import com.vmardones.tealchess.color.Color;
@@ -33,17 +32,11 @@ public record Piece(PieceType type, Color color, int coordinate) implements Fen,
      */
     public static Piece fromSymbol(String symbol, int coordinate) {
         var color = Character.isUpperCase(symbol.charAt(0)) ? Color.WHITE : Color.BLACK;
-        var upperCaseSymbol = symbol.toUpperCase(Locale.ROOT);
-
+        
         return new Piece(PieceType.fromSymbol(symbol), color, coordinate);
     }
 
     /* Getters */
-
-    // TODO: Invert black pawn's moveOffsets
-    public List<Integer> moveOffsets() {
-        return type.moveOffsets();
-    }
 
     /**
      * Checks whether a piece slides when moving or not.

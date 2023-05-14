@@ -44,6 +44,16 @@ final class ColorTest {
     }
 
     @Test
+    void whiteOpposite() {
+        assertThat(WHITE.opposite()).isEqualTo(BLACK);
+    }
+
+    @Test
+    void blackOpposite() {
+        assertThat(BLACK.opposite()).isEqualTo(WHITE);
+    }
+
+    @Test
     void whiteFen() {
         assertThat(WHITE.fen()).isEqualTo("w");
     }

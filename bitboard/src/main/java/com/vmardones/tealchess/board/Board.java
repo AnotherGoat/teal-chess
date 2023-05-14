@@ -165,6 +165,38 @@ public final class Board implements Unicode {
         return bitboards[KING.ordinal()][color.ordinal()];
     }
 
+    /* Special bitboards */
+
+    public long emptyCoordinates() {
+        return ~(pawns(WHITE)
+                | pawns(BLACK)
+                | knights(WHITE)
+                | knights(BLACK)
+                | bishops(WHITE)
+                | bishops(BLACK)
+                | rooks(WHITE)
+                | rooks(BLACK)
+                | queens(WHITE)
+                | queens(BLACK)
+                | kings(WHITE)
+                | kings(BLACK));
+    }
+
+    public long capturablePieces(Color attacker) {
+        var opposite = attacker.opposite();
+        return pawns(opposite) | kings(opposite) | bishops(opposite) | rooks(opposite) | queens(opposite);
+    }
+
+    public long notCapturablePieces(Color attacker) {
+        var opposite = attacker.opposite();
+        return kings(opposite)
+                | pawns(attacker)
+                | kings(attacker)
+                | bishops(attacker)
+                | rooks(attacker)
+                | queens(attacker);
+    }
+
     @Override
     public String unicode() {
         var result = new StringBuilder();

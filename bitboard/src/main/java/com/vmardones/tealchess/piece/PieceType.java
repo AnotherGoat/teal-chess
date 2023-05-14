@@ -5,8 +5,6 @@
 
 package com.vmardones.tealchess.piece;
 
-import java.util.List;
-
 public enum PieceType {
     /**
      * The pawn piece. It only moves forward (depending on the side) and can eat other pieces
@@ -14,38 +12,37 @@ public enum PieceType {
      * opposite side.
      * @see <a href="https://www.chessprogramming.org/Pawn">Pawn</a>
      */
-    PAWN(1, List.of(8), false, "P", "p", "♙", "♟"),
+    PAWN(1, false, "P", "p", "♙", "♟"),
     /**
      * The knight piece. It moves in an L shape.
      * @see <a href="https://www.chessprogramming.org/Knight">Knight</a>
      */
-    KNIGHT(3, List.of(15, 17, 6, 10, -10, -6, -17, -15), false, "N", "n", "♘", "♞"),
+    KNIGHT(3, false, "N", "n", "♘", "♞"),
     /**
      * The bishop piece. It can move diagonally.
      * @see <a href="https://www.chessprogramming.org/Bishop">Bishop</a>
      */
-    BISHOP(3, List.of(7, 9, -9, -7), true, "B", "b", "♗", "♝"),
+    BISHOP(3, true, "B", "b", "♗", "♝"),
     /**
      * The rook piece. It can move horizontally and vertically.
      * @see <a href="https://www.chessprogramming.org/Rook">Rook</a>
      */
-    ROOK(5, List.of(8, -1, 1, -8), true, "R", "r", "♖", "♜"),
+    ROOK(5, true, "R", "r", "♖", "♜"),
     /**
      * The queen, the strongest piece in the game and the most common promoted piece.
      * It can move horizontally, vertically and diagonally.
      * @see <a href="https://www.chessprogramming.org/Queen">Queen</a>
      */
-    QUEEN(9, List.of(7, 8, 9, -1, 1, -9, -8, -7), true, "Q", "q", "♕", "♛"),
+    QUEEN(9, true, "Q", "q", "♕", "♛"),
     /**
      * The king piece. The most important piece in the game, must be defended at all costs. It moves
      * like the queen, but only one space at a time. It also cannot move into a coordinate where it could
      * be captured.
      * @see <a href="https://www.chessprogramming.org/King">King</a>
      */
-    KING(200, List.of(7, 8, 9, -1, 1, -9, -8, -7), false, "K", "k", "♔", "♚");
+    KING(200, false, "K", "k", "♔", "♚");
 
     private final int value;
-    private final List<Integer> moveOffsets;
     private final boolean sliding;
     private final String whiteFen;
     private final String blackFen;
@@ -65,10 +62,6 @@ public enum PieceType {
     }
 
     /* Getters */
-
-    List<Integer> moveOffsets() {
-        return moveOffsets;
-    }
 
     boolean sliding() {
         return sliding;
@@ -90,16 +83,8 @@ public enum PieceType {
         return blackUnicode;
     }
 
-    PieceType(
-            int value,
-            List<Integer> moveOffsets,
-            boolean sliding,
-            String whiteFen,
-            String blackFen,
-            String whiteUnicode,
-            String blackUnicode) {
+    PieceType(int value, boolean sliding, String whiteFen, String blackFen, String whiteUnicode, String blackUnicode) {
         this.value = value;
-        this.moveOffsets = moveOffsets;
         this.sliding = sliding;
         this.whiteFen = whiteFen;
         this.blackFen = blackFen;

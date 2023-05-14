@@ -21,17 +21,6 @@ public enum Color implements Fen {
         return direction;
     }
 
-    public Color opposite() {
-        return switch (this) {
-            case WHITE -> BLACK;
-            case BLACK -> WHITE;
-        };
-    }
-
-    public int oppositeDirection() {
-        return opposite().direction();
-    }
-
     /* toString */
 
     @Override
