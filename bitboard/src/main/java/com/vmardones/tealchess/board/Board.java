@@ -7,17 +7,28 @@ package com.vmardones.tealchess.board;
 
 import java.util.List;
 
+import com.vmardones.tealchess.color.Color;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.piece.PieceType;
-import com.vmardones.tealchess.side.Side;
 import org.eclipse.jdt.annotation.Nullable;
 
 public final class Board {
 
+    /** The chessboard is a square grid composed of squares. This is the number of squares per side. */
+    public static final int SIDE_LENGTH = 8;
+
     /**
      * The number of squares in the game board.
      */
-    public static final int NUMBER_OF_SQUARES = 64;
+    public static final int NUMBER_OF_SQUARES = SIDE_LENGTH * SIDE_LENGTH;
+
+    /**
+     * The initial position of the chess pieces in the board, which consists of a rank filled with 8 pawns on each side with a
+     * formation of 8 major pieces behind.
+     * Always used when starting a new game.
+     * @see <a href="https://www.chessprogramming.org/Initial_Position">Initial Position</a>
+     */
+    public static final Board INITIAL_BOARD = createInitialBoard();
 
     // Arrays of bitboards: https://www.chessprogramming.org/Bitboard_Board-Definition#Array
     private final long[][] bitboards;
@@ -30,12 +41,12 @@ public final class Board {
      * and black kings must be supplied for the board to be legal. This builder is intended for
      * creating a new board from scratch.
      *
-     * @param whiteKing The white player's king coordinate.
-     * @param blackKing The black player's king coordinate.
+     * @param whiteKingCoordinate The white player's king coordinate.
+     * @param blackKingCoordinate The black player's king coordinate.
      * @return The board builder.
      */
-    public static BoardBuilder builder(int whiteKing, int blackKing) {
-        return new BoardBuilder(whiteKing, blackKing);
+    public static BoardBuilder builder(int whiteKingCoordinate, int blackKingCoordinate) {
+        return new BoardBuilder(whiteKingCoordinate, blackKingCoordinate);
     }
 
     /* Checking the board */
@@ -62,38 +73,68 @@ public final class Board {
 
     /* Getters */
 
-    public long pawns(Side side) {
-        return bitboards[PieceType.PAWN.ordinal()][side.ordinal()];
+    public long pawns(Color color) {
+        return bitboards[PieceType.PAWN.ordinal()][color.ordinal()];
     }
 
-    public long knights(Side side) {
-        return bitboards[PieceType.KNIGHT.ordinal()][side.ordinal()];
+    public long knights(Color color) {
+        return bitboards[PieceType.KNIGHT.ordinal()][color.ordinal()];
     }
 
-    public long bishops(Side side) {
-        return bitboards[PieceType.BISHOP.ordinal()][side.ordinal()];
+    public long bishops(Color color) {
+        return bitboards[PieceType.BISHOP.ordinal()][color.ordinal()];
     }
 
-    public long rooks(Side side) {
-        return bitboards[PieceType.ROOK.ordinal()][side.ordinal()];
+    public long rooks(Color color) {
+        return bitboards[PieceType.ROOK.ordinal()][color.ordinal()];
     }
 
-    public long queens(Side side) {
-        return bitboards[PieceType.QUEEN.ordinal()][side.ordinal()];
+    public long queens(Color color) {
+        return bitboards[PieceType.QUEEN.ordinal()][color.ordinal()];
     }
 
-    public long kings(Side side) {
-        return bitboards[PieceType.KING.ordinal()][side.ordinal()];
+    public long kings(Color color) {
+        return bitboards[PieceType.KING.ordinal()][color.ordinal()];
     }
 
-    private Board(BoardBuilder boardBuilder) {
-        bitboards = new long[][] {};
-        mailbox = boardBuilder.mailbox;
+    private static Board createInitialBoard() {
+        var builder = Board.builder(4, 60);
+
+        builder.with(new Piece(PieceType.ROOK, Color.WHITE, 0))
+                .with(new Piece(PieceType.KNIGHT, Color.WHITE, 1))
+                .with(new Piece(PieceType.BISHOP, Color.WHITE, 2))
+                .with(new Piece(PieceType.QUEEN, Color.WHITE, 3))
+                .with(new Piece(PieceType.BISHOP, Color.WHITE, 5))
+                .with(new Piece(PieceType.KNIGHT, Color.WHITE, 6))
+                .with(new Piece(PieceType.ROOK, Color.WHITE, 7));
+
+        for (int i = 8; i < 16; i++) {
+            builder.with(new Piece(PieceType.PAWN, Color.WHITE, i));
+        }
+
+        for (int i = 48; i < 56; i++) {
+            builder.with(new Piece(PieceType.PAWN, Color.BLACK, i));
+        }
+
+        builder.with(new Piece(PieceType.ROOK, Color.BLACK, 56))
+                .with(new Piece(PieceType.KNIGHT, Color.BLACK, 57))
+                .with(new Piece(PieceType.BISHOP, Color.BLACK, 58))
+                .with(new Piece(PieceType.QUEEN, Color.BLACK, 59))
+                .with(new Piece(PieceType.BISHOP, Color.BLACK, 61))
+                .with(new Piece(PieceType.KNIGHT, Color.BLACK, 62))
+                .with(new Piece(PieceType.ROOK, Color.BLACK, 63));
+
+        return builder.build();
+    }
+
+    private Board(BoardBuilder builder) {
+        bitboards = builder.bitboards;
+        mailbox = builder.mailbox;
     }
 
     public static class BoardBuilder {
 
-        private final long[][] bitboards = new long[PieceType.values().length][Side.values().length];
+        private final long[][] bitboards = new long[PieceType.values().length][Color.values().length];
         private final @Nullable Piece[] mailbox = new Piece[NUMBER_OF_SQUARES];
         private final Piece whiteKing;
         private final Piece blackKing;
@@ -112,10 +153,9 @@ public final class Board {
             }
 
             var typeIndex = piece.type().ordinal();
-            var sideIndex = piece.side().ordinal();
+            var sideIndex = piece.color().ordinal();
 
             var bitboard = bitboards[typeIndex][sideIndex];
-
             var coordinate = piece.coordinate();
 
             bitboards[typeIndex][sideIndex] = BitboardManipulator.set(bitboard, coordinate);
@@ -148,7 +188,7 @@ public final class Board {
             }
 
             var typeIndex = piece.type().ordinal();
-            var sideIndex = piece.side().ordinal();
+            var sideIndex = piece.color().ordinal();
 
             var bitboard = bitboards[typeIndex][sideIndex];
 
@@ -169,8 +209,8 @@ public final class Board {
         }
 
         private BoardBuilder(int whiteKingCoordinate, int blackKingCoordinate) {
-            whiteKing = new Piece(PieceType.KING, Side.WHITE, whiteKingCoordinate);
-            blackKing = new Piece(PieceType.KING, Side.BLACK, blackKingCoordinate);
+            whiteKing = new Piece(PieceType.KING, Color.WHITE, whiteKingCoordinate);
+            blackKing = new Piece(PieceType.KING, Color.BLACK, blackKingCoordinate);
         }
     }
 }

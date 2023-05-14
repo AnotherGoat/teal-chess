@@ -28,32 +28,6 @@ public abstract sealed class Piece implements Fen, San, Unicode permits Bishop, 
     protected final boolean sliding;
     protected final List<Vector> moveVectors;
 
-    /* Alternate piece construction */
-
-    /**
-     * Alternative method to build a piece, useful for parsing.
-     * Only valid symbols are "PNBRQK" for white pieces and "pnbrqk" for black pieces;
-     * The color is inferred from the symbol being uppercase (white) or lowercase (black).
-     *
-     * @param symbol The piece symbol.
-     * @param coordinate The coordinate to put the piece in.
-     * @return The piece with the asked symbol.
-     */
-    public static Piece fromSymbol(String symbol, Coordinate coordinate) {
-        var color = Character.isUpperCase(symbol.charAt(0)) ? Color.WHITE : Color.BLACK;
-        var upperCaseSymbol = symbol.toUpperCase(Locale.ROOT);
-
-        return switch (upperCaseSymbol) {
-            case "P" -> new Pawn(coordinate, color);
-            case "N" -> new Knight(coordinate, color);
-            case "B" -> new Bishop(coordinate, color);
-            case "R" -> new Rook(coordinate, color);
-            case "Q" -> new Queen(coordinate, color);
-            case "K" -> new King(coordinate, color);
-            default -> throw new PieceSymbolException(symbol);
-        };
-    }
-
     /* Getters */
 
     public Coordinate coordinate() {
@@ -101,32 +75,6 @@ public abstract sealed class Piece implements Fen, San, Unicode permits Bishop, 
     @Override
     public String san() {
         return isPawn() ? "" : type.firstChar();
-    }
-
-    /* Checking piece types */
-
-    public boolean isPawn() {
-        return type == PieceType.PAWN;
-    }
-
-    public boolean isKnight() {
-        return type == PieceType.KNIGHT;
-    }
-
-    public boolean isBishop() {
-        return type == PieceType.BISHOP;
-    }
-
-    public boolean isRook() {
-        return type == PieceType.ROOK;
-    }
-
-    public boolean isQueen() {
-        return type == PieceType.QUEEN;
-    }
-
-    public boolean isKing() {
-        return type == PieceType.KING;
     }
 
     /* Comparing pieces */

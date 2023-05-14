@@ -3,19 +3,19 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package com.vmardones.tealchess.board;
+package com.vmardones.tealchess.parser;
 
 import java.io.Serial;
 
 /**
  * Exception thrown when incorrect algebraic notation is used.
  */
-public final class AlgebraicNotationException extends RuntimeException {
+public final class AlgebraicConverterException extends RuntimeException {
 
     @Serial
     private static final long serialVersionUID = -8460280404931066099L;
 
-    AlgebraicNotationException(String message) {
+    AlgebraicConverterException(String message) {
         super(message);
     }
 }

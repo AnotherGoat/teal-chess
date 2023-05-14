@@ -3,7 +3,7 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package com.vmardones.tealchess.player;
+package com.vmardones.tealchess.color;
 
 import java.io.Serial;
 

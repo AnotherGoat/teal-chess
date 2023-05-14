@@ -11,5 +11,17 @@ public enum PieceType {
     BISHOP,
     ROOK,
     QUEEN,
-    KING
+    KING;
+
+    public static PieceType fromSymbol(String symbol) {
+        return switch (symbol) {
+            case "P", "p" -> PAWN;
+            case "N", "n" -> KNIGHT;
+            case "B", "b" -> BISHOP;
+            case "R", "r" -> ROOK;
+            case "Q", "q" -> QUEEN;
+            case "K", "k" -> KING;
+            default -> throw new PieceSymbolException(symbol);
+        };
+    }
 }
