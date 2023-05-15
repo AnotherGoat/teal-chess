@@ -22,25 +22,8 @@ import org.eclipse.jdt.annotation.Nullable;
 
 final class PawnMoveGenerator extends MoveGenerator {
 
-    private final Board board;
-    private final Color sideToMove;
-    private final List<Pawn> pawns;
-    private final @Nullable Coordinate enPassantTarget;
-
-    PawnMoveGenerator(Position position) {
-        super(position);
-        board = position.board();
-        sideToMove = position.sideToMove();
-        pawns = board.pieces(sideToMove).stream()
-                .filter(Piece::isPawn)
-                .map(Pawn.class::cast)
-                .toList();
-        enPassantTarget = position.enPassantTarget();
-    }
-
     @Override
     Stream<Move> generate() {
-        var moves = Stream.<@Nullable Move>builder();
 
         for (var pawn : pawns) {
             generatePushes(pawn).forEach(moves::add);
@@ -50,12 +33,6 @@ final class PawnMoveGenerator extends MoveGenerator {
             moves.add(generateEnPassant(pawn, true));
             moves.add(generateEnPassant(pawn, false));
         }
-
-        return moves.build().filter(Objects::nonNull);
-    }
-
-    private Stream<Move> generatePushes(Pawn pawn) {
-        return new DestinationFinder(board).calculateDestinations(pawn).flatMap(square -> createPushes(pawn, square));
     }
 
     private Stream<Move> createPushes(Pawn pawn, Coordinate destination) {

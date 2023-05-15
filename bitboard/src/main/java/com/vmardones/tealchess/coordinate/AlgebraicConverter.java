@@ -71,11 +71,19 @@ public final class AlgebraicConverter {
 
     public static String toAlgebraic(int coordinate) {
 
-        var fileIndex = coordinate % SIDE_LENGTH;
+        var fileIndex = fileIndex(coordinate);
         var fileChar = FILES.charAt(fileIndex);
-        var rank = (coordinate - fileIndex) / SIDE_LENGTH + 1;
+        var rank = rankFromIndex(rankIndex(coordinate));
 
         return String.valueOf(fileChar) + rank;
+    }
+
+    public static int fileIndex(int coordinate) {
+        return coordinate % SIDE_LENGTH;
+    }
+
+    public static int rankIndex(int coordinate) {
+        return (coordinate - fileIndex(coordinate)) / SIDE_LENGTH;
     }
 
     private static int calculateCoordinate(String algebraicNotation) {

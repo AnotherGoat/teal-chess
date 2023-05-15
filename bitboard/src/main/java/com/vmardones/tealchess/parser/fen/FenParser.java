@@ -56,7 +56,7 @@ public final class FenParser {
     }
 
     private static boolean isPrintableAscii(String text) {
-        return text.chars().allMatch(character -> character >= 0x20 && character < 0x7F);
+        return text.chars().allMatch(character -> character >= 0x20 && character < 0x7f);
     }
 
     private static List<String> parseRanks(String data) {

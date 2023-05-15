@@ -5,6 +5,8 @@
 
 package com.vmardones.tealchess.color;
 
+import java.util.Locale;
+
 import com.vmardones.tealchess.parser.Unicode;
 import com.vmardones.tealchess.parser.fen.Fen;
 
@@ -63,6 +65,11 @@ public enum Color implements Fen, Unicode {
     @Override
     public String unicode() {
         return unicodeSymbol;
+    }
+
+    @Override
+    public String toString() {
+        return name().charAt(0) + name().substring(1).toLowerCase(Locale.ROOT);
     }
 
     Color(String symbol, String unicodeSymbol) {

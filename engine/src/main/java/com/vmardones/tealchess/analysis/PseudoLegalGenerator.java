@@ -22,7 +22,6 @@ final class PseudoLegalGenerator extends MoveGenerator {
 
         new NormalGenerator(position).generate().forEach(builder::add);
         new CaptureGenerator(position).generate().forEach(builder::add);
-        new PawnMoveGenerator(position).generate().forEach(builder::add);
         new CastleGenerator(position).generate().forEach(builder::add);
 
         return builder.build();

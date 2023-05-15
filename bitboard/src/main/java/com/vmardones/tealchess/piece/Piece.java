@@ -5,8 +5,6 @@
 
 package com.vmardones.tealchess.piece;
 
-import java.util.Locale;
-
 import com.vmardones.tealchess.color.Color;
 import com.vmardones.tealchess.parser.Unicode;
 import com.vmardones.tealchess.parser.fen.Fen;
@@ -32,7 +30,7 @@ public record Piece(PieceType type, Color color, int coordinate) implements Fen,
      */
     public static Piece fromSymbol(String symbol, int coordinate) {
         var color = Character.isUpperCase(symbol.charAt(0)) ? Color.WHITE : Color.BLACK;
-        
+
         return new Piece(PieceType.fromSymbol(symbol), color, coordinate);
     }
 

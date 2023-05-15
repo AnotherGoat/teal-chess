@@ -5,21 +5,24 @@
 
 package com.vmardones.tealchess.generator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.position.Position;
 
-final class KnightMoveGenerator extends MoveGenerator {
+public final class PseudoLegalGenerator extends MoveGenerator {
 
-    private static final List<Integer> MOVE_OFFSETS = List.of(15, 17, 6, 10, -10, -6, -17, -15);
-
-    KnightMoveGenerator(Position position) {
+    public PseudoLegalGenerator(Position position) {
         super(position);
     }
 
     @Override
     public List<Move> generate() {
-        return null;
+        var moves = new ArrayList<Move>();
+
+        moves.addAll(new PawnMoveGenerator(position).generate());
+
+        return moves;
     }
 }

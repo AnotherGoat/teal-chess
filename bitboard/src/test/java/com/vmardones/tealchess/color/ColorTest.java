@@ -72,4 +72,10 @@ final class ColorTest {
     void blackUnicode() {
         assertThat(BLACK.unicode()).isEqualTo("■");
     }
+
+    @Test
+    void asString() {
+        assertThat(WHITE).hasToString("White");
+        assertThat(BLACK).hasToString("Black");
+    }
 }

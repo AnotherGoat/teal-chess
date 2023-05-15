@@ -5,4 +5,11 @@
 
 package com.vmardones.tealchess.move;
 
-public record Move(int source, int destination) {}
+import com.vmardones.tealchess.piece.PromotionChoice;
+import org.eclipse.jdt.annotation.Nullable;
+
+public record Move(MoveType type, int source, int destination, @Nullable PromotionChoice choice) {
+    public Move(MoveType type, int source, int destination) {
+        this(type, source, destination, null);
+    }
+}

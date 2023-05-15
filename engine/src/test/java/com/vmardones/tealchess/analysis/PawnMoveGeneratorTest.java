@@ -18,33 +18,6 @@ import org.junit.jupiter.api.Test;
 
 @ExcludeFromNullAway
 final class PawnMoveGeneratorTest {
-
-    @Test
-    void whitePawnPushes() {
-        var position = FenParser.parse("4k3/8/8/8/6p1/1P4P1/8/4K3 w - - 0 1");
-        var generator = new PawnMoveGenerator(position);
-
-        var board = position.board();
-        var leftPawn = board.pieceAt(Coordinate.of("b3"));
-
-        var expectedMove = Move.normal(leftPawn, Coordinate.of("b4"));
-
-        assertThat(generator.generate()).hasSize(1).containsOnlyOnce(expectedMove);
-    }
-
-    @Test
-    void blackPawnPushes() {
-        var position = FenParser.parse("4k3/8/1p4p1/6P1/8/8/8/4K3 b - - 0 1");
-        var generator = new PawnMoveGenerator(position);
-
-        var board = position.board();
-        var leftPawn = board.pieceAt(Coordinate.of("b6"));
-
-        var expectedMove = Move.normal(leftPawn, Coordinate.of("b5"));
-
-        assertThat(generator.generate()).hasSize(1).containsOnlyOnce(expectedMove);
-    }
-
     @Test
     void whiteDoublePushes() {
         var position = FenParser.parse("4k3/8/8/8/4Q1n1/2N5/P1P1P1P1/4K3 w - - 0 1");

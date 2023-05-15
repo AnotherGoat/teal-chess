@@ -42,7 +42,7 @@ public final class Board implements Unicode {
      */
     public static final Board INITIAL_BOARD = createInitialBoard();
 
-    private static final long LIGHT_SQUARES = 0x55AA55AA55AA55AAL;
+    private static final long LIGHT_SQUARES = 0x55aa55aa55aa55aaL;
 
     // Arrays of bitboards: https://www.chessprogramming.org/Bitboard_Board-Definition#Array
     private final long[][] bitboards;
@@ -137,6 +137,7 @@ public final class Board implements Unicode {
         return color.isWhite() ? whiteKing : blackKing;
     }
 
+    // TODO: Generate the mailbox lazily, when this method is called for the first time
     public @Nullable Piece[] mailbox() {
         return mailbox.clone();
     }
