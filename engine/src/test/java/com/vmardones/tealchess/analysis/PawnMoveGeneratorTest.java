@@ -18,72 +18,7 @@ import org.junit.jupiter.api.Test;
 
 @ExcludeFromNullAway
 final class PawnMoveGeneratorTest {
-    @Test
-    void whiteDoublePushes() {
-        var position = FenParser.parse("4k3/8/8/8/4Q1n1/2N5/P1P1P1P1/4K3 w - - 0 1");
-        var generator = new PawnMoveGenerator(position);
 
-        var board = position.board();
-        var jumper = (Pawn) board.pieceAt(Coordinate.of("a2"));
-
-        var expectedMove = Move.doublePush(jumper, Coordinate.of("a4"));
-
-        assertThat(generator.generate())
-                .hasSize(4)
-                .containsOnlyOnce(expectedMove)
-                .satisfiesOnlyOnce(move -> assertThat(move.type()).isEqualTo(MoveType.DOUBLE_PUSH));
-    }
-
-    @Test
-    void blackDoublePushes() {
-        var position = FenParser.parse("4k3/p1p1p1p1/2n5/4q1N1/8/8/8/4K3 b - - 0 1");
-        var generator = new PawnMoveGenerator(position);
-
-        var board = position.board();
-        var jumper = (Pawn) board.pieceAt(Coordinate.of("a7"));
-
-        var expectedMove = Move.doublePush(jumper, Coordinate.of("a5"));
-
-        assertThat(generator.generate())
-                .hasSize(4)
-                .containsOnlyOnce(expectedMove)
-                .satisfiesOnlyOnce(move -> assertThat(move.type()).isEqualTo(MoveType.DOUBLE_PUSH));
-    }
-
-    @Test
-    void blockedDoublePush() {}
-
-    @Test
-    void whitePawnCaptures() {
-        var position = FenParser.parse("4k3/8/8/1npn4/1bPr4/8/8/4K3 w - - 0 1");
-        var generator = new PawnMoveGenerator(position);
-
-        var board = position.board();
-        var pawn = board.pieceAt(Coordinate.of("c4"));
-
-        var expectedCaptures = new Move[] {
-            Move.capture(pawn, board.pieceAt(Coordinate.of("b5"))),
-            Move.capture(pawn, board.pieceAt(Coordinate.of("d5")))
-        };
-
-        assertThat(generator.generate()).hasSize(2).containsOnlyOnce(expectedCaptures);
-    }
-
-    @Test
-    void blackPawnCaptures() {
-        var position = FenParser.parse("4k3/8/8/1BpR4/1NPN4/8/8/4K3 b - - 0 1");
-        var generator = new PawnMoveGenerator(position);
-
-        var board = position.board();
-        var pawn = board.pieceAt(Coordinate.of("c5"));
-
-        var expectedCaptures = new Move[] {
-            Move.capture(pawn, board.pieceAt(Coordinate.of("b4"))),
-            Move.capture(pawn, board.pieceAt(Coordinate.of("d4")))
-        };
-
-        assertThat(generator.generate()).hasSize(2).containsOnlyOnce(expectedCaptures);
-    }
 
     @Test
     void whiteEnPassantMoves() {
@@ -139,32 +74,5 @@ final class PawnMoveGeneratorTest {
         assertThat(generator.generate()).containsOnlyOnce(expectedMoves).doesNotContain(unexpectedMoves);
     }
 
-    @Test
-    void whitePromotions() {
-        var position = FenParser.parse("4k2b/6P1/8/8/8/8/8/4K3 w - - 0 1");
-        var generator = new PawnMoveGenerator(position);
 
-        assertThat(generator.generate()).hasSize(8).allMatch(move -> move.promotionChoice() != null);
-    }
-
-    @Test
-    void blackPromotions() {
-        var position = FenParser.parse("4k3/8/8/8/8/8/6p1/4K2B b - - 0 1");
-        var generator = new PawnMoveGenerator(position);
-
-        assertThat(generator.generate()).hasSize(8).allMatch(move -> move.promotionChoice() != null);
-    }
-
-    @Test
-    void allChoicesAvailable() {
-        var position = FenParser.parse("4k3/8/8/8/8/8/6p1/4K3 b - - 0 1");
-        var generator = new PawnMoveGenerator(position);
-
-        assertThat(generator.generate())
-                .hasSize(4)
-                .anyMatch(move -> move.promotionChoice() == PromotionChoice.KNIGHT)
-                .anyMatch(move -> move.promotionChoice() == PromotionChoice.BISHOP)
-                .anyMatch(move -> move.promotionChoice() == PromotionChoice.ROOK)
-                .anyMatch(move -> move.promotionChoice() == PromotionChoice.QUEEN);
-    }
 }

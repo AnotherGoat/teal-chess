@@ -26,73 +26,9 @@ final class PawnMoveGenerator extends MoveGenerator {
     Stream<Move> generate() {
 
         for (var pawn : pawns) {
-            generatePushes(pawn).forEach(moves::add);
-            moves.add(generateDoublePush(pawn));
-            generateCaptures(pawn, true).forEach(moves::add);
-            generateCaptures(pawn, false).forEach(moves::add);
             moves.add(generateEnPassant(pawn, true));
             moves.add(generateEnPassant(pawn, false));
         }
-    }
-
-    private Stream<Move> createPushes(Pawn pawn, Coordinate destination) {
-
-        var destinationPiece = board.pieceAt(destination);
-
-        if (destinationPiece != null) {
-            return Stream.empty();
-        }
-
-        if (pawn.canBePromoted()) {
-            return Arrays.stream(PromotionChoice.values())
-                    .map(choice -> Move.normalPromotion(pawn, destination, choice));
-        }
-
-        return Stream.of(Move.normal(pawn, destination));
-    }
-
-    private @Nullable Move generateDoublePush(Pawn pawn) {
-        if (!pawn.canDoublePush()) {
-            return null;
-        }
-
-        var forward = pawn.coordinate().up(sideToMove.direction());
-
-        if (board.pieceAt(forward) != null) {
-            return null;
-        }
-
-        var destination = forward.up(sideToMove.direction());
-
-        if (board.pieceAt(destination) != null) {
-            return null;
-        }
-
-        return Move.doublePush(pawn, destination);
-    }
-
-    private Stream<Move> generateCaptures(Pawn pawn, boolean leftSide) {
-
-        var direction = leftSide ? -1 : 1;
-
-        var destination = pawn.coordinate().toOrNull(direction, pawn.color().direction());
-
-        if (destination == null) {
-            return Stream.empty();
-        }
-
-        var destinationPiece = board.pieceAt(destination);
-
-        if (destinationPiece == null || pawn.isAllyOf(destinationPiece)) {
-            return Stream.empty();
-        }
-
-        if (pawn.canBePromoted()) {
-            return Arrays.stream(PromotionChoice.values())
-                    .map(choice -> Move.capturePromotion(pawn, destinationPiece, choice));
-        }
-
-        return Stream.of(Move.capture(pawn, destinationPiece));
     }
 
     private @Nullable Move generateEnPassant(Pawn pawn, boolean leftSide) {

@@ -185,17 +185,18 @@ public final class Board implements Unicode {
 
     public long capturablePieces(Color attacker) {
         var opposite = attacker.opposite();
-        return pawns(opposite) | kings(opposite) | bishops(opposite) | rooks(opposite) | queens(opposite);
+        return pawns(opposite) | knights(opposite) | bishops(opposite) | rooks(opposite) | queens(opposite);
     }
 
     public long notCapturablePieces(Color attacker) {
         var opposite = attacker.opposite();
-        return kings(opposite)
-                | pawns(attacker)
-                | kings(attacker)
+        return pawns(attacker)
+                | knights(attacker)
                 | bishops(attacker)
                 | rooks(attacker)
-                | queens(attacker);
+                | queens(attacker)
+                | kings(attacker)
+                | kings(opposite);
     }
 
     @Override

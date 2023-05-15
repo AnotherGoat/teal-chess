@@ -83,7 +83,7 @@ public final class AlgebraicConverter {
     }
 
     public static int rankIndex(int coordinate) {
-        return (coordinate - fileIndex(coordinate)) / SIDE_LENGTH;
+        return coordinate / SIDE_LENGTH;
     }
 
     private static int calculateCoordinate(String algebraicNotation) {
