@@ -7,9 +7,9 @@ package com.vmardones.tealchess.board;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.stream.IntStream;
+
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 final class BitboardManipulatorTest {
 
@@ -24,11 +24,13 @@ final class BitboardManipulatorTest {
         assertThat(BitboardManipulator.set(zero, 4)).isEqualTo(0b10000L);
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {0, 1, 2, 3, 4})
-    void setOne(int coordinate) {
+    @Test
+    void setOne() {
         var ones = 0b11111L;
-        assertThat(BitboardManipulator.set(ones, coordinate)).isEqualTo(ones);
+
+        IntStream.range(0, 5).forEach(coordinate -> {
+            assertThat(BitboardManipulator.set(ones, coordinate)).isEqualTo(ones);
+        });
     }
 
     @Test
@@ -42,11 +44,13 @@ final class BitboardManipulatorTest {
         assertThat(BitboardManipulator.clear(ones, 4)).isEqualTo(0b1111L);
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {0, 1, 2, 3, 4})
-    void clearZero(int coordinate) {
+    @Test
+    void clearZero() {
         var zero = 0L;
-        assertThat(BitboardManipulator.clear(zero, coordinate)).isEqualTo(zero);
+
+        IntStream.range(0, 5).forEach(coordinate -> {
+            assertThat(BitboardManipulator.clear(zero, coordinate)).isEqualTo(zero);
+        });
     }
 
     @Test
@@ -60,17 +64,45 @@ final class BitboardManipulatorTest {
         assertThat(BitboardManipulator.toggle(bitboard, 4)).isEqualTo(0b101L);
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {0, 1, 2, 3, 4})
-    void isSet(int coordinate) {
+    @Test
+    void isSet() {
         var ones = 0b11111L;
-        assertThat(BitboardManipulator.isSet(ones, coordinate)).isTrue();
+
+        IntStream.range(0, 5).forEach(coordinate -> {
+            assertThat(BitboardManipulator.isSet(ones, coordinate)).isTrue();
+        });
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {0, 1, 2, 3, 4})
-    void isNotSet(int coordinate) {
+    @Test
+    void isNotSet() {
         var zero = 0L;
-        assertThat(BitboardManipulator.isSet(zero, coordinate)).isFalse();
+
+        IntStream.range(0, 5).forEach(coordinate -> {
+            assertThat(BitboardManipulator.isSet(zero, coordinate)).isFalse();
+        });
+    }
+
+    @Test
+    void firstBit() {
+        var bitboard = 0b100100100L;
+
+        assertThat(BitboardManipulator.firstBit(bitboard)).isEqualTo(2);
+    }
+
+    @Test
+    void firstZeroBit() {
+        assertThat(BitboardManipulator.firstBit(0L)).isEqualTo(64);
+    }
+
+    @Test
+    void lastBit() {
+        var bitboard = 0b100100100L;
+
+        assertThat(BitboardManipulator.lastBit(bitboard)).isEqualTo(8);
+    }
+
+    @Test
+    void lastZeroBit() {
+        assertThat(BitboardManipulator.lastBit(0L)).isEqualTo(-1);
     }
 }
