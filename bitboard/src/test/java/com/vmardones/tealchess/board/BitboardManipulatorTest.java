@@ -40,8 +40,8 @@ final class BitboardManipulatorTest {
 
     @Test
     void setOnes() {
-        IntStream.range(0, Long.SIZE).forEach(coordinate -> {
-            assertThat(BitboardManipulator.set(ones, coordinate)).isEqualTo(ones);
+        IntStream.range(0, Long.SIZE).forEach(square -> {
+            assertThat(BitboardManipulator.set(ones, square)).isEqualTo(ones);
         });
     }
 
@@ -58,8 +58,8 @@ final class BitboardManipulatorTest {
 
     @Test
     void clearZeros() {
-        IntStream.range(0, Long.SIZE).forEach(coordinate -> {
-            assertThat(BitboardManipulator.clear(zeros, coordinate)).isEqualTo(zeros);
+        IntStream.range(0, Long.SIZE).forEach(square -> {
+            assertThat(BitboardManipulator.clear(zeros, square)).isEqualTo(zeros);
         });
     }
 
@@ -77,15 +77,15 @@ final class BitboardManipulatorTest {
 
     @Test
     void isSet() {
-        IntStream.range(0, Long.SIZE).forEach(coordinate -> {
-            assertThat(BitboardManipulator.isSet(ones, coordinate)).isTrue();
+        IntStream.range(0, Long.SIZE).forEach(square -> {
+            assertThat(BitboardManipulator.isSet(ones, square)).isTrue();
         });
     }
 
     @Test
     void isNotSet() {
-        IntStream.range(0, Long.SIZE).forEach(coordinate -> {
-            assertThat(BitboardManipulator.isSet(zeros, coordinate)).isFalse();
+        IntStream.range(0, Long.SIZE).forEach(square -> {
+            assertThat(BitboardManipulator.isSet(zeros, square)).isFalse();
         });
     }
 
@@ -119,6 +119,22 @@ final class BitboardManipulatorTest {
     @Test
     void lastZerosBit() {
         assertThat(BitboardManipulator.lastBit(zeros)).isEqualTo(-1);
+    }
+
+    @Test
+    void bitCount() {
+        var bitboard = 0b100010100110100L;
+        assertThat(BitboardManipulator.bitCount(bitboard)).isEqualTo(6);
+    }
+
+    @Test
+    void onesBitCount() {
+        assertThat(BitboardManipulator.bitCount(ones)).isEqualTo(64);
+    }
+
+    @Test
+    void zerosBitCount() {
+        assertThat(BitboardManipulator.bitCount(zeros)).isEqualTo(0);
     }
 
     @Test

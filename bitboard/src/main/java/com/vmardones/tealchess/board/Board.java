@@ -6,8 +6,8 @@
 package com.vmardones.tealchess.board;
 
 import static com.vmardones.tealchess.color.Color.*;
-import static com.vmardones.tealchess.coordinate.Coordinate.*;
 import static com.vmardones.tealchess.piece.PieceType.*;
+import static com.vmardones.tealchess.square.Square.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,10 +21,9 @@ import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * The chessboard, composed of 8x8 squares.
- * Each square is associated with a coordinate and can be individually checked.
+ * Each square can be individually checked to find the piece it could have.
  * To allow performing fast calculations, bitboards for all the piece types can also be obtained.
  * @see <a href="https://www.chessprogramming.org/Chessboard">Chessboard</a>
- * @see <a href="https://www.chessprogramming.org/Squares">Squares</a>
  */
 public final class Board implements Unicode {
 
@@ -57,12 +56,12 @@ public final class Board implements Unicode {
      * and black kings must be supplied for the board to be legal. This builder is intended for
      * creating a new board from scratch.
      *
-     * @param whiteKingCoordinate The white player's king coordinate.
-     * @param blackKingCoordinate The black player's king coordinate.
+     * @param whiteKingSquare The white player's king square.
+     * @param blackKingSquare The black player's king square.
      * @return The board builder.
      */
-    public static BoardBuilder builder(int whiteKingCoordinate, int blackKingCoordinate) {
-        return new BoardBuilder(whiteKingCoordinate, blackKingCoordinate);
+    public static BoardBuilder builder(int whiteKingSquare, int blackKingSquare) {
+        return new BoardBuilder(whiteKingSquare, blackKingSquare);
     }
 
     /**
@@ -79,47 +78,47 @@ public final class Board implements Unicode {
     /* Checking the board */
 
     /**
-     * Get the piece located at a specific coordinate.
+     * Get the piece located at a specific square.
      *
-     * @param coordinate The coordinate to search.
+     * @param square The square to search.
      * @return The piece found.
      */
-    public @Nullable Piece pieceAt(int coordinate) {
-        return mailbox[coordinate];
+    public @Nullable Piece pieceAt(int square) {
+        return mailbox[square];
     }
 
     /**
      * Check if a specific square is empty.
      *
-     * @param coordinate The coordinate of the square to check.
+     * @param square The square of the square to check.
      * @return True if the square doesn't have a piece.
      */
-    public boolean isEmpty(int coordinate) {
-        return pieceAt(coordinate) == null;
+    public boolean isEmpty(int square) {
+        return pieceAt(square) == null;
     }
 
     /**
-     * Find the color of the square at a specific coordinate.
+     * Find the color of the square at a specific square.
      * Mostly used to draw the board.
-     * @param coordinate The coordinate of the square.
+     * @param square The square of the square.
      * @return The color of the square.
      * @see <a href="https://www.chessprogramming.org/Color_of_a_Square">Color of a Square</a>
      */
-    public Color colorOf(int coordinate) {
-        return BitboardManipulator.isSet(LIGHT_SQUARES, coordinate) ? WHITE : BLACK;
+    public Color colorOf(int square) {
+        return BitboardManipulator.isSet(LIGHT_SQUARES, square) ? WHITE : BLACK;
     }
 
     /**
      * Represent a square using Unicode characters.
      * This returns the piece's Unicode representation or a white/black square character for empty squares.
-     * @param coordinate The coordinate of the square.
+     * @param square The square of the square.
      * @return Unicode representation of the square.
      */
-    public String squareAsUnicode(int coordinate) {
-        var piece = pieceAt(coordinate);
+    public String squareAsUnicode(int square) {
+        var piece = pieceAt(square);
 
         if (piece == null) {
-            return colorOf(coordinate).unicode();
+            return colorOf(square).unicode();
         }
 
         return piece.unicode();
@@ -168,7 +167,7 @@ public final class Board implements Unicode {
 
     /* Special bitboards */
 
-    public long emptyCoordinates() {
+    public long emptySquares() {
         return ~(pawns(WHITE)
                 | pawns(BLACK)
                 | knights(WHITE)
@@ -304,16 +303,16 @@ public final class Board implements Unicode {
             var sideIndex = piece.color().ordinal();
 
             var bitboard = bitboards[typeIndex][sideIndex];
-            var coordinate = piece.coordinate();
+            var square = piece.square();
 
-            bitboards[typeIndex][sideIndex] = BitboardManipulator.set(bitboard, coordinate);
-            mailbox[coordinate] = piece;
+            bitboards[typeIndex][sideIndex] = BitboardManipulator.set(bitboard, square);
+            mailbox[square] = piece;
             return this;
         }
 
         /**
          * Add multiple pieces to the board. Null pieces are silently ignored.
-         * If multiple pieces are put in the same coordinate, the last one takes precedence.
+         * If multiple pieces are put in the same square, the last one takes precedence.
          * @param pieces The pieces to add.
          * @return The same instance of this builder, to continue the building process.
          */
@@ -325,11 +324,11 @@ public final class Board implements Unicode {
         /**
          * Remove a piece from the board.
          *
-         * @param coordinate The coordinate to remove a piece from.
+         * @param square The square to remove a piece from.
          * @return The same instance of this builder, to continue the building process.
          */
-        public BoardBuilder without(int coordinate) {
-            var piece = mailbox[coordinate];
+        public BoardBuilder without(int square) {
+            var piece = mailbox[square];
 
             if (piece == null) {
                 return this;
@@ -340,8 +339,8 @@ public final class Board implements Unicode {
 
             var bitboard = bitboards[typeIndex][sideIndex];
 
-            bitboards[typeIndex][sideIndex] = BitboardManipulator.clear(bitboard, coordinate);
-            mailbox[coordinate] = null;
+            bitboards[typeIndex][sideIndex] = BitboardManipulator.clear(bitboard, square);
+            mailbox[square] = null;
             return this;
         }
 
@@ -356,11 +355,11 @@ public final class Board implements Unicode {
             return new Board(this);
         }
 
-        private BoardBuilder(int whiteKingCoordinate, int blackKingCoordinate) {
+        private BoardBuilder(int whiteKingSquare, int blackKingSquare) {
             bitboards = new long[PieceType.values().length][Color.values().length];
             mailbox = new Piece[NUMBER_OF_SQUARES];
-            whiteKing = new Piece(KING, WHITE, whiteKingCoordinate);
-            blackKing = new Piece(KING, BLACK, blackKingCoordinate);
+            whiteKing = new Piece(KING, WHITE, whiteKingSquare);
+            blackKing = new Piece(KING, BLACK, blackKingSquare);
         }
 
         private BoardBuilder(Board board) {

@@ -3,9 +3,9 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package com.vmardones.tealchess.coordinate;
+package com.vmardones.tealchess.square;
 
-import static com.vmardones.tealchess.coordinate.Coordinate.*;
+import static com.vmardones.tealchess.square.Square.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -43,15 +43,15 @@ final class AlgebraicConverterTest {
 
     @Test
     void validAlgebraicNotation() {
-        assertThat(AlgebraicConverter.toCoordinate("a8")).isEqualTo(a8);
-        assertThat(AlgebraicConverter.toCoordinate("a1")).isEqualTo(a1);
-        assertThat(AlgebraicConverter.toCoordinate("h8")).isEqualTo(h8);
-        assertThat(AlgebraicConverter.toCoordinate("h1")).isEqualTo(h1);
+        assertThat(AlgebraicConverter.toSquare("a8")).isEqualTo(a8);
+        assertThat(AlgebraicConverter.toSquare("a1")).isEqualTo(a1);
+        assertThat(AlgebraicConverter.toSquare("h8")).isEqualTo(h8);
+        assertThat(AlgebraicConverter.toSquare("h1")).isEqualTo(h1);
     }
 
     @Test
     void invalidAlgebraicNotation() {
-        assertThatThrownBy(() -> AlgebraicConverter.toCoordinate("x4"))
+        assertThatThrownBy(() -> AlgebraicConverter.toSquare("x4"))
                 .isInstanceOf(AlgebraicNotationException.class)
                 .hasMessageContaining("x4");
     }

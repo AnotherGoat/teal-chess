@@ -15,7 +15,7 @@ import com.vmardones.tealchess.parser.pgn.San;
  * A chess piece, which players can move in the board.
  * @see <a href="https://www.chessprogramming.org/Pieces">Pieces</a>
  */
-public record Piece(PieceType type, Color color, int coordinate) implements Fen, San, Unicode {
+public record Piece(PieceType type, Color color, int square) implements Fen, San, Unicode {
 
     /* Static factory methods */
 
@@ -25,13 +25,13 @@ public record Piece(PieceType type, Color color, int coordinate) implements Fen,
      * The color is inferred from the symbol being uppercase (white) or lowercase (black).
      *
      * @param symbol The piece symbol.
-     * @param coordinate The coordinate to put the piece in.
+     * @param square The square to put the piece in.
      * @return The piece with the asked symbol.
      */
-    public static Piece fromSymbol(String symbol, int coordinate) {
+    public static Piece fromSymbol(String symbol, int square) {
         var color = Character.isUpperCase(symbol.charAt(0)) ? Color.WHITE : Color.BLACK;
 
-        return new Piece(PieceType.fromSymbol(symbol), color, coordinate);
+        return new Piece(PieceType.fromSymbol(symbol), color, square);
     }
 
     /* Getters */
@@ -98,6 +98,6 @@ public record Piece(PieceType type, Color color, int coordinate) implements Fen,
 
     @Override
     public String toString() {
-        return unicode() + coordinate;
+        return unicode() + square;
     }
 }

@@ -5,13 +5,16 @@
 
 package com.vmardones.tealchess.generator;
 
-import static com.vmardones.tealchess.coordinate.Coordinate.*;
 import static com.vmardones.tealchess.move.MoveType.*;
+import static com.vmardones.tealchess.square.Square.*;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.concurrent.TimeUnit;
 
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.parser.fen.FenParser;
 import com.vmardones.tealchess.piece.PromotionChoice;
+import com.vmardones.tealchess.position.Position;
 import org.junit.jupiter.api.Test;
 
 final class PawnMoveGeneratorTest {

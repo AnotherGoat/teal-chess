@@ -7,8 +7,8 @@ package com.vmardones.tealchess.parser.fen;
 
 import static com.vmardones.tealchess.color.Color.BLACK;
 import static com.vmardones.tealchess.color.Color.WHITE;
-import static com.vmardones.tealchess.coordinate.Coordinate.*;
 import static com.vmardones.tealchess.piece.PieceType.*;
+import static com.vmardones.tealchess.square.Square.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -117,7 +117,7 @@ final class FenParserTest {
     void illegalEnPassantTarget() {
         assertThatThrownBy(() -> FenParser.parse("4k3/8/8/8/8/8/8/4K3 w - x9 - -"))
                 .isInstanceOf(FenParseException.class)
-                .hasMessageContaining("coordinate")
+                .hasMessageContaining("square")
                 .hasMessageContaining("x9");
     }
 

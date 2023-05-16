@@ -6,8 +6,8 @@
 package com.vmardones.tealchess.parser.fen;
 
 import com.vmardones.tealchess.board.Board;
-import com.vmardones.tealchess.coordinate.AlgebraicConverter;
 import com.vmardones.tealchess.position.Position;
+import com.vmardones.tealchess.square.AlgebraicConverter;
 import org.eclipse.jdt.annotation.Nullable;
 
 public final class FenSerializer {
@@ -36,8 +36,8 @@ public final class FenSerializer {
         for (var rank = Board.SIDE_LENGTH - 1; rank >= 0; rank--) {
             for (var file = 0; file < Board.SIDE_LENGTH; file++) {
 
-                var coordinate = AlgebraicConverter.toCoordinate(file, rank);
-                var piece = mailbox[coordinate];
+                var square = AlgebraicConverter.toSquare(file, rank);
+                var piece = mailbox[square];
 
                 if (piece == null) {
                     emptyCounter++;

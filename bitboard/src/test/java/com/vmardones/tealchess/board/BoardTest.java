@@ -8,15 +8,15 @@ package com.vmardones.tealchess.board;
 import static com.vmardones.tealchess.board.Board.INITIAL_BOARD;
 import static com.vmardones.tealchess.color.Color.BLACK;
 import static com.vmardones.tealchess.color.Color.WHITE;
-import static com.vmardones.tealchess.coordinate.Coordinate.*;
 import static com.vmardones.tealchess.piece.PieceType.*;
+import static com.vmardones.tealchess.square.Square.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.stream.IntStream;
 
 import com.vmardones.tealchess.board.Board.BoardBuilder;
-import com.vmardones.tealchess.coordinate.Coordinate;
 import com.vmardones.tealchess.piece.Piece;
+import com.vmardones.tealchess.square.Square;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -112,20 +112,20 @@ final class BoardTest {
 
     @Test
     void initialEmptySquares() {
-        IntStream.range(16, 48).forEach(coordinate -> assertThat(INITIAL_BOARD.pieceAt(coordinate))
-                .isNull());
+        IntStream.range(16, 48)
+                .forEach(square -> assertThat(INITIAL_BOARD.pieceAt(square)).isNull());
     }
 
     @Test
     void initialWhitePawnRank() {
-        IntStream.range(8, 16).forEach(coordinate -> assertThat(INITIAL_BOARD.pieceAt(coordinate))
-                .isEqualTo(new Piece(PAWN, WHITE, coordinate)));
+        IntStream.range(8, 16)
+                .forEach(square -> assertThat(INITIAL_BOARD.pieceAt(square)).isEqualTo(new Piece(PAWN, WHITE, square)));
     }
 
     @Test
     void initialBlackPawnRank() {
-        IntStream.range(48, 56).forEach(coordinate -> assertThat(INITIAL_BOARD.pieceAt(coordinate))
-                .isEqualTo(new Piece(PAWN, BLACK, coordinate)));
+        IntStream.range(48, 56)
+                .forEach(square -> assertThat(INITIAL_BOARD.pieceAt(square)).isEqualTo(new Piece(PAWN, BLACK, square)));
     }
 
     @Test
@@ -213,10 +213,10 @@ final class BoardTest {
     @Test
     void lastPieceTakesPrecedence() {
         var piece1 = new Piece(PAWN, WHITE, a1);
-        var piece2 = new Piece(ROOK, WHITE, Coordinate.a1);
+        var piece2 = new Piece(ROOK, WHITE, Square.a1);
         var newBoard = builder.with(piece1).with(piece2).build();
 
-        assertThat(newBoard.pieceAt(Coordinate.a1)).isEqualTo(piece2);
+        assertThat(newBoard.pieceAt(Square.a1)).isEqualTo(piece2);
     }
 
     @Test

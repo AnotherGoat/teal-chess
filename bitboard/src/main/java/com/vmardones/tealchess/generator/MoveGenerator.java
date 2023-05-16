@@ -10,10 +10,10 @@ import static com.vmardones.tealchess.board.BitboardManipulator.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vmardones.tealchess.coordinate.AlgebraicConverter;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.move.MoveType;
 import com.vmardones.tealchess.position.Position;
+import com.vmardones.tealchess.square.AlgebraicConverter;
 
 public abstract sealed class MoveGenerator
         permits BishopMoveGenerator,
@@ -38,17 +38,19 @@ public abstract sealed class MoveGenerator
             return;
         }
 
-        var start = firstBit(possibleMoves);
-        var end = lastBit(possibleMoves);
+        boolean nextMove;
+        var destination = firstBit(possibleMoves);
 
-        for (var destination = start; destination <= end; destination++) {
-            if (isSet(possibleMoves, destination)) {
-                var fileIndex = AlgebraicConverter.fileIndex(destination) + fileDelta;
-                var rankIndex = AlgebraicConverter.rankIndex(destination) + rankDelta;
+        do {
+            var fileIndex = AlgebraicConverter.fileIndex(destination);
+            var rankIndex = AlgebraicConverter.rankIndex(destination);
+            var source = AlgebraicConverter.toSquare(fileIndex + fileDelta, rankIndex + rankDelta);
 
-                var source = AlgebraicConverter.toCoordinate(fileIndex, rankIndex);
-                moves.add(new Move(moveType, source, destination));
-            }
-        }
+            moves.add(new Move(moveType, source, destination));
+
+            possibleMoves = clear(possibleMoves, destination);
+            destination = firstBit(possibleMoves);
+            nextMove = isSet(possibleMoves, destination);
+        } while (nextMove);
     }
 }

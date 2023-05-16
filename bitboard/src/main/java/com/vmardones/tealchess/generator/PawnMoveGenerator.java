@@ -10,11 +10,11 @@ import static com.vmardones.tealchess.board.BitboardManipulator.*;
 import java.util.List;
 
 import com.vmardones.tealchess.color.Color;
-import com.vmardones.tealchess.coordinate.AlgebraicConverter;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.move.MoveType;
 import com.vmardones.tealchess.piece.PromotionChoice;
 import com.vmardones.tealchess.position.Position;
+import com.vmardones.tealchess.square.AlgebraicConverter;
 import org.eclipse.jdt.annotation.Nullable;
 
 final class PawnMoveGenerator extends MoveGenerator {
@@ -32,7 +32,7 @@ final class PawnMoveGenerator extends MoveGenerator {
     private static final int RIGHT_CAPTURE_OFFSET = 9;
 
     private final Color sideToMove;
-    private final long emptyCoordinates;
+    private final long emptySquares;
     private final long pawns;
     private final long capturablePieces;
     private final @Nullable Integer enPassantTarget;
@@ -43,7 +43,7 @@ final class PawnMoveGenerator extends MoveGenerator {
         super(position);
         var board = position.board();
         sideToMove = position.sideToMove();
-        emptyCoordinates = board.emptyCoordinates();
+        emptySquares = board.emptySquares();
         pawns = board.pawns(sideToMove);
         capturablePieces = board.capturablePieces(sideToMove);
         enPassantTarget = position.enPassantTarget();
@@ -81,7 +81,7 @@ final class PawnMoveGenerator extends MoveGenerator {
 
     private void addPushes() {
         var movedPawns = movePawns(PUSH_OFFSET);
-        var possibleMoves = movedPawns & emptyCoordinates & ~promotionRank;
+        var possibleMoves = movedPawns & emptySquares & ~promotionRank;
         var rankDelta = sideToMove.isWhite() ? -1 : 1;
 
         addMoves(MoveType.PAWN_PUSH, possibleMoves, 0, rankDelta);
@@ -89,9 +89,8 @@ final class PawnMoveGenerator extends MoveGenerator {
 
     private void addDoublePushes() {
         var movedPawns = movePawns(DOUBLE_PUSH_OFFSET);
-        var forwardEmptyCoordinates =
-                sideToMove.isWhite() ? emptyCoordinates << PUSH_OFFSET : emptyCoordinates >> PUSH_OFFSET;
-        var possibleMoves = movedPawns & emptyCoordinates & forwardEmptyCoordinates & doublePushRank;
+        var forwardEmptySquares = sideToMove.isWhite() ? emptySquares << PUSH_OFFSET : emptySquares >> PUSH_OFFSET;
+        var possibleMoves = movedPawns & emptySquares & forwardEmptySquares & doublePushRank;
         var rankDelta = sideToMove.isWhite() ? -2 : 2;
 
         addMoves(MoveType.DOUBLE_PUSH, possibleMoves, 0, rankDelta);
@@ -117,7 +116,7 @@ final class PawnMoveGenerator extends MoveGenerator {
 
     private void addPushPromotions() {
         var movedPawns = movePawns(PUSH_OFFSET);
-        var possibleMoves = movedPawns & emptyCoordinates & promotionRank;
+        var possibleMoves = movedPawns & emptySquares & promotionRank;
         var rankDelta = sideToMove.isWhite() ? -1 : 1;
 
         addPromotionMoves(MoveType.PAWN_PUSH, possibleMoves, 0, rankDelta);
@@ -144,20 +143,19 @@ final class PawnMoveGenerator extends MoveGenerator {
             return;
         }
 
-        var start = firstBit(possibleMoves);
-        var end = lastBit(possibleMoves);
+        var destination = firstBit(possibleMoves);
 
-        for (var destination = start; destination <= end; destination++) {
-            if (isSet(possibleMoves, destination)) {
-                var fileIndex = AlgebraicConverter.fileIndex(destination) + fileDelta;
-                var rankIndex = AlgebraicConverter.rankIndex(destination) + rankDelta;
+        do {
+            var fileIndex = AlgebraicConverter.fileIndex(destination);
+            var rankIndex = AlgebraicConverter.rankIndex(destination);
+            var source = AlgebraicConverter.toSquare(fileIndex + fileDelta, rankIndex + rankDelta);
 
-                var source = AlgebraicConverter.toCoordinate(fileIndex, rankIndex);
-
-                for (var choice : PromotionChoice.values()) {
-                    moves.add(new Move(moveType, source, destination, choice));
-                }
+            for (var choice : PromotionChoice.values()) {
+                moves.add(new Move(moveType, source, destination, choice));
             }
-        }
+
+            possibleMoves = clear(possibleMoves, destination);
+            destination = firstBit(possibleMoves);
+        } while (isSet(possibleMoves, destination));
     }
 }

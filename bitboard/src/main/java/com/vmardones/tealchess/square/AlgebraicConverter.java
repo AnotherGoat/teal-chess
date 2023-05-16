@@ -3,7 +3,7 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package com.vmardones.tealchess.coordinate;
+package com.vmardones.tealchess.square;
 
 import java.util.regex.Pattern;
 
@@ -48,8 +48,8 @@ public final class AlgebraicConverter {
         return rankIndex + 1;
     }
 
-    // TODO: Document usage of LSF to represent coordinates
-    public static int toCoordinate(int fileIndex, int rankIndex) {
+    // TODO: Document usage of LSF to represent squares
+    public static int toSquare(int fileIndex, int rankIndex) {
         if (fileIndex < 0 || fileIndex >= SIDE_LENGTH) {
             throw new AlgebraicNotationException("File index out of bounds: " + fileIndex);
         }
@@ -61,37 +61,37 @@ public final class AlgebraicConverter {
         return SIDE_LENGTH * rankIndex + fileIndex;
     }
 
-    public static int toCoordinate(String algebraicNotation) {
+    public static int toSquare(String algebraicNotation) {
         if (!ALGEBRAIC_PATTERN.matcher(algebraicNotation).matches()) {
             throw new AlgebraicNotationException("Invalid algebraic notation: " + algebraicNotation);
         }
 
-        return calculateCoordinate(algebraicNotation);
+        return calculateSquare(algebraicNotation);
     }
 
-    public static String toAlgebraic(int coordinate) {
+    public static String toAlgebraic(int square) {
 
-        var fileIndex = fileIndex(coordinate);
+        var fileIndex = fileIndex(square);
         var fileChar = FILES.charAt(fileIndex);
-        var rank = rankFromIndex(rankIndex(coordinate));
+        var rank = rankFromIndex(rankIndex(square));
 
         return String.valueOf(fileChar) + rank;
     }
 
-    public static int fileIndex(int coordinate) {
-        return coordinate % SIDE_LENGTH;
+    public static int fileIndex(int square) {
+        return square % SIDE_LENGTH;
     }
 
-    public static int rankIndex(int coordinate) {
-        return coordinate / SIDE_LENGTH;
+    public static int rankIndex(int square) {
+        return square / SIDE_LENGTH;
     }
 
-    private static int calculateCoordinate(String algebraicNotation) {
+    private static int calculateSquare(String algebraicNotation) {
 
         var fileIndex = algebraicNotation.charAt(0) - 'a';
         var rankIndex = Character.digit(algebraicNotation.charAt(1), 10) - 1;
 
-        return toCoordinate(fileIndex, rankIndex);
+        return toSquare(fileIndex, rankIndex);
     }
 
     private AlgebraicConverter() {}

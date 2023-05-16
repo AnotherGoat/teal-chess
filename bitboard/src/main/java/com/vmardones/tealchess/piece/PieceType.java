@@ -36,8 +36,8 @@ public enum PieceType {
     QUEEN(9, true, "Q", "q", "♕", "♛"),
     /**
      * The king piece. The most important piece in the game, must be defended at all costs. It moves
-     * like the queen, but only one space at a time. It also cannot move into a coordinate where it could
-     * be captured.
+     * like the queen, but only one space at a time. It also cannot move into a square where it could
+     * be captured the next turn.
      * @see <a href="https://www.chessprogramming.org/King">King</a>
      */
     KING(200, false, "K", "k", "♔", "♚");

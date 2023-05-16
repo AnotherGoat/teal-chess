@@ -3,7 +3,7 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package com.vmardones.tealchess.coordinate;
+package com.vmardones.tealchess.square;
 
 import java.io.Serial;
 

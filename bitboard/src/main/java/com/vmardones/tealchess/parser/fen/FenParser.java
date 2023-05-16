@@ -15,10 +15,10 @@ import java.util.regex.Pattern;
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.color.Color;
 import com.vmardones.tealchess.color.ColorSymbolException;
-import com.vmardones.tealchess.coordinate.AlgebraicConverter;
 import com.vmardones.tealchess.piece.*;
 import com.vmardones.tealchess.position.CastlingRights;
 import com.vmardones.tealchess.position.Position;
+import com.vmardones.tealchess.square.AlgebraicConverter;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
@@ -117,14 +117,14 @@ public final class FenParser {
 
     private static @Nullable Integer parseEnPassantTarget(String data) {
         if (!EN_PASSANT_PATTERN.matcher(data).matches()) {
-            throw new FenParseException("En passant target is not a valid target coordinate: " + data);
+            throw new FenParseException("En passant target is not a valid target square: " + data);
         }
 
         if (data.equals("-")) {
             return null;
         }
 
-        return AlgebraicConverter.toCoordinate(data);
+        return AlgebraicConverter.toSquare(data);
     }
 
     private static int parseHalfmoveClock(String data) {
@@ -162,12 +162,10 @@ public final class FenParser {
     private static Board buildBoard(List<String> ranks) {
         var pieces = generatePieces(ranks);
 
-        var whiteKingCoordinate = findKing(pieces, Color.WHITE);
-        var blackKingCoordinate = findKing(pieces, Color.BLACK);
+        var whiteKingSquare = findKing(pieces, Color.WHITE);
+        var blackKingSquare = findKing(pieces, Color.BLACK);
 
-        return Board.builder(whiteKingCoordinate, blackKingCoordinate)
-                .withAll(pieces)
-                .build();
+        return Board.builder(whiteKingSquare, blackKingSquare).withAll(pieces).build();
     }
 
     private static List<Piece> generatePieces(List<String> ranks) {
@@ -185,9 +183,9 @@ public final class FenParser {
                     fileCounter += Character.digit(symbol, 10);
                 } else {
                     var rankIndex = AlgebraicConverter.rankToIndex(Board.SIDE_LENGTH - i);
-                    var coordinate = AlgebraicConverter.toCoordinate(fileCounter, rankIndex);
+                    var square = AlgebraicConverter.toSquare(fileCounter, rankIndex);
 
-                    pieces.add(Piece.fromSymbol(String.valueOf(symbol), coordinate));
+                    pieces.add(Piece.fromSymbol(String.valueOf(symbol), square));
                     fileCounter++;
                 }
             }
@@ -199,7 +197,7 @@ public final class FenParser {
     private static int findKing(List<Piece> pieces, Color color) {
         return pieces.stream()
                 .filter(piece -> piece.isKing() && piece.color() == color)
-                .mapToInt(Piece::coordinate)
+                .mapToInt(Piece::square)
                 .findFirst()
                 .orElseThrow(AssertionError::new);
     }
