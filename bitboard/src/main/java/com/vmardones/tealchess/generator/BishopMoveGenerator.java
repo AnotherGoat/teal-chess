@@ -20,6 +20,6 @@ final class BishopMoveGenerator extends MoveGenerator {
 
     @Override
     public List<Move> generate() {
-        return null;
+        return moves;
     }
 }

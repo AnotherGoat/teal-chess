@@ -13,6 +13,7 @@ import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.parser.fen.FenParser;
 import org.junit.jupiter.api.Test;
 
+// TODO: Test cases where wrapping is needed
 final class KnightMoveGeneratorTest {
 
     @Test
@@ -41,7 +42,12 @@ final class KnightMoveGeneratorTest {
         var expectedCaptures =
                 new Move[] {new Move(CAPTURE, c5, a4), new Move(CAPTURE, c5, e4), new Move(CAPTURE, c5, d7)};
 
+        var unexpectedCaptures = new Move[] {
+                new Move(CAPTURE, c5, b7),
+                new Move(CAPTURE, c5, e6)
+        };
+
         var normalMoves = 4;
-        assertThat(generator.generate()).hasSize(normalMoves + 3).containsOnlyOnce(expectedCaptures);
+        assertThat(generator.generate()).hasSize(normalMoves + 3).containsOnlyOnce(expectedCaptures).doesNotContain(unexpectedCaptures);
     }
 }
