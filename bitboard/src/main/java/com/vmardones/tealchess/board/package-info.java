@@ -1,5 +1,5 @@
 /**
- * Provides immutable classes that represent the chessboard itself.
+ * Provides immutable classes that represent and manipulate the chessboard itself.
  */
 @NonNullByDefault
 package com.vmardones.tealchess.board;

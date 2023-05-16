@@ -15,7 +15,6 @@ import com.vmardones.tealchess.move.MoveType;
 import com.vmardones.tealchess.piece.PromotionChoice;
 import com.vmardones.tealchess.position.Position;
 import com.vmardones.tealchess.square.AlgebraicConverter;
-import org.eclipse.jdt.annotation.Nullable;
 
 final class PawnMoveGenerator extends MoveGenerator {
 
@@ -35,7 +34,7 @@ final class PawnMoveGenerator extends MoveGenerator {
     private final long emptySquares;
     private final long pawns;
     private final long capturablePieces;
-    private final @Nullable Integer enPassantTarget;
+    private final long enPassantBitboard;
     private final long promotionRank;
     private final long doublePushRank;
 
@@ -46,7 +45,10 @@ final class PawnMoveGenerator extends MoveGenerator {
         emptySquares = board.emptySquares();
         pawns = board.pawns(sideToMove);
         capturablePieces = board.capturablePieces(sideToMove);
-        enPassantTarget = position.enPassantTarget();
+
+        var enPassantTarget = position.enPassantTarget();
+        enPassantBitboard = enPassantTarget == null ? 0 : singleBit(enPassantTarget);
+
         promotionRank = sideToMove.isWhite() ? RANK_8 : RANK_1;
         doublePushRank = sideToMove.isWhite() ? RANK_4 : RANK_5;
     }
@@ -61,12 +63,11 @@ final class PawnMoveGenerator extends MoveGenerator {
         addDoublePushes();
         addLeftCaptures();
         addRightCaptures();
+        addLeftEnPassantCaptures();
+        addRightEnPassantCaptures();
         addPushPromotions();
         addLeftCapturePromotions();
         addRightCapturePromotions();
-        if (enPassantTarget != null) {
-            addEnPassantCaptures();
-        }
 
         return moves;
     }
@@ -112,7 +113,29 @@ final class PawnMoveGenerator extends MoveGenerator {
         addMoves(MoveType.PAWN_CAPTURE, possibleMoves, -1, rankDelta);
     }
 
-    private void addEnPassantCaptures() {}
+    private void addLeftEnPassantCaptures() {
+        if (enPassantBitboard == 0L) {
+            return;
+        }
+
+        var movedPawns = movePawns(LEFT_CAPTURE_OFFSET, RIGHT_CAPTURE_OFFSET);
+        var possibleMoves = movedPawns & enPassantBitboard & ~FILE_H;
+        var rankDelta = sideToMove.isWhite() ? -1 : 1;
+
+        addMoves(MoveType.EN_PASSANT, possibleMoves, 1, rankDelta);
+    }
+
+    private void addRightEnPassantCaptures() {
+        if (enPassantBitboard == 0L) {
+            return;
+        }
+
+        var movedPawns = movePawns(RIGHT_CAPTURE_OFFSET, LEFT_CAPTURE_OFFSET);
+        var possibleMoves = movedPawns & enPassantBitboard & ~FILE_A;
+        var rankDelta = sideToMove.isWhite() ? -1 : 1;
+
+        addMoves(MoveType.EN_PASSANT, possibleMoves, -1, rankDelta);
+    }
 
     private void addPushPromotions() {
         var movedPawns = movePawns(PUSH_OFFSET);

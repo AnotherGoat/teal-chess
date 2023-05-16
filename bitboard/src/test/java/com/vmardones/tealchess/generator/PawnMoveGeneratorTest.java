@@ -9,12 +9,9 @@ import static com.vmardones.tealchess.move.MoveType.*;
 import static com.vmardones.tealchess.square.Square.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.concurrent.TimeUnit;
-
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.parser.fen.FenParser;
 import com.vmardones.tealchess.piece.PromotionChoice;
-import com.vmardones.tealchess.position.Position;
 import org.junit.jupiter.api.Test;
 
 final class PawnMoveGeneratorTest {
@@ -98,6 +95,50 @@ final class PawnMoveGeneratorTest {
     }
 
     @Test
+    void whiteEnPassantMoves() {
+        var position = FenParser.parse("4k3/8/8/PpP2P2/8/8/8/4K3 w - b6 0 1");
+        var generator = new PawnMoveGenerator(position);
+
+        // Only the pawns at a5 and c5 can make an en passant capture
+        var expectedMoves = new Move[] {new Move(EN_PASSANT, a5, b6), new Move(EN_PASSANT, c5, b6)};
+
+        var unexpectedMoves =
+                new Move[] {new Move(EN_PASSANT, c5, d6), new Move(EN_PASSANT, f5, e6), new Move(EN_PASSANT, f5, g6)};
+
+        assertThat(generator.generate()).containsOnlyOnce(expectedMoves).doesNotContain(unexpectedMoves);
+    }
+
+    @Test
+    void blackEnPassantMoves() {
+        var position = FenParser.parse("4k3/8/8/8/pPp2p2/8/8/4K3 b - b3 0 1");
+        var generator = new PawnMoveGenerator(position);
+
+        // Only the pawns at a4 and c4 can make an en passant capture
+        var expectedMoves = new Move[] {new Move(EN_PASSANT, a4, b3), new Move(EN_PASSANT, c4, b3)};
+
+        var unexpectedMoves =
+                new Move[] {new Move(EN_PASSANT, c4, d3), new Move(EN_PASSANT, f4, e3), new Move(EN_PASSANT, f4, g3)};
+
+        assertThat(generator.generate()).containsOnlyOnce(expectedMoves).doesNotContain(unexpectedMoves);
+    }
+
+    @Test
+    void noWrappingWhiteEnPassant() {
+        var position = FenParser.parse("4k3/8/p7/P6p/8/8/8/4K3 w - h6 0 1");
+        var generator = new PawnMoveGenerator(position);
+
+        assertThat(generator.generate()).isEmpty();
+    }
+
+    @Test
+    void noWrappingBlackEnPassant() {
+        var position = FenParser.parse("4k3/8/8/8/P6p/7P/8/4K3 b - a3 0 1");
+        var generator = new PawnMoveGenerator(position);
+
+        assertThat(generator.generate()).isEmpty();
+    }
+
+    @Test
     void whitePromotions() {
         var position = FenParser.parse("4k2b/6P1/8/8/8/8/8/4K3 w - - 0 1");
         var generator = new PawnMoveGenerator(position);
@@ -124,5 +165,21 @@ final class PawnMoveGeneratorTest {
                 .anyMatch(move -> move.promotionChoice() == PromotionChoice.BISHOP)
                 .anyMatch(move -> move.promotionChoice() == PromotionChoice.ROOK)
                 .anyMatch(move -> move.promotionChoice() == PromotionChoice.QUEEN);
+    }
+
+    @Test
+    void noWrappingWhitePromotions() {
+        var position = FenParser.parse("r3k2r/P7/8/8/8/8/8/4K3 w - - 0 1");
+        var generator = new PawnMoveGenerator(position);
+
+        assertThat(generator.generate()).isEmpty();
+    }
+
+    @Test
+    void noWrappingBlackPromotions() {
+        var position = FenParser.parse("4k3/8/8/8/8/8/7p/R3K2R w - - 0 1");
+        var generator = new PawnMoveGenerator(position);
+
+        assertThat(generator.generate()).isEmpty();
     }
 }
