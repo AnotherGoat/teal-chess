@@ -79,6 +79,22 @@ final class PawnMoveGeneratorTest {
     }
 
     @Test
+    void noWrappingWhiteCaptures() {
+        var position = FenParser.parse("4k3/8/8/p6p/P6P/8/8/4K3 w - - 0 1");
+        var generator = new PawnMoveGenerator(position);
+
+        assertThat(generator.generate()).isEmpty();
+    }
+
+    @Test
+    void noWrappingBlackCaptures() {
+        var position = FenParser.parse("4k3/8/8/p6p/P6P/8/8/4K3 b - - 0 1");
+        var generator = new PawnMoveGenerator(position);
+
+        assertThat(generator.generate()).isEmpty();
+    }
+
+    @Test
     void whitePromotions() {
         var position = FenParser.parse("4k2b/6P1/8/8/8/8/8/4K3 w - - 0 1");
         var generator = new PawnMoveGenerator(position);

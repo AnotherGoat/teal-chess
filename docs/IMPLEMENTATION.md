@@ -17,12 +17,15 @@ Javadoc, please use this template:
 
 ### Board Representation
 
-The board is represented using an hybrid solution, which keeps redundant associations to make algorithms simpler.
+The board is represented using a hybrid solution, which keeps redundant associations to make some algorithms simpler.
 
-Piece centric: The board keeps two sets with its pieces, separated by their color.
-Each piece knows its location, which is known as a coordinate.
-This allows skipping the "scan the board" step during move generation (see the `Board.pieces(Color)` method).
+Piece centric: The board keeps a 3D array of bitboards, indexed first by their piece type and then by their color.
+There are 12 bitboards in total, each stored as a Java 64-bit long primitive type.
+The squares are indexed from 0 (a1) to 63 (h8), using Little-Endian Rank-File mapping (LERF).
+The indexes are known as "coordinates".
+Performing the operation `1L << coordinate` returns the square at a particular coordinate.
 
-Square centric: The board keeps a map (mailbox) that dispatches pieces or "null" pointers.
-The map has exactly 64 entries, which represent an 8x8 board. 
-This allows quickly finding pieces by their coordinates (see the `Board.pieceAt(Coordinate)` and `Board.mailbox()` methods).
+Square centric: The board keeps an array (mailbox) that dispatches piece records or "null" pointers.
+The mailbox is implemented as an 8x8 board, which stores exactly 64 values.
+Performing the operation `mailbox[coordinate]` returns the square at a particular coordinate.
+The coordinates used in the mailbox are exactly the sames as the ones used in the bitboard.

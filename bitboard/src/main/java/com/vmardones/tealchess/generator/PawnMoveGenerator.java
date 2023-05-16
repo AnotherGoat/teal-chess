@@ -23,7 +23,7 @@ final class PawnMoveGenerator extends MoveGenerator {
     private static final long RANK_4 = 0xff_00_00_00L;
     private static final long RANK_5 = 0xff_00_00_00_00L;
     private static final long RANK_8 = 0xff_00_00_00_00_00_00_00L;
-    private static final long FILE_A = 0x1_01_01_01_01_01_01_01L;
+    private static final long FILE_A = 0x01_01_01_01_01_01_01_01L;
     private static final long FILE_H = 0x80_80_80_80_80_80_80_80L;
 
     private static final int PUSH_OFFSET = 8;
@@ -64,6 +64,9 @@ final class PawnMoveGenerator extends MoveGenerator {
         addPushPromotions();
         addLeftCapturePromotions();
         addRightCapturePromotions();
+        if (enPassantTarget != null) {
+            addEnPassantCaptures();
+        }
 
         return moves;
     }
@@ -109,6 +112,8 @@ final class PawnMoveGenerator extends MoveGenerator {
 
         addMoves(MoveType.PAWN_CAPTURE, possibleMoves, -1, rankDelta);
     }
+
+    private void addEnPassantCaptures() {}
 
     private void addPushPromotions() {
         var movedPawns = movePawns(PUSH_OFFSET);

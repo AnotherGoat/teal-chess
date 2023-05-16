@@ -41,13 +41,13 @@ public abstract sealed class MoveGenerator
         var start = firstBit(possibleMoves);
         var end = lastBit(possibleMoves);
 
-        for (var i = start; i <= end; i++) {
-            if (isSet(possibleMoves, i)) {
-                var fileIndex = AlgebraicConverter.fileIndex(i) + fileDelta;
-                var rankIndex = AlgebraicConverter.rankIndex(i) + rankDelta;
+        for (var destination = start; destination <= end; destination++) {
+            if (isSet(possibleMoves, destination)) {
+                var fileIndex = AlgebraicConverter.fileIndex(destination) + fileDelta;
+                var rankIndex = AlgebraicConverter.rankIndex(destination) + rankDelta;
 
                 var source = AlgebraicConverter.toCoordinate(fileIndex, rankIndex);
-                moves.add(new Move(moveType, source, i));
+                moves.add(new Move(moveType, source, destination));
             }
         }
     }

@@ -42,7 +42,7 @@ public final class Board implements Unicode {
      */
     public static final Board INITIAL_BOARD = createInitialBoard();
 
-    private static final long LIGHT_SQUARES = 0x55aa55aa55aa55aaL;
+    private static final long LIGHT_SQUARES = 0x55_aa_55_aa_55_aa_55_aaL;
 
     // Arrays of bitboards: https://www.chessprogramming.org/Bitboard_Board-Definition#Array
     private final long[][] bitboards;
@@ -212,7 +212,6 @@ public final class Board implements Unicode {
         }
 
         result.deleteCharAt(result.length() - 1);
-
         return result.toString();
     }
 
