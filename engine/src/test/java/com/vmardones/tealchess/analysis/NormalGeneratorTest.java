@@ -37,41 +37,6 @@ final class NormalGeneratorTest {
     }
 
     @Test
-    void ignoresPawnPushes() {
-        var position = FenParser.parse("4k3/8/pppppppp/8/8/8/8/4K3 b - - 0 1");
-        var generator = new NormalGenerator(position);
-
-        var kingMoves = 5;
-        assertThat(generator.generate()).hasSize(kingMoves).allMatch(move -> move.piece()
-                .isKing());
-    }
-
-    @Test
-    void knightMoves() {
-        var position = FenParser.parse("4k3/1p6/1P1r4/8/2N5/4n3/1q6/4K3 w - - 0 1");
-        var generator = new NormalGenerator(position);
-
-        var board = position.board();
-        var knight = board.pieceAt(Coordinate.of("c4"));
-
-        var expectedMoves = new Move[] {
-            Move.normal(knight, Coordinate.of("a3")),
-            Move.normal(knight, Coordinate.of("a5")),
-            Move.normal(knight, Coordinate.of("d2")),
-            Move.normal(knight, Coordinate.of("e5"))
-        };
-
-        var unexpectedMoves =
-                new Move[] {Move.normal(knight, Coordinate.of("b6")), Move.normal(knight, Coordinate.of("b2"))};
-
-        var kingMoves = 5;
-        assertThat(generator.generate())
-                .hasSize(kingMoves + 4)
-                .containsOnlyOnce(expectedMoves)
-                .doesNotContain(unexpectedMoves);
-    }
-
-    @Test
     void bishopMoves() {
         var position = FenParser.parse("4k3/6B1/1p6/1P6/3b4/8/8/4K3 b - - 0 1");
         var generator = new NormalGenerator(position);

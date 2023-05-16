@@ -22,6 +22,7 @@ public final class PseudoLegalGenerator extends MoveGenerator {
         var moves = new ArrayList<Move>();
 
         moves.addAll(new PawnMoveGenerator(position).generate());
+        moves.addAll(new KnightMoveGenerator(position).generate());
 
         return moves;
     }

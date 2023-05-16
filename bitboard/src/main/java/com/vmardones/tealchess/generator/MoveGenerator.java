@@ -33,12 +33,26 @@ public abstract sealed class MoveGenerator
 
     abstract List<Move> generate();
 
-    protected void addMoves(MoveType moveType, long possibleMoves, int fileDelta, int rankDelta) {
+    protected void addMoves(MoveType type, long possibleMoves, int source) {
         if (possibleMoves == 0) {
             return;
         }
 
-        boolean nextMove;
+        var destination = firstBit(possibleMoves);
+
+        do {
+            moves.add(new Move(type, source, destination));
+
+            possibleMoves = clear(possibleMoves, destination);
+            destination = firstBit(possibleMoves);
+        } while (isSet(possibleMoves, destination));
+    }
+
+    protected void addMoves(MoveType type, long possibleMoves, int fileDelta, int rankDelta) {
+        if (possibleMoves == 0) {
+            return;
+        }
+
         var destination = firstBit(possibleMoves);
 
         do {
@@ -46,11 +60,10 @@ public abstract sealed class MoveGenerator
             var rankIndex = AlgebraicConverter.rankIndex(destination);
             var source = AlgebraicConverter.toSquare(fileIndex + fileDelta, rankIndex + rankDelta);
 
-            moves.add(new Move(moveType, source, destination));
+            moves.add(new Move(type, source, destination));
 
             possibleMoves = clear(possibleMoves, destination);
             destination = firstBit(possibleMoves);
-            nextMove = isSet(possibleMoves, destination);
-        } while (nextMove);
+        } while (isSet(possibleMoves, destination));
     }
 }

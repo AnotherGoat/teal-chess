@@ -63,8 +63,8 @@ final class PawnMoveGenerator extends MoveGenerator {
         addDoublePushes();
         addLeftCaptures();
         addRightCaptures();
-        addLeftEnPassantCaptures();
-        addRightEnPassantCaptures();
+        addLeftEnPassantCapture();
+        addRightEnPassantCapture();
         addPushPromotions();
         addLeftCapturePromotions();
         addRightCapturePromotions();
@@ -113,7 +113,7 @@ final class PawnMoveGenerator extends MoveGenerator {
         addMoves(MoveType.PAWN_CAPTURE, possibleMoves, -1, rankDelta);
     }
 
-    private void addLeftEnPassantCaptures() {
+    private void addLeftEnPassantCapture() {
         if (enPassantBitboard == 0L) {
             return;
         }
@@ -122,10 +122,10 @@ final class PawnMoveGenerator extends MoveGenerator {
         var possibleMoves = movedPawns & enPassantBitboard & ~FILE_H;
         var rankDelta = sideToMove.isWhite() ? -1 : 1;
 
-        addMoves(MoveType.EN_PASSANT, possibleMoves, 1, rankDelta);
+        addEnPassantMove(possibleMoves, 1, rankDelta);
     }
 
-    private void addRightEnPassantCaptures() {
+    private void addRightEnPassantCapture() {
         if (enPassantBitboard == 0L) {
             return;
         }
@@ -134,7 +134,21 @@ final class PawnMoveGenerator extends MoveGenerator {
         var possibleMoves = movedPawns & enPassantBitboard & ~FILE_A;
         var rankDelta = sideToMove.isWhite() ? -1 : 1;
 
-        addMoves(MoveType.EN_PASSANT, possibleMoves, -1, rankDelta);
+        addEnPassantMove(possibleMoves, -1, rankDelta);
+    }
+
+    private void addEnPassantMove(long possibleMoves, int fileDelta, int rankDelta) {
+        if (possibleMoves == 0) {
+            return;
+        }
+
+        var destination = firstBit(possibleMoves);
+
+        var fileIndex = AlgebraicConverter.fileIndex(destination);
+        var rankIndex = AlgebraicConverter.rankIndex(destination);
+        var source = AlgebraicConverter.toSquare(fileIndex + fileDelta, rankIndex + rankDelta);
+
+        moves.add(new Move(MoveType.EN_PASSANT, source, destination));
     }
 
     private void addPushPromotions() {
@@ -161,7 +175,7 @@ final class PawnMoveGenerator extends MoveGenerator {
         addPromotionMoves(MoveType.PAWN_CAPTURE, possibleMoves, -1, rankDelta);
     }
 
-    private void addPromotionMoves(MoveType moveType, long possibleMoves, int fileDelta, int rankDelta) {
+    private void addPromotionMoves(MoveType type, long possibleMoves, int fileDelta, int rankDelta) {
         if (possibleMoves == 0) {
             return;
         }
@@ -174,7 +188,7 @@ final class PawnMoveGenerator extends MoveGenerator {
             var source = AlgebraicConverter.toSquare(fileIndex + fileDelta, rankIndex + rankDelta);
 
             for (var choice : PromotionChoice.values()) {
-                moves.add(new Move(moveType, source, destination, choice));
+                moves.add(new Move(type, source, destination, choice));
             }
 
             possibleMoves = clear(possibleMoves, destination);
