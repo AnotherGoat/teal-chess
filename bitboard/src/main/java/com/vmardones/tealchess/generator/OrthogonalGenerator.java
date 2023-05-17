@@ -55,8 +55,10 @@ interface OrthogonalGenerator {
     }
 
     private long hyperbolaQuintessence(long slider, long occupiedSquares, long mask) {
-        var leftAttacks = (occupiedSquares & mask) - 2 * slider;
-        var reversedRightAttacks = reverse(occupiedSquares & mask) - 2 * reverse(slider);
+        var occupiedLine = occupiedSquares & mask;
+
+        var leftAttacks = occupiedLine - 2 * slider;
+        var reversedRightAttacks = reverse(occupiedLine) - 2 * reverse(slider);
         var rightAttacks = reverse(reversedRightAttacks);
 
         return (leftAttacks ^ rightAttacks) & mask;

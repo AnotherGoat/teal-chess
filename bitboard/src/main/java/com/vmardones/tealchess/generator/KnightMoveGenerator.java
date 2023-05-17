@@ -52,7 +52,7 @@ final class KnightMoveGenerator implements MoveGenerator, LookupGenerator {
         var nextKnight = firstBit(possibleKnights);
 
         do {
-            long possibleMoves = shiftPattern(KNIGHT_PATTERN, KNIGHT_PATTERN_CENTER, nextKnight) & intersection;
+            var possibleMoves = shiftPattern(KNIGHT_PATTERN, KNIGHT_PATTERN_CENTER, nextKnight) & intersection;
 
             var fileIndex = AlgebraicConverter.fileIndex(nextKnight);
             if (fileIndex < 4) {

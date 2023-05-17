@@ -5,9 +5,12 @@
 
 package com.vmardones.tealchess.generator;
 
+import static com.vmardones.tealchess.board.BitboardManipulator.*;
+
 import java.util.List;
 
 import com.vmardones.tealchess.move.Move;
+import com.vmardones.tealchess.move.MoveType;
 import com.vmardones.tealchess.position.Position;
 
 public sealed interface MoveGenerator
@@ -19,4 +22,19 @@ public sealed interface MoveGenerator
                 QueenMoveGenerator,
                 RookMoveGenerator {
     List<Move> generate(Position position);
+
+    default void addMoves(List<Move> moves, MoveType type, long possibleMoves, int source) {
+        if (possibleMoves == 0) {
+            return;
+        }
+
+        var destination = firstBit(possibleMoves);
+
+        do {
+            moves.add(new Move(type, source, destination));
+
+            possibleMoves = clear(possibleMoves, destination);
+            destination = firstBit(possibleMoves);
+        } while (isSet(possibleMoves, destination));
+    }
 }

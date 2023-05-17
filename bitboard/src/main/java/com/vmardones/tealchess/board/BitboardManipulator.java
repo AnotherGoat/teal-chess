@@ -85,7 +85,7 @@ public final class BitboardManipulator {
     }
 
     public static long reverse(long bitboard) {
-        return Long.reverseBytes(bitboard);
+        return Long.reverse(bitboard);
     }
 
     /**

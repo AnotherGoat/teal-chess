@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vmardones.tealchess.move.Move;
+import com.vmardones.tealchess.move.MoveType;
 import com.vmardones.tealchess.position.Position;
 
 final class RookMoveGenerator implements MoveGenerator, OrthogonalGenerator {
@@ -26,7 +27,23 @@ final class RookMoveGenerator implements MoveGenerator, OrthogonalGenerator {
             return emptyList();
         }
 
+        var emptySquares = board.emptySquares();
+        var occupiedSquares = board.occupiedSquares();
+        var capturablePieces = board.capturablePieces(sideToMove);
+
         var moves = new ArrayList<Move>();
+
+        var possibleRooks = rooks;
+        var nextRook = firstBit(possibleRooks);
+
+        do {
+            var orthogonalMoves = orthogonalMoves(nextRook, occupiedSquares);
+            addMoves(moves, MoveType.NORMAL, orthogonalMoves & emptySquares, nextRook);
+            addMoves(moves, MoveType.CAPTURE, orthogonalMoves & capturablePieces, nextRook);
+
+            possibleRooks = clear(possibleRooks, nextRook);
+            nextRook = firstBit(possibleRooks);
+        } while (isSet(possibleRooks, nextRook));
 
         return moves;
     }
