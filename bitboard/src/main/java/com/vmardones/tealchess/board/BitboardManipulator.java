@@ -84,10 +84,6 @@ public final class BitboardManipulator {
         return 63 - Long.numberOfLeadingZeros(bitboard);
     }
 
-    public static long reverse(long bitboard) {
-        return Long.reverse(bitboard);
-    }
-
     /**
      * Count the number of set bits in a bitboard.
      * @param bitboard The bitboard to check.

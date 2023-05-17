@@ -23,18 +23,18 @@ public sealed interface MoveGenerator
                 RookMoveGenerator {
     List<Move> generate(Position position);
 
-    default void addMoves(List<Move> moves, MoveType type, long possibleMoves, int source) {
-        if (possibleMoves == 0) {
+    default void addMoves(List<Move> moves, MoveType type, long movesToAdd, int source) {
+        if (movesToAdd == 0) {
             return;
         }
 
-        var destination = firstBit(possibleMoves);
+        var destination = firstBit(movesToAdd);
 
         do {
             moves.add(new Move(type, source, destination));
 
-            possibleMoves = clear(possibleMoves, destination);
-            destination = firstBit(possibleMoves);
-        } while (isSet(possibleMoves, destination));
+            movesToAdd = clear(movesToAdd, destination);
+            destination = firstBit(movesToAdd);
+        } while (isSet(movesToAdd, destination));
     }
 }

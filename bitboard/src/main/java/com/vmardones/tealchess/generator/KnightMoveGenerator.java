@@ -48,23 +48,22 @@ final class KnightMoveGenerator implements MoveGenerator, LookupGenerator {
     KnightMoveGenerator() {}
 
     private void addKnightMoves(List<Move> moves, MoveType type, long knights, long intersection) {
-        var possibleKnights = knights;
-        var nextKnight = firstBit(possibleKnights);
+        var nextKnight = firstBit(knights);
 
         do {
-            var possibleMoves = shiftPattern(KNIGHT_PATTERN, KNIGHT_PATTERN_CENTER, nextKnight) & intersection;
+            var movesToAdd = shiftPattern(KNIGHT_PATTERN, KNIGHT_PATTERN_CENTER, nextKnight) & intersection;
 
             var fileIndex = AlgebraicConverter.fileIndex(nextKnight);
             if (fileIndex < 4) {
-                possibleMoves = possibleMoves & ~FILES_GH;
+                movesToAdd = movesToAdd & ~FILES_GH;
             } else {
-                possibleMoves = possibleMoves & ~FILES_AB;
+                movesToAdd = movesToAdd & ~FILES_AB;
             }
 
-            addMoves(moves, type, possibleMoves, nextKnight);
+            addMoves(moves, type, movesToAdd, nextKnight);
 
-            possibleKnights = clear(possibleKnights, nextKnight);
-            nextKnight = firstBit(possibleKnights);
-        } while (isSet(possibleKnights, nextKnight));
+            knights = clear(knights, nextKnight);
+            nextKnight = firstBit(knights);
+        } while (isSet(knights, nextKnight));
     }
 }

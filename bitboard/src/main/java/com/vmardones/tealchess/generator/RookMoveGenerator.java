@@ -33,17 +33,16 @@ final class RookMoveGenerator implements MoveGenerator, OrthogonalGenerator {
 
         var moves = new ArrayList<Move>();
 
-        var possibleRooks = rooks;
-        var nextRook = firstBit(possibleRooks);
+        var nextRook = firstBit(rooks);
 
         do {
             var orthogonalMoves = orthogonalMoves(nextRook, occupiedSquares);
             addMoves(moves, MoveType.NORMAL, orthogonalMoves & emptySquares, nextRook);
             addMoves(moves, MoveType.CAPTURE, orthogonalMoves & capturablePieces, nextRook);
 
-            possibleRooks = clear(possibleRooks, nextRook);
-            nextRook = firstBit(possibleRooks);
-        } while (isSet(possibleRooks, nextRook));
+            rooks = clear(rooks, nextRook);
+            nextRook = firstBit(rooks);
+        } while (isSet(rooks, nextRook));
 
         return moves;
     }

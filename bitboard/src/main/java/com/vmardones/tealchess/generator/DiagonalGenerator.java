@@ -5,8 +5,7 @@
 
 package com.vmardones.tealchess.generator;
 
-import static com.vmardones.tealchess.board.BitboardManipulator.reverse;
-import static com.vmardones.tealchess.board.BitboardManipulator.singleBit;
+import static com.vmardones.tealchess.board.BitboardManipulator.*;
 
 import java.util.List;
 
@@ -60,12 +59,12 @@ interface DiagonalGenerator {
         return diagonalMoves | antiDiagonalMoves;
     }
 
-    private long hyperbolaQuintessence(long slider, long occupiedSquares, long mask) {
+    default long hyperbolaQuintessence(long slider, long occupiedSquares, long mask) {
         var occupiedLine = occupiedSquares & mask;
 
         var leftAttacks = occupiedLine - 2 * slider;
-        var reversedRightAttacks = reverse(occupiedLine) - 2 * reverse(slider);
-        var rightAttacks = reverse(reversedRightAttacks);
+        var reversedRightAttacks = Long.reverse(occupiedLine) - 2 * Long.reverse(slider);
+        var rightAttacks = Long.reverse(reversedRightAttacks);
 
         return (leftAttacks ^ rightAttacks) & mask;
     }

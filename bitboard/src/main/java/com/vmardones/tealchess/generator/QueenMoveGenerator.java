@@ -33,8 +33,7 @@ final class QueenMoveGenerator implements MoveGenerator, OrthogonalGenerator, Di
 
         var moves = new ArrayList<Move>();
 
-        var possibleQueens = queens;
-        var nextQueen = firstBit(possibleQueens);
+        var nextQueen = firstBit(queens);
 
         do {
             var orthogonalMoves = orthogonalMoves(nextQueen, occupiedSquares);
@@ -45,9 +44,9 @@ final class QueenMoveGenerator implements MoveGenerator, OrthogonalGenerator, Di
             addMoves(moves, MoveType.NORMAL, diagonalMoves & emptySquares, nextQueen);
             addMoves(moves, MoveType.CAPTURE, diagonalMoves & capturablePieces, nextQueen);
 
-            possibleQueens = clear(possibleQueens, nextQueen);
-            nextQueen = firstBit(possibleQueens);
-        } while (isSet(possibleQueens, nextQueen));
+            queens = clear(queens, nextQueen);
+            nextQueen = firstBit(queens);
+        } while (isSet(queens, nextQueen));
 
         return moves;
     }

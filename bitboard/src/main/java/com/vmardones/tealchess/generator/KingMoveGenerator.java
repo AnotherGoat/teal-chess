@@ -45,15 +45,15 @@ final class KingMoveGenerator implements MoveGenerator, LookupGenerator {
     private void addKingMoves(List<Move> moves, MoveType type, long king, long intersection) {
 
         var kingSquare = firstBit(king);
-        var possibleMoves = shiftPattern(KING_PATTERN, KING_PATTERN_CENTER, kingSquare) & intersection;
+        var movesToAdd = shiftPattern(KING_PATTERN, KING_PATTERN_CENTER, kingSquare) & intersection;
 
         var fileIndex = AlgebraicConverter.fileIndex(kingSquare);
         if (fileIndex < 4) {
-            possibleMoves = possibleMoves & ~FILE_H;
+            movesToAdd = movesToAdd & ~FILE_H;
         } else {
-            possibleMoves = possibleMoves & ~FILE_A;
+            movesToAdd = movesToAdd & ~FILE_A;
         }
 
-        addMoves(moves, type, possibleMoves, kingSquare);
+        addMoves(moves, type, movesToAdd, kingSquare);
     }
 }

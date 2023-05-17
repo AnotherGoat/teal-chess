@@ -15,7 +15,6 @@ import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.move.MoveType;
 import com.vmardones.tealchess.position.Position;
 
-// TODO: Adapt this tomorrow
 final class BishopMoveGenerator implements MoveGenerator, DiagonalGenerator {
 
     @Override
@@ -34,17 +33,16 @@ final class BishopMoveGenerator implements MoveGenerator, DiagonalGenerator {
 
         var moves = new ArrayList<Move>();
 
-        var possibleBishops = bishops;
-        var nextBishop = firstBit(possibleBishops);
+        var nextBishop = firstBit(bishops);
 
         do {
             var diagonalMoves = diagonalMoves(nextBishop, occupiedSquares);
             addMoves(moves, MoveType.NORMAL, diagonalMoves & emptySquares, nextBishop);
             addMoves(moves, MoveType.CAPTURE, diagonalMoves & capturablePieces, nextBishop);
 
-            possibleBishops = clear(possibleBishops, nextBishop);
-            nextBishop = firstBit(possibleBishops);
-        } while (isSet(possibleBishops, nextBishop));
+            bishops = clear(bishops, nextBishop);
+            nextBishop = firstBit(bishops);
+        } while (isSet(bishops, nextBishop));
 
         return moves;
     }

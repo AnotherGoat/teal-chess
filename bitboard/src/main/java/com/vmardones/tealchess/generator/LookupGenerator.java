@@ -5,8 +5,6 @@
 
 package com.vmardones.tealchess.generator;
 
-import static com.vmardones.tealchess.board.BitboardManipulator.*;
-
 interface LookupGenerator {
 
     default long shiftPattern(long pattern, int patternCenter, int newCenter) {

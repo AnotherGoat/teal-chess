@@ -122,12 +122,12 @@ final class PawnMoveGenerator implements MoveGenerator {
         return moves;
     }
 
-    private void addMoves(List<Move> moves, MoveType type, long possibleMoves, int fileDelta, int rankDelta) {
-        if (possibleMoves == 0) {
+    private void addMoves(List<Move> moves, MoveType type, long movesToAdd, int fileDelta, int rankDelta) {
+        if (movesToAdd == 0) {
             return;
         }
 
-        var destination = firstBit(possibleMoves);
+        var destination = firstBit(movesToAdd);
 
         do {
             var fileIndex = AlgebraicConverter.fileIndex(destination);
@@ -136,17 +136,17 @@ final class PawnMoveGenerator implements MoveGenerator {
 
             moves.add(new Move(type, source, destination));
 
-            possibleMoves = clear(possibleMoves, destination);
-            destination = firstBit(possibleMoves);
-        } while (isSet(possibleMoves, destination));
+            movesToAdd = clear(movesToAdd, destination);
+            destination = firstBit(movesToAdd);
+        } while (isSet(movesToAdd, destination));
     }
 
-    private void addEnPassantMove(List<Move> moves, long possibleMoves, int fileDelta, int rankDelta) {
-        if (possibleMoves == 0) {
+    private void addEnPassantMove(List<Move> moves, long movesToAdd, int fileDelta, int rankDelta) {
+        if (movesToAdd == 0) {
             return;
         }
 
-        var destination = firstBit(possibleMoves);
+        var destination = firstBit(movesToAdd);
 
         var fileIndex = AlgebraicConverter.fileIndex(destination);
         var rankIndex = AlgebraicConverter.rankIndex(destination);
@@ -155,12 +155,12 @@ final class PawnMoveGenerator implements MoveGenerator {
         moves.add(new Move(MoveType.EN_PASSANT, source, destination));
     }
 
-    private void addPromotionMoves(List<Move> moves, MoveType type, long possibleMoves, int fileDelta, int rankDelta) {
-        if (possibleMoves == 0) {
+    private void addPromotionMoves(List<Move> moves, MoveType type, long movesToAdd, int fileDelta, int rankDelta) {
+        if (movesToAdd == 0) {
             return;
         }
 
-        var destination = firstBit(possibleMoves);
+        var destination = firstBit(movesToAdd);
 
         do {
             var fileIndex = AlgebraicConverter.fileIndex(destination);
@@ -171,8 +171,8 @@ final class PawnMoveGenerator implements MoveGenerator {
                 moves.add(new Move(type, source, destination, choice));
             }
 
-            possibleMoves = clear(possibleMoves, destination);
-            destination = firstBit(possibleMoves);
-        } while (isSet(possibleMoves, destination));
+            movesToAdd = clear(movesToAdd, destination);
+            destination = firstBit(movesToAdd);
+        } while (isSet(movesToAdd, destination));
     }
 }
