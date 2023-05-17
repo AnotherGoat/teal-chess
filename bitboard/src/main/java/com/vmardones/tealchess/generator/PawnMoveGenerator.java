@@ -6,7 +6,9 @@
 package com.vmardones.tealchess.generator;
 
 import static com.vmardones.tealchess.board.BitboardManipulator.*;
+import static java.util.Collections.emptyList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.vmardones.tealchess.color.Color;
@@ -16,7 +18,7 @@ import com.vmardones.tealchess.piece.PromotionChoice;
 import com.vmardones.tealchess.position.Position;
 import com.vmardones.tealchess.square.AlgebraicConverter;
 
-final class PawnMoveGenerator extends MoveGenerator {
+final class PawnMoveGenerator implements MoveGenerator {
 
     private static final long RANK_1 = 0xffL;
     private static final long RANK_4 = 0xff_00_00_00L;
@@ -30,152 +32,97 @@ final class PawnMoveGenerator extends MoveGenerator {
     private static final int LEFT_CAPTURE_OFFSET = 7;
     private static final int RIGHT_CAPTURE_OFFSET = 9;
 
-    private final Color sideToMove;
-    private final long emptySquares;
-    private final long pawns;
-    private final long capturablePieces;
-    private final long enPassantBitboard;
-    private final long promotionRank;
-    private final long doublePushRank;
-
-    PawnMoveGenerator(Position position) {
-        super(position);
-        var board = position.board();
-        sideToMove = position.sideToMove();
-        emptySquares = board.emptySquares();
-        pawns = board.pawns(sideToMove);
-        capturablePieces = board.capturablePieces(sideToMove);
-
-        var enPassantTarget = position.enPassantTarget();
-        enPassantBitboard = enPassantTarget == null ? 0 : singleBit(enPassantTarget);
-
-        promotionRank = sideToMove.isWhite() ? RANK_8 : RANK_1;
-        doublePushRank = sideToMove.isWhite() ? RANK_4 : RANK_5;
+    @Override
+    public List<Move> generate(Position position) {
+        var sideToMove = position.sideToMove();
+        return sideToMove.isWhite() ? generateWhiteMoves(position) : generateBlackMoves(position);
     }
 
-    @Override
-    public List<Move> generate() {
+    PawnMoveGenerator() {}
+
+    private List<Move> generateWhiteMoves(Position position) {
+        var board = position.board();
+        var pawns = board.pawns(Color.WHITE);
+
         if (pawns == 0) {
-            return moves;
+            return emptyList();
         }
 
-        addPushes();
-        addDoublePushes();
-        addLeftCaptures();
-        addRightCaptures();
-        addLeftEnPassantCapture();
-        addRightEnPassantCapture();
-        addPushPromotions();
-        addLeftCapturePromotions();
-        addRightCapturePromotions();
+        var emptySquares = board.emptySquares();
+        var capturablePieces = board.capturablePieces(Color.WHITE);
+
+        var moves = new ArrayList<Move>();
+
+        var pushedPawns = pawns << PUSH_OFFSET;
+        addMoves(moves, MoveType.PAWN_PUSH, pushedPawns & emptySquares & ~RANK_8, 0, 1);
+
+        var doublePushedPawns = pawns << DOUBLE_PUSH_OFFSET;
+        var skippedEmptySquares = emptySquares << PUSH_OFFSET;
+        addMoves(moves, MoveType.DOUBLE_PUSH, doublePushedPawns & emptySquares & skippedEmptySquares & RANK_4, 0, 2);
+
+        var leftCapturePawns = pawns << LEFT_CAPTURE_OFFSET;
+        addMoves(moves, MoveType.PAWN_CAPTURE, leftCapturePawns & capturablePieces & ~RANK_8 & ~FILE_H, -1, 1);
+
+        var rightCapturePawns = pawns << RIGHT_CAPTURE_OFFSET;
+        addMoves(moves, MoveType.PAWN_CAPTURE, rightCapturePawns & capturablePieces & ~RANK_8 & ~FILE_A, 1, 1);
+
+        var enPassantTarget = position.enPassantTarget();
+        if (enPassantTarget != null) {
+            var enPassantBitboard = singleBit(enPassantTarget);
+
+            addEnPassantMove(moves, leftCapturePawns & enPassantBitboard & ~FILE_H, -1, 1);
+            addEnPassantMove(moves, rightCapturePawns & enPassantBitboard & ~FILE_A, 1, 1);
+        }
+
+        addPromotionMoves(moves, MoveType.PAWN_PUSH, pushedPawns & emptySquares & RANK_8, 0, 1);
+        addPromotionMoves(moves, MoveType.PAWN_CAPTURE, leftCapturePawns & capturablePieces & RANK_8 & ~FILE_H, -1, 1);
+        addPromotionMoves(moves, MoveType.PAWN_CAPTURE, rightCapturePawns & capturablePieces & RANK_8 & ~FILE_A, 1, 1);
 
         return moves;
     }
 
-    private long movePawns(int offset) {
-        return sideToMove.isWhite() ? pawns << offset : pawns >> offset;
-    }
+    private List<Move> generateBlackMoves(Position position) {
+        var board = position.board();
+        var pawns = board.pawns(Color.BLACK);
 
-    private long movePawns(int whiteOffset, int blackOffset) {
-        return sideToMove.isWhite() ? pawns << whiteOffset : pawns >> blackOffset;
-    }
-
-    private void addPushes() {
-        var movedPawns = movePawns(PUSH_OFFSET);
-        var possibleMoves = movedPawns & emptySquares & ~promotionRank;
-        var rankDelta = sideToMove.isWhite() ? -1 : 1;
-
-        addMoves(MoveType.PAWN_PUSH, possibleMoves, 0, rankDelta);
-    }
-
-    private void addDoublePushes() {
-        var movedPawns = movePawns(DOUBLE_PUSH_OFFSET);
-        var forwardEmptySquares = sideToMove.isWhite() ? emptySquares << PUSH_OFFSET : emptySquares >> PUSH_OFFSET;
-        var possibleMoves = movedPawns & emptySquares & forwardEmptySquares & doublePushRank;
-        var rankDelta = sideToMove.isWhite() ? -2 : 2;
-
-        addMoves(MoveType.DOUBLE_PUSH, possibleMoves, 0, rankDelta);
-    }
-
-    private void addLeftCaptures() {
-        var movedPawns = movePawns(LEFT_CAPTURE_OFFSET, RIGHT_CAPTURE_OFFSET);
-        var possibleMoves = movedPawns & capturablePieces & ~promotionRank & ~FILE_H;
-        var rankDelta = sideToMove.isWhite() ? -1 : 1;
-
-        addMoves(MoveType.PAWN_CAPTURE, possibleMoves, 1, rankDelta);
-    }
-
-    private void addRightCaptures() {
-        var movedPawns = movePawns(RIGHT_CAPTURE_OFFSET, LEFT_CAPTURE_OFFSET);
-        var possibleMoves = movedPawns & capturablePieces & ~promotionRank & ~FILE_A;
-        var rankDelta = sideToMove.isWhite() ? -1 : 1;
-
-        addMoves(MoveType.PAWN_CAPTURE, possibleMoves, -1, rankDelta);
-    }
-
-    private void addLeftEnPassantCapture() {
-        if (enPassantBitboard == 0L) {
-            return;
+        if (pawns == 0) {
+            return emptyList();
         }
 
-        var movedPawns = movePawns(LEFT_CAPTURE_OFFSET, RIGHT_CAPTURE_OFFSET);
-        var possibleMoves = movedPawns & enPassantBitboard & ~FILE_H;
-        var rankDelta = sideToMove.isWhite() ? -1 : 1;
+        var emptySquares = board.emptySquares();
+        var capturablePieces = board.capturablePieces(Color.BLACK);
 
-        addEnPassantMove(possibleMoves, 1, rankDelta);
-    }
+        var moves = new ArrayList<Move>();
 
-    private void addRightEnPassantCapture() {
-        if (enPassantBitboard == 0L) {
-            return;
+        var pushedPawns = pawns >> PUSH_OFFSET;
+        addMoves(moves, MoveType.PAWN_PUSH, pushedPawns & emptySquares & ~RANK_1, 0, -1);
+
+        var doublePushedPawns = pawns >> DOUBLE_PUSH_OFFSET;
+        var skippedEmptySquares = emptySquares >> PUSH_OFFSET;
+        addMoves(moves, MoveType.DOUBLE_PUSH, doublePushedPawns & emptySquares & skippedEmptySquares & RANK_5, 0, -2);
+
+        var leftCapturePawns = pawns >> RIGHT_CAPTURE_OFFSET;
+        addMoves(moves, MoveType.PAWN_CAPTURE, leftCapturePawns & capturablePieces & ~RANK_1 & ~FILE_H, -1, -1);
+
+        var rightCapturePawns = pawns >> LEFT_CAPTURE_OFFSET;
+        addMoves(moves, MoveType.PAWN_CAPTURE, rightCapturePawns & capturablePieces & ~RANK_1 & ~FILE_A, 1, -1);
+
+        var enPassantTarget = position.enPassantTarget();
+        if (enPassantTarget != null) {
+            var enPassantBitboard = singleBit(enPassantTarget);
+
+            addEnPassantMove(moves, leftCapturePawns & enPassantBitboard & ~FILE_H, -1, -1);
+            addEnPassantMove(moves, rightCapturePawns & enPassantBitboard & ~FILE_A, 1, -1);
         }
 
-        var movedPawns = movePawns(RIGHT_CAPTURE_OFFSET, LEFT_CAPTURE_OFFSET);
-        var possibleMoves = movedPawns & enPassantBitboard & ~FILE_A;
-        var rankDelta = sideToMove.isWhite() ? -1 : 1;
+        addPromotionMoves(moves, MoveType.PAWN_PUSH, pushedPawns & emptySquares & RANK_1, 0, -1);
+        addPromotionMoves(moves, MoveType.PAWN_CAPTURE, leftCapturePawns & capturablePieces & RANK_1 & ~FILE_H, -1, -1);
+        addPromotionMoves(moves, MoveType.PAWN_CAPTURE, rightCapturePawns & capturablePieces & RANK_1 & ~FILE_A, 1, -1);
 
-        addEnPassantMove(possibleMoves, -1, rankDelta);
+        return moves;
     }
 
-    private void addEnPassantMove(long possibleMoves, int fileDelta, int rankDelta) {
-        if (possibleMoves == 0) {
-            return;
-        }
-
-        var destination = firstBit(possibleMoves);
-
-        var fileIndex = AlgebraicConverter.fileIndex(destination);
-        var rankIndex = AlgebraicConverter.rankIndex(destination);
-        var source = AlgebraicConverter.toSquare(fileIndex + fileDelta, rankIndex + rankDelta);
-
-        moves.add(new Move(MoveType.EN_PASSANT, source, destination));
-    }
-
-    private void addPushPromotions() {
-        var movedPawns = movePawns(PUSH_OFFSET);
-        var possibleMoves = movedPawns & emptySquares & promotionRank;
-        var rankDelta = sideToMove.isWhite() ? -1 : 1;
-
-        addPromotionMoves(MoveType.PAWN_PUSH, possibleMoves, 0, rankDelta);
-    }
-
-    private void addLeftCapturePromotions() {
-        var movedPawns = movePawns(LEFT_CAPTURE_OFFSET, RIGHT_CAPTURE_OFFSET);
-        var possibleMoves = movedPawns & capturablePieces & promotionRank & ~FILE_H;
-        var rankDelta = sideToMove.isWhite() ? -1 : 1;
-
-        addPromotionMoves(MoveType.PAWN_CAPTURE, possibleMoves, 1, rankDelta);
-    }
-
-    private void addRightCapturePromotions() {
-        var movedPawns = movePawns(RIGHT_CAPTURE_OFFSET, LEFT_CAPTURE_OFFSET);
-        var possibleMoves = movedPawns & capturablePieces & promotionRank & ~FILE_A;
-        var rankDelta = sideToMove.isWhite() ? -1 : 1;
-
-        addPromotionMoves(MoveType.PAWN_CAPTURE, possibleMoves, -1, rankDelta);
-    }
-
-    private void addPromotionMoves(MoveType type, long possibleMoves, int fileDelta, int rankDelta) {
+    private void addMoves(List<Move> moves, MoveType type, long possibleMoves, int fileDelta, int rankDelta) {
         if (possibleMoves == 0) {
             return;
         }
@@ -185,7 +132,40 @@ final class PawnMoveGenerator extends MoveGenerator {
         do {
             var fileIndex = AlgebraicConverter.fileIndex(destination);
             var rankIndex = AlgebraicConverter.rankIndex(destination);
-            var source = AlgebraicConverter.toSquare(fileIndex + fileDelta, rankIndex + rankDelta);
+            var source = AlgebraicConverter.toSquare(fileIndex - fileDelta, rankIndex - rankDelta);
+
+            moves.add(new Move(type, source, destination));
+
+            possibleMoves = clear(possibleMoves, destination);
+            destination = firstBit(possibleMoves);
+        } while (isSet(possibleMoves, destination));
+    }
+
+    private void addEnPassantMove(List<Move> moves, long possibleMoves, int fileDelta, int rankDelta) {
+        if (possibleMoves == 0) {
+            return;
+        }
+
+        var destination = firstBit(possibleMoves);
+
+        var fileIndex = AlgebraicConverter.fileIndex(destination);
+        var rankIndex = AlgebraicConverter.rankIndex(destination);
+        var source = AlgebraicConverter.toSquare(fileIndex - fileDelta, rankIndex - rankDelta);
+
+        moves.add(new Move(MoveType.EN_PASSANT, source, destination));
+    }
+
+    private void addPromotionMoves(List<Move> moves, MoveType type, long possibleMoves, int fileDelta, int rankDelta) {
+        if (possibleMoves == 0) {
+            return;
+        }
+
+        var destination = firstBit(possibleMoves);
+
+        do {
+            var fileIndex = AlgebraicConverter.fileIndex(destination);
+            var rankIndex = AlgebraicConverter.rankIndex(destination);
+            var source = AlgebraicConverter.toSquare(fileIndex - fileDelta, rankIndex - rankDelta);
 
             for (var choice : PromotionChoice.values()) {
                 moves.add(new Move(type, source, destination, choice));

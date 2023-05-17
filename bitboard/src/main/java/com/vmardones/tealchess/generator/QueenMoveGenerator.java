@@ -5,21 +5,30 @@
 
 package com.vmardones.tealchess.generator;
 
+import static java.util.Collections.emptyList;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.position.Position;
 
-final class QueenMoveGenerator extends MoveGenerator {
-
-    private static final List<Integer> MOVE_OFFSETS = List.of(7, 8, 9, -1, 1, -9, -8, -7);
-
-    QueenMoveGenerator(Position position) {
-        super(position);
-    }
+final class QueenMoveGenerator implements MoveGenerator, OrthogonalGenerator, DiagonalGenerator {
 
     @Override
-    public List<Move> generate() {
+    public List<Move> generate(Position position) {
+        var board = position.board();
+        var sideToMove = position.sideToMove();
+        var queens = board.queens(sideToMove);
+
+        if (queens == 0) {
+            return emptyList();
+        }
+
+        var moves = new ArrayList<Move>();
+
         return moves;
     }
+
+    QueenMoveGenerator() {}
 }

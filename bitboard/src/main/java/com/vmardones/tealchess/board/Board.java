@@ -168,7 +168,11 @@ public final class Board implements Unicode {
     /* Special bitboards */
 
     public long emptySquares() {
-        return ~(pawns(WHITE)
+        return ~occupiedSquares();
+    }
+
+    public long occupiedSquares() {
+        return pawns(WHITE)
                 | pawns(BLACK)
                 | knights(WHITE)
                 | knights(BLACK)
@@ -179,7 +183,7 @@ public final class Board implements Unicode {
                 | queens(WHITE)
                 | queens(BLACK)
                 | kings(WHITE)
-                | kings(BLACK));
+                | kings(BLACK);
     }
 
     public long capturablePieces(Color attacker) {

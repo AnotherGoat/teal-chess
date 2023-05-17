@@ -11,19 +11,35 @@ import java.util.List;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.position.Position;
 
-public final class PseudoLegalGenerator extends MoveGenerator {
+public final class PseudoLegalGenerator implements MoveGenerator {
 
-    public PseudoLegalGenerator(Position position) {
-        super(position);
-    }
+    private final MoveGenerator pawnMoveGenerator;
+    private final MoveGenerator knightMoveGenerator;
+    private final MoveGenerator bishopMoveGenerator;
+    private final MoveGenerator rookMoveGenerator;
+    private final MoveGenerator queenMoveGenerator;
+    private final MoveGenerator kingMoveGenerator;
 
     @Override
-    public List<Move> generate() {
+    public List<Move> generate(Position position) {
         var moves = new ArrayList<Move>();
 
-        moves.addAll(new PawnMoveGenerator(position).generate());
-        moves.addAll(new KnightMoveGenerator(position).generate());
+        moves.addAll(pawnMoveGenerator.generate(position));
+        moves.addAll(knightMoveGenerator.generate(position));
+        moves.addAll(bishopMoveGenerator.generate(position));
+        moves.addAll(rookMoveGenerator.generate(position));
+        moves.addAll(queenMoveGenerator.generate(position));
+        moves.addAll(kingMoveGenerator.generate(position));
 
         return moves;
+    }
+
+    public PseudoLegalGenerator() {
+        pawnMoveGenerator = new PawnMoveGenerator();
+        knightMoveGenerator = new KnightMoveGenerator();
+        bishopMoveGenerator = new BishopMoveGenerator();
+        rookMoveGenerator = new RookMoveGenerator();
+        queenMoveGenerator = new QueenMoveGenerator();
+        kingMoveGenerator = new KingMoveGenerator();
     }
 }

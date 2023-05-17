@@ -5,21 +5,28 @@
 
 package com.vmardones.tealchess.generator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.vmardones.tealchess.move.Move;
+import com.vmardones.tealchess.move.MoveType;
 import com.vmardones.tealchess.position.Position;
+import com.vmardones.tealchess.square.AlgebraicConverter;
 
-final class KingMoveGenerator extends MoveGenerator {
+import static com.vmardones.tealchess.board.BitboardManipulator.*;
 
-    private static final List<Integer> MOVE_OFFSETS = List.of(7, 8, 9, -1, 1, -9, -8, -7);
-
-    KingMoveGenerator(Position position) {
-        super(position);
-    }
+final class KingMoveGenerator implements MoveGenerator, LookupGenerator {
 
     @Override
-    public List<Move> generate() {
+    public List<Move> generate(Position position) {
+        var board = position.board();
+        var sideToMove = position.sideToMove();
+        var king = board.kings(sideToMove);
+
+        var moves = new ArrayList<Move>();
+
         return moves;
     }
+
+    KingMoveGenerator() {}
 }

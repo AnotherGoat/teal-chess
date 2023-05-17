@@ -86,6 +86,14 @@ public final class AlgebraicConverter {
         return square / SIDE_LENGTH;
     }
 
+    public static int diagonalIndex(int square) {
+        return fileIndex(square) + rankIndex(square);
+    }
+
+    public static int antiDiagonalIndex(int square) {
+        return rankIndex(square) + 7 - fileIndex(square);
+    }
+
     private static int calculateSquare(String algebraicNotation) {
 
         var fileIndex = algebraicNotation.charAt(0) - 'a';

@@ -5,21 +5,31 @@
 
 package com.vmardones.tealchess.generator;
 
+import static com.vmardones.tealchess.board.BitboardManipulator.*;
+import static java.util.Collections.emptyList;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.position.Position;
 
-final class RookMoveGenerator extends MoveGenerator {
-
-    private static final List<Integer> MOVE_OFFSETS = List.of(8, -1, 1, -8);
-
-    RookMoveGenerator(Position position) {
-        super(position);
-    }
+final class RookMoveGenerator implements MoveGenerator, OrthogonalGenerator {
 
     @Override
-    public List<Move> generate() {
+    public List<Move> generate(Position position) {
+        var board = position.board();
+        var sideToMove = position.sideToMove();
+        var rooks = board.rooks(sideToMove);
+
+        if (rooks == 0) {
+            return emptyList();
+        }
+
+        var moves = new ArrayList<Move>();
+
         return moves;
     }
+
+    RookMoveGenerator() {}
 }
