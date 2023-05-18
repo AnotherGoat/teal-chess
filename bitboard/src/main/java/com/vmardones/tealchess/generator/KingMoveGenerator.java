@@ -5,6 +5,10 @@
 
 package com.vmardones.tealchess.generator;
 
+import static com.vmardones.tealchess.board.BitboardManipulator.*;
+import static com.vmardones.tealchess.move.MoveType.KING_CASTLE;
+import static com.vmardones.tealchess.move.MoveType.QUEEN_CASTLE;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +18,6 @@ import com.vmardones.tealchess.move.MoveType;
 import com.vmardones.tealchess.position.Position;
 import com.vmardones.tealchess.square.AlgebraicConverter;
 import com.vmardones.tealchess.square.Square;
-
-import static com.vmardones.tealchess.board.BitboardManipulator.*;
-import static com.vmardones.tealchess.move.MoveType.KING_CASTLE;
-import static com.vmardones.tealchess.move.MoveType.QUEEN_CASTLE;
 
 final class KingMoveGenerator implements MoveGenerator, LookupGenerator {
 

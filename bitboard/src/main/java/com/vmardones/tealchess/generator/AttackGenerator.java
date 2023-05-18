@@ -25,6 +25,12 @@ final class AttackGenerator implements DiagonalGenerator, LookupGenerator, Ortho
     private static final int LEFT_PAWN_CAPTURE_OFFSET = 7;
     private static final int RIGHT_PAWN_CAPTURE_OFFSET = 9;
 
+    /**
+     * Generate a bitboard with all the squares attacked by one of the sides.
+     * @param position The position to analyze.
+     * @param attacker The side to calculate attacks for.
+     * @return Attacked squares bitboard.
+     */
     long generate(Position position, Color attacker) {
         var board = position.board();
 
