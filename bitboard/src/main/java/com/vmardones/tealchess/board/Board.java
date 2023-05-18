@@ -76,7 +76,11 @@ public final class Board implements Unicode {
      * @return The piece found.
      */
     public @Nullable Piece pieceAt(int square) {
-        return mailbox().get(square);
+        if (mailbox.isEmpty()) {
+            mailbox.addAll(loadMailbox(bitboards));
+        }
+
+        return mailbox.get(square);
     }
 
     /**

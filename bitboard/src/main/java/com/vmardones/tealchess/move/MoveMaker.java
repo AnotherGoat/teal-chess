@@ -135,7 +135,11 @@ public final class MoveMaker {
             return clear(bitboard, source);
         }
 
-        if (pieceType != choice.type() && pieceColor != sideToMove) {
+        if (pieceColor != sideToMove) {
+            return clear(bitboard, destination);
+        }
+
+        if (pieceType != choice.type()) {
             return clear(bitboard, destination);
         }
 
@@ -176,7 +180,7 @@ public final class MoveMaker {
         var rookDestination = rookMove.destination();
 
         if (isSet(bitboard, rookSource)) {
-            bitboard = clear(bitboard, source);
+            bitboard = clear(bitboard, rookSource);
             return set(bitboard, rookDestination);
         }
 
@@ -204,6 +208,7 @@ public final class MoveMaker {
             return null;
         }
 
-        return sideToMove.isWhite() ? move.destination() + PAWN_PUSH_OFFSET : move.destination() - PAWN_PUSH_OFFSET;
+        var source = move.source();
+        return sideToMove.isWhite() ? source + PAWN_PUSH_OFFSET : source - PAWN_PUSH_OFFSET;
     }
 }

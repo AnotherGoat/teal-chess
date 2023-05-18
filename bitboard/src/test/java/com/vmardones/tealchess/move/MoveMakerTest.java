@@ -82,7 +82,7 @@ final class MoveMakerTest {
     void makeBlackQueenSideCastle() {
         var position = FenParser.parse("r3k3/8/8/8/8/8/8/4K3 b q - 0 1");
         var postMoveBoard =
-                moveMaker.make(position, WHITE_QUEEN_SIDE_CASTLE.get(0)).board();
+                moveMaker.make(position, BLACK_QUEEN_SIDE_CASTLE.get(0)).board();
 
         assertThat(postMoveBoard.pieceAt(e8)).isNull();
         assertThat(postMoveBoard.pieceAt(c8)).isEqualTo(new Piece(KING, BLACK, c8));
