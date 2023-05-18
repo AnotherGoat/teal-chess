@@ -6,8 +6,7 @@
 package com.vmardones.tealchess.generator;
 
 import static com.vmardones.tealchess.board.BitboardManipulator.*;
-import static com.vmardones.tealchess.move.MoveType.KING_CASTLE;
-import static com.vmardones.tealchess.move.MoveType.QUEEN_CASTLE;
+import static com.vmardones.tealchess.move.Move.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +26,6 @@ final class KingMoveGenerator implements MoveGenerator, LookupGenerator {
     private static final int KING_PATTERN_CENTER = Square.b2;
     private static final int WHITE_KING = Square.e1;
     private static final int BLACK_KING = Square.e8;
-    private static final Move WHITE_KING_SIDE_CASTLE = new Move(KING_CASTLE, WHITE_KING, Square.g1);
-    private static final Move WHITE_QUEEN_SIDE_CASTLE = new Move(QUEEN_CASTLE, WHITE_KING, Square.c1);
-    private static final Move BLACK_KING_SIDE_CASTLE = new Move(KING_CASTLE, BLACK_KING, Square.g8);
-    private static final Move BLACK_QUEEN_SIDE_CASTLE = new Move(QUEEN_CASTLE, BLACK_KING, Square.c8);
 
     private final AttackGenerator attackGenerator;
 
@@ -92,11 +87,11 @@ final class KingMoveGenerator implements MoveGenerator, LookupGenerator {
         var emptySquares = position.board().emptySquares();
 
         if (rights.whiteKingSide() && isKingSideCastlePossible(WHITE_KING, emptySquares, opponentAttacks)) {
-            moves.add(WHITE_KING_SIDE_CASTLE);
+            moves.add(WHITE_KING_SIDE_CASTLE.get(0));
         }
 
         if (rights.whiteQueenSide() && isQueenSideCastlePossible(WHITE_KING, emptySquares, opponentAttacks)) {
-            moves.add(WHITE_QUEEN_SIDE_CASTLE);
+            moves.add(WHITE_QUEEN_SIDE_CASTLE.get(0));
         }
     }
 
@@ -116,11 +111,11 @@ final class KingMoveGenerator implements MoveGenerator, LookupGenerator {
         var emptySquares = position.board().emptySquares();
 
         if (rights.blackKingSide() && isKingSideCastlePossible(BLACK_KING, emptySquares, opponentAttacks)) {
-            moves.add(BLACK_KING_SIDE_CASTLE);
+            moves.add(BLACK_KING_SIDE_CASTLE.get(0));
         }
 
         if (rights.blackQueenSide() && isQueenSideCastlePossible(BLACK_KING, emptySquares, opponentAttacks)) {
-            moves.add(BLACK_QUEEN_SIDE_CASTLE);
+            moves.add(BLACK_QUEEN_SIDE_CASTLE.get(0));
         }
     }
 

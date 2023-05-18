@@ -25,7 +25,7 @@ public enum PromotionChoice implements San {
         return type.whiteFen();
     }
 
-    PieceType type() {
+    public PieceType type() {
         return type;
     }
 

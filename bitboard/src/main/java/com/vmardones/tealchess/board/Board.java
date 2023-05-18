@@ -75,6 +75,10 @@ public final class Board implements Unicode {
         return new BoardBuilder(this);
     }
 
+    public static Board fromBitboards(long[][] bitboards) {
+        return new Board(bitboards);
+    }
+
     /* Checking the board */
 
     /**
@@ -139,6 +143,10 @@ public final class Board implements Unicode {
     // TODO: Generate the mailbox lazily, when this method is called for the first time
     public @Nullable Piece[] mailbox() {
         return mailbox.clone();
+    }
+
+    public long bitboard(PieceType pieceType, Color color) {
+        return bitboards[pieceType.ordinal()][color.ordinal()];
     }
 
     public long pawns(Color color) {
@@ -253,6 +261,13 @@ public final class Board implements Unicode {
         mailbox = builder.mailbox;
         whiteKing = builder.whiteKing;
         blackKing = builder.blackKing;
+    }
+
+    private Board(long[][] bitboards) {
+        this.bitboards = bitboards;
+        mailbox = null;
+        whiteKing = null;
+        blackKing = null;
     }
 
     /* equals and hashCode */
