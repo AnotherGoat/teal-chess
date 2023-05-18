@@ -5,13 +5,13 @@
 
 package com.vmardones.tealchess.board;
 
+import static com.vmardones.tealchess.board.BitboardManipulator.*;
 import static com.vmardones.tealchess.color.Color.*;
 import static com.vmardones.tealchess.piece.PieceType.*;
 import static com.vmardones.tealchess.square.Square.*;
+import static java.util.Collections.unmodifiableList;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import com.vmardones.tealchess.color.Color;
 import com.vmardones.tealchess.parser.Unicode;
@@ -43,11 +43,10 @@ public final class Board implements Unicode {
 
     private static final long LIGHT_SQUARES = 0x55_aa_55_aa_55_aa_55_aaL;
 
+    // TODO: Move this comment to implementation details document
     // Arrays of bitboards: https://www.chessprogramming.org/Bitboard_Board-Definition#Array
     private final long[][] bitboards;
-    private final @Nullable Piece[] mailbox;
-    private final Piece whiteKing;
-    private final Piece blackKing;
+    private final List<@Nullable Piece> mailbox = new ArrayList<>();
 
     /* Building the board */
 
@@ -64,17 +63,6 @@ public final class Board implements Unicode {
         return new BoardBuilder(whiteKingSquare, blackKingSquare);
     }
 
-    /**
-     * A special builder intended to be used when players make a move. This can only be used after the
-     * board has been initialized at least once. It keeps the current state of the board and lets you
-     * specify only the differences from the previous position.
-     *
-     * @return The next position builder.
-     */
-    public BoardBuilder nextPositionBuilder() {
-        return new BoardBuilder(this);
-    }
-
     public static Board fromBitboards(long[][] bitboards) {
         return new Board(bitboards);
     }
@@ -88,7 +76,7 @@ public final class Board implements Unicode {
      * @return The piece found.
      */
     public @Nullable Piece pieceAt(int square) {
-        return mailbox[square];
+        return mailbox().get(square);
     }
 
     /**
@@ -130,19 +118,12 @@ public final class Board implements Unicode {
 
     /* Getters */
 
-    /**
-     * Directly gets the king of a specific color.
-     * It's common to use this method when checking if a player is in check.
-     * @param color The color of the king.
-     * @return The requested king.
-     */
-    public Piece king(Color color) {
-        return color.isWhite() ? whiteKing : blackKing;
-    }
+    public List<@Nullable Piece> mailbox() {
+        if (mailbox.isEmpty()) {
+            mailbox.addAll(loadMailbox(bitboards));
+        }
 
-    // TODO: Generate the mailbox lazily, when this method is called for the first time
-    public @Nullable Piece[] mailbox() {
-        return mailbox.clone();
+        return unmodifiableList(mailbox);
     }
 
     public long bitboard(PieceType pieceType, Color color) {
@@ -258,16 +239,37 @@ public final class Board implements Unicode {
 
     private Board(BoardBuilder builder) {
         bitboards = builder.bitboards;
-        mailbox = builder.mailbox;
-        whiteKing = builder.whiteKing;
-        blackKing = builder.blackKing;
+        mailbox.addAll(Arrays.asList(builder.mailbox));
     }
 
     private Board(long[][] bitboards) {
         this.bitboards = bitboards;
-        mailbox = null;
-        whiteKing = null;
-        blackKing = null;
+    }
+
+    private List<Piece> loadMailbox(long[][] bitboards) {
+        var arrayMailbox = new Piece[NUMBER_OF_SQUARES];
+
+        for (var pieceType : PieceType.values()) {
+            for (var color : Color.values()) {
+
+                var bitboard = bitboards[pieceType.ordinal()][color.ordinal()];
+
+                if (bitboard == 0) {
+                    continue;
+                }
+
+                var nextBit = firstBit(bitboard);
+
+                do {
+                    arrayMailbox[nextBit] = new Piece(pieceType, color, nextBit);
+
+                    bitboard = clear(bitboard, nextBit);
+                    nextBit = firstBit(bitboard);
+                } while (isSet(bitboard, nextBit));
+            }
+        }
+
+        return Arrays.asList(arrayMailbox);
     }
 
     /* equals and hashCode */
@@ -283,20 +285,16 @@ public final class Board implements Unicode {
         }
 
         var other = (Board) o;
-        return Arrays.deepEquals(bitboards, other.bitboards)
-                && Arrays.equals(mailbox, other.mailbox)
-                && whiteKing.equals(other.whiteKing)
-                && blackKing.equals(other.blackKing);
+        return Arrays.deepEquals(bitboards, other.bitboards) && mailbox.equals(other.mailbox);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(Arrays.deepHashCode(bitboards), Arrays.hashCode(mailbox), whiteKing, blackKing);
+        return Objects.hash(Arrays.deepHashCode(bitboards), mailbox);
     }
 
     /**
      * Responsible for building the board, a complex object.
-     * The builder shouldn't be reutilized after finishing the building process once.
      */
     public static class BoardBuilder {
 
@@ -379,13 +377,6 @@ public final class Board implements Unicode {
             mailbox = new Piece[NUMBER_OF_SQUARES];
             whiteKing = new Piece(KING, WHITE, whiteKingSquare);
             blackKing = new Piece(KING, BLACK, blackKingSquare);
-        }
-
-        private BoardBuilder(Board board) {
-            bitboards = board.bitboards.clone();
-            mailbox = board.mailbox.clone();
-            whiteKing = board.whiteKing;
-            blackKing = board.blackKing;
         }
     }
 }

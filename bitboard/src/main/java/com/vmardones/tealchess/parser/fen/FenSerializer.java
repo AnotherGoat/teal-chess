@@ -37,7 +37,7 @@ public final class FenSerializer {
             for (var file = 0; file < Board.SIDE_LENGTH; file++) {
 
                 var square = AlgebraicConverter.toSquare(file, rank);
-                var piece = mailbox[square];
+                var piece = mailbox.get(square);
 
                 if (piece == null) {
                     emptyCounter++;

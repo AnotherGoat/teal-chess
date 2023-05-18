@@ -11,7 +11,6 @@ import static com.vmardones.tealchess.move.MoveType.*;
 
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.color.Color;
-import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.piece.PieceType;
 import com.vmardones.tealchess.piece.PromotionChoice;
 import com.vmardones.tealchess.position.CastlingRights;
@@ -25,8 +24,10 @@ import org.eclipse.jdt.annotation.Nullable;
  */
 public final class MoveMaker {
 
+    private static final int WHITE_KING = Square.e1;
     private static final int WHITE_KING_SIDE_ROOK = Square.h1;
     private static final int WHITE_QUEEN_SIDE_ROOK = Square.a1;
+    private static final int BLACK_KING = Square.e8;
     private static final int BLACK_KING_SIDE_ROOK = Square.h8;
     private static final int BLACK_QUEEN_SIDE_ROOK = Square.a8;
     private static final int PAWN_PUSH_OFFSET = 8;
@@ -43,12 +44,6 @@ public final class MoveMaker {
     public Position make(Position position, Move move) {
 
         var board = position.board();
-        var piece = board.pieceAt(move.source());
-
-        if (piece == null) {
-            throw new AssertionError();
-        }
-
         var sideToMove = position.sideToMove();
 
         var updatedBitboards = new long[PieceType.values().length][Color.values().length];
@@ -62,12 +57,18 @@ public final class MoveMaker {
 
         var updatedBoard = Board.fromBitboards(updatedBitboards);
 
-        var castlingRights = updateCastlingRights(position.castlingRights(), sideToMove, piece);
+        var castlingRights = updateCastlingRights(move.source(), position.castlingRights(), sideToMove);
         var enPassantTarget = updateEnPassantTarget(move, sideToMove);
 
         var halfmoveClock = position.halfmoveClock();
 
-        if (move.type() == MoveType.CAPTURE || piece.isPawn()) {
+        var moveType = move.type();
+
+        if (moveType == MoveType.CAPTURE
+                || moveType == PAWN_PUSH
+                || moveType == DOUBLE_PUSH
+                || moveType == PAWN_CAPTURE
+                || moveType == EN_PASSANT) {
             halfmoveClock = 0;
         } else {
             halfmoveClock++;
@@ -182,22 +183,16 @@ public final class MoveMaker {
         return bitboard;
     }
 
-    private CastlingRights updateCastlingRights(CastlingRights castlingRights, Color sideToMove, Piece piece) {
-        if (!piece.isKing() && !piece.isRook()) {
-            return castlingRights;
-        }
-
-        if (piece.isKing()) {
+    private CastlingRights updateCastlingRights(int source, CastlingRights castlingRights, Color sideToMove) {
+        if (source == WHITE_KING || source == BLACK_KING) {
             return castlingRights.disable(sideToMove);
         }
 
-        var square = piece.square();
-
-        if (square == WHITE_KING_SIDE_ROOK || square == BLACK_KING_SIDE_ROOK) {
+        if (source == WHITE_KING_SIDE_ROOK || source == BLACK_KING_SIDE_ROOK) {
             return castlingRights.disableKingSide(sideToMove);
         }
 
-        if (square == WHITE_QUEEN_SIDE_ROOK || square == BLACK_QUEEN_SIDE_ROOK) {
+        if (source == WHITE_QUEEN_SIDE_ROOK || source == BLACK_QUEEN_SIDE_ROOK) {
             return castlingRights.disableQueenSide(sideToMove);
         }
 

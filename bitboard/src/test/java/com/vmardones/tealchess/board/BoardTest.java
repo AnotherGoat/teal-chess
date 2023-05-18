@@ -11,6 +11,7 @@ import static com.vmardones.tealchess.color.Color.WHITE;
 import static com.vmardones.tealchess.piece.PieceType.*;
 import static com.vmardones.tealchess.square.Square.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import java.util.stream.IntStream;
 
@@ -33,9 +34,7 @@ final class BoardTest {
 
     @Test
     void equalsContract() {
-        EqualsVerifier.forClass(Board.class)
-                .withNonnullFields("whiteKing", "blackKing")
-                .verify();
+        EqualsVerifier.forClass(Board.class).withNonnullFields("mailbox").verify();
     }
 
     @Test
@@ -187,14 +186,6 @@ final class BoardTest {
     }
 
     @Test
-    void nextPositionBuilder() {
-        var nextBoard = board.nextPositionBuilder().build();
-
-        assertThat(board.king(WHITE)).isEqualTo(nextBoard.king(WHITE));
-        assertThat(board.king(BLACK)).isEqualTo(nextBoard.king(BLACK));
-    }
-
-    @Test
     void addPiece() {
         var piece = new Piece(QUEEN, WHITE, d7);
         var newBoard = builder.with(piece).build();
@@ -205,7 +196,7 @@ final class BoardTest {
     @Test
     void addNullPiece() {
         var board1 = builder.build();
-        var board2 = board1.nextPositionBuilder().with(null).build();
+        var board2 = builder.with(null).build();
 
         assertThat(board1).isEqualTo(board2);
     }
@@ -230,7 +221,7 @@ final class BoardTest {
     @Test
     void withoutNonExistantPiece() {
         var board1 = builder.build();
-        var board2 = board1.nextPositionBuilder().without(c6).build();
+        var board2 = builder.without(c6).build();
 
         assertThat(board1).isEqualTo(board2);
     }
@@ -254,11 +245,9 @@ final class BoardTest {
     }
 
     @Test
-    void clonedMailbox() {
-        var mailbox1 = board.mailbox();
-        var mailbox2 = board.mailbox();
-
-        assertThat(mailbox1).isNotSameAs(mailbox2).isEqualTo(mailbox2);
+    void unmodifiableMailbox() {
+        var mailbox = board.mailbox();
+        assertThatThrownBy(mailbox::clear).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test

@@ -158,7 +158,7 @@ final class KingMoveGeneratorTest {
     void normalCastles() {
         var position = FenParser.parse("r3k2r/8/8/8/8/8/8/R3K2R b kq - 0 1");
 
-        var expectedCastles = new Move[] {new Move(KING_CASTLE, e8, g8), new Move(QUEEN_CASTLE, e8, c8)};
+        var expectedCastles = new Move[] {Move.BLACK_KING_SIDE_CASTLE.get(0), Move.BLACK_QUEEN_SIDE_CASTLE.get(0)};
 
         var normalMoves = 5;
         assertThat(generator.generate(position)).hasSize(normalMoves + 2).containsOnlyOnce(expectedCastles);
@@ -169,7 +169,7 @@ final class KingMoveGeneratorTest {
         // Castling can be done queen side even if the square beside the rook is being attacked
         var position = FenParser.parse("1r2k3/8/8/8/8/8/8/R3K3 w Q - 0 1");
 
-        var expectedCastles = new Move[] {new Move(QUEEN_CASTLE, e1, c1)};
+        var expectedCastles = new Move[] {Move.WHITE_QUEEN_SIDE_CASTLE.get(0)};
 
         var normalMoves = 5;
         assertThat(generator.generate(position)).hasSize(normalMoves + 1).containsOnlyOnce(expectedCastles);

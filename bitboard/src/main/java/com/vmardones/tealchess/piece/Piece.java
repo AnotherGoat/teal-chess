@@ -9,6 +9,7 @@ import com.vmardones.tealchess.color.Color;
 import com.vmardones.tealchess.parser.Unicode;
 import com.vmardones.tealchess.parser.fen.Fen;
 import com.vmardones.tealchess.parser.pgn.San;
+import com.vmardones.tealchess.square.AlgebraicConverter;
 
 // TODO: Add a piece cache
 /**
@@ -87,6 +88,6 @@ public record Piece(PieceType type, Color color, int square) implements Fen, San
 
     @Override
     public String toString() {
-        return unicode() + square;
+        return unicode() + AlgebraicConverter.toAlgebraic(square);
     }
 }
