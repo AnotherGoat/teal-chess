@@ -129,8 +129,7 @@ public final class BitboardManipulator {
         var splitBytes = splitIntoBytes(fullBits);
         var result = new StringBuilder();
 
-        for (var i = 0; i < Long.BYTES; i++) {
-            var rank = splitBytes.get(i);
+        for (var rank : splitBytes) {
             result.append(rank).append("\n");
         }
 

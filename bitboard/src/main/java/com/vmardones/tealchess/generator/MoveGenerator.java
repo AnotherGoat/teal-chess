@@ -17,6 +17,7 @@ public sealed interface MoveGenerator
         permits BishopMoveGenerator,
                 KingMoveGenerator,
                 KnightMoveGenerator,
+                LegalGenerator,
                 PawnMoveGenerator,
                 PseudoLegalGenerator,
                 QueenMoveGenerator,

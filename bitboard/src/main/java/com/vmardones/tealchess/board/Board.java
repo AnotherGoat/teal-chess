@@ -199,10 +199,10 @@ public final class Board implements Unicode {
     public String unicode() {
         var result = new StringBuilder();
 
-        for (var i = 0; i < NUMBER_OF_SQUARES; i++) {
-            result.append(squareAsUnicode(i)).append(" ");
+        for (var square = 0; square < NUMBER_OF_SQUARES; square++) {
+            result.append(squareAsUnicode(square)).append(" ");
 
-            if ((i + 1) % SIDE_LENGTH == 0) {
+            if ((square + 1) % SIDE_LENGTH == 0) {
                 result.deleteCharAt(result.length() - 1).append("\n");
             }
         }
@@ -222,12 +222,12 @@ public final class Board implements Unicode {
                 .with(new Piece(KNIGHT, WHITE, g1))
                 .with(new Piece(ROOK, WHITE, h1));
 
-        for (var i = 8; i < 16; i++) {
-            builder.with(new Piece(PAWN, WHITE, i));
+        for (var square = a2; square < a3; square++) {
+            builder.with(new Piece(PAWN, WHITE, square));
         }
 
-        for (var i = 48; i < 56; i++) {
-            builder.with(new Piece(PAWN, BLACK, i));
+        for (var square = a7; square < a8; square++) {
+            builder.with(new Piece(PAWN, BLACK, square));
         }
 
         builder.with(new Piece(ROOK, BLACK, a8))

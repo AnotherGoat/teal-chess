@@ -11,7 +11,7 @@ import java.util.List;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.position.Position;
 
-public final class PseudoLegalGenerator implements MoveGenerator {
+final class PseudoLegalGenerator implements MoveGenerator {
 
     private final MoveGenerator pawnMoveGenerator;
     private final MoveGenerator knightMoveGenerator;
@@ -34,7 +34,7 @@ public final class PseudoLegalGenerator implements MoveGenerator {
         return moves;
     }
 
-    public PseudoLegalGenerator() {
+    PseudoLegalGenerator() {
         pawnMoveGenerator = new PawnMoveGenerator();
         knightMoveGenerator = new KnightMoveGenerator();
         bishopMoveGenerator = new BishopMoveGenerator();
