@@ -37,27 +37,6 @@ final class CastleGenerator extends MoveGenerator {
         inCheck = attackTester.isKingAttacked();
     }
 
-    @Override
-    Stream<Move> generate() {
-        if (castlingIsImpossible()) {
-            return Stream.empty();
-        }
-
-        return Stream.of(generateCastleMove(true), generateCastleMove(false)).filter(Objects::nonNull);
-    }
-
-    private boolean castlingIsImpossible() {
-        if (inCheck) {
-            return true;
-        }
-
-        if (sideToMove.isWhite()) {
-            return !castlingRights.whiteKingSide() && !castlingRights.whiteQueenSide();
-        }
-
-        return !castlingRights.blackKingSide() && !castlingRights.blackQueenSide();
-    }
-
     private @Nullable Move generateCastleMove(boolean kingSide) {
 
         if ((kingSide && !isKingSideCastlePossible()) || (!kingSide && !isQueenSideCastlePossible())) {
@@ -81,28 +60,7 @@ final class CastleGenerator extends MoveGenerator {
         return Move.castle(kingSide, king, kingDestination, rook, rookDestination);
     }
 
-    private boolean isKingSideCastlePossible() {
-        var hasRights = sideToMove.isWhite() ? castlingRights.whiteKingSide() : castlingRights.blackKingSide();
 
-        return hasRights
-                && squareHasRook(3)
-                && isSquareFree(1)
-                && isSquareFree(2)
-                && isNotUnderAttack(1)
-                && isNotUnderAttack(2);
-    }
-
-    private boolean isQueenSideCastlePossible() {
-        var hasRights = sideToMove.isWhite() ? castlingRights.whiteQueenSide() : castlingRights.blackQueenSide();
-
-        return hasRights
-                && squareHasRook(-4)
-                && isSquareFree(-1)
-                && isSquareFree(-2)
-                && isSquareFree(-3)
-                && isNotUnderAttack(-1)
-                && isNotUnderAttack(-2);
-    }
 
     private boolean isSquareFree(int offset) {
         var destination = king.coordinate().right(offset);

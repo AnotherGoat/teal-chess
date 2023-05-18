@@ -13,7 +13,7 @@ import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.parser.fen.FenParser;
 import org.junit.jupiter.api.Test;
 
-class QueenMoveGeneratorTest {
+final class QueenMoveGeneratorTest {
 
     MoveGenerator generator = new QueenMoveGenerator();
 

@@ -62,6 +62,10 @@ public final class BitboardManipulator {
         return (bitboard & singleBit(square)) != 0;
     }
 
+    public static boolean isNotSet(long bitboard, int square) {
+        return !isSet(bitboard, square);
+    }
+
     /**
      * Find the square represented by the first bit in a bitboard.
      * If the input is 0, the first bit will be 64 (outside the bitboard).

@@ -36,17 +36,6 @@ public record Piece(PieceType type, Color color, int square) implements Fen, San
 
     /* Getters */
 
-    /**
-     * Checks whether a piece slides when moving or not.
-     * Sliding pieces can move freely in a direction until they're blocked by other pieces and they can easily pin enemy pieces, like a Rook.
-     * Non-sliding pieces have a fixed set of possible destinations, like a Knight.
-     * @see <a href="https://www.chessprogramming.org/Sliding_Pieces">Sliding Pieces</a>
-     * @return True if the piece slides.
-     */
-    public boolean sliding() {
-        return type.sliding();
-    }
-
     @Override
     public String unicode() {
         return color.isWhite() ? type.whiteUnicode() : type.blackUnicode();

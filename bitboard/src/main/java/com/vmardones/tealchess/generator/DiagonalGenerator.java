@@ -11,6 +11,11 @@ import java.util.List;
 
 import com.vmardones.tealchess.square.AlgebraicConverter;
 
+/**
+ * Generates moves for pieces that slide diagonally.
+ * Sliding pieces can move freely in a direction until they're blocked by other pieces, which allows them to easily block enemy pieces.
+ * @see <a href="https://www.chessprogramming.org/Sliding_Pieces">Sliding Pieces</a>
+ */
 interface DiagonalGenerator {
 
     List<Long> DIAGONAL_MASKS = List.of(
