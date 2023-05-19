@@ -1,4 +1,3 @@
-include('bitboard')
-// include('engine', 'core', 'desktop')
+include('engine', 'core', 'desktop')
 
 rootProject.name = 'tealchess'
