@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.vmardones.tealchess.move.LegalMove;
+import com.vmardones.tealchess.move.Move;
 import org.eclipse.jdt.annotation.Nullable;
 
 public final class GameHistory {
@@ -43,14 +43,14 @@ public final class GameHistory {
 
     /* Getters */
 
-    List<LegalMove> moves() {
+    List<Move> moves() {
         return history.stream()
                 .map(GameMemento::lastMove)
                 .filter(Objects::nonNull)
                 .toList();
     }
 
-    @Nullable LegalMove lastMove() {
+    @Nullable Move lastMove() {
         return history.get(history.size() - 1).lastMove();
     }
 

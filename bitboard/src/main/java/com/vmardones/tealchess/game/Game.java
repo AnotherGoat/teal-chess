@@ -5,28 +5,27 @@
 
 package com.vmardones.tealchess.game;
 
-import static java.util.stream.Collectors.toUnmodifiableSet;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.vmardones.tealchess.ai.MoveChooser;
-import com.vmardones.tealchess.analysis.AttackMapGenerator;
-import com.vmardones.tealchess.analysis.PositionAnalyzer;
 import com.vmardones.tealchess.board.Board;
-import com.vmardones.tealchess.board.Coordinate;
-import com.vmardones.tealchess.move.LegalMove;
+import com.vmardones.tealchess.color.Color;
+import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.move.MoveFinder;
 import com.vmardones.tealchess.move.MoveMaker;
+import com.vmardones.tealchess.move.MoveType;
 import com.vmardones.tealchess.parser.fen.Fen;
 import com.vmardones.tealchess.parser.fen.FenSerializer;
 import com.vmardones.tealchess.parser.pgn.Pgn;
 import com.vmardones.tealchess.parser.pgn.PgnSerializer;
 import com.vmardones.tealchess.piece.Piece;
-import com.vmardones.tealchess.player.Color;
 import com.vmardones.tealchess.player.Player;
+import com.vmardones.tealchess.player.PlayerFactory;
 import com.vmardones.tealchess.player.PlayerStatus;
+import com.vmardones.tealchess.position.CastlingRights;
+import com.vmardones.tealchess.position.Position;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
@@ -35,8 +34,11 @@ import org.eclipse.jdt.annotation.Nullable;
  */
 public final class Game implements Fen, Pgn {
 
+    /* Injected dependencies */
     private final MoveMaker moveMaker;
     private final MoveFinder moveFinder;
+    private final PlayerFactory playerFactory;
+
     private final GameState state;
     private GameHistory history;
     private final Map<String, String> tags;
@@ -48,11 +50,17 @@ public final class Game implements Fen, Pgn {
      * Also used when loading a PGN file.
      * @param tags Map containing the PGN tag-value pairs.
      */
-    public Game(MoveMaker moveMaker, MoveFinder moveFinder, Map<String, String> tags) {
+    public Game(MoveMaker moveMaker, MoveFinder moveFinder, PlayerFactory playerFactory, Map<String, String> tags) {
         this.moveMaker = moveMaker;
         this.moveFinder = moveFinder;
+        this.playerFactory = playerFactory;
+
         this.tags = tags;
-        state = new GameState();
+
+        var position = Position.INITIAL_POSITION;
+        var whitePlayer = playerFactory.create(position, Color.WHITE);
+        var blackPlayer = playerFactory.create(position, Color.BLACK);
+        state = new GameState(position, whitePlayer, blackPlayer);
         history = new GameHistory(state.save());
     }
 
@@ -66,7 +74,7 @@ public final class Game implements Fen, Pgn {
         return position().castlingRights();
     }
 
-    public @Nullable Coordinate enPassantTarget() {
+    public @Nullable Integer enPassantTarget() {
         return position().enPassantTarget();
     }
 
@@ -79,7 +87,7 @@ public final class Game implements Fen, Pgn {
      * @return The move list.
      * @see <a href="https://www.chessprogramming.org/Move_List">Move List</a>
      */
-    public List<LegalMove> moveHistory() {
+    public List<Move> moveHistory() {
         return history.moves();
     }
 
@@ -95,7 +103,7 @@ public final class Game implements Fen, Pgn {
         return player().status();
     }
 
-    public List<LegalMove> legalMoves() {
+    public List<Move> legalMoves() {
         return player().legals();
     }
 
@@ -103,9 +111,12 @@ public final class Game implements Fen, Pgn {
         return oppponent().toString();
     }
 
-    public Coordinate kingCoordinate() {
+    // TODO: Probably delete this method
+    /*
+    public int kingCoordinate() {
         return player().king().coordinate();
     }
+     */
 
     public boolean isKingAttacked() {
         return player().status() == PlayerStatus.CHECKED || player().status() == PlayerStatus.CHECKMATED;
@@ -123,8 +134,8 @@ public final class Game implements Fen, Pgn {
         return piece.color() == oppponent().color();
     }
 
-    public boolean isCastling(LegalMove move) {
-        return move.isCastling();
+    public boolean isCastling(Move move) {
+        return move.type() == MoveType.KING_CASTLE || move.type() == MoveType.QUEEN_CASTLE;
     }
 
     /* AI setters */
@@ -145,20 +156,19 @@ public final class Game implements Fen, Pgn {
      * Make a move on the chessboard and update the position.
      * @param move The legal move, chosen by the player.
      */
-    public void makeMove(LegalMove move) {
+    public void makeMove(Move move) {
         state.lastMove(move);
 
         var nextPosition = moveMaker.make(state.position(), move);
         state.position(nextPosition);
 
-        var positionAnalyzer = new PositionAnalyzer(nextPosition);
-        state.whitePlayer(positionAnalyzer.whitePlayer());
-        state.blackPlayer(positionAnalyzer.blackPlayer());
+        state.whitePlayer(playerFactory.create(nextPosition, Color.WHITE));
+        state.blackPlayer(playerFactory.create(nextPosition, Color.BLACK));
 
         history = history.add(state.save());
     }
 
-    public LegalMove chooseAiMove() {
+    public Move chooseAiMove() {
         var currentAi = ai();
 
         if (currentAi == null) {
@@ -171,25 +181,25 @@ public final class Game implements Fen, Pgn {
     /* Analysis methods */
 
     /**
-     * Given a piece, find the destinations of its moves for the current position. Mainly used when the user clicks on a piece, to highlight its legal moves.
-     * @param piece The piece to move.
+     * Given a source, find the destinations of its moves for the current position.
+     * Mainly used when the user clicks on a piece, to highlight its legal moves.
+     * @param source The source coordinate
      * @return The legal destinations for the piece's moves.
      */
-    public Set<Coordinate> findLegalDestinations(Piece piece) {
-        return player().legals().stream()
-                .filter(legal -> legal.piece().equals(piece))
-                .map(LegalMove::destination)
-                .collect(toUnmodifiableSet());
+    public Set<Integer> findLegalDestinations(int source) {
+        return moveFinder.findDestinations(player().legals(), source);
     }
 
-    public List<LegalMove> findLegalMoves(Coordinate source, Coordinate destination) {
+    public List<Move> findLegalMoves(int source, int destination) {
         return moveFinder.find(player().legals(), source, destination);
     }
 
-    // TODO: Use dependency injection instead
-    public Set<Coordinate> findOpponentAttacks() {
+    // TODO: Change this method's signature
+    /*
+    public Set<Integer> findOpponentAttacks() {
         return new AttackMapGenerator(position()).generate(true);
     }
+     */
 
     /* Serialization methods */
 

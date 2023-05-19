@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.vmardones.tealchess.game.Game;
-import com.vmardones.tealchess.move.LegalMove;
+import com.vmardones.tealchess.move.Move;
 
 /**
  * PGN (Portable Game Notation) serializer.
@@ -38,7 +38,7 @@ public final class PgnSerializer {
         return result.toString();
     }
 
-    public static String serializeMoves(List<LegalMove> moves) {
+    public static String serializeMoves(List<Move> moves) {
         List<String> moveText = new ArrayList<>();
 
         for (var i = 0; i < moves.size(); i++) {
@@ -47,7 +47,8 @@ public final class PgnSerializer {
                 moveText.add(fullMove + ".");
             }
 
-            moveText.add(moves.get(i).san());
+            // TODO: Reimplement san() method for moves
+            // moveText.add(moves.get(i).san());
         }
 
         return String.join(" ", moveText.toArray(new String[moves.size()]));

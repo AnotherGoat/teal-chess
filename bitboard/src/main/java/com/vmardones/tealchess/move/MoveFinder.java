@@ -6,15 +6,21 @@
 package com.vmardones.tealchess.move;
 
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toSet;
 
 import java.util.List;
-import java.util.function.Predicate;
-
-import com.vmardones.tealchess.board.Coordinate;
+import java.util.Set;
 
 public final class MoveFinder {
 
     public MoveFinder() {}
+
+    public Set<Integer> findDestinations(List<Move> legalMoves, int from) {
+        return legalMoves.stream()
+                .filter(move -> move.source() == from)
+                .map(Move::destination)
+                .collect(toSet());
+    }
 
     /**
      * Given a list of legal moves, find the ones that go from the source to the destination.
@@ -23,16 +29,14 @@ public final class MoveFinder {
      * @param to Destination coordinate.
      * @return Move that goes from the source to the destination, if possible.
      */
-    public List<LegalMove> find(List<LegalMove> legalMoves, Coordinate from, Coordinate to) {
+    public List<Move> find(List<Move> legalMoves, int from, int to) {
 
-        if (from.equals(to)) {
+        if (from == to) {
             return emptyList();
         }
 
-        return legalMoves.stream().filter(isMovePossible(from, to)).toList();
-    }
-
-    private Predicate<LegalMove> isMovePossible(Coordinate source, Coordinate destination) {
-        return legal -> legal.source().equals(source) && legal.destination().equals(destination);
+        return legalMoves.stream()
+                .filter(move -> move.source() == from && move.destination() == to)
+                .toList();
     }
 }

@@ -7,10 +7,9 @@ package com.vmardones.tealchess.ai;
 
 import java.util.List;
 
-import com.vmardones.tealchess.analysis.PositionAnalyzer;
-import com.vmardones.tealchess.game.Position;
-import com.vmardones.tealchess.move.LegalMove;
+import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.move.MoveMaker;
+import com.vmardones.tealchess.position.Position;
 
 public final class MiniMaxMoveChooser implements MoveChooser {
 
@@ -24,11 +23,11 @@ public final class MiniMaxMoveChooser implements MoveChooser {
     }
 
     @Override
-    public LegalMove chooseMove(Position position, List<LegalMove> legals) {
+    public Move chooseMove(Position position, List<Move> legals) {
 
         var startTime = System.currentTimeMillis();
 
-        LegalMove bestMove = null;
+        Move bestMove = null;
 
         var highestValue = Integer.MIN_VALUE;
         var lowestValue = Integer.MAX_VALUE;
@@ -65,7 +64,7 @@ public final class MiniMaxMoveChooser implements MoveChooser {
         return bestMove;
     }
 
-    private int min(Position position, List<LegalMove> legals, int depth) {
+    private int min(Position position, List<Move> legals, int depth) {
         if (depth == 0 || legals.isEmpty()) {
             return evaluator.evaluate(position);
         }
@@ -87,7 +86,7 @@ public final class MiniMaxMoveChooser implements MoveChooser {
         return lowestValue;
     }
 
-    private int max(Position position, List<LegalMove> legals, int depth) {
+    private int max(Position position, List<Move> legals, int depth) {
         if (depth == 0 || legals.isEmpty()) {
             return evaluator.evaluate(position);
         }

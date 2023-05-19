@@ -12,7 +12,7 @@ import com.vmardones.tealchess.position.Position;
 import com.vmardones.tealchess.square.AlgebraicConverter;
 import com.vmardones.tealchess.square.Square;
 
-final class AttackGenerator implements DiagonalGenerator, LookupGenerator, OrthogonalGenerator {
+public final class AttackGenerator implements DiagonalGenerator, LookupGenerator, OrthogonalGenerator {
 
     private static final long FILE_A = 0x01_01_01_01_01_01_01_01L;
     private static final long FILE_H = 0x80_80_80_80_80_80_80_80L;
@@ -31,7 +31,7 @@ final class AttackGenerator implements DiagonalGenerator, LookupGenerator, Ortho
      * @param attacker The side to calculate attacks for.
      * @return Attacked squares bitboard.
      */
-    long generate(Position position, Color attacker) {
+    public long generate(Position position, Color attacker) {
         var board = position.board();
 
         var attacks = 0L;
@@ -58,6 +58,16 @@ final class AttackGenerator implements DiagonalGenerator, LookupGenerator, Ortho
         attacks = addKingAttacks(attacks, king);
 
         return attacks;
+    }
+
+    public boolean isKingAttacked(Position position, Color kingColor) {
+        var board = position.board();
+        var king = board.kings(kingColor);
+        var attacker = kingColor.opposite();
+
+        var attacks = generate(position, attacker);
+
+        return (king & attacks) == 1;
     }
 
     private long addWhitePawnAttacks(long attacks, long pawns) {

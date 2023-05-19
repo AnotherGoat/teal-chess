@@ -5,8 +5,9 @@
 
 package com.vmardones.tealchess.game;
 
-import com.vmardones.tealchess.move.LegalMove;
+import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.player.Player;
+import com.vmardones.tealchess.position.Position;
 import org.eclipse.jdt.annotation.Nullable;
 
-record GameMemento(Position position, Player whitePlayer, Player blackPlayer, @Nullable LegalMove lastMove) {}
+record GameMemento(Position position, Player whitePlayer, Player blackPlayer, @Nullable Move lastMove) {}

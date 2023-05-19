@@ -5,11 +5,8 @@
 
 package com.vmardones.tealchess.ai;
 
-import java.util.Set;
-
-import com.vmardones.tealchess.game.Position;
-import com.vmardones.tealchess.piece.Piece;
-import com.vmardones.tealchess.player.Color;
+import com.vmardones.tealchess.color.Color;
+import com.vmardones.tealchess.position.Position;
 
 public final class PieceValueEvaluator implements BoardEvaluator {
     @Override
@@ -19,6 +16,8 @@ public final class PieceValueEvaluator implements BoardEvaluator {
     }
 
     private int scoreSide(Position position, Color side) {
+        return 0;
+
         return pieceValue(position.board().pieces(side));
     }
 
