@@ -7,8 +7,8 @@ package com.vmardones.tealchess.gdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.game.Game;
+import com.vmardones.tealchess.square.Coordinate;
 
 final class SquareSelector extends Actor {
 
@@ -58,7 +58,7 @@ final class SquareSelector extends Actor {
                 return;
             }
 
-            var legalDestinations = game.findLegalDestinations(piece);
+            var legalDestinations = game.findLegalDestinations(Coordinate.forSquare(piece.square()));
 
             if (legalDestinations.isEmpty()) {
                 Gdx.app.debug(LOG_TAG, "The selected piece has no legal moves");

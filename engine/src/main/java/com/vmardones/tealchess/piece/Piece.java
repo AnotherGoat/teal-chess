@@ -12,6 +12,7 @@ import com.vmardones.tealchess.parser.pgn.San;
 import com.vmardones.tealchess.square.AlgebraicConverter;
 
 // TODO: Add a piece cache
+// TODO: Add a "coordinate" method, which is meant to be used by the frontend
 /**
  * A chess piece, which players can move in the board.
  * @see <a href="https://www.chessprogramming.org/Pieces">Pieces</a>
@@ -55,7 +56,7 @@ public record Piece(PieceType type, Color color, int square) implements Fen, San
      */
     @Override
     public String san() {
-        return isPawn() ? "" : type.whiteFen();
+        return type.whiteFen();
     }
 
     /* Checking piece types */

@@ -9,19 +9,19 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.vmardones.tealchess.color.Color;
 import com.vmardones.tealchess.io.assets.AssetLoader;
-import com.vmardones.tealchess.move.LegalMove;
+import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.piece.PromotionChoice;
-import com.vmardones.tealchess.player.Color;
 
 final class PromotionOption extends Actor {
 
     private final AssetLoader assets;
     private final PromotionChoice choice;
     private final Color color;
-    private final LegalMove move;
+    private final Move move;
 
-    PromotionOption(AssetLoader assets, PromotionChoice choice, Color color, LegalMove move) {
+    PromotionOption(AssetLoader assets, PromotionChoice choice, Color color, Move move) {
         this.assets = assets;
         this.choice = choice;
         this.color = color;

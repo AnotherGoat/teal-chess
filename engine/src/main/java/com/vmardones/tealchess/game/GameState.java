@@ -17,7 +17,11 @@ final class GameState {
     private Player blackPlayer;
     private @Nullable Move lastMove;
 
-    GameState(Position position, Player whitePlayer, Player blackPlayer) {}
+    GameState(Position position, Player whitePlayer, Player blackPlayer) {
+        this.position = position;
+        this.whitePlayer = whitePlayer;
+        this.blackPlayer = blackPlayer;
+    }
 
     GameMemento save() {
         return new GameMemento(position, whitePlayer, blackPlayer, lastMove);

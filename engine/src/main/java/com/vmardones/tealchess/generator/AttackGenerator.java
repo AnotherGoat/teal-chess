@@ -178,5 +178,5 @@ public final class AttackGenerator implements DiagonalGenerator, LookupGenerator
         return attacks;
     }
 
-    AttackGenerator() {}
+    public AttackGenerator() {}
 }

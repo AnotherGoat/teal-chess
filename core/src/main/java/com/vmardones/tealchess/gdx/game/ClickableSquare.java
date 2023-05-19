@@ -11,14 +11,14 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.vmardones.tealchess.board.Coordinate;
+import com.vmardones.tealchess.color.Color;
 import com.vmardones.tealchess.io.assets.AssetLoader;
 import com.vmardones.tealchess.io.settings.SettingManager;
 import com.vmardones.tealchess.piece.Piece;
-import com.vmardones.tealchess.player.Color;
+import com.vmardones.tealchess.square.Coordinate;
 import org.eclipse.jdt.annotation.Nullable;
 
-final class Square extends Actor {
+final class ClickableSquare extends Actor {
 
     private final SettingManager settings;
     private final AssetLoader assets;
@@ -26,16 +26,19 @@ final class Square extends Actor {
     private final Color color;
     private @Nullable Piece piece;
     private @Nullable Sprite sprite;
-    private boolean source;
-    private boolean destination;
-    private boolean lastMove;
-    private boolean attacked;
-    private boolean checked;
-    private boolean dark;
-    private boolean file;
-    private boolean rank;
 
-    Square(SettingManager settings, AssetLoader assets, Coordinate coordinate, Color color, @Nullable Piece piece) {
+    /* Highlighting settings */
+    private boolean showSource;
+    private boolean showDestination;
+    private boolean showLastMove;
+    private boolean showAttacked;
+    private boolean showChecked;
+    private boolean showDark;
+    private boolean showFile;
+    private boolean showRank;
+
+    ClickableSquare(
+            SettingManager settings, AssetLoader assets, Coordinate coordinate, Color color, @Nullable Piece piece) {
         this.settings = settings;
         this.assets = assets;
         this.coordinate = coordinate;
@@ -48,8 +51,8 @@ final class Square extends Actor {
         var y = coordinate.rankIndex() * getHeight();
         setPosition(x, y);
 
-        file = coordinate.rank() == 1;
-        rank = coordinate.file().equals("h");
+        showFile = coordinate.rank() == 1;
+        showRank = coordinate.file().equals("h");
 
         if (piece != null) {
             sprite = new Sprite(loadTexture(piece));
@@ -71,11 +74,11 @@ final class Square extends Actor {
             var height = font.getCapHeight();
             var padding = 6;
 
-            if (settings.showAllCoordinates() || file) {
+            if (settings.showAllCoordinates() || showFile) {
                 font.draw(batch, coordinate.file(), getX() + padding, getY() + height + padding);
             }
 
-            if (settings.showAllCoordinates() || rank) {
+            if (settings.showAllCoordinates() || showRank) {
                 font.draw(
                         batch,
                         String.valueOf(coordinate.rank()),
@@ -84,17 +87,17 @@ final class Square extends Actor {
             }
         }
 
-        if (source) {
+        if (showSource) {
             var tint = assets.texture("source");
             batch.draw(tint, getX(), getY());
         }
 
-        if (settings.showLastMove() && lastMove) {
+        if (settings.showLastMove() && showLastMove) {
             var tint = assets.texture("last_move");
             batch.draw(tint, getX(), getY());
         }
 
-        if (checked) {
+        if (showChecked) {
             var tint = assets.texture("check");
             batch.draw(tint, getX(), getY());
         }
@@ -111,17 +114,17 @@ final class Square extends Actor {
             sprite.draw(batch);
         }
 
-        if (settings.showLegals() && destination) {
+        if (settings.showLegals() && showDestination) {
             var texture = piece == null ? assets.texture("destination") : assets.texture("target");
             batch.draw(texture, getX(), getY());
         }
 
-        if (settings.showAttackedPieces() && !checked && attacked) {
+        if (settings.showAttackedPieces() && !showChecked && showAttacked) {
             var texture = assets.texture("attack");
             batch.draw(texture, getX(), getY());
         }
 
-        if (dark) {
+        if (showDark) {
             var tint = assets.texture("dark_tint");
             batch.draw(tint, getX(), getY());
         }
@@ -129,6 +132,7 @@ final class Square extends Actor {
 
     /* Getters and setters */
 
+    // TODO: Add back coordinate, as an abstraction that the frontend uses
     Coordinate coordinate() {
         return coordinate;
     }
@@ -139,11 +143,11 @@ final class Square extends Actor {
 
     void reset(@Nullable Piece newPiece) {
         piece(newPiece);
-        source(false);
-        destination(false);
-        checked(false);
-        dark(false);
-        move(false);
+        showSource(false);
+        showDestination(false);
+        showChecked(false);
+        showDark(false);
+        showLastMove(false);
     }
 
     void piece(@Nullable Piece value) {
@@ -167,12 +171,12 @@ final class Square extends Actor {
 
         if (flip) {
             setPosition(7 * getWidth() - x, 7 * getHeight() - y);
-            file = coordinate.rank() == 8;
-            rank = coordinate.file().equals("a");
+            showFile = coordinate.rank() == 8;
+            showRank = coordinate.file().equals("a");
         } else {
             setPosition(x, y);
-            file = coordinate.rank() == 1;
-            rank = coordinate.file().equals("h");
+            showFile = coordinate.rank() == 1;
+            showRank = coordinate.file().equals("h");
         }
 
         if (sprite != null) {
@@ -180,28 +184,28 @@ final class Square extends Actor {
         }
     }
 
-    void source(boolean value) {
-        source = value;
+    void showSource(boolean value) {
+        showSource = value;
     }
 
-    void destination(boolean value) {
-        destination = value;
+    void showDestination(boolean value) {
+        showDestination = value;
     }
 
-    void move(boolean value) {
-        lastMove = value;
+    void showLastMove(boolean value) {
+        showLastMove = value;
     }
 
-    void attacked(boolean value) {
-        attacked = value;
+    void showAttacked(boolean value) {
+        showAttacked = value;
     }
 
-    void checked(boolean value) {
-        checked = value;
+    void showChecked(boolean value) {
+        showChecked = value;
     }
 
-    void dark(boolean value) {
-        dark = value;
+    void showDark(boolean value) {
+        showDark = value;
     }
 
     void removeSprite() {
@@ -209,13 +213,13 @@ final class Square extends Actor {
     }
 
     private Texture loadTexture(Piece piece) {
-        return assets.texture(piece.color().fen() + piece.firstChar());
+        return assets.texture(piece.color().fen() + piece.san());
     }
 
     private class SquareListener extends ClickListener {
         @Override
         public void clicked(InputEvent event, float x, float y) {
-            fire(new SquareEvent(Square.this));
+            fire(new SquareEvent(ClickableSquare.this));
         }
     }
 }

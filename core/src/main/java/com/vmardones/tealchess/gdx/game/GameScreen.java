@@ -14,15 +14,16 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.utils.Timer;
-import com.vmardones.tealchess.ai.MiniMaxMoveChooser;
-import com.vmardones.tealchess.ai.PieceValueEvaluator;
 import com.vmardones.tealchess.game.Game;
+import com.vmardones.tealchess.generator.AttackGenerator;
+import com.vmardones.tealchess.generator.LegalGenerator;
 import com.vmardones.tealchess.io.assets.AssetLoader;
 import com.vmardones.tealchess.io.export.ScreenshotTaker;
 import com.vmardones.tealchess.io.settings.SettingManager;
-import com.vmardones.tealchess.move.LegalMove;
+import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.move.MoveFinder;
 import com.vmardones.tealchess.move.MoveMaker;
+import com.vmardones.tealchess.player.PlayerFactory;
 import org.eclipse.jdt.annotation.Nullable;
 
 public final class GameScreen extends ScreenAdapter {
@@ -146,8 +147,13 @@ public final class GameScreen extends ScreenAdapter {
     }
 
     private Game createNewGame() {
-        return new Game(new MoveMaker(), new MoveFinder(), INITIAL_TAGS)
-                .blackAi(new MiniMaxMoveChooser(new PieceValueEvaluator(), 2));
+        var moveMaker = new MoveMaker();
+        var moveFinder = new MoveFinder();
+        var attackGenerator = new AttackGenerator();
+        var moveGenerator = new LegalGenerator();
+        var playerFactory = new PlayerFactory(attackGenerator, moveGenerator);
+
+        return new Game(moveMaker, moveFinder, attackGenerator, playerFactory, INITIAL_TAGS);
     }
 
     private void playAiMove() {
@@ -180,7 +186,7 @@ public final class GameScreen extends ScreenAdapter {
         Timer.schedule(task, settings.aiDelay());
     }
 
-    private void playSlidingAnimation(LegalMove move) {
+    private void playSlidingAnimation(Move move) {
         if (!settings.animatePieces()) {
             playNextTurn();
             return;
@@ -191,8 +197,9 @@ public final class GameScreen extends ScreenAdapter {
             stage.addActor(moveAnimation);
         }
 
-        if (game.isCastling(move)) {
-            var castleAnimation = animator.animateCastle(move.move());
+        var castlingStep = game.castlingStep(move);
+        if (castlingStep != null) {
+            var castleAnimation = animator.animateCastle(castlingStep);
 
             if (castleAnimation != null) {
                 stage.addActor(castleAnimation);

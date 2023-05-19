@@ -7,13 +7,14 @@ package com.vmardones.tealchess.square;
 
 import java.util.regex.Pattern;
 
+// TODO: Move the validations somewhere else
+// TODO: The methods could have better names
 public final class AlgebraicConverter {
 
     private static final String FILES = "abcdefgh";
     private static final int SIDE_LENGTH = FILES.length();
     private static final Pattern ALGEBRAIC_PATTERN = Pattern.compile("^[a-h][1-8]$");
 
-    // TODO: Move the validations somewhere else
     public static int fileToIndex(String file) {
         var result = file.charAt(0) - 'a';
 

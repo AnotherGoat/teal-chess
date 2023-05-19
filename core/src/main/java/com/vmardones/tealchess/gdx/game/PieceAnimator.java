@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.vmardones.tealchess.io.settings.SettingManager;
-import com.vmardones.tealchess.move.LegalMove;
 import com.vmardones.tealchess.move.Move;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -29,7 +28,7 @@ final class PieceAnimator extends Actor {
         this.board = board;
     }
 
-    @Nullable Image animateMove(LegalMove move) {
+    @Nullable Image animateMove(Move move) {
         var sourceSquare = board.squareAt(move.source());
         var sprite = sourceSquare.sprite();
 
@@ -60,14 +59,7 @@ final class PieceAnimator extends Actor {
     }
 
     @Nullable Image animateCastle(Move castle) {
-        var rook = castle.otherPiece();
-        var rookDestination = castle.rookDestination();
-
-        if (rook == null || rookDestination == null) {
-            throw new AssertionError();
-        }
-
-        var sourceSquare = board.squareAt(rook.coordinate());
+        var sourceSquare = board.squareAt(castle.source());
         var sprite = sourceSquare.sprite();
 
         if (sprite == null) {
@@ -78,7 +70,7 @@ final class PieceAnimator extends Actor {
         var x1 = board.getX() + sourceSquare.getX();
         var y1 = board.getY() + sourceSquare.getY();
 
-        var destinationSquare = board.squareAt(rookDestination);
+        var destinationSquare = board.squareAt(castle.destination());
         var x2 = board.getX() + destinationSquare.getX();
         var y2 = board.getY() + destinationSquare.getY();
 

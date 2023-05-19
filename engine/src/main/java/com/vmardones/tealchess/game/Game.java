@@ -5,17 +5,20 @@
 
 package com.vmardones.tealchess.game;
 
+import static java.util.stream.Collectors.toSet;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.vmardones.tealchess.ai.MoveChooser;
+import com.vmardones.tealchess.board.BitboardManipulator;
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.color.Color;
+import com.vmardones.tealchess.generator.AttackGenerator;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.move.MoveFinder;
 import com.vmardones.tealchess.move.MoveMaker;
-import com.vmardones.tealchess.move.MoveType;
 import com.vmardones.tealchess.parser.fen.Fen;
 import com.vmardones.tealchess.parser.fen.FenSerializer;
 import com.vmardones.tealchess.parser.pgn.Pgn;
@@ -26,6 +29,7 @@ import com.vmardones.tealchess.player.PlayerFactory;
 import com.vmardones.tealchess.player.PlayerStatus;
 import com.vmardones.tealchess.position.CastlingRights;
 import com.vmardones.tealchess.position.Position;
+import com.vmardones.tealchess.square.Coordinate;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
@@ -37,6 +41,7 @@ public final class Game implements Fen, Pgn {
     /* Injected dependencies */
     private final MoveMaker moveMaker;
     private final MoveFinder moveFinder;
+    private final AttackGenerator attackGenerator;
     private final PlayerFactory playerFactory;
 
     private final GameState state;
@@ -50,9 +55,15 @@ public final class Game implements Fen, Pgn {
      * Also used when loading a PGN file.
      * @param tags Map containing the PGN tag-value pairs.
      */
-    public Game(MoveMaker moveMaker, MoveFinder moveFinder, PlayerFactory playerFactory, Map<String, String> tags) {
+    public Game(
+            MoveMaker moveMaker,
+            MoveFinder moveFinder,
+            AttackGenerator attackGenerator,
+            PlayerFactory playerFactory,
+            Map<String, String> tags) {
         this.moveMaker = moveMaker;
         this.moveFinder = moveFinder;
+        this.attackGenerator = attackGenerator;
         this.playerFactory = playerFactory;
 
         this.tags = tags;
@@ -111,12 +122,11 @@ public final class Game implements Fen, Pgn {
         return oppponent().toString();
     }
 
-    // TODO: Probably delete this method
-    /*
-    public int kingCoordinate() {
-        return player().king().coordinate();
+    public Coordinate kingCoordinate() {
+        var king = board().kings(sideToMove());
+        var kingSquare = BitboardManipulator.firstBit(king);
+        return Coordinate.forSquare(kingSquare);
     }
-     */
 
     public boolean isKingAttacked() {
         return player().status() == PlayerStatus.CHECKED || player().status() == PlayerStatus.CHECKMATED;
@@ -134,8 +144,24 @@ public final class Game implements Fen, Pgn {
         return piece.color() == oppponent().color();
     }
 
-    public boolean isCastling(Move move) {
-        return move.type() == MoveType.KING_CASTLE || move.type() == MoveType.QUEEN_CASTLE;
+    public @Nullable Move castlingStep(Move move) {
+        if (move.equals(Move.WHITE_KING_SIDE_CASTLE.get(0))) {
+            return Move.WHITE_KING_SIDE_CASTLE.get(1);
+        }
+
+        if (move.equals(Move.WHITE_QUEEN_SIDE_CASTLE.get(0))) {
+            return Move.WHITE_QUEEN_SIDE_CASTLE.get(1);
+        }
+
+        if (move.equals(Move.BLACK_KING_SIDE_CASTLE.get(0))) {
+            return Move.BLACK_KING_SIDE_CASTLE.get(1);
+        }
+
+        if (move.equals(Move.BLACK_QUEEN_SIDE_CASTLE.get(0))) {
+            return Move.BLACK_QUEEN_SIDE_CASTLE.get(1);
+        }
+
+        return null;
     }
 
     /* AI setters */
@@ -183,23 +209,23 @@ public final class Game implements Fen, Pgn {
     /**
      * Given a source, find the destinations of its moves for the current position.
      * Mainly used when the user clicks on a piece, to highlight its legal moves.
-     * @param source The source coordinate
+     * @param source The source coordinate.
      * @return The legal destinations for the piece's moves.
      */
-    public Set<Integer> findLegalDestinations(int source) {
+    public Set<Coordinate> findLegalDestinations(Coordinate source) {
         return moveFinder.findDestinations(player().legals(), source);
     }
 
-    public List<Move> findLegalMoves(int source, int destination) {
+    public List<Move> findLegalMoves(Coordinate source, Coordinate destination) {
         return moveFinder.find(player().legals(), source, destination);
     }
 
-    // TODO: Change this method's signature
-    /*
-    public Set<Integer> findOpponentAttacks() {
-        return new AttackMapGenerator(position()).generate(true);
+    public Set<Coordinate> findOpponentAttacks() {
+        var attackBitboard = attackGenerator.generate(position(), sideToMove().opposite());
+        return BitboardManipulator.bits(attackBitboard)
+                .map(Coordinate::forSquare)
+                .collect(toSet());
     }
-     */
 
     /* Serialization methods */
 

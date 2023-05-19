@@ -5,8 +5,8 @@
 
 package com.vmardones.tealchess.board;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
 
 public final class BitboardManipulator {
 
@@ -108,6 +108,23 @@ public final class BitboardManipulator {
         } while (isSet(bitboard, nextBit));
 
         return count;
+    }
+
+    public static Stream<Integer> bits(long bitboard) {
+        if (bitboard == 0L) {
+            return Stream.empty();
+        }
+
+        var setBits = Stream.<Integer>builder();
+        var nextBit = firstBit(bitboard);
+
+        do {
+            bitboard = clear(bitboard, nextBit);
+            setBits.add(nextBit);
+            nextBit = firstBit(bitboard);
+        } while (isSet(bitboard, nextBit));
+
+        return setBits.build();
     }
 
     /**

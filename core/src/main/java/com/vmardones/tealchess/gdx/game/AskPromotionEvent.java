@@ -8,25 +8,25 @@ package com.vmardones.tealchess.gdx.game;
 import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.Event;
-import com.vmardones.tealchess.move.LegalMove;
+import com.vmardones.tealchess.move.Move;
 
 final class AskPromotionEvent extends Event {
 
-    private final Square square;
-    private final List<LegalMove> promotionMoves;
+    private final ClickableSquare square;
+    private final List<Move> promotionMoves;
 
-    AskPromotionEvent(Square square, List<LegalMove> promotionMoves) {
+    AskPromotionEvent(ClickableSquare square, List<Move> promotionMoves) {
         this.square = square;
         this.promotionMoves = promotionMoves;
     }
 
     /* Getters */
 
-    public Square square() {
+    public ClickableSquare square() {
         return square;
     }
 
-    public List<LegalMove> promotionMoves() {
+    public List<Move> promotionMoves() {
         return promotionMoves;
     }
 }

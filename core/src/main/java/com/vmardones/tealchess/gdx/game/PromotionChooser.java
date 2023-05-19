@@ -8,22 +8,22 @@ package com.vmardones.tealchess.gdx.game;
 import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.vmardones.tealchess.color.Color;
 import com.vmardones.tealchess.io.assets.AssetLoader;
-import com.vmardones.tealchess.move.LegalMove;
+import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.piece.PromotionChoice;
-import com.vmardones.tealchess.player.Color;
 
 final class PromotionChooser extends Group {
 
     private static final int WIDTH = AssetLoader.SQUARE_SIZE * PromotionChoice.values().length;
 
-    PromotionChooser(AssetLoader assets, Color color, float x, float y, List<LegalMove> promotionMoves) {
+    PromotionChooser(AssetLoader assets, Color color, float x, float y, List<Move> promotionMoves) {
         setSize(WIDTH, AssetLoader.SQUARE_SIZE);
         setPosition(x, y);
 
         for (var choice : PromotionChoice.values()) {
             var selectedMove = promotionMoves.stream()
-                    .filter(legal -> legal.move().promotionChoice() == choice)
+                    .filter(legal -> legal.promotionChoice() == choice)
                     .findFirst()
                     .orElseThrow(AssertionError::new);
 

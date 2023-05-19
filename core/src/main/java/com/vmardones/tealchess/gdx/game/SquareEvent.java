@@ -9,15 +9,15 @@ import com.badlogic.gdx.scenes.scene2d.Event;
 
 final class SquareEvent extends Event {
 
-    private final Square square;
+    private final ClickableSquare square;
 
-    SquareEvent(Square square) {
+    SquareEvent(ClickableSquare square) {
         this.square = square;
     }
 
     /* Getters */
 
-    public Square square() {
+    public ClickableSquare square() {
         return square;
     }
 }

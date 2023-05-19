@@ -15,9 +15,6 @@ import org.eclipse.jdt.annotation.Nullable;
 
 public final class Coordinate implements San {
 
-    private static final List<Coordinate> COORDINATE_CACHE = fillCoordinateCache();
-    private final int index;
-
     /* Coordinate creation */
 
     /**
@@ -40,51 +37,6 @@ public final class Coordinate implements San {
      */
     public static String fileByIndex(int index) {
         return AlgebraicConverter.fileByIndex(index);
-    }
-
-    /* Getters */
-
-    @Override
-    public String san() {
-        return AlgebraicConverter.toAlgebraic(index);
-    }
-
-    /**
-     * Obtains the file (row in chess terminology) of this coordinate. The file is a letter between lowercase a (left side or
-     * queen's side) and lowercase h (right side or king's side).
-     *
-     * @return The coordinate's file.
-     * @see <a href="https://www.chessprogramming.org/Files">Files</a>
-     */
-    public String file() {
-        return san().substring(0, 1);
-    }
-
-    /**
-     * Obtains the index of this coordinate's file. The index goes from 0 (file a) to 7 (file h).
-     * @return The index of the coordinate's file.
-     */
-    public int fileIndex() {
-        return index % AlgebraicConverter.SIDE_LENGTH;
-    }
-
-    /**
-     * Obtains the rank (row in chess terminology) of this coordinate. The rank is a number between 1
-     * (bottom of the board, white side) and 8 (top of the board, black side).
-     *
-     * @return The coordinate's rank.
-     * @see <a href="https://www.chessprogramming.org/Ranks">Ranks</a>
-     */
-    public int rank() {
-        return AlgebraicConverter.SIDE_LENGTH - index / AlgebraicConverter.SIDE_LENGTH;
-    }
-
-    /**
-     * Obtains the index of this coordinate's rank. The index goes from 0 (rank 1) to 7 (rank 8).
-     * @return The index of the coordinate's rank.
-     */
-    public int rankIndex() {
-        return rank() - 1;
     }
 
     /* Comparisons */
@@ -200,53 +152,8 @@ public final class Coordinate implements San {
         }
     }
 
-    /* equals, hashCode and toString */
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        var other = (Coordinate) o;
-        return index == other.index;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(index);
-    }
-
-    /**
-     * Get the algebraic notation representation of this coordinate.
-     *
-     * @return The coordinate's algebraic notation.
-     */
-    @Override
-    public String toString() {
-        return san();
-    }
-
-    static Coordinate forIndex(int index) {
-        return COORDINATE_CACHE.get(index);
-    }
-
     int index() {
         return index;
-    }
-
-    private static List<Coordinate> fillCoordinateCache() {
-        return IntStream.range(0, AlgebraicConverter.NUMBER_OF_SQUARES)
-                .mapToObj(Coordinate::new)
-                .toList();
-    }
-
-    private Coordinate(int index) {
-        this.index = index;
     }
 
     private boolean illegalHorizontalJump(int x, Coordinate destination) {

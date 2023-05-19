@@ -6,6 +6,12 @@
 package com.vmardones.tealchess.square;
 
 // TODO: Add paragraph breaks to other javadocs, similar to this one
+
+import java.util.List;
+import java.util.stream.IntStream;
+
+import com.vmardones.tealchess.board.Board;
+
 /**
  * A square is one of the 64 places where a piece can be found.
  * It's usually identified by its chess algebraic notation, which consists of the square's rank (a-h) folowed by its file (1-8).
@@ -32,6 +38,13 @@ public final class Square {
     public static final int a6 = 40, b6 = 41, c6 = 42, d6 = 43, e6 = 44, f6 = 45, g6 = 46, h6 = 47;
     public static final int a7 = 48, b7 = 49, c7 = 50, d7 = 51, e7 = 52, f7 = 53, g7 = 54, h7 = 55;
     public static final int a8 = 56, b8 = 57, c8 = 58, d8 = 59, e8 = 60, f8 = 61, g8 = 62, h8 = 63;
+
+    private static final List<Integer> SQUARE_CACHE =
+            IntStream.range(0, Board.NUMBER_OF_SQUARES).boxed().toList();
+
+    public static List<Integer> all() {
+        return SQUARE_CACHE;
+    }
 
     private Square() {}
 }

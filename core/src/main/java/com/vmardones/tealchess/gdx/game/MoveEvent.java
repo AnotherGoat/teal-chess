@@ -6,19 +6,19 @@
 package com.vmardones.tealchess.gdx.game;
 
 import com.badlogic.gdx.scenes.scene2d.Event;
-import com.vmardones.tealchess.move.LegalMove;
+import com.vmardones.tealchess.move.Move;
 
 final class MoveEvent extends Event {
 
-    private final LegalMove move;
+    private final Move move;
 
-    MoveEvent(LegalMove move) {
+    MoveEvent(Move move) {
         this.move = move;
     }
 
     /* Getters */
 
-    public LegalMove move() {
+    public Move move() {
         return move;
     }
 }

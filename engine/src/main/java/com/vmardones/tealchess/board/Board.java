@@ -17,6 +17,7 @@ import com.vmardones.tealchess.color.Color;
 import com.vmardones.tealchess.parser.Unicode;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.piece.PieceType;
+import com.vmardones.tealchess.square.Coordinate;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
@@ -70,6 +71,16 @@ public final class Board implements Unicode {
     /* Checking the board */
 
     /**
+     * Get the piece located at a specific coordinate.
+     *
+     * @param coordinate The coordinate to search.
+     * @return The piece found.
+     */
+    public @Nullable Piece pieceAt(Coordinate coordinate) {
+        return pieceAt(coordinate.squareIndex());
+    }
+
+    /**
      * Get the piece located at a specific square.
      *
      * @param square The square to search.
@@ -96,7 +107,18 @@ public final class Board implements Unicode {
     /**
      * Find the color of the square at a specific square.
      * Mostly used to draw the board.
-     * @param square The square of the square.
+     * @param coordinate The coordinate to inspect.
+     * @return The color of the square.
+     * @see <a href="https://www.chessprogramming.org/Color_of_a_Square">Color of a Square</a>
+     */
+    public Color colorOf(Coordinate coordinate) {
+        return colorOf(coordinate.squareIndex());
+    }
+
+    /**
+     * Find the color of the square at a specific square.
+     * Mostly used to draw the board.
+     * @param square The square to inspect.
      * @return The color of the square.
      * @see <a href="https://www.chessprogramming.org/Color_of_a_Square">Color of a Square</a>
      */

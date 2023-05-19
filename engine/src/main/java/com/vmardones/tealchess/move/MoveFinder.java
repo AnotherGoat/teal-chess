@@ -11,14 +11,21 @@ import static java.util.stream.Collectors.toSet;
 import java.util.List;
 import java.util.Set;
 
+import com.vmardones.tealchess.square.Coordinate;
+
+/**
+ * Filters moves based on source and destination coordinates.
+ * Mainly used by frontend code.
+ */
 public final class MoveFinder {
 
     public MoveFinder() {}
 
-    public Set<Integer> findDestinations(List<Move> legalMoves, int from) {
+    public Set<Coordinate> findDestinations(List<Move> legalMoves, Coordinate from) {
         return legalMoves.stream()
-                .filter(move -> move.source() == from)
+                .filter(move -> move.source() == from.squareIndex())
                 .map(Move::destination)
+                .map(Coordinate::forSquare)
                 .collect(toSet());
     }
 
@@ -29,14 +36,14 @@ public final class MoveFinder {
      * @param to Destination coordinate.
      * @return Move that goes from the source to the destination, if possible.
      */
-    public List<Move> find(List<Move> legalMoves, int from, int to) {
+    public List<Move> find(List<Move> legalMoves, Coordinate from, Coordinate to) {
 
-        if (from == to) {
+        if (from.equals(to)) {
             return emptyList();
         }
 
         return legalMoves.stream()
-                .filter(move -> move.source() == from && move.destination() == to)
+                .filter(move -> move.source() == from.squareIndex() && move.destination() == to.squareIndex())
                 .toList();
     }
 }
