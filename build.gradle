@@ -25,6 +25,10 @@ allprojects {
         assertjVersion = '3.24.2'
         equalsVerifierVersion = '3.14.1'
 
+        pitestPluginVersion = '1.9.0'
+        pitestVersion = '1.14.0'
+        junit5PluginVersion = '1.1.1'
+
         batikVersion = '1.16'
         gdxVersion = '1.11.0'
 

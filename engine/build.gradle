@@ -2,10 +2,19 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
     id 'jacoco'
+    id 'info.solidsoft.pitest' version "$pitestPluginVersion"
 }
 
 jacoco {
     toolVersion = jacocoVersion
+}
+
+pitest {
+    pitestVersion = "$project.pitestVersion"
+    junit5PluginVersion = "$project.junit5PluginVersion"
+
+    // Excludes running mutations on perft tests
+    targetTests = ['com.vmardones.tealchess.*.*']
 }
 
 tasks {

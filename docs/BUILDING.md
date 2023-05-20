@@ -119,6 +119,17 @@ To include them, run:
 ./gradlew test -PincludePerft
 ```
 
+### Running mutation tests
+
+To run mutation tests, run:
+
+```shell
+./gradlew pitest
+```
+
+A [Pitest](https://pitest.org/) report is generated after running this task.
+The report can be found at `engine/build/reports/pitest`.
+
 ### Generating Javadocs
 
 To generate Javadocs for the project's code and see what files are missing
