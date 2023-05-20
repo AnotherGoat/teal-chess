@@ -6,7 +6,6 @@
 package com.vmardones.tealchess.generator;
 
 import static com.vmardones.tealchess.board.BitboardManipulator.*;
-import static java.util.Collections.emptyList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ final class KnightMoveGenerator implements MoveGenerator, LookupGenerator {
         var knights = board.knights(sideToMove);
 
         if (knights == 0) {
-            return emptyList();
+            return new ArrayList<>();
         }
 
         var moves = new ArrayList<Move>();

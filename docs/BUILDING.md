@@ -112,6 +112,13 @@ after running the tests, which can be found at
 `engine/build/reports/jacoco/test`. This generates HTML, XML and CSV reports
 containing the results.
 
+Perft tests are skipped by default.
+To include them, run:
+
+```shell
+./gradlew test -PincludePerft
+```
+
 ### Generating Javadocs
 
 To generate Javadocs for the project's code and see what files are missing

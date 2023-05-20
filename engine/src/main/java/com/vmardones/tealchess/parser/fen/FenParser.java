@@ -176,7 +176,9 @@ public final class FenParser {
             var rank = ranks.get(i);
             var fileCounter = 0;
 
-            for (var symbol : rank.toCharArray()) {
+            for (int j = 0; j < rank.length(); j++) {
+                var symbol = rank.charAt(j);
+
                 if (Character.isDigit(symbol)) {
                     fileCounter += Character.digit(symbol, 10);
                 } else {

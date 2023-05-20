@@ -14,6 +14,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.utils.Timer;
+import com.vmardones.tealchess.ai.RandomMoveChooser;
 import com.vmardones.tealchess.game.Game;
 import com.vmardones.tealchess.generator.AttackGenerator;
 import com.vmardones.tealchess.generator.LegalGenerator;
@@ -153,14 +154,20 @@ public final class GameScreen extends ScreenAdapter {
         var moveGenerator = new LegalGenerator();
         var playerFactory = new PlayerFactory(attackGenerator, moveGenerator);
 
-        return new Game(moveMaker, moveFinder, attackGenerator, playerFactory, INITIAL_TAGS);
+        return new Game(moveMaker, moveFinder, attackGenerator, playerFactory, INITIAL_TAGS)
+                .blackAi(new RandomMoveChooser());
     }
 
     private void playAiMove() {
         board.setTouchable(Touchable.disabled);
 
-        Gdx.app.log("AI", "The AI is choosing a move!");
+        Gdx.app.log("AI", "The AI is choosing a move");
+
+        var startTime = System.nanoTime();
         var aiMove = game.chooseAiMove();
+        var elapsedTime = (System.nanoTime() - startTime) / 1_000_000f;
+
+        Gdx.app.debug("AI", "Took " + elapsedTime + " seconds");
 
         var task = new Timer.Task() {
             @Override
@@ -182,8 +189,7 @@ public final class GameScreen extends ScreenAdapter {
             }
         };
 
-        // TODO: Calculate next AI move at the same time, not after the delay is finished
-        Timer.schedule(task, settings.aiDelay());
+        Timer.schedule(task, settings.aiDelay() - elapsedTime);
     }
 
     private void playSlidingAnimation(Move move) {

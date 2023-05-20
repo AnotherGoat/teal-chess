@@ -6,7 +6,6 @@
 package com.vmardones.tealchess.generator;
 
 import static com.vmardones.tealchess.board.BitboardManipulator.*;
-import static java.util.Collections.emptyList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ final class QueenMoveGenerator implements MoveGenerator, OrthogonalGenerator, Di
         var queens = board.queens(sideToMove);
 
         if (queens == 0) {
-            return emptyList();
+            return new ArrayList<>();
         }
 
         var emptySquares = board.emptySquares();

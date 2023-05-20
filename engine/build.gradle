@@ -12,6 +12,10 @@ tasks {
     test {
         useJUnitPlatform()
 
+        if (!project.hasProperty('includePerft')) {
+            exclude('com/vmardones/tealchess/PerftTest.class')
+        }
+
         testLogging {
             exceptionFormat = TestExceptionFormat.FULL
         }

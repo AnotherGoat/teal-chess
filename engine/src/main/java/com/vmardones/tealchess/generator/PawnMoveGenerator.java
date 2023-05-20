@@ -6,7 +6,7 @@
 package com.vmardones.tealchess.generator;
 
 import static com.vmardones.tealchess.board.BitboardManipulator.*;
-import static java.util.Collections.emptyList;
+import static java.util.Collections.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ final class PawnMoveGenerator implements MoveGenerator {
         var pawns = board.pawns(Color.WHITE);
 
         if (pawns == 0) {
-            return emptyList();
+            return new ArrayList<>();
         }
 
         var emptySquares = board.emptySquares();
@@ -86,7 +86,7 @@ final class PawnMoveGenerator implements MoveGenerator {
         var pawns = board.pawns(Color.BLACK);
 
         if (pawns == 0) {
-            return emptyList();
+            return new ArrayList<>();
         }
 
         var emptySquares = board.emptySquares();

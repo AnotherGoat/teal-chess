@@ -59,6 +59,7 @@ allprojects {
         options.compilerArgs.add("-Xlint:all")
 
         options.errorprone {
+            disable('JavaTimeDefaultTimeZone', 'TimeZoneUsage')
             option('NullAway:AnnotatedPackages', project.group)
             option('NullAway:ExcludedClassAnnotations', 'com.vmardones.tealchess.ExcludeFromNullAway')
         }

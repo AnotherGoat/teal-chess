@@ -6,7 +6,6 @@
 package com.vmardones.tealchess.generator;
 
 import static com.vmardones.tealchess.board.BitboardManipulator.*;
-import static java.util.Collections.emptyList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ final class RookMoveGenerator implements MoveGenerator, OrthogonalGenerator {
         var rooks = board.rooks(sideToMove);
 
         if (rooks == 0) {
-            return emptyList();
+            return new ArrayList<>();
         }
 
         var emptySquares = board.emptySquares();

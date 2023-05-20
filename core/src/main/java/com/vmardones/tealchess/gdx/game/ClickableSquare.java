@@ -132,7 +132,6 @@ final class ClickableSquare extends Actor {
 
     /* Getters and setters */
 
-    // TODO: Add back coordinate, as an abstraction that the frontend uses
     Coordinate coordinate() {
         return coordinate;
     }

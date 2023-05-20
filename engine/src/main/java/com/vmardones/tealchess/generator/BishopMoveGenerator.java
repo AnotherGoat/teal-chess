@@ -6,7 +6,6 @@
 package com.vmardones.tealchess.generator;
 
 import static com.vmardones.tealchess.board.BitboardManipulator.*;
-import static java.util.Collections.emptyList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ final class BishopMoveGenerator implements MoveGenerator, DiagonalGenerator {
         var bishops = board.bishops(sideToMove);
 
         if (bishops == 0) {
-            return emptyList();
+            return new ArrayList<>();
         }
 
         var emptySquares = board.emptySquares();

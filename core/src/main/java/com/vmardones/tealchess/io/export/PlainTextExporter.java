@@ -13,8 +13,11 @@ public final class PlainTextExporter {
 
     public static String save(String fileName, String text) {
         var fullPath = PLAIN_TEXT_PATH + fileName;
-        Gdx.files.external(fullPath).writeString(text + "\n", false);
-        return fullPath;
+        var fileHandle = Gdx.files.external(fullPath);
+
+        fileHandle.writeString(text + "\n", false);
+
+        return fileHandle.path();
     }
 
     private PlainTextExporter() {}

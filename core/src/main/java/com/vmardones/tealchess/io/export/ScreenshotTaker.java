@@ -29,10 +29,12 @@ public final class ScreenshotTaker {
         }
 
         var path = SCREENSHOT_PATH + fileName + ".png";
-        PixmapIO.writePNG(Gdx.files.external(path), pixmap, Deflater.DEFAULT_COMPRESSION, true);
+        var fileHandle = Gdx.files.external(path);
+
+        PixmapIO.writePNG(fileHandle, pixmap, Deflater.DEFAULT_COMPRESSION, true);
         pixmap.dispose();
 
-        return path;
+        return fileHandle.path();
     }
 
     private ScreenshotTaker() {}

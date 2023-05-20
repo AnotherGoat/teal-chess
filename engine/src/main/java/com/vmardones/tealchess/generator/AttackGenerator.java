@@ -55,9 +55,7 @@ public final class AttackGenerator implements DiagonalGenerator, LookupGenerator
         attacks = addDiagonalAttacks(attacks, bishops | queens, occupiedSquares);
 
         var king = board.kings(attacker);
-        attacks = addKingAttacks(attacks, king);
-
-        return attacks;
+        return addKingAttacks(attacks, king);
     }
 
     public boolean isKingAttacked(Position position, Color kingColor) {
