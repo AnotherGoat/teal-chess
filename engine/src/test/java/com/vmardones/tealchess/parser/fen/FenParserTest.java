@@ -13,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import com.vmardones.tealchess.board.Board;
+import com.vmardones.tealchess.board.Mailbox;
 import com.vmardones.tealchess.piece.Piece;
 import org.junit.jupiter.api.Test;
 
@@ -180,23 +181,24 @@ final class FenParserTest {
         // Board from the explained Chess.com example at https://www.chess.com/terms/fen-chess
         var board = FenParser.parse("r1bk3r/p2pBpNp/n4n2/1p1NP2P/6P1/3P4/P1P1K3/q5b1 w - - 0 1")
                 .board();
+        var mailbox = new Mailbox(board);
 
-        assertThat(board.pieceAt(a1)).isEqualTo(new Piece(QUEEN, BLACK, a1));
-        assertThat(board.pieceAt(b5)).isEqualTo(new Piece(PAWN, BLACK, b5));
-        assertThat(board.pieceAt(c2)).isEqualTo(new Piece(PAWN, WHITE, c2));
-        assertThat(board.pieceAt(d5)).isEqualTo(new Piece(KNIGHT, WHITE, d5));
-        assertThat(board.pieceAt(e2)).isEqualTo(new Piece(KING, WHITE, e2));
-        assertThat(board.pieceAt(f6)).isEqualTo(new Piece(KNIGHT, BLACK, f6));
-        assertThat(board.pieceAt(g1)).isEqualTo(new Piece(BISHOP, BLACK, g1));
-        assertThat(board.pieceAt(h8)).isEqualTo(new Piece(ROOK, BLACK, h8));
+        assertThat(mailbox.pieceAt(a1)).isEqualTo(new Piece(QUEEN, BLACK, a1));
+        assertThat(mailbox.pieceAt(b5)).isEqualTo(new Piece(PAWN, BLACK, b5));
+        assertThat(mailbox.pieceAt(c2)).isEqualTo(new Piece(PAWN, WHITE, c2));
+        assertThat(mailbox.pieceAt(d5)).isEqualTo(new Piece(KNIGHT, WHITE, d5));
+        assertThat(mailbox.pieceAt(e2)).isEqualTo(new Piece(KING, WHITE, e2));
+        assertThat(mailbox.pieceAt(f6)).isEqualTo(new Piece(KNIGHT, BLACK, f6));
+        assertThat(mailbox.pieceAt(g1)).isEqualTo(new Piece(BISHOP, BLACK, g1));
+        assertThat(mailbox.pieceAt(h8)).isEqualTo(new Piece(ROOK, BLACK, h8));
 
-        assertThat(board.pieceAt(a3)).isNull();
-        assertThat(board.pieceAt(b7)).isNull();
-        assertThat(board.pieceAt(c4)).isNull();
-        assertThat(board.pieceAt(d1)).isNull();
-        assertThat(board.pieceAt(e6)).isNull();
-        assertThat(board.pieceAt(f5)).isNull();
-        assertThat(board.pieceAt(g8)).isNull();
-        assertThat(board.pieceAt(h2)).isNull();
+        assertThat(mailbox.pieceAt(a3)).isNull();
+        assertThat(mailbox.pieceAt(b7)).isNull();
+        assertThat(mailbox.pieceAt(c4)).isNull();
+        assertThat(mailbox.pieceAt(d1)).isNull();
+        assertThat(mailbox.pieceAt(e6)).isNull();
+        assertThat(mailbox.pieceAt(f5)).isNull();
+        assertThat(mailbox.pieceAt(g8)).isNull();
+        assertThat(mailbox.pieceAt(h2)).isNull();
     }
 }

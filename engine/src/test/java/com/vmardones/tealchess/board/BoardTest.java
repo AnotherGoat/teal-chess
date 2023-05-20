@@ -6,6 +6,7 @@
 package com.vmardones.tealchess.board;
 
 import static com.vmardones.tealchess.board.Board.INITIAL_BOARD;
+import static com.vmardones.tealchess.board.Mailbox.INITIAL_MAILBOX;
 import static com.vmardones.tealchess.color.Color.BLACK;
 import static com.vmardones.tealchess.color.Color.WHITE;
 import static com.vmardones.tealchess.piece.PieceType.*;
@@ -34,7 +35,7 @@ final class BoardTest {
 
     @Test
     void equalsContract() {
-        EqualsVerifier.forClass(Board.class).withNonnullFields("mailbox").verify();
+        EqualsVerifier.forClass(Board.class).verify();
     }
 
     @Test
@@ -112,49 +113,51 @@ final class BoardTest {
     @Test
     void initialEmptySquares() {
         IntStream.range(16, 48)
-                .forEach(square -> assertThat(INITIAL_BOARD.pieceAt(square)).isNull());
+                .forEach(square -> assertThat(INITIAL_MAILBOX.pieceAt(square)).isNull());
     }
 
     @Test
     void initialWhitePawnRank() {
-        IntStream.range(8, 16)
-                .forEach(square -> assertThat(INITIAL_BOARD.pieceAt(square)).isEqualTo(new Piece(PAWN, WHITE, square)));
+        IntStream.range(8, 16).forEach(square -> assertThat(INITIAL_MAILBOX.pieceAt(square))
+                .isEqualTo(new Piece(PAWN, WHITE, square)));
     }
 
     @Test
     void initialBlackPawnRank() {
-        IntStream.range(48, 56)
-                .forEach(square -> assertThat(INITIAL_BOARD.pieceAt(square)).isEqualTo(new Piece(PAWN, BLACK, square)));
+        IntStream.range(48, 56).forEach(square -> assertThat(INITIAL_MAILBOX.pieceAt(square))
+                .isEqualTo(new Piece(PAWN, BLACK, square)));
     }
 
     @Test
     void initialWhiteBackRank() {
-        assertThat(INITIAL_BOARD.pieceAt(a1)).isEqualTo(new Piece(ROOK, WHITE, a1));
-        assertThat(INITIAL_BOARD.pieceAt(b1)).isEqualTo(new Piece(KNIGHT, WHITE, b1));
-        assertThat(INITIAL_BOARD.pieceAt(c1)).isEqualTo(new Piece(BISHOP, WHITE, c1));
-        assertThat(INITIAL_BOARD.pieceAt(d1)).isEqualTo(new Piece(QUEEN, WHITE, d1));
-        assertThat(INITIAL_BOARD.pieceAt(e1)).isEqualTo(new Piece(KING, WHITE, e1));
-        assertThat(INITIAL_BOARD.pieceAt(f1)).isEqualTo(new Piece(BISHOP, WHITE, f1));
-        assertThat(INITIAL_BOARD.pieceAt(g1)).isEqualTo(new Piece(KNIGHT, WHITE, g1));
-        assertThat(INITIAL_BOARD.pieceAt(h1)).isEqualTo(new Piece(ROOK, WHITE, h1));
+        assertThat(INITIAL_MAILBOX.pieceAt(a1)).isEqualTo(new Piece(ROOK, WHITE, a1));
+        assertThat(INITIAL_MAILBOX.pieceAt(b1)).isEqualTo(new Piece(KNIGHT, WHITE, b1));
+        assertThat(INITIAL_MAILBOX.pieceAt(c1)).isEqualTo(new Piece(BISHOP, WHITE, c1));
+        assertThat(INITIAL_MAILBOX.pieceAt(d1)).isEqualTo(new Piece(QUEEN, WHITE, d1));
+        assertThat(INITIAL_MAILBOX.pieceAt(e1)).isEqualTo(new Piece(KING, WHITE, e1));
+        assertThat(INITIAL_MAILBOX.pieceAt(f1)).isEqualTo(new Piece(BISHOP, WHITE, f1));
+        assertThat(INITIAL_MAILBOX.pieceAt(g1)).isEqualTo(new Piece(KNIGHT, WHITE, g1));
+        assertThat(INITIAL_MAILBOX.pieceAt(h1)).isEqualTo(new Piece(ROOK, WHITE, h1));
     }
 
     @Test
     void initialBlackBackRank() {
-        assertThat(INITIAL_BOARD.pieceAt(a8)).isEqualTo(new Piece(ROOK, BLACK, a8));
-        assertThat(INITIAL_BOARD.pieceAt(b8)).isEqualTo(new Piece(KNIGHT, BLACK, b8));
-        assertThat(INITIAL_BOARD.pieceAt(c8)).isEqualTo(new Piece(BISHOP, BLACK, c8));
-        assertThat(INITIAL_BOARD.pieceAt(d8)).isEqualTo(new Piece(QUEEN, BLACK, d8));
-        assertThat(INITIAL_BOARD.pieceAt(e8)).isEqualTo(new Piece(KING, BLACK, e8));
-        assertThat(INITIAL_BOARD.pieceAt(f8)).isEqualTo(new Piece(BISHOP, BLACK, f8));
-        assertThat(INITIAL_BOARD.pieceAt(g8)).isEqualTo(new Piece(KNIGHT, BLACK, g8));
-        assertThat(INITIAL_BOARD.pieceAt(h8)).isEqualTo(new Piece(ROOK, BLACK, h8));
+        assertThat(INITIAL_MAILBOX.pieceAt(a8)).isEqualTo(new Piece(ROOK, BLACK, a8));
+        assertThat(INITIAL_MAILBOX.pieceAt(b8)).isEqualTo(new Piece(KNIGHT, BLACK, b8));
+        assertThat(INITIAL_MAILBOX.pieceAt(c8)).isEqualTo(new Piece(BISHOP, BLACK, c8));
+        assertThat(INITIAL_MAILBOX.pieceAt(d8)).isEqualTo(new Piece(QUEEN, BLACK, d8));
+        assertThat(INITIAL_MAILBOX.pieceAt(e8)).isEqualTo(new Piece(KING, BLACK, e8));
+        assertThat(INITIAL_MAILBOX.pieceAt(f8)).isEqualTo(new Piece(BISHOP, BLACK, f8));
+        assertThat(INITIAL_MAILBOX.pieceAt(g8)).isEqualTo(new Piece(KNIGHT, BLACK, g8));
+        assertThat(INITIAL_MAILBOX.pieceAt(h8)).isEqualTo(new Piece(ROOK, BLACK, h8));
     }
 
     @Test
     void isEmpty() {
-        assertThat(board.isEmpty(a1)).isTrue();
-        assertThat(board.isEmpty(h8)).isTrue();
+        var mailbox = new Mailbox(board);
+
+        assertThat(mailbox.isEmpty(a1)).isTrue();
+        assertThat(mailbox.isEmpty(h8)).isTrue();
     }
 
     @Test
@@ -189,8 +192,9 @@ final class BoardTest {
     void addPiece() {
         var piece = new Piece(QUEEN, WHITE, d7);
         var newBoard = builder.with(piece).build();
+        var mailbox = new Mailbox(newBoard);
 
-        assertThat(newBoard.pieceAt(d7)).isEqualTo(piece);
+        assertThat(mailbox.pieceAt(d7)).isEqualTo(piece);
     }
 
     @Test
@@ -206,16 +210,18 @@ final class BoardTest {
         var piece1 = new Piece(PAWN, WHITE, a1);
         var piece2 = new Piece(ROOK, WHITE, Square.a1);
         var newBoard = builder.with(piece1).with(piece2).build();
+        var mailbox = new Mailbox(newBoard);
 
-        assertThat(newBoard.pieceAt(Square.a1)).isEqualTo(piece2);
+        assertThat(mailbox.pieceAt(Square.a1)).isEqualTo(piece2);
     }
 
     @Test
     void withoutPiece() {
         var piece = new Piece(PAWN, BLACK, a5);
         var newBoard = builder.with(piece).without(a5).build();
+        var mailbox = new Mailbox(newBoard);
 
-        assertThat(newBoard.pieceAt(a5)).isNull();
+        assertThat(mailbox.pieceAt(a5)).isNull();
     }
 
     @Test
@@ -231,8 +237,9 @@ final class BoardTest {
         var whiteKing = new Piece(KING, WHITE, e1);
         var impostorQueen = new Piece(QUEEN, WHITE, e1);
         var newBoard = builder.with(impostorQueen).build();
+        var mailbox = new Mailbox(newBoard);
 
-        assertThat(newBoard.pieceAt(e1)).isNotEqualTo(impostorQueen).isEqualTo(whiteKing);
+        assertThat(mailbox.pieceAt(e1)).isNotEqualTo(impostorQueen).isEqualTo(whiteKing);
     }
 
     @Test
@@ -240,14 +247,16 @@ final class BoardTest {
         var blackKing = new Piece(KING, BLACK, e8);
         var impostorQueen = new Piece(QUEEN, BLACK, e8);
         var newBoard = builder.with(impostorQueen).build();
+        var mailbox = new Mailbox(newBoard);
 
-        assertThat(newBoard.pieceAt(e8)).isNotEqualTo(impostorQueen).isEqualTo(blackKing);
+        assertThat(mailbox.pieceAt(e8)).isNotEqualTo(impostorQueen).isEqualTo(blackKing);
     }
 
+    // Move some of these tests to "mailbox test"
     @Test
-    void unmodifiableMailbox() {
-        var mailbox = board.mailbox();
-        assertThatThrownBy(mailbox::clear).isInstanceOf(UnsupportedOperationException.class);
+    void unmodifiablePieces() {
+        var pieces = new Mailbox(board).pieces();
+        assertThatThrownBy(pieces::clear).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test

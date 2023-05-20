@@ -6,6 +6,7 @@
 package com.vmardones.tealchess.parser.fen;
 
 import com.vmardones.tealchess.board.Board;
+import com.vmardones.tealchess.board.Mailbox;
 import com.vmardones.tealchess.position.Position;
 import com.vmardones.tealchess.square.AlgebraicConverter;
 import org.eclipse.jdt.annotation.Nullable;
@@ -30,14 +31,14 @@ public final class FenSerializer {
 
         var result = new StringBuilder();
 
-        var mailbox = board.mailbox();
+        var pieces = new Mailbox(board).pieces();
         var emptyCounter = 0;
 
         for (var rank = Board.SIDE_LENGTH - 1; rank >= 0; rank--) {
             for (var file = 0; file < Board.SIDE_LENGTH; file++) {
 
                 var square = AlgebraicConverter.toSquare(file, rank);
-                var piece = mailbox.get(square);
+                var piece = pieces.get(square);
 
                 if (piece == null) {
                     emptyCounter++;

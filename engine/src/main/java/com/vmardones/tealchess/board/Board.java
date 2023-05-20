@@ -9,7 +9,6 @@ import static com.vmardones.tealchess.board.BitboardManipulator.*;
 import static com.vmardones.tealchess.color.Color.*;
 import static com.vmardones.tealchess.piece.PieceType.*;
 import static com.vmardones.tealchess.square.Square.*;
-import static java.util.Collections.unmodifiableList;
 
 import java.util.*;
 
@@ -47,7 +46,6 @@ public final class Board implements Unicode {
     // TODO: Move this comment to implementation details document
     // Arrays of bitboards: https://www.chessprogramming.org/Bitboard_Board-Definition#Array
     private final long[][] bitboards;
-    private final List<@Nullable Piece> mailbox = new ArrayList<>();
 
     /* Building the board */
 
@@ -66,42 +64,6 @@ public final class Board implements Unicode {
 
     public static Board fromBitboards(long[][] bitboards) {
         return new Board(bitboards);
-    }
-
-    /* Checking the board */
-
-    /**
-     * Get the piece located at a specific coordinate.
-     *
-     * @param coordinate The coordinate to search.
-     * @return The piece found.
-     */
-    public @Nullable Piece pieceAt(Coordinate coordinate) {
-        return pieceAt(coordinate.squareIndex());
-    }
-
-    /**
-     * Get the piece located at a specific square.
-     *
-     * @param square The square to search.
-     * @return The piece found.
-     */
-    public @Nullable Piece pieceAt(int square) {
-        if (mailbox.isEmpty()) {
-            mailbox.addAll(loadMailbox(bitboards));
-        }
-
-        return mailbox.get(square);
-    }
-
-    /**
-     * Check if a specific square is empty.
-     *
-     * @param square The square of the square to check.
-     * @return True if the square doesn't have a piece.
-     */
-    public boolean isEmpty(int square) {
-        return pieceAt(square) == null;
     }
 
     /**
@@ -126,6 +88,7 @@ public final class Board implements Unicode {
         return BitboardManipulator.isSet(LIGHT_SQUARES, square) ? WHITE : BLACK;
     }
 
+    // TODO: Move this method to mailbox
     /**
      * Represent a square using Unicode characters.
      * This returns the piece's Unicode representation or a white/black square character for empty squares.
@@ -133,23 +96,14 @@ public final class Board implements Unicode {
      * @return Unicode representation of the square.
      */
     public String squareAsUnicode(int square) {
-        var piece = pieceAt(square);
+        var mailbox = new Mailbox(this);
+        var piece = mailbox.pieceAt(square);
 
         if (piece == null) {
             return colorOf(square).unicode();
         }
 
         return piece.unicode();
-    }
-
-    /* Getters */
-
-    public List<@Nullable Piece> mailbox() {
-        if (mailbox.isEmpty()) {
-            mailbox.addAll(loadMailbox(bitboards));
-        }
-
-        return unmodifiableList(mailbox);
     }
 
     public long bitboard(PieceType pieceType, Color color) {
@@ -233,6 +187,10 @@ public final class Board implements Unicode {
         return result.toString();
     }
 
+    long[][] bitboards() {
+        return bitboards;
+    }
+
     private static Board createInitialBoard() {
         var builder = Board.builder(e1, e8);
 
@@ -265,37 +223,10 @@ public final class Board implements Unicode {
 
     private Board(BoardBuilder builder) {
         bitboards = builder.bitboards;
-        mailbox.addAll(Arrays.asList(builder.mailbox));
     }
 
     private Board(long[][] bitboards) {
         this.bitboards = bitboards;
-    }
-
-    private List<Piece> loadMailbox(long[][] bitboards) {
-        var arrayMailbox = new Piece[NUMBER_OF_SQUARES];
-
-        for (var pieceType : PieceType.values()) {
-            for (var color : Color.values()) {
-
-                var bitboard = bitboards[pieceType.ordinal()][color.ordinal()];
-
-                if (bitboard == 0) {
-                    continue;
-                }
-
-                var nextBit = firstBit(bitboard);
-
-                do {
-                    arrayMailbox[nextBit] = new Piece(pieceType, color, nextBit);
-
-                    bitboard = clear(bitboard, nextBit);
-                    nextBit = firstBit(bitboard);
-                } while (isSet(bitboard, nextBit));
-            }
-        }
-
-        return Arrays.asList(arrayMailbox);
     }
 
     /* equals and hashCode */
@@ -311,12 +242,12 @@ public final class Board implements Unicode {
         }
 
         var other = (Board) o;
-        return Arrays.deepEquals(bitboards, other.bitboards) && mailbox.equals(other.mailbox);
+        return Arrays.deepEquals(bitboards, other.bitboards);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(Arrays.deepHashCode(bitboards), mailbox);
+        return Objects.hash(Arrays.deepHashCode(bitboards));
     }
 
     /**
@@ -325,7 +256,6 @@ public final class Board implements Unicode {
     public static class BoardBuilder {
 
         private final long[][] bitboards;
-        private final @Nullable Piece[] mailbox;
         private final Piece whiteKing;
         private final Piece blackKing;
 
@@ -349,7 +279,6 @@ public final class Board implements Unicode {
             var square = piece.square();
 
             bitboards[typeIndex][sideIndex] = BitboardManipulator.set(bitboard, square);
-            mailbox[square] = piece;
             return this;
         }
 
@@ -371,19 +300,12 @@ public final class Board implements Unicode {
          * @return The same instance of this builder, to continue the building process.
          */
         public BoardBuilder without(int square) {
-            var piece = mailbox[square];
-
-            if (piece == null) {
-                return this;
+            for (var pieceType : PieceType.values()) {
+                for (var color : Color.values()) {
+                    var bitboard = bitboards[pieceType.ordinal()][color.ordinal()];
+                    bitboards[pieceType.ordinal()][color.ordinal()] = BitboardManipulator.clear(bitboard, square);
+                }
             }
-
-            var typeIndex = piece.type().ordinal();
-            var sideIndex = piece.color().ordinal();
-
-            var bitboard = bitboards[typeIndex][sideIndex];
-
-            bitboards[typeIndex][sideIndex] = BitboardManipulator.clear(bitboard, square);
-            mailbox[square] = null;
             return this;
         }
 
@@ -400,7 +322,6 @@ public final class Board implements Unicode {
 
         private BoardBuilder(int whiteKingSquare, int blackKingSquare) {
             bitboards = new long[PieceType.values().length][Color.values().length];
-            mailbox = new Piece[NUMBER_OF_SQUARES];
             whiteKing = new Piece(KING, WHITE, whiteKingSquare);
             blackKing = new Piece(KING, BLACK, blackKingSquare);
         }

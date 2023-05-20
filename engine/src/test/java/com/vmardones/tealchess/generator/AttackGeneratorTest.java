@@ -86,4 +86,10 @@ final class AttackGeneratorTest {
 
         assertThat(generator.generate(position, WHITE)).isEqualTo(expectedAttacks);
     }
+
+    @Test
+    void kingIsAttacked() {
+        var position = FenParser.parse("bk1r3r/4qp1p/pn3np1/Nppp4/4PQ2/P1N2PPB/1PP4P/1K1R3R b - - 1 20");
+        assertThat(generator.isKingAttacked(position, BLACK)).isTrue();
+    }
 }

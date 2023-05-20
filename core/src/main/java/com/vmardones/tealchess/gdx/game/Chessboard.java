@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.vmardones.tealchess.board.Board;
+import com.vmardones.tealchess.board.Mailbox;
 import com.vmardones.tealchess.color.Color;
 import com.vmardones.tealchess.io.assets.AssetLoader;
 import com.vmardones.tealchess.io.settings.SettingManager;
@@ -39,8 +40,9 @@ final class Chessboard extends Group {
 
         for (var square : Square.all()) {
             var coordinate = Coordinate.forSquare(square);
+            var mailbox = new Mailbox(board);
             var clickableSquare = new ClickableSquare(
-                    settings, assets, coordinate, board.colorOf(coordinate), board.pieceAt(coordinate));
+                    settings, assets, coordinate, board.colorOf(coordinate), mailbox.pieceAt(coordinate));
             squares.add(clickableSquare);
             addActor(clickableSquare);
         }
@@ -58,7 +60,8 @@ final class Chessboard extends Group {
         board = newBoard;
 
         for (var square : squares) {
-            var newPiece = board.pieceAt(square.coordinate());
+            var mailbox = new Mailbox(board);
+            var newPiece = mailbox.pieceAt(square.coordinate());
 
             if (!Objects.equals(newPiece, square.piece())) {
                 square.piece(newPiece);
@@ -70,7 +73,8 @@ final class Chessboard extends Group {
         board = newBoard;
 
         for (var square : squares) {
-            var piece = board.pieceAt(square.coordinate());
+            var mailbox = new Mailbox(board);
+            var piece = mailbox.pieceAt(square.coordinate());
             square.reset(piece);
         }
     }

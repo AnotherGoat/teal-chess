@@ -81,6 +81,10 @@ public final class Game implements Fen, Pgn {
         return position().board();
     }
 
+    public Color sideToMove() {
+        return position().sideToMove();
+    }
+
     public CastlingRights castlingRights() {
         return position().castlingRights();
     }
@@ -89,8 +93,12 @@ public final class Game implements Fen, Pgn {
         return position().enPassantTarget();
     }
 
-    public Color sideToMove() {
-        return position().sideToMove();
+    public int halfmoveClock() {
+        return position().halfmoveClock();
+    }
+
+    public int fullmoveCounter() {
+        return position().fullmoveCounter();
     }
 
     /**
@@ -185,7 +193,7 @@ public final class Game implements Fen, Pgn {
     public void makeMove(Move move) {
         state.lastMove(move);
 
-        var nextPosition = moveMaker.make(state.position(), move);
+        var nextPosition = moveMaker.make(position(), move);
         state.position(nextPosition);
 
         state.whitePlayer(playerFactory.create(nextPosition, Color.WHITE));

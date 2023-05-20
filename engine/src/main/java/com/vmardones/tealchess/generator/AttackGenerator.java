@@ -65,7 +65,7 @@ public final class AttackGenerator implements DiagonalGenerator, LookupGenerator
 
         var attacks = generate(position, attacker);
 
-        return (king & attacks) == 1;
+        return (king & attacks) != 0;
     }
 
     private long addWhitePawnAttacks(long attacks, long pawns) {

@@ -42,7 +42,7 @@ public final class PlayerFactory {
             return new Player(color, legals, calculateStatus(position, color, legals));
         }
 
-        return new Player(color, emptyList(), PlayerStatus.NORMAL);
+        return new Player(color, emptyList(), PlayerStatus.OK);
     }
 
     private PlayerStatus calculateStatus(Position position, Color color, List<Move> legals) {
@@ -62,6 +62,6 @@ public final class PlayerFactory {
             return PlayerStatus.CHECKED;
         }
 
-        return PlayerStatus.NORMAL;
+        return PlayerStatus.OK;
     }
 }

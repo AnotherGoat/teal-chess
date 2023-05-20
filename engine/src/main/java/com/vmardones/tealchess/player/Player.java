@@ -38,7 +38,7 @@ public record Player(Color color, List<Move> legals, PlayerStatus status) {
                     case CHECKMATED -> "%s player, in checkmate!";
                     case STALEMATED -> "%s player, in stalemate!";
                     case CHECKED -> "%s player, in check!";
-                    case NORMAL -> "%s player";
+                    case OK -> "%s player";
                 };
 
         return String.format(template, color);

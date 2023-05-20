@@ -13,6 +13,7 @@ import static com.vmardones.tealchess.piece.PieceType.*;
 import static com.vmardones.tealchess.square.Square.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.vmardones.tealchess.board.Mailbox;
 import com.vmardones.tealchess.parser.fen.FenParser;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.piece.PromotionChoice;
@@ -27,9 +28,10 @@ final class MoveMakerTest {
         var position = FenParser.parse("4k3/8/8/8/8/8/8/4K3 w - - 0 1");
         var move = new Move(NORMAL, e1, e2);
         var postMoveBoard = moveMaker.make(position, move).board();
+        var mailbox = new Mailbox(postMoveBoard);
 
-        assertThat(postMoveBoard.pieceAt(e1)).isNull();
-        assertThat(postMoveBoard.pieceAt(e2)).isEqualTo(new Piece(KING, WHITE, e2));
+        assertThat(mailbox.pieceAt(e1)).isNull();
+        assertThat(mailbox.pieceAt(e2)).isEqualTo(new Piece(KING, WHITE, e2));
     }
 
     @Test
@@ -37,9 +39,10 @@ final class MoveMakerTest {
         var position = FenParser.parse("r3k3/8/8/8/8/8/8/B3K3 b - - 0 1");
         var move = new Move(CAPTURE, a8, a1);
         var postMoveBoard = moveMaker.make(position, move).board();
+        var mailbox = new Mailbox(postMoveBoard);
 
-        assertThat(postMoveBoard.pieceAt(a8)).isNull();
-        assertThat(postMoveBoard.pieceAt(a1)).isEqualTo(new Piece(ROOK, BLACK, a1));
+        assertThat(mailbox.pieceAt(a8)).isNull();
+        assertThat(mailbox.pieceAt(a1)).isEqualTo(new Piece(ROOK, BLACK, a1));
     }
 
     @Test
@@ -47,11 +50,12 @@ final class MoveMakerTest {
         var position = FenParser.parse("4k3/8/8/8/8/8/8/4K2R w K - 0 1");
         var postMoveBoard =
                 moveMaker.make(position, WHITE_KING_SIDE_CASTLE.get(0)).board();
+        var mailbox = new Mailbox(postMoveBoard);
 
-        assertThat(postMoveBoard.pieceAt(e1)).isNull();
-        assertThat(postMoveBoard.pieceAt(g1)).isEqualTo(new Piece(KING, WHITE, g1));
-        assertThat(postMoveBoard.pieceAt(h1)).isNull();
-        assertThat(postMoveBoard.pieceAt(f1)).isEqualTo(new Piece(ROOK, WHITE, f1));
+        assertThat(mailbox.pieceAt(e1)).isNull();
+        assertThat(mailbox.pieceAt(g1)).isEqualTo(new Piece(KING, WHITE, g1));
+        assertThat(mailbox.pieceAt(h1)).isNull();
+        assertThat(mailbox.pieceAt(f1)).isEqualTo(new Piece(ROOK, WHITE, f1));
     }
 
     @Test
@@ -59,11 +63,12 @@ final class MoveMakerTest {
         var position = FenParser.parse("4k3/8/8/8/8/8/8/R3K3 w Q - 0 1");
         var postMoveBoard =
                 moveMaker.make(position, WHITE_QUEEN_SIDE_CASTLE.get(0)).board();
+        var mailbox = new Mailbox(postMoveBoard);
 
-        assertThat(postMoveBoard.pieceAt(e1)).isNull();
-        assertThat(postMoveBoard.pieceAt(c1)).isEqualTo(new Piece(KING, WHITE, c1));
-        assertThat(postMoveBoard.pieceAt(a1)).isNull();
-        assertThat(postMoveBoard.pieceAt(d1)).isEqualTo(new Piece(ROOK, WHITE, d1));
+        assertThat(mailbox.pieceAt(e1)).isNull();
+        assertThat(mailbox.pieceAt(c1)).isEqualTo(new Piece(KING, WHITE, c1));
+        assertThat(mailbox.pieceAt(a1)).isNull();
+        assertThat(mailbox.pieceAt(d1)).isEqualTo(new Piece(ROOK, WHITE, d1));
     }
 
     @Test
@@ -71,11 +76,12 @@ final class MoveMakerTest {
         var position = FenParser.parse("4k2r/8/8/8/8/8/8/4K3 b k - 0 1");
         var postMoveBoard =
                 moveMaker.make(position, BLACK_KING_SIDE_CASTLE.get(0)).board();
+        var mailbox = new Mailbox(postMoveBoard);
 
-        assertThat(postMoveBoard.pieceAt(e8)).isNull();
-        assertThat(postMoveBoard.pieceAt(g8)).isEqualTo(new Piece(KING, BLACK, g8));
-        assertThat(postMoveBoard.pieceAt(h8)).isNull();
-        assertThat(postMoveBoard.pieceAt(f8)).isEqualTo(new Piece(ROOK, BLACK, f8));
+        assertThat(mailbox.pieceAt(e8)).isNull();
+        assertThat(mailbox.pieceAt(g8)).isEqualTo(new Piece(KING, BLACK, g8));
+        assertThat(mailbox.pieceAt(h8)).isNull();
+        assertThat(mailbox.pieceAt(f8)).isEqualTo(new Piece(ROOK, BLACK, f8));
     }
 
     @Test
@@ -83,11 +89,12 @@ final class MoveMakerTest {
         var position = FenParser.parse("r3k3/8/8/8/8/8/8/4K3 b q - 0 1");
         var postMoveBoard =
                 moveMaker.make(position, BLACK_QUEEN_SIDE_CASTLE.get(0)).board();
+        var mailbox = new Mailbox(postMoveBoard);
 
-        assertThat(postMoveBoard.pieceAt(e8)).isNull();
-        assertThat(postMoveBoard.pieceAt(c8)).isEqualTo(new Piece(KING, BLACK, c8));
-        assertThat(postMoveBoard.pieceAt(a8)).isNull();
-        assertThat(postMoveBoard.pieceAt(d8)).isEqualTo(new Piece(ROOK, BLACK, d8));
+        assertThat(mailbox.pieceAt(e8)).isNull();
+        assertThat(mailbox.pieceAt(c8)).isEqualTo(new Piece(KING, BLACK, c8));
+        assertThat(mailbox.pieceAt(a8)).isNull();
+        assertThat(mailbox.pieceAt(d8)).isEqualTo(new Piece(ROOK, BLACK, d8));
     }
 
     @Test
@@ -95,9 +102,10 @@ final class MoveMakerTest {
         var position = FenParser.parse("4k3/P7/8/8/8/8/8/4K3 w - - 0 1");
         var move = new Move(PAWN_PUSH, a7, a8, PromotionChoice.BISHOP);
         var postMoveBoard = moveMaker.make(position, move).board();
+        var mailbox = new Mailbox(postMoveBoard);
 
-        assertThat(postMoveBoard.pieceAt(a7)).isNull();
-        assertThat(postMoveBoard.pieceAt(a8)).isEqualTo(new Piece(BISHOP, WHITE, a8));
+        assertThat(mailbox.pieceAt(a7)).isNull();
+        assertThat(mailbox.pieceAt(a8)).isEqualTo(new Piece(BISHOP, WHITE, a8));
     }
 
     @Test
@@ -105,9 +113,10 @@ final class MoveMakerTest {
         var position = FenParser.parse("1b2k3/2P5/8/8/8/8/8/4K3 w - - 0 1");
         var move = new Move(PAWN_CAPTURE, c7, b8, PromotionChoice.QUEEN);
         var postMoveBoard = moveMaker.make(position, move).board();
+        var mailbox = new Mailbox(postMoveBoard);
 
-        assertThat(postMoveBoard.pieceAt(c7)).isNull();
-        assertThat(postMoveBoard.pieceAt(b8)).isEqualTo(new Piece(QUEEN, WHITE, b8));
+        assertThat(mailbox.pieceAt(c7)).isNull();
+        assertThat(mailbox.pieceAt(b8)).isEqualTo(new Piece(QUEEN, WHITE, b8));
     }
 
     // TODO: Test making en passant moves
@@ -116,9 +125,10 @@ final class MoveMakerTest {
         var position = FenParser.parse("4k3/8/8/8/8/8/P7/4K3 w - - 0 1");
         var move = new Move(DOUBLE_PUSH, a2, a4);
         var postMove = moveMaker.make(position, move);
+        var mailbox = new Mailbox(postMove.board());
 
-        assertThat(postMove.board().pieceAt(a2)).isNull();
-        assertThat(postMove.board().pieceAt(a4).isPawn()).isTrue();
+        assertThat(mailbox.pieceAt(a2)).isNull();
+        assertThat(mailbox.pieceAt(a4).isPawn()).isTrue();
         assertThat(postMove.enPassantTarget()).isNotNull().isEqualTo(a3);
     }
 
@@ -127,9 +137,10 @@ final class MoveMakerTest {
         var position = FenParser.parse("4k3/p7/8/8/8/8/8/4K3 b - - 0 1");
         var move = new Move(DOUBLE_PUSH, a7, a5);
         var postMove = moveMaker.make(position, move);
+        var mailbox = new Mailbox(postMove.board());
 
-        assertThat(postMove.board().pieceAt(a7)).isNull();
-        assertThat(postMove.board().pieceAt(a5).isPawn()).isTrue();
+        assertThat(mailbox.pieceAt(a7)).isNull();
+        assertThat(mailbox.pieceAt(a5).isPawn()).isTrue();
         assertThat(postMove.enPassantTarget()).isNotNull().isEqualTo(a6);
     }
 
@@ -209,5 +220,14 @@ final class MoveMakerTest {
         var postMove = moveMaker.make(position, move);
 
         assertThat(postMove.castlingRights()).isEqualTo(position.castlingRights());
+    }
+
+    @Test
+    void resetHalfMoveClock() {
+        var position = FenParser.parse("b2r3r/k3qp1p/pn3np1/Nppp4/4PQ2/P1N2PPB/1PP4P/1K1RR3 b - - 3 21");
+        var move = new Move(PAWN_PUSH, d5, d4);
+        var postMove = moveMaker.make(position, move);
+
+        assertThat(postMove.halfmoveClock()).isZero();
     }
 }
