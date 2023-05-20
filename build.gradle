@@ -16,9 +16,9 @@ allprojects {
         jacocoVersion = '0.8.10'
 
         jdtVersion = '2.2.700'
-        errorProneVersion = '2.18.0'
+        errorProneVersion = '2.19.1'
         nullAwayVersion = '0.10.10'
-        errorProneSupportVersion = '0.9.0'
+        errorProneSupportVersion = '0.11.1'
 
         junitVersion = '5.9.3'
         mockitoVersion = '5.3.1'
@@ -27,6 +27,9 @@ allprojects {
 
         batikVersion = '1.16'
         gdxVersion = '1.11.0'
+
+        shadowVersion = '8.1.1'
+        beryxRuntimeVersion = '1.13.0'
     }
 
     apply plugin: 'java'
