@@ -11,6 +11,7 @@ import static com.vmardones.tealchess.square.Square.*;
 import java.util.List;
 
 import com.vmardones.tealchess.piece.PromotionChoice;
+import com.vmardones.tealchess.square.AlgebraicConverter;
 import org.eclipse.jdt.annotation.Nullable;
 
 public record Move(MoveType type, int source, int destination, @Nullable PromotionChoice promotionChoice) {
@@ -27,5 +28,10 @@ public record Move(MoveType type, int source, int destination, @Nullable Promoti
 
     public Move(MoveType type, int source, int destination) {
         this(type, source, destination, null);
+    }
+
+    @Override
+    public String toString() {
+        return AlgebraicConverter.toAlgebraic(source) + AlgebraicConverter.toAlgebraic(destination);
     }
 }

@@ -159,4 +159,14 @@ final class PawnMoveGeneratorTest {
         var position = FenParser.parse("4k3/8/8/8/8/8/7p/R3K2R w - - 0 1");
         assertThat(generator.generate(position)).isEmpty();
     }
+
+    // https://www.chessprogramming.org/En_passant#bugs
+    @Test
+    void bruteForceEnPassantBug() {
+        var position = FenParser.parse("2r3k1/1q1nbppp/r3p3/3pP3/pPpP4/P1Q2N2/2RN1PPP/2R4K b - b3 0 23");
+
+        var expectedMoves = new Move[] {new Move(EN_PASSANT, a4, b3), new Move(EN_PASSANT, c4, b3)};
+
+        assertThat(generator.generate(position)).containsOnlyOnce(expectedMoves);
+    }
 }

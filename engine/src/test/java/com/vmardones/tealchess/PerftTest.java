@@ -16,6 +16,8 @@ import com.vmardones.tealchess.position.Position;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.util.List;
+
 final class PerftTest {
 
     MoveGenerator generator = new LegalGenerator();
@@ -29,14 +31,14 @@ final class PerftTest {
         var nodes = 0L;
         var moves = generator.generate(position);
 
-        for (var i = 0; i < moves.size(); i++) {
-            var postMove = moveMaker.make(position, moves.get(i));
+        for (var move : moves) {
+            var postMove = moveMaker.make(position, move);
             nodes += perft(postMove, depth - 1);
         }
 
         return nodes;
     }
-
+    
     // https://www.chessprogramming.org/Perft_Results#Initial_Position
     @CsvSource({"0, 1", "1, 20", "2, 400", "3, 8902", "4, 197281", "5, 4865609"})
     @ParameterizedTest

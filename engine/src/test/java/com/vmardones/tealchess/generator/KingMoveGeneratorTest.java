@@ -174,4 +174,13 @@ final class KingMoveGeneratorTest {
         var normalMoves = 5;
         assertThat(generator.generate(position)).hasSize(normalMoves + 1).containsOnlyOnce(expectedCastles);
     }
+
+    // https://www.chessprogramming.org/Novag_Micro_Chess#CastlingBug
+    @Test
+    void novagCastlingBug() {
+        var position = FenParser.parse("r3k2r/pp2n1pp/2p5/3pB3/P3P3/2P5/2P3PP/R4RK1 b kq - 1 19");
+        var unexpectedCastles = new Move[] {Move.BLACK_KING_SIDE_CASTLE.get(0)};
+
+        assertThat(generator.generate(position)).doesNotContain(unexpectedCastles);
+    }
 }

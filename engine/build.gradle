@@ -25,6 +25,10 @@ tasks {
             exclude('com/vmardones/tealchess/PerftTest.class')
         }
 
+        if (!project.hasProperty('includeIntegration')) {
+            exclude('com/vmardones/tealchess/integration/*')
+        }
+
         testLogging {
             exceptionFormat = TestExceptionFormat.FULL
         }

@@ -41,6 +41,7 @@ final class FullGameTest {
         var attackGenerator = new AttackGenerator();
         var moveGenerator = new LegalGenerator();
         var playerFactory = new PlayerFactory(attackGenerator, moveGenerator);
+
         var tags = new HashMap<String, String>();
         tags.put("Event", "It (cat.17)");
         tags.put("Site", "Wijk aan Zee (Netherlands)");
