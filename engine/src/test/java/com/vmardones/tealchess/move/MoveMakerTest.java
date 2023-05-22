@@ -262,27 +262,29 @@ final class MoveMakerTest {
     }
 
     @Test
+    void whiteRookCapturesBlackRook() {
+        var position = FenParser.parse("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
+        var move = new Move(CAPTURE, a1, a8);
+        var postMove = moveMaker.make(position, move);
+
+        assertThat(postMove.castlingRights()).hasToString("Kk");
+    }
+
+    @Test
+    void blackRookCapturesWhiteRook() {
+        var position = FenParser.parse("r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 0 1");
+        var move = new Move(CAPTURE, h8, h1);
+        var postMove = moveMaker.make(position, move);
+
+        assertThat(postMove.castlingRights()).hasToString("Qq");
+    }
+
+    @Test
     void resetHalfMoveClock() {
         var position = FenParser.parse("b2r3r/k3qp1p/pn3np1/Nppp4/4PQ2/P1N2PPB/1PP4P/1K1RR3 b - - 3 21");
         var move = new Move(PAWN_PUSH, d5, d4);
         var postMove = moveMaker.make(position, move);
 
         assertThat(postMove.halfmoveClock()).isZero();
-    }
-
-    // Case starting from https://www.chessprogramming.org/Perft_Results#Position_5
-    // After making the moves d1d5 and f2h1
-    // The castling move e1g1 is added (an illegal move)
-    @Test
-    void buggyCastlingCase() {
-        var position1 = FenParser.parse("rnbq1k1r/pp1Pbppp/2p5/3Q4/2B5/8/PPP1NnPP/RNB1K2R b KQ - 2 8");
-
-        var expectedPosition2 = FenParser.parse("rnbq1k1r/pp1Pbppp/2p5/3Q4/2B5/8/PPP1N1PP/RNB1K2n w Q - 0 9");
-        var unexpectedPosition2 = FenParser.parse("rnbq1k1r/pp1Pbppp/2p5/3Q4/2B5/8/PPP1N1PP/RNB1K2n w KQ - 0 9");
-
-        var move = new Move(CAPTURE, f2, h1);
-        var postMove = moveMaker.make(position1, move);
-
-        assertThat(postMove).isNotEqualTo(unexpectedPosition2).isEqualTo(expectedPosition2);
     }
 }

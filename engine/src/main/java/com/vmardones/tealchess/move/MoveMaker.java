@@ -188,31 +188,30 @@ public final class MoveMaker {
         return bitboard;
     }
 
-    private CastlingRights updateCastlingRights(
-            int source, int destination, CastlingRights castlingRights, Color sideToMove) {
+    private CastlingRights updateCastlingRights(int source, int destination, CastlingRights rights, Color sideToMove) {
         if (source == WHITE_KING || source == BLACK_KING) {
-            return castlingRights.disable(sideToMove);
+            return rights.disable(sideToMove);
         }
 
         if (source == WHITE_KING_SIDE_ROOK || source == BLACK_KING_SIDE_ROOK) {
-            return castlingRights.disableKingSide(sideToMove);
+            rights = rights.disableKingSide(sideToMove);
         }
 
         if (source == WHITE_QUEEN_SIDE_ROOK || source == BLACK_QUEEN_SIDE_ROOK) {
-            return castlingRights.disableQueenSide(sideToMove);
+            rights = rights.disableQueenSide(sideToMove);
         }
 
         if (sideToMove.isBlack() && destination == WHITE_KING_SIDE_ROOK
                 || sideToMove.isWhite() && destination == BLACK_KING_SIDE_ROOK) {
-            return castlingRights.disableKingSide(sideToMove.opposite());
+            rights = rights.disableKingSide(sideToMove.opposite());
         }
 
         if (sideToMove.isBlack() && destination == WHITE_QUEEN_SIDE_ROOK
                 || sideToMove.isWhite() && destination == BLACK_QUEEN_SIDE_ROOK) {
-            return castlingRights.disableQueenSide(sideToMove.opposite());
+            rights = rights.disableQueenSide(sideToMove.opposite());
         }
 
-        return castlingRights;
+        return rights;
     }
 
     private @Nullable Integer updateEnPassantTarget(Move move, Color sideToMove) {
