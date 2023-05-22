@@ -92,4 +92,10 @@ final class AttackGeneratorTest {
         var position = FenParser.parse("bk1r3r/4qp1p/pn3np1/Nppp4/4PQ2/P1N2PPB/1PP4P/1K1R3R b - - 1 20");
         assertThat(generator.isKingAttacked(position, BLACK)).isTrue();
     }
+
+    @Test
+    void detectFoolsMate() {
+        var position = FenParser.parse("rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3");
+        assertThat(generator.isKingAttacked(position, WHITE)).isTrue();
+    }
 }

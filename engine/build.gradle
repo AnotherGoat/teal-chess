@@ -14,7 +14,7 @@ pitest {
     junit5PluginVersion = "$project.junit5PluginVersion"
 
     // Excludes running mutations on perft tests
-    targetTests = ['com.vmardones.tealchess.*.*']
+    excludedTestClasses = ['com.vmardones.tealchess.perft.*']
 }
 
 tasks {
@@ -22,7 +22,7 @@ tasks {
         useJUnitPlatform()
 
         if (!project.hasProperty('includePerft')) {
-            exclude('com/vmardones/tealchess/PerftTest.class')
+            exclude('com/vmardones/tealchess/perft/*')
         }
 
         if (!project.hasProperty('includeIntegration')) {

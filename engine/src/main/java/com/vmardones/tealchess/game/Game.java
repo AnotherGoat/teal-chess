@@ -229,10 +229,9 @@ public final class Game implements Fen, Pgn {
     }
 
     public Set<Coordinate> findOpponentAttacks() {
-        var attackBitboard = attackGenerator.generate(position(), sideToMove().opposite());
-        return BitboardManipulator.bits(attackBitboard)
-                .map(Coordinate::forSquare)
-                .collect(toSet());
+        var attacks = attackGenerator.generate(position(), sideToMove().opposite());
+
+        return BitboardManipulator.bits(attacks).map(Coordinate::forSquare).collect(toSet());
     }
 
     /* Serialization methods */
