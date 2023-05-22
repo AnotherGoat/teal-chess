@@ -150,7 +150,7 @@ final class MoveMakerTest {
         var move = new Move(NORMAL, d3, b4);
         var postMove = moveMaker.make(position, move);
 
-        assertThat(postMove.castlingRights()).isEqualTo(position.castlingRights());
+        assertThat(postMove.castlingRights()).hasToString("KQkq");
     }
 
     @Test
@@ -159,8 +159,7 @@ final class MoveMakerTest {
         var move = new Move(NORMAL, e1, e2);
         var postMove = moveMaker.make(position, move);
 
-        assertThat(postMove.castlingRights().whiteKingSide()).isFalse();
-        assertThat(postMove.castlingRights().whiteQueenSide()).isFalse();
+        assertThat(postMove.castlingRights()).hasToString("kq");
     }
 
     @Test
@@ -169,8 +168,7 @@ final class MoveMakerTest {
         var move = new Move(NORMAL, e8, e7);
         var postMove = moveMaker.make(position, move);
 
-        assertThat(postMove.castlingRights().blackKingSide()).isFalse();
-        assertThat(postMove.castlingRights().blackQueenSide()).isFalse();
+        assertThat(postMove.castlingRights()).hasToString("KQ");
     }
 
     @Test
@@ -179,8 +177,7 @@ final class MoveMakerTest {
         var move = new Move(NORMAL, h1, h3);
         var postMove = moveMaker.make(position, move);
 
-        assertThat(postMove.castlingRights().whiteKingSide()).isFalse();
-        assertThat(postMove.castlingRights().blackKingSide()).isTrue();
+        assertThat(postMove.castlingRights()).hasToString("Qkq");
     }
 
     @Test
@@ -189,8 +186,7 @@ final class MoveMakerTest {
         var move = new Move(NORMAL, a1, d1);
         var postMove = moveMaker.make(position, move);
 
-        assertThat(postMove.castlingRights().whiteQueenSide()).isFalse();
-        assertThat(postMove.castlingRights().blackQueenSide()).isTrue();
+        assertThat(postMove.castlingRights()).hasToString("Kkq");
     }
 
     @Test
@@ -199,8 +195,7 @@ final class MoveMakerTest {
         var move = new Move(NORMAL, h8, g8);
         var postMove = moveMaker.make(position, move);
 
-        assertThat(postMove.castlingRights().whiteKingSide()).isTrue();
-        assertThat(postMove.castlingRights().blackKingSide()).isFalse();
+        assertThat(postMove.castlingRights()).hasToString("KQq");
     }
 
     @Test
@@ -209,8 +204,7 @@ final class MoveMakerTest {
         var move = new Move(NORMAL, a8, a6);
         var postMove = moveMaker.make(position, move);
 
-        assertThat(postMove.castlingRights().whiteQueenSide()).isTrue();
-        assertThat(postMove.castlingRights().blackQueenSide()).isFalse();
+        assertThat(postMove.castlingRights()).hasToString("KQk");
     }
 
     @Test
@@ -219,7 +213,52 @@ final class MoveMakerTest {
         var move = new Move(NORMAL, f4, a4);
         var postMove = moveMaker.make(position, move);
 
-        assertThat(postMove.castlingRights()).isEqualTo(position.castlingRights());
+        assertThat(postMove.castlingRights()).hasToString("KQq");
+    }
+
+    @Test
+    void loseWhiteKingSideRook() {
+        var position = FenParser.parse("r3k2r/8/1N4N1/8/8/1n4n1/8/R3K2R b KQkq - 0 1");
+        var move = new Move(CAPTURE, g3, h1);
+        var postMove = moveMaker.make(position, move);
+
+        assertThat(postMove.castlingRights()).hasToString("Qkq");
+    }
+
+    @Test
+    void loseWhiteQueenSideRook() {
+        var position = FenParser.parse("r3k2r/8/1N4N1/8/8/1n4n1/8/R3K2R b KQkq - 0 1");
+        var move = new Move(CAPTURE, b3, a1);
+        var postMove = moveMaker.make(position, move);
+
+        assertThat(postMove.castlingRights()).hasToString("Kkq");
+    }
+
+    @Test
+    void loseBlackKingSideRook() {
+        var position = FenParser.parse("r3k2r/8/1N4N1/8/8/1n4n1/8/R3K2R w KQkq - 0 1");
+        var move = new Move(CAPTURE, g6, h8);
+        var postMove = moveMaker.make(position, move);
+
+        assertThat(postMove.castlingRights()).hasToString("KQq");
+    }
+
+    @Test
+    void loseBlackQueenSideRook() {
+        var position = FenParser.parse("r3k2r/8/1N4N1/8/8/1n4n1/8/R3K2R w KQkq - 0 1");
+        var move = new Move(CAPTURE, b6, a8);
+        var postMove = moveMaker.make(position, move);
+
+        assertThat(postMove.castlingRights()).hasToString("KQk");
+    }
+
+    @Test
+    void noIncorrectLossOfRights() {
+        var position = FenParser.parse("r3k3/8/6n1/8/8/8/8/R3K2R b KQq - 0 1");
+        var move = new Move(NORMAL, g6, h8);
+        var postMove = moveMaker.make(position, move);
+
+        assertThat(postMove.castlingRights()).doesNotHaveToString("Qq").hasToString("KQq");
     }
 
     @Test
@@ -229,5 +268,21 @@ final class MoveMakerTest {
         var postMove = moveMaker.make(position, move);
 
         assertThat(postMove.halfmoveClock()).isZero();
+    }
+
+    // Case starting from https://www.chessprogramming.org/Perft_Results#Position_5
+    // After making the moves d1d5 and f2h1
+    // The castling move e1g1 is added (an illegal move)
+    @Test
+    void buggyCastlingCase() {
+        var position1 = FenParser.parse("rnbq1k1r/pp1Pbppp/2p5/3Q4/2B5/8/PPP1NnPP/RNB1K2R b KQ - 2 8");
+
+        var expectedPosition2 = FenParser.parse("rnbq1k1r/pp1Pbppp/2p5/3Q4/2B5/8/PPP1N1PP/RNB1K2n w Q - 0 9");
+        var unexpectedPosition2 = FenParser.parse("rnbq1k1r/pp1Pbppp/2p5/3Q4/2B5/8/PPP1N1PP/RNB1K2n w KQ - 0 9");
+
+        var move = new Move(CAPTURE, f2, h1);
+        var postMove = moveMaker.make(position1, move);
+
+        assertThat(postMove).isNotEqualTo(unexpectedPosition2).isEqualTo(expectedPosition2);
     }
 }

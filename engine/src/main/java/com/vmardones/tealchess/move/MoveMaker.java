@@ -57,7 +57,8 @@ public final class MoveMaker {
 
         var updatedBoard = Board.fromBitboards(updatedBitboards);
 
-        var castlingRights = updateCastlingRights(move.source(), position.castlingRights(), sideToMove);
+        var castlingRights =
+                updateCastlingRights(move.source(), move.destination(), position.castlingRights(), sideToMove);
         var enPassantTarget = updateEnPassantTarget(move, sideToMove);
 
         var halfmoveClock = position.halfmoveClock();
@@ -187,7 +188,8 @@ public final class MoveMaker {
         return bitboard;
     }
 
-    private CastlingRights updateCastlingRights(int source, CastlingRights castlingRights, Color sideToMove) {
+    private CastlingRights updateCastlingRights(
+            int source, int destination, CastlingRights castlingRights, Color sideToMove) {
         if (source == WHITE_KING || source == BLACK_KING) {
             return castlingRights.disable(sideToMove);
         }
@@ -198,6 +200,16 @@ public final class MoveMaker {
 
         if (source == WHITE_QUEEN_SIDE_ROOK || source == BLACK_QUEEN_SIDE_ROOK) {
             return castlingRights.disableQueenSide(sideToMove);
+        }
+
+        if (sideToMove.isBlack() && destination == WHITE_KING_SIDE_ROOK
+                || sideToMove.isWhite() && destination == BLACK_KING_SIDE_ROOK) {
+            return castlingRights.disableKingSide(sideToMove.opposite());
+        }
+
+        if (sideToMove.isBlack() && destination == WHITE_QUEEN_SIDE_ROOK
+                || sideToMove.isWhite() && destination == BLACK_QUEEN_SIDE_ROOK) {
+            return castlingRights.disableQueenSide(sideToMove.opposite());
         }
 
         return castlingRights;

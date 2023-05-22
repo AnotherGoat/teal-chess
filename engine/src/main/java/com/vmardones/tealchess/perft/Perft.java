@@ -76,7 +76,7 @@ public final class Perft {
         }
 
         var totalNodes = divideResult.values().stream().reduce(0L, Long::sum);
-        result.append("\nNodes searches: ").append(totalNodes);
+        result.append("\nNodes searched: ").append(totalNodes);
 
         return result.toString();
     }

@@ -53,4 +53,9 @@ public record CastlingRights(
                 blackKingSide ? "k" : "",
                 blackQueenSide ? "q" : "");
     }
+
+    @Override
+    public String toString() {
+        return fen();
+    }
 }

@@ -9,6 +9,7 @@ import static com.vmardones.tealchess.move.MoveType.*;
 import static com.vmardones.tealchess.square.Square.*;
 
 import java.util.List;
+import java.util.Locale;
 
 import com.vmardones.tealchess.piece.PromotionChoice;
 import com.vmardones.tealchess.square.AlgebraicConverter;
@@ -32,6 +33,12 @@ public record Move(MoveType type, int source, int destination, @Nullable Promoti
 
     @Override
     public String toString() {
-        return AlgebraicConverter.toAlgebraic(source) + AlgebraicConverter.toAlgebraic(destination);
+        var base = AlgebraicConverter.toAlgebraic(source) + AlgebraicConverter.toAlgebraic(destination);
+
+        if (promotionChoice == null) {
+            return base;
+        }
+
+        return base + promotionChoice.san().toLowerCase(Locale.ROOT);
     }
 }
