@@ -153,20 +153,20 @@ public final class Game implements Fen, Pgn {
     }
 
     public @Nullable Move castlingStep(Move move) {
-        if (move.equals(Move.WHITE_KING_SIDE_CASTLE.get(0))) {
-            return Move.WHITE_KING_SIDE_CASTLE.get(1);
+        if (move.equals(Move.WHITE_SHORT_CASTLE_STEPS.get(0))) {
+            return Move.WHITE_SHORT_CASTLE_STEPS.get(1);
         }
 
-        if (move.equals(Move.WHITE_QUEEN_SIDE_CASTLE.get(0))) {
-            return Move.WHITE_QUEEN_SIDE_CASTLE.get(1);
+        if (move.equals(Move.WHITE_LONG_CASTLE_STEPS.get(0))) {
+            return Move.WHITE_LONG_CASTLE_STEPS.get(1);
         }
 
-        if (move.equals(Move.BLACK_KING_SIDE_CASTLE.get(0))) {
-            return Move.BLACK_KING_SIDE_CASTLE.get(1);
+        if (move.equals(Move.BLACK_SHORT_CASTLE_STEPS.get(0))) {
+            return Move.BLACK_SHORT_CASTLE_STEPS.get(1);
         }
 
-        if (move.equals(Move.BLACK_QUEEN_SIDE_CASTLE.get(0))) {
-            return Move.BLACK_QUEEN_SIDE_CASTLE.get(1);
+        if (move.equals(Move.BLACK_LONG_CASTLE_STEPS.get(0))) {
+            return Move.BLACK_LONG_CASTLE_STEPS.get(1);
         }
 
         return null;

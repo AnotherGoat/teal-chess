@@ -38,10 +38,10 @@ public enum MoveType {
      * A special move where the king enters the king side castle and moves 2 squares.
      * @see <a href="https://www.chessprogramming.org/Castling">Castling</a>
      */
-    KING_CASTLE,
+    SHORT_CASTLE,
     /**
      * A special move where the king enters the queen side castle and moves 3 squares.
      * @see <a href="https://www.chessprogramming.org/Castling">Castling</a>
      */
-    QUEEN_CASTLE
+    LONG_CASTLE
 }

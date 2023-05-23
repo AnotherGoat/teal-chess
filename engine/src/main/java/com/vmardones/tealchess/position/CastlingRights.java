@@ -9,11 +9,11 @@ import com.vmardones.tealchess.color.Color;
 import com.vmardones.tealchess.parser.fen.Fen;
 
 /**
- * Specifies the precondition of what castle moves could be possible, based on what kings and rooks have been moved.
+ * Specifies the precondition of what castle moves could be possible, based on what kings and rooks have been moved or captured.
  * @see <a href="https://www.chessprogramming.org/Castling_Rights">Castling Rights</a>
  */
-public record CastlingRights(
-        boolean whiteKingSide, boolean whiteQueenSide, boolean blackKingSide, boolean blackQueenSide) implements Fen {
+public record CastlingRights(boolean whiteShort, boolean whiteLong, boolean blackShort, boolean blackLong)
+        implements Fen {
 
     public CastlingRights() {
         this(false, false, false, false);
@@ -21,37 +21,33 @@ public record CastlingRights(
 
     public CastlingRights disable(Color color) {
         return switch (color) {
-            case WHITE -> new CastlingRights(false, false, blackKingSide, blackQueenSide);
-            case BLACK -> new CastlingRights(whiteKingSide, whiteQueenSide, false, false);
+            case WHITE -> new CastlingRights(false, false, blackShort, blackLong);
+            case BLACK -> new CastlingRights(whiteShort, whiteLong, false, false);
         };
     }
 
-    public CastlingRights disableKingSide(Color color) {
+    public CastlingRights disableShortCastle(Color color) {
         return switch (color) {
-            case WHITE -> new CastlingRights(false, whiteQueenSide, blackKingSide, blackQueenSide);
-            case BLACK -> new CastlingRights(whiteKingSide, whiteQueenSide, false, blackQueenSide);
+            case WHITE -> new CastlingRights(false, whiteLong, blackShort, blackLong);
+            case BLACK -> new CastlingRights(whiteShort, whiteLong, false, blackLong);
         };
     }
 
-    public CastlingRights disableQueenSide(Color color) {
+    public CastlingRights disableLongCastle(Color color) {
         return switch (color) {
-            case WHITE -> new CastlingRights(whiteKingSide, false, blackKingSide, blackQueenSide);
-            case BLACK -> new CastlingRights(whiteKingSide, whiteQueenSide, blackKingSide, false);
+            case WHITE -> new CastlingRights(whiteShort, false, blackShort, blackLong);
+            case BLACK -> new CastlingRights(whiteShort, whiteLong, blackShort, false);
         };
     }
 
     @Override
     public String fen() {
-        if (!whiteKingSide && !whiteQueenSide && !blackKingSide && !blackQueenSide) {
+        if (!whiteShort && !whiteLong && !blackShort && !blackLong) {
             return "-";
         }
 
         return String.join(
-                "",
-                whiteKingSide ? "K" : "",
-                whiteQueenSide ? "Q" : "",
-                blackKingSide ? "k" : "",
-                blackQueenSide ? "q" : "");
+                "", whiteShort ? "K" : "", whiteLong ? "Q" : "", blackShort ? "k" : "", blackLong ? "q" : "");
     }
 
     @Override

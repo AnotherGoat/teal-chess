@@ -56,7 +56,7 @@ final class KingMoveGeneratorTest {
         var normalMoves = 5;
         assertThat(generator.generate(position))
                 .hasSize(normalMoves)
-                .noneMatch(move -> move.type() == KING_CASTLE || move.type() == QUEEN_CASTLE);
+                .noneMatch(move -> move.type() == SHORT_CASTLE || move.type() == LONG_CASTLE);
     }
 
     @Test
@@ -66,7 +66,7 @@ final class KingMoveGeneratorTest {
         var normalMoves = 5;
         assertThat(generator.generate(position))
                 .hasSize(normalMoves)
-                .noneMatch(move -> move.type() == KING_CASTLE || move.type() == QUEEN_CASTLE);
+                .noneMatch(move -> move.type() == SHORT_CASTLE || move.type() == LONG_CASTLE);
     }
 
     @Test
@@ -76,100 +76,100 @@ final class KingMoveGeneratorTest {
         var normalMoves = 5;
         assertThat(generator.generate(position))
                 .hasSize(normalMoves)
-                .noneMatch(move -> move.type() == KING_CASTLE || move.type() == QUEEN_CASTLE);
+                .noneMatch(move -> move.type() == SHORT_CASTLE || move.type() == LONG_CASTLE);
     }
 
     @Test
-    void kingSidePathBlocked() {
+    void shortCastlePathBlocked() {
         // 1st square blocked
         var position1 = FenParser.parse("r3kn1r/8/8/8/8/8/8/R3K2R b k - 0 1");
         var normalMoves1 = 4;
         assertThat(generator.generate(position1))
                 .hasSize(normalMoves1)
-                .noneMatch(move -> move.type() == KING_CASTLE || move.type() == QUEEN_CASTLE);
+                .noneMatch(move -> move.type() == SHORT_CASTLE || move.type() == LONG_CASTLE);
 
         // 2nd square blocked
         var position2 = FenParser.parse("r3k1nr/8/8/8/8/8/8/R3K2R b k - 0 1");
         var normalMoves2 = 5;
         assertThat(generator.generate(position2))
                 .hasSize(normalMoves2)
-                .noneMatch(move -> move.type() == KING_CASTLE || move.type() == QUEEN_CASTLE);
+                .noneMatch(move -> move.type() == SHORT_CASTLE || move.type() == LONG_CASTLE);
     }
 
     @Test
-    void queenSidePathBlocked() {
+    void longCastlePathBlocked() {
         // 1st square blocked
         var position1 = FenParser.parse("r2nk2r/8/8/8/8/8/8/R3K2R b q - 0 1");
         var normalMoves1 = 4;
         assertThat(generator.generate(position1))
                 .hasSize(normalMoves1)
-                .noneMatch(move -> move.type() == KING_CASTLE || move.type() == QUEEN_CASTLE);
+                .noneMatch(move -> move.type() == SHORT_CASTLE || move.type() == LONG_CASTLE);
 
         // 2nd square blocked
         var position2 = FenParser.parse("r1n1k2r/8/8/8/8/8/8/R3K2R b q - 0 1");
         var normalMoves2 = 5;
         assertThat(generator.generate(position2))
                 .hasSize(normalMoves2)
-                .noneMatch(move -> move.type() == KING_CASTLE || move.type() == QUEEN_CASTLE);
+                .noneMatch(move -> move.type() == SHORT_CASTLE || move.type() == LONG_CASTLE);
 
         // 3rd square blocked
         var position3 = FenParser.parse("rn2k2r/8/8/8/8/8/8/R3K2R b q - 0 1");
         var normalMoves3 = 5;
         assertThat(generator.generate(position3))
                 .hasSize(normalMoves3)
-                .noneMatch(move -> move.type() == KING_CASTLE || move.type() == QUEEN_CASTLE);
+                .noneMatch(move -> move.type() == SHORT_CASTLE || move.type() == LONG_CASTLE);
     }
 
     @Test
-    void kingSidePathUnderAttack() {
+    void shortCastlePathUnderAttack() {
         // 1st square attacked
         var position1 = FenParser.parse("r3k2r/8/8/1b6/8/8/8/R3K2R w K - 0 1");
         var normalMoves1 = 5;
         assertThat(generator.generate(position1))
                 .hasSize(normalMoves1)
-                .noneMatch(move -> move.type() == KING_CASTLE || move.type() == QUEEN_CASTLE);
+                .noneMatch(move -> move.type() == SHORT_CASTLE || move.type() == LONG_CASTLE);
 
         // 2nd square attacked
         var position2 = FenParser.parse("r3k2r/8/8/2b5/8/8/8/R3K2R w K - 0 1");
         var normalMoves2 = 5;
         assertThat(generator.generate(position2))
                 .hasSize(normalMoves2)
-                .noneMatch(move -> move.type() == KING_CASTLE || move.type() == QUEEN_CASTLE);
+                .noneMatch(move -> move.type() == SHORT_CASTLE || move.type() == LONG_CASTLE);
     }
 
     @Test
-    void queenSidePathUnderAttack() {
+    void longCastlePathUnderAttack() {
         // 1st square attacked
         var position1 = FenParser.parse("r3k2r/8/8/7b/8/8/8/R3K2R w Q - 0 1");
         var normalMoves1 = 5;
         assertThat(generator.generate(position1))
                 .hasSize(normalMoves1)
-                .noneMatch(move -> move.type() == KING_CASTLE || move.type() == QUEEN_CASTLE);
+                .noneMatch(move -> move.type() == SHORT_CASTLE || move.type() == LONG_CASTLE);
 
         // 2nd square attacked
         var position2 = FenParser.parse("r3k2r/8/8/6b1/8/8/8/R3K2R w Q - 0 1");
         var normalMoves2 = 5;
         assertThat(generator.generate(position2))
                 .hasSize(normalMoves2)
-                .noneMatch(move -> move.type() == KING_CASTLE || move.type() == QUEEN_CASTLE);
+                .noneMatch(move -> move.type() == SHORT_CASTLE || move.type() == LONG_CASTLE);
     }
 
     @Test
     void normalCastles() {
         var position = FenParser.parse("r3k2r/8/8/8/8/8/8/R3K2R b kq - 0 1");
 
-        var expectedCastles = new Move[] {Move.BLACK_KING_SIDE_CASTLE.get(0), Move.BLACK_QUEEN_SIDE_CASTLE.get(0)};
+        var expectedCastles = new Move[] {Move.BLACK_SHORT_CASTLE_STEPS.get(0), Move.BLACK_LONG_CASTLE_STEPS.get(0)};
 
         var normalMoves = 5;
         assertThat(generator.generate(position)).hasSize(normalMoves + 2).containsOnlyOnce(expectedCastles);
     }
 
     @Test
-    void verySpecificQueenCastle() {
-        // Castling can be done queen side even if the square beside the rook is being attacked
+    void verySpecificLongCastle() {
+        // A long castle can be made even if the square beside the rook is being attacked
         var position = FenParser.parse("1r2k3/8/8/8/8/8/8/R3K3 w Q - 0 1");
 
-        var expectedCastles = new Move[] {Move.WHITE_QUEEN_SIDE_CASTLE.get(0)};
+        var expectedCastles = new Move[] {Move.WHITE_LONG_CASTLE_STEPS.get(0)};
 
         var normalMoves = 5;
         assertThat(generator.generate(position)).hasSize(normalMoves + 1).containsOnlyOnce(expectedCastles);
@@ -179,7 +179,7 @@ final class KingMoveGeneratorTest {
     @Test
     void novagCastlingBug() {
         var position = FenParser.parse("r3k2r/pp2n1pp/2p5/3pB3/P3P3/2P5/2P3PP/R4RK1 b kq - 1 19");
-        var unexpectedCastles = new Move[] {Move.BLACK_KING_SIDE_CASTLE.get(0)};
+        var unexpectedCastles = new Move[] {Move.BLACK_SHORT_CASTLE_STEPS.get(0)};
 
         assertThat(generator.generate(position)).doesNotContain(unexpectedCastles);
     }

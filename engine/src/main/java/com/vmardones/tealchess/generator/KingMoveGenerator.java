@@ -74,7 +74,7 @@ final class KingMoveGenerator implements MoveGenerator, LookupGenerator {
     private void addWhiteCastles(List<Move> moves, long king, Position position) {
         var rights = position.castlingRights();
 
-        if (!rights.whiteKingSide() && !rights.whiteQueenSide()) {
+        if (!rights.whiteShort() && !rights.whiteLong()) {
             return;
         }
 
@@ -86,19 +86,19 @@ final class KingMoveGenerator implements MoveGenerator, LookupGenerator {
 
         var emptySquares = position.board().emptySquares();
 
-        if (rights.whiteKingSide() && isKingSideCastlePossible(WHITE_KING, emptySquares, opponentAttacks)) {
-            moves.add(WHITE_KING_SIDE_CASTLE.get(0));
+        if (rights.whiteShort() && isShortCastlePossible(WHITE_KING, emptySquares, opponentAttacks)) {
+            moves.add(WHITE_SHORT_CASTLE_STEPS.get(0));
         }
 
-        if (rights.whiteQueenSide() && isQueenSideCastlePossible(WHITE_KING, emptySquares, opponentAttacks)) {
-            moves.add(WHITE_QUEEN_SIDE_CASTLE.get(0));
+        if (rights.whiteLong() && isLongCastlePossible(WHITE_KING, emptySquares, opponentAttacks)) {
+            moves.add(WHITE_LONG_CASTLE_STEPS.get(0));
         }
     }
 
     private void addBlackCastles(List<Move> moves, long king, Position position) {
         var rights = position.castlingRights();
 
-        if (!rights.blackKingSide() && !rights.blackQueenSide()) {
+        if (!rights.blackShort() && !rights.blackLong()) {
             return;
         }
 
@@ -110,23 +110,23 @@ final class KingMoveGenerator implements MoveGenerator, LookupGenerator {
 
         var emptySquares = position.board().emptySquares();
 
-        if (rights.blackKingSide() && isKingSideCastlePossible(BLACK_KING, emptySquares, opponentAttacks)) {
-            moves.add(BLACK_KING_SIDE_CASTLE.get(0));
+        if (rights.blackShort() && isShortCastlePossible(BLACK_KING, emptySquares, opponentAttacks)) {
+            moves.add(BLACK_SHORT_CASTLE_STEPS.get(0));
         }
 
-        if (rights.blackQueenSide() && isQueenSideCastlePossible(BLACK_KING, emptySquares, opponentAttacks)) {
-            moves.add(BLACK_QUEEN_SIDE_CASTLE.get(0));
+        if (rights.blackLong() && isLongCastlePossible(BLACK_KING, emptySquares, opponentAttacks)) {
+            moves.add(BLACK_LONG_CASTLE_STEPS.get(0));
         }
     }
 
-    private boolean isKingSideCastlePossible(int kingSquare, long emptySquares, long opponentAttacks) {
+    private boolean isShortCastlePossible(int kingSquare, long emptySquares, long opponentAttacks) {
         return isSet(emptySquares, kingSquare + 1)
                 && isSet(emptySquares, kingSquare + 2)
                 && isNotSet(opponentAttacks, kingSquare + 1)
                 && isNotSet(opponentAttacks, kingSquare + 2);
     }
 
-    private boolean isQueenSideCastlePossible(int kingSquare, long emptySquares, long opponentAttacks) {
+    private boolean isLongCastlePossible(int kingSquare, long emptySquares, long opponentAttacks) {
         return isSet(emptySquares, kingSquare - 1)
                 && isSet(emptySquares, kingSquare - 2)
                 && isSet(emptySquares, kingSquare - 3)

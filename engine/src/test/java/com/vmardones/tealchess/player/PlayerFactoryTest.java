@@ -14,7 +14,7 @@ import com.vmardones.tealchess.generator.LegalGenerator;
 import com.vmardones.tealchess.parser.fen.FenParser;
 import org.junit.jupiter.api.Test;
 
-class PlayerFactoryTest {
+final class PlayerFactoryTest {
 
     PlayerFactory playerFactory = new PlayerFactory(new AttackGenerator(), new LegalGenerator());
 

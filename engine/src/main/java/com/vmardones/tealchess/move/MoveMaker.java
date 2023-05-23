@@ -25,11 +25,11 @@ import org.eclipse.jdt.annotation.Nullable;
 public final class MoveMaker {
 
     private static final int WHITE_KING = Square.e1;
-    private static final int WHITE_KING_SIDE_ROOK = Square.h1;
-    private static final int WHITE_QUEEN_SIDE_ROOK = Square.a1;
+    private static final int WHITE_SHORT_ROOK = Square.h1;
+    private static final int WHITE_LONG_ROOK = Square.a1;
     private static final int BLACK_KING = Square.e8;
-    private static final int BLACK_KING_SIDE_ROOK = Square.h8;
-    private static final int BLACK_QUEEN_SIDE_ROOK = Square.a8;
+    private static final int BLACK_SHORT_ROOK = Square.h8;
+    private static final int BLACK_LONG_ROOK = Square.a8;
     private static final int PAWN_PUSH_OFFSET = 8;
 
     public MoveMaker() {}
@@ -94,8 +94,8 @@ public final class MoveMaker {
 
         if (promotionChoice == null
                 && move.type() != EN_PASSANT
-                && move.type() != KING_CASTLE
-                && move.type() != QUEEN_CASTLE) {
+                && move.type() != SHORT_CASTLE
+                && move.type() != LONG_CASTLE) {
             return makeRegularMove(bitboard, source, destination);
         }
 
@@ -107,11 +107,11 @@ public final class MoveMaker {
             return makeEnPassantMove(bitboard, source, destination, sideToMove);
         }
 
-        if (move.type() == KING_CASTLE) {
-            return makeKingSideCastle(bitboard, source, destination, sideToMove);
+        if (move.type() == SHORT_CASTLE) {
+            return makeShortCastle(bitboard, source, destination, sideToMove);
         }
 
-        return makeQueenSideCastle(bitboard, source, destination, sideToMove);
+        return makeLongCastle(bitboard, source, destination, sideToMove);
     }
 
     // TODO: Maybe also check if destination is set
@@ -161,13 +161,13 @@ public final class MoveMaker {
         return bitboard;
     }
 
-    private long makeKingSideCastle(long bitboard, int source, int destination, Color sideToMove) {
-        var rookMove = sideToMove.isWhite() ? WHITE_KING_SIDE_CASTLE.get(1) : BLACK_KING_SIDE_CASTLE.get(1);
+    private long makeShortCastle(long bitboard, int source, int destination, Color sideToMove) {
+        var rookMove = sideToMove.isWhite() ? WHITE_SHORT_CASTLE_STEPS.get(1) : BLACK_SHORT_CASTLE_STEPS.get(1);
         return makeCastle(bitboard, source, destination, rookMove);
     }
 
-    private long makeQueenSideCastle(long bitboard, int source, int destination, Color sideToMove) {
-        var rookMove = sideToMove.isWhite() ? WHITE_QUEEN_SIDE_CASTLE.get(1) : BLACK_QUEEN_SIDE_CASTLE.get(1);
+    private long makeLongCastle(long bitboard, int source, int destination, Color sideToMove) {
+        var rookMove = sideToMove.isWhite() ? WHITE_LONG_CASTLE_STEPS.get(1) : BLACK_LONG_CASTLE_STEPS.get(1);
         return makeCastle(bitboard, source, destination, rookMove);
     }
 
@@ -193,22 +193,22 @@ public final class MoveMaker {
             return rights.disable(sideToMove);
         }
 
-        if (source == WHITE_KING_SIDE_ROOK || source == BLACK_KING_SIDE_ROOK) {
-            rights = rights.disableKingSide(sideToMove);
+        if (source == WHITE_SHORT_ROOK || source == BLACK_SHORT_ROOK) {
+            rights = rights.disableShortCastle(sideToMove);
         }
 
-        if (source == WHITE_QUEEN_SIDE_ROOK || source == BLACK_QUEEN_SIDE_ROOK) {
-            rights = rights.disableQueenSide(sideToMove);
+        if (source == WHITE_LONG_ROOK || source == BLACK_LONG_ROOK) {
+            rights = rights.disableLongCastle(sideToMove);
         }
 
-        if (sideToMove.isBlack() && destination == WHITE_KING_SIDE_ROOK
-                || sideToMove.isWhite() && destination == BLACK_KING_SIDE_ROOK) {
-            rights = rights.disableKingSide(sideToMove.opposite());
+        if ((sideToMove.isBlack() && destination == WHITE_SHORT_ROOK)
+                || (sideToMove.isWhite() && destination == BLACK_SHORT_ROOK)) {
+            rights = rights.disableShortCastle(sideToMove.opposite());
         }
 
-        if (sideToMove.isBlack() && destination == WHITE_QUEEN_SIDE_ROOK
-                || sideToMove.isWhite() && destination == BLACK_QUEEN_SIDE_ROOK) {
-            rights = rights.disableQueenSide(sideToMove.opposite());
+        if ((sideToMove.isBlack() && destination == WHITE_LONG_ROOK)
+                || (sideToMove.isWhite() && destination == BLACK_LONG_ROOK)) {
+            rights = rights.disableLongCastle(sideToMove.opposite());
         }
 
         return rights;

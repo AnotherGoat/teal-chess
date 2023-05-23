@@ -5,8 +5,8 @@
 
 package com.vmardones.tealchess.integration;
 
-import static com.vmardones.tealchess.move.Move.BLACK_QUEEN_SIDE_CASTLE;
-import static com.vmardones.tealchess.move.Move.WHITE_QUEEN_SIDE_CASTLE;
+import static com.vmardones.tealchess.move.Move.BLACK_LONG_CASTLE_STEPS;
+import static com.vmardones.tealchess.move.Move.WHITE_LONG_CASTLE_STEPS;
 import static com.vmardones.tealchess.move.MoveType.*;
 import static com.vmardones.tealchess.parser.fen.FenParser.parse;
 import static com.vmardones.tealchess.player.PlayerStatus.*;
@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.game.Game;
 import com.vmardones.tealchess.generator.AttackGenerator;
 import com.vmardones.tealchess.generator.LegalGenerator;
@@ -30,6 +31,7 @@ import com.vmardones.tealchess.position.Position;
 import com.vmardones.tealchess.square.Coordinate;
 import org.junit.jupiter.api.Test;
 
+@ExcludeFromNullAway
 final class FullGameTest {
 
     // Kasparov vs. Topalov, Wijk aan Zee 1999
@@ -206,7 +208,7 @@ final class FullGameTest {
                         OK,
                         e1,
                         new int[] {d1, c1, d2, f2},
-                        WHITE_QUEEN_SIDE_CASTLE.get(0)),
+                        WHITE_LONG_CASTLE_STEPS.get(0)),
                 new TurnData(
                         parse("r2qk2r/pb1n1p1p/2pp1npQ/1p2p3/3PP3/P1N2P2/1PP1N1PP/2KR1B1R b kq - 1 11"),
                         OK,
@@ -236,7 +238,7 @@ final class FullGameTest {
                         OK,
                         e8,
                         new int[] {d8, c8},
-                        BLACK_QUEEN_SIDE_CASTLE.get(0)),
+                        BLACK_LONG_CASTLE_STEPS.get(0)),
                 new TurnData(
                         parse("2kr3r/1b1nqp1p/p1pp1npQ/1p2p3/3PP3/P1N2P2/1PP3PP/1KNR1B1R w - - 2 14"),
                         OK,

@@ -13,12 +13,14 @@ import static com.vmardones.tealchess.piece.PieceType.*;
 import static com.vmardones.tealchess.square.Square.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.board.Mailbox;
 import com.vmardones.tealchess.parser.fen.FenParser;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.piece.PromotionChoice;
 import org.junit.jupiter.api.Test;
 
+@ExcludeFromNullAway
 final class MoveMakerTest {
 
     MoveMaker moveMaker = new MoveMaker();
@@ -46,10 +48,10 @@ final class MoveMakerTest {
     }
 
     @Test
-    void makeWhiteKingSideCastle() {
+    void makeWhiteShortCastle() {
         var position = FenParser.parse("4k3/8/8/8/8/8/8/4K2R w K - 0 1");
         var postMoveBoard =
-                moveMaker.make(position, WHITE_KING_SIDE_CASTLE.get(0)).board();
+                moveMaker.make(position, WHITE_SHORT_CASTLE_STEPS.get(0)).board();
         var mailbox = new Mailbox(postMoveBoard);
 
         assertThat(mailbox.pieceAt(e1)).isNull();
@@ -59,10 +61,10 @@ final class MoveMakerTest {
     }
 
     @Test
-    void makeWhiteQueenSideCastle() {
+    void makeWhiteLongCastle() {
         var position = FenParser.parse("4k3/8/8/8/8/8/8/R3K3 w Q - 0 1");
         var postMoveBoard =
-                moveMaker.make(position, WHITE_QUEEN_SIDE_CASTLE.get(0)).board();
+                moveMaker.make(position, WHITE_LONG_CASTLE_STEPS.get(0)).board();
         var mailbox = new Mailbox(postMoveBoard);
 
         assertThat(mailbox.pieceAt(e1)).isNull();
@@ -72,10 +74,10 @@ final class MoveMakerTest {
     }
 
     @Test
-    void makeBlackKingSideCastle() {
+    void makeBlackShortCastle() {
         var position = FenParser.parse("4k2r/8/8/8/8/8/8/4K3 b k - 0 1");
         var postMoveBoard =
-                moveMaker.make(position, BLACK_KING_SIDE_CASTLE.get(0)).board();
+                moveMaker.make(position, BLACK_SHORT_CASTLE_STEPS.get(0)).board();
         var mailbox = new Mailbox(postMoveBoard);
 
         assertThat(mailbox.pieceAt(e8)).isNull();
@@ -85,10 +87,10 @@ final class MoveMakerTest {
     }
 
     @Test
-    void makeBlackQueenSideCastle() {
+    void makeBlackLongCastle() {
         var position = FenParser.parse("r3k3/8/8/8/8/8/8/4K3 b q - 0 1");
         var postMoveBoard =
-                moveMaker.make(position, BLACK_QUEEN_SIDE_CASTLE.get(0)).board();
+                moveMaker.make(position, BLACK_LONG_CASTLE_STEPS.get(0)).board();
         var mailbox = new Mailbox(postMoveBoard);
 
         assertThat(mailbox.pieceAt(e8)).isNull();
@@ -172,7 +174,7 @@ final class MoveMakerTest {
     }
 
     @Test
-    void loseWhiteKingSideCastle() {
+    void loseWhiteShortCastle() {
         var position = FenParser.parse("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
         var move = new Move(NORMAL, h1, h3);
         var postMove = moveMaker.make(position, move);
@@ -181,7 +183,7 @@ final class MoveMakerTest {
     }
 
     @Test
-    void loseWhiteQueenSideCastle() {
+    void loseWhiteLongCastle() {
         var position = FenParser.parse("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
         var move = new Move(NORMAL, a1, d1);
         var postMove = moveMaker.make(position, move);
@@ -190,7 +192,7 @@ final class MoveMakerTest {
     }
 
     @Test
-    void loseBlackKingSideCastle() {
+    void loseBlackShortCastle() {
         var position = FenParser.parse("r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 0 1");
         var move = new Move(NORMAL, h8, g8);
         var postMove = moveMaker.make(position, move);
@@ -199,7 +201,7 @@ final class MoveMakerTest {
     }
 
     @Test
-    void loseBlackQueenSideCastle() {
+    void loseBlackLongCastle() {
         var position = FenParser.parse("r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 0 1");
         var move = new Move(NORMAL, a8, a6);
         var postMove = moveMaker.make(position, move);
@@ -217,7 +219,7 @@ final class MoveMakerTest {
     }
 
     @Test
-    void loseWhiteKingSideRook() {
+    void loseWhiteShortRook() {
         var position = FenParser.parse("r3k2r/8/1N4N1/8/8/1n4n1/8/R3K2R b KQkq - 0 1");
         var move = new Move(CAPTURE, g3, h1);
         var postMove = moveMaker.make(position, move);
@@ -226,7 +228,7 @@ final class MoveMakerTest {
     }
 
     @Test
-    void loseWhiteQueenSideRook() {
+    void loseWhiteLongRook() {
         var position = FenParser.parse("r3k2r/8/1N4N1/8/8/1n4n1/8/R3K2R b KQkq - 0 1");
         var move = new Move(CAPTURE, b3, a1);
         var postMove = moveMaker.make(position, move);
@@ -235,7 +237,7 @@ final class MoveMakerTest {
     }
 
     @Test
-    void loseBlackKingSideRook() {
+    void loseBlackShortRook() {
         var position = FenParser.parse("r3k2r/8/1N4N1/8/8/1n4n1/8/R3K2R w KQkq - 0 1");
         var move = new Move(CAPTURE, g6, h8);
         var postMove = moveMaker.make(position, move);
@@ -244,7 +246,7 @@ final class MoveMakerTest {
     }
 
     @Test
-    void loseBlackQueenSideRook() {
+    void loseBlackLongRook() {
         var position = FenParser.parse("r3k2r/8/1N4N1/8/8/1n4n1/8/R3K2R w KQkq - 0 1");
         var move = new Move(CAPTURE, b6, a8);
         var postMove = moveMaker.make(position, move);

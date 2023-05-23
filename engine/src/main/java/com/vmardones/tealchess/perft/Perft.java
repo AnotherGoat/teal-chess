@@ -100,7 +100,7 @@ public final class Perft {
                 results.enPassants++;
             }
 
-            if (type == MoveType.KING_CASTLE || type == MoveType.QUEEN_CASTLE) {
+            if (type == MoveType.SHORT_CASTLE || type == MoveType.LONG_CASTLE) {
                 results.castles++;
             }
 

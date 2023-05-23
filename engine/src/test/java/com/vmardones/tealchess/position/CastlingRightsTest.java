@@ -17,10 +17,10 @@ final class CastlingRightsTest {
     void emptyConstructor() {
         var rights = new CastlingRights();
 
-        assertThat(rights.whiteKingSide()).isFalse();
-        assertThat(rights.whiteQueenSide()).isFalse();
-        assertThat(rights.blackKingSide()).isFalse();
-        assertThat(rights.blackQueenSide()).isFalse();
+        assertThat(rights.whiteShort()).isFalse();
+        assertThat(rights.whiteLong()).isFalse();
+        assertThat(rights.blackShort()).isFalse();
+        assertThat(rights.blackLong()).isFalse();
     }
 
     @Test
@@ -36,27 +36,27 @@ final class CastlingRightsTest {
     }
 
     @Test
-    void disableWhiteKingSide() {
+    void disableWhiteShortCastle() {
         var rights = new CastlingRights(true, true, true, true);
-        assertThat(rights.disableKingSide(Color.WHITE)).isEqualTo(new CastlingRights(false, true, true, true));
+        assertThat(rights.disableShortCastle(Color.WHITE)).isEqualTo(new CastlingRights(false, true, true, true));
     }
 
     @Test
-    void disableBlackKingSide() {
+    void disableBlackShortCastle() {
         var rights = new CastlingRights(true, true, true, true);
-        assertThat(rights.disableKingSide(BLACK)).isEqualTo(new CastlingRights(true, true, false, true));
+        assertThat(rights.disableShortCastle(BLACK)).isEqualTo(new CastlingRights(true, true, false, true));
     }
 
     @Test
-    void disableWhiteQueenSide() {
+    void disableWhiteLongCastle() {
         var rights = new CastlingRights(true, true, true, true);
-        assertThat(rights.disableQueenSide(Color.WHITE)).isEqualTo(new CastlingRights(true, false, true, true));
+        assertThat(rights.disableLongCastle(Color.WHITE)).isEqualTo(new CastlingRights(true, false, true, true));
     }
 
     @Test
-    void disableBlackQueenSide() {
+    void disableBlackLongCastle() {
         var rights = new CastlingRights(true, true, true, true);
-        assertThat(rights.disableQueenSide(BLACK)).isEqualTo(new CastlingRights(true, true, true, false));
+        assertThat(rights.disableLongCastle(BLACK)).isEqualTo(new CastlingRights(true, true, true, false));
     }
 
     @Test

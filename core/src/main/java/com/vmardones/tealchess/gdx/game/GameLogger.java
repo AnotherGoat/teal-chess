@@ -33,7 +33,7 @@ final class GameLogger {
         Gdx.app.debug(LOG_TAG, "Black pieces: " + board.pieces(Color.BLACK));
         */
 
-        Gdx.app.debug(LOG_TAG, "Castling rights: " + game.castlingRights().fen());
+        Gdx.app.debug(LOG_TAG, "Castling rights: " + game.castlingRights());
 
         var enPassantTarget = game.enPassantTarget();
         if (enPassantTarget != null) {
