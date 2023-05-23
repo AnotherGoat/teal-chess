@@ -38,6 +38,10 @@ public record Piece(PieceType type, Color color, int square) implements Fen, San
 
     /* Getters */
 
+    public int value() {
+        return type.value();
+    }
+
     @Override
     public String unicode() {
         return color.isWhite() ? type.whiteUnicode() : type.blackUnicode();

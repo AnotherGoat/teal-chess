@@ -9,8 +9,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import com.vmardones.tealchess.ai.MoveChooser;
-import com.vmardones.tealchess.ai.RandomMoveChooser;
 import com.vmardones.tealchess.board.Mailbox;
 import com.vmardones.tealchess.generator.LegalGenerator;
 import com.vmardones.tealchess.generator.MoveGenerator;
@@ -20,6 +18,8 @@ import com.vmardones.tealchess.move.MoveType;
 import com.vmardones.tealchess.parser.fen.FenParser;
 import com.vmardones.tealchess.piece.PromotionChoice;
 import com.vmardones.tealchess.position.Position;
+import com.vmardones.tealchess.search.MoveChooser;
+import com.vmardones.tealchess.search.RandomMoveChooser;
 import com.vmardones.tealchess.square.AlgebraicConverter;
 
 final class UciCommunicator {

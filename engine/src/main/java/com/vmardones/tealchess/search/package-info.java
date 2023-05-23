@@ -1,4 +1,4 @@
 @NonNullByDefault
-package com.vmardones.tealchess.ai;
+package com.vmardones.tealchess.search;
 
 import org.eclipse.jdt.annotation.NonNullByDefault;

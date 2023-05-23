@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.vmardones.tealchess.ai.MoveChooser;
 import com.vmardones.tealchess.board.BitboardManipulator;
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.color.Color;
@@ -29,6 +28,7 @@ import com.vmardones.tealchess.player.PlayerFactory;
 import com.vmardones.tealchess.player.PlayerStatus;
 import com.vmardones.tealchess.position.CastlingRights;
 import com.vmardones.tealchess.position.Position;
+import com.vmardones.tealchess.search.MoveChooser;
 import com.vmardones.tealchess.square.Coordinate;
 import org.eclipse.jdt.annotation.Nullable;
 

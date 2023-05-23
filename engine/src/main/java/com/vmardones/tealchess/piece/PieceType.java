@@ -62,6 +62,10 @@ public enum PieceType {
 
     /* Getters */
 
+    int value() {
+        return value;
+    }
+
     String whiteFen() {
         return whiteFen;
     }

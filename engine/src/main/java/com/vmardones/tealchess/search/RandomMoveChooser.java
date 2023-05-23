@@ -3,7 +3,7 @@
  * The full notice can be found at README.md in the root directory.
  */
 
-package com.vmardones.tealchess.ai;
+package com.vmardones.tealchess.search;
 
 import java.util.List;
 import java.util.Random;

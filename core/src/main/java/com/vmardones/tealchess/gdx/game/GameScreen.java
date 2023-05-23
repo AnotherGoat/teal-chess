@@ -14,7 +14,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.utils.Timer;
-import com.vmardones.tealchess.ai.RandomMoveChooser;
+import com.vmardones.tealchess.evaluation.MaterialEvaluator;
 import com.vmardones.tealchess.game.Game;
 import com.vmardones.tealchess.generator.AttackGenerator;
 import com.vmardones.tealchess.generator.LegalGenerator;
@@ -25,6 +25,7 @@ import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.move.MoveFinder;
 import com.vmardones.tealchess.move.MoveMaker;
 import com.vmardones.tealchess.player.PlayerFactory;
+import com.vmardones.tealchess.search.NegamaxMoveChooser;
 import org.eclipse.jdt.annotation.Nullable;
 
 public final class GameScreen extends ScreenAdapter {
@@ -153,9 +154,9 @@ public final class GameScreen extends ScreenAdapter {
         var attackGenerator = new AttackGenerator();
         var moveGenerator = new LegalGenerator();
         var playerFactory = new PlayerFactory(attackGenerator, moveGenerator);
+        var blackAi = new NegamaxMoveChooser(new MaterialEvaluator(), 3);
 
-        return new Game(moveMaker, moveFinder, attackGenerator, playerFactory, INITIAL_TAGS)
-                .blackAi(new RandomMoveChooser());
+        return new Game(moveMaker, moveFinder, attackGenerator, playerFactory, INITIAL_TAGS).blackAi(blackAi);
     }
 
     private void playAiMove() {
@@ -165,8 +166,9 @@ public final class GameScreen extends ScreenAdapter {
 
         var startTime = System.nanoTime();
         var aiMove = game.chooseAiMove();
-        var elapsedTime = (System.nanoTime() - startTime) / 1_000_000f;
+        var endTime = System.nanoTime();
 
+        var elapsedTime = (float) (endTime - startTime) / 1e9f;
         Gdx.app.debug("AI", "Took " + elapsedTime + " seconds");
 
         var task = new Timer.Task() {
@@ -189,7 +191,7 @@ public final class GameScreen extends ScreenAdapter {
             }
         };
 
-        Timer.schedule(task, settings.aiDelay() - elapsedTime);
+        Timer.schedule(task, settings.aiDelay());
     }
 
     private void playSlidingAnimation(Move move) {

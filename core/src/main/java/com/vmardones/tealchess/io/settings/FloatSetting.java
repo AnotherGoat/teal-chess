@@ -9,7 +9,8 @@ import java.util.Locale;
 
 enum FloatSetting {
     ANIMATION_DURATION(0.3f, 0.1f, 0.7f, 0.1f),
-    AI_DELAY(0.7f, 0, 1.5f, 0.1f);
+    // TODO: Either remove or hide this setting, the delay must be at least 0.1 to make the animations play smoothly
+    AI_DELAY(0.2f, 0.1f, 1.0f, 0.1f);
 
     private final float defaultValue;
     private final float min;
