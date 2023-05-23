@@ -5,12 +5,20 @@ with `.\gradlew.bat` if you're using Windows.
 
 ## Using the program
 
-### Running the program
+### Running the engine
+
+To run the engine (for UCI communication), run:
+
+```shell
+./gradlew compileJava && java -cp engine/build/libs/*.jar com.vmardones.tealchess.uci.UciLauncher
+```
+
+### Running the frontend
 
 The game can be easily started like this:
 
 ```shell
-/.gradlew run
+./gradlew run
 ```
 
 ### Compiling a JAR (platform-independent, but requires JRE)

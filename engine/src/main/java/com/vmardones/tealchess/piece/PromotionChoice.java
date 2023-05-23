@@ -18,6 +18,17 @@ public enum PromotionChoice implements San {
 
     private final PieceType type;
 
+    public static PromotionChoice fromSymbol(String symbol) {
+        return switch (symbol) {
+            case "q" -> PromotionChoice.QUEEN;
+            case "n" -> PromotionChoice.KNIGHT;
+            case "r" -> PromotionChoice.ROOK;
+            case "b" -> PromotionChoice.BISHOP;
+                // TODO: Throw an exception instead
+            default -> PromotionChoice.QUEEN;
+        };
+    }
+
     /* Getters */
 
     @Override

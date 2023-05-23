@@ -171,16 +171,24 @@ public final class Board implements Unicode {
                 | kings(opposite);
     }
 
+    // TODO: Consider moving this to other class
     @Override
     public String unicode() {
         var result = new StringBuilder();
+        var lines = new ArrayList<>();
 
         for (var square = 0; square < NUMBER_OF_SQUARES; square++) {
             result.append(squareAsUnicode(square)).append(" ");
 
             if ((square + 1) % SIDE_LENGTH == 0) {
-                result.deleteCharAt(result.length() - 1).append("\n");
+                result.deleteCharAt(result.length() - 1);
+                lines.add(result.toString());
+                result.delete(0, result.length());
             }
+        }
+
+        for (var rank = SIDE_LENGTH - 1; rank >= 0; rank--) {
+            result.append(lines.get(rank)).append("\n");
         }
 
         result.deleteCharAt(result.length() - 1);

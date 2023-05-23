@@ -61,17 +61,25 @@ public final class Game implements Fen, Pgn {
             AttackGenerator attackGenerator,
             PlayerFactory playerFactory,
             Map<String, String> tags) {
+        this(moveMaker, moveFinder, attackGenerator, playerFactory, tags, Position.INITIAL_POSITION);
+    }
+
+    public Game(
+            MoveMaker moveMaker,
+            MoveFinder moveFinder,
+            AttackGenerator attackGenerator,
+            PlayerFactory playerFactory,
+            Map<String, String> tags,
+            Position startingPosition) {
         this.moveMaker = moveMaker;
         this.moveFinder = moveFinder;
         this.attackGenerator = attackGenerator;
         this.playerFactory = playerFactory;
-
         this.tags = tags;
 
-        var position = Position.INITIAL_POSITION;
-        var whitePlayer = playerFactory.create(position, Color.WHITE);
-        var blackPlayer = playerFactory.create(position, Color.BLACK);
-        state = new GameState(position, whitePlayer, blackPlayer);
+        var whitePlayer = playerFactory.create(startingPosition, Color.WHITE);
+        var blackPlayer = playerFactory.create(startingPosition, Color.BLACK);
+        state = new GameState(startingPosition, whitePlayer, blackPlayer);
         history = new GameHistory(state.save());
     }
 
