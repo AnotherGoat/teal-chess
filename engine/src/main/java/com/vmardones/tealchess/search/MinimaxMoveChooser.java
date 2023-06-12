@@ -5,17 +5,17 @@
 
 package com.vmardones.tealchess.search;
 
-import java.util.List;
 import java.util.Random;
 
+import com.vmardones.tealchess.color.Color;
 import com.vmardones.tealchess.evaluation.BoardEvaluator;
+import com.vmardones.tealchess.game.GameMemento;
 import com.vmardones.tealchess.generator.AttackGenerator;
 import com.vmardones.tealchess.generator.LegalGenerator;
 import com.vmardones.tealchess.generator.MoveGenerator;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.move.MoveMaker;
 import com.vmardones.tealchess.player.PlayerFactory;
-import com.vmardones.tealchess.position.Position;
 
 public final class MinimaxMoveChooser implements MoveChooser {
 
@@ -32,20 +32,24 @@ public final class MinimaxMoveChooser implements MoveChooser {
     }
 
     @Override
-    public Move chooseMove(Position position, List<Move> legals) {
+    public Move chooseMove(GameMemento state) {
 
+        var legals = state.player().legals();
         var bestMove = legals.get(0);
 
         var highest = Integer.MIN_VALUE;
         var lowest = Integer.MAX_VALUE;
 
         for (var move : legals) {
-            var nextPosition = moveMaker.make(position, move);
-            var nextSideToMove = nextPosition.sideToMove();
-            var player = playerFactory.create(nextPosition, nextSideToMove);
+            // TODO: Encapsulate this into a method
+            var position = moveMaker.make(state.position(), move);
+            var whitePlayer = playerFactory.create(position, Color.WHITE);
+            var blackPlayer = playerFactory.create(position, Color.BLACK);
 
-            if (nextSideToMove.isWhite()) {
-                var score = min(nextPosition, player.legals(), depth - 1);
+            var nextState = new GameMemento(position, whitePlayer, blackPlayer, move);
+
+            if (position.sideToMove().isWhite()) {
+                var score = min(nextState, depth - 1);
 
                 if (score > highest) {
                     highest = score;
@@ -54,7 +58,7 @@ public final class MinimaxMoveChooser implements MoveChooser {
                     bestMove = move;
                 }
             } else {
-                var score = max(nextPosition, player.legals(), depth - 1);
+                var score = max(nextState, depth - 1);
 
                 if (score < lowest) {
                     lowest = score;
@@ -68,19 +72,23 @@ public final class MinimaxMoveChooser implements MoveChooser {
         return bestMove;
     }
 
-    private int min(Position position, List<Move> legals, int depth) {
+    private int min(GameMemento state, int depth) {
+        var legals = state.player().legals();
+
         if (depth == 0 || legals.isEmpty()) {
-            return evaluator.evaluate(position);
+            return evaluator.evaluate(state);
         }
 
         var lowest = Integer.MAX_VALUE;
 
         for (var move : legals) {
-            var nextPosition = moveMaker.make(position, move);
-            var nextSideToMove = nextPosition.sideToMove();
-            var player = playerFactory.create(nextPosition, nextSideToMove);
+            var position = moveMaker.make(state.position(), move);
+            var whitePlayer = playerFactory.create(position, Color.WHITE);
+            var blackPlayer = playerFactory.create(position, Color.BLACK);
 
-            var score = max(nextPosition, player.legals(), depth - 1);
+            var nextState = new GameMemento(position, whitePlayer, blackPlayer, move);
+
+            var score = max(nextState, depth - 1);
 
             if (score < lowest) {
                 lowest = score;
@@ -90,19 +98,23 @@ public final class MinimaxMoveChooser implements MoveChooser {
         return lowest;
     }
 
-    private int max(Position position, List<Move> legals, int depth) {
+    private int max(GameMemento state, int depth) {
+        var legals = state.player().legals();
+
         if (depth == 0 || legals.isEmpty()) {
-            return evaluator.evaluate(position);
+            return evaluator.evaluate(state);
         }
 
         var highest = Integer.MIN_VALUE;
 
         for (var move : legals) {
-            var nextPosition = moveMaker.make(position, move);
-            var nextSideToMove = nextPosition.sideToMove();
-            var player = playerFactory.create(nextPosition, nextSideToMove);
+            var position = moveMaker.make(state.position(), move);
+            var whitePlayer = playerFactory.create(position, Color.WHITE);
+            var blackPlayer = playerFactory.create(position, Color.BLACK);
 
-            var score = min(nextPosition, player.legals(), depth - 1);
+            var nextState = new GameMemento(position, whitePlayer, blackPlayer, move);
+
+            var score = min(nextState, depth - 1);
 
             if (score > highest) {
                 highest = score;

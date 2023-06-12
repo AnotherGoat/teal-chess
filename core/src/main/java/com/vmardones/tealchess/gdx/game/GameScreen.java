@@ -16,15 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.utils.Timer;
 import com.vmardones.tealchess.evaluation.MaterialEvaluator;
 import com.vmardones.tealchess.game.Game;
-import com.vmardones.tealchess.generator.AttackGenerator;
-import com.vmardones.tealchess.generator.LegalGenerator;
 import com.vmardones.tealchess.io.assets.AssetLoader;
 import com.vmardones.tealchess.io.export.ScreenshotTaker;
 import com.vmardones.tealchess.io.settings.SettingManager;
 import com.vmardones.tealchess.move.Move;
-import com.vmardones.tealchess.move.MoveFinder;
-import com.vmardones.tealchess.move.MoveMaker;
-import com.vmardones.tealchess.player.PlayerFactory;
 import com.vmardones.tealchess.search.NegamaxMoveChooser;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -149,14 +144,8 @@ public final class GameScreen extends ScreenAdapter {
     }
 
     private Game createNewGame() {
-        var moveMaker = new MoveMaker();
-        var moveFinder = new MoveFinder();
-        var attackGenerator = new AttackGenerator();
-        var moveGenerator = new LegalGenerator();
-        var playerFactory = new PlayerFactory(attackGenerator, moveGenerator);
         var blackAi = new NegamaxMoveChooser(new MaterialEvaluator(), 3);
-
-        return new Game(moveMaker, moveFinder, attackGenerator, playerFactory, INITIAL_TAGS).blackAi(blackAi);
+        return new Game(INITIAL_TAGS).blackAi(blackAi);
     }
 
     private void playAiMove() {

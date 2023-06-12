@@ -5,33 +5,31 @@
 
 package com.vmardones.tealchess.uci;
 
+import static java.util.Collections.emptyMap;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 import com.vmardones.tealchess.board.Mailbox;
-import com.vmardones.tealchess.generator.LegalGenerator;
-import com.vmardones.tealchess.generator.MoveGenerator;
+import com.vmardones.tealchess.game.Game;
 import com.vmardones.tealchess.move.Move;
-import com.vmardones.tealchess.move.MoveMaker;
 import com.vmardones.tealchess.move.MoveType;
 import com.vmardones.tealchess.parser.fen.FenParser;
 import com.vmardones.tealchess.piece.PromotionChoice;
-import com.vmardones.tealchess.position.Position;
 import com.vmardones.tealchess.search.MoveChooser;
 import com.vmardones.tealchess.search.RandomMoveChooser;
 import com.vmardones.tealchess.square.AlgebraicConverter;
 
+// TODO: Also use GameState here, to pass the memento
 final class UciCommunicator {
 
     private static final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
     private static final String ENGINE_NAME = "TealChess v0.0";
     private static final String AUTHOR = "Víctor M.";
 
-    private final MoveMaker moveMaker = new MoveMaker();
-    private final MoveGenerator legalGenerator = new LegalGenerator();
     private final MoveChooser moveChooser = new RandomMoveChooser();
-    private Position position = Position.INITIAL_POSITION;
+    private Game game = new Game(emptyMap()).whiteAi(moveChooser).blackAi(moveChooser);
 
     UciCommunicator() {}
 
@@ -88,18 +86,19 @@ final class UciCommunicator {
             var splitInput = input.split(" moves ");
             positionInput = splitInput[0];
             movesInput = splitInput[1];
-
         } else {
             positionInput = input;
             movesInput = "";
         }
 
         if (positionInput.equals("startpos")) {
-            position = Position.INITIAL_POSITION;
+            game = new Game(emptyMap());
         } else if (positionInput.startsWith("fen ")) {
             var fen = positionInput.substring("fen".length() + 1);
-            position = FenParser.parse(fen);
+            game = new Game(emptyMap(), FenParser.parse(fen));
         }
+
+        game.whiteAi(moveChooser).blackAi(moveChooser);
 
         if (!movesInput.isBlank()) {
             var moves = movesInput.split(" ");
@@ -117,17 +116,18 @@ final class UciCommunicator {
                 if (moveText.length() == 5) {
                     var promotionChoice = PromotionChoice.fromSymbol(moveText.substring(4));
                     var move = new Move(moveType, source, destination, promotionChoice);
-                    position = moveMaker.make(position, move);
+                    game.makeMove(move);
                 } else {
                     var move = new Move(moveType, source, destination);
-                    position = moveMaker.make(position, move);
+                    game.makeMove(move);
                 }
             }
         }
     }
 
+    // TODO: Move this method to a parser class
     private MoveType inferMoveType(int source, int destination) {
-        var mailbox = new Mailbox(position.board());
+        var mailbox = new Mailbox(game.board());
 
         if (mailbox.pieceAt(source).isPawn()) {
 
@@ -135,7 +135,7 @@ final class UciCommunicator {
                 return MoveType.PAWN_CAPTURE;
             }
 
-            if (position.enPassantTarget() != null && destination == position.enPassantTarget()) {
+            if (game.enPassantTarget() != null && destination == game.enPassantTarget()) {
                 return MoveType.EN_PASSANT;
             }
 
@@ -163,16 +163,16 @@ final class UciCommunicator {
     }
 
     private void sendGo() {
-        var legalMoves = legalGenerator.generate(position);
+        var legalMoves = game.legalMoves();
 
         if (!legalMoves.isEmpty()) {
-            var move = moveChooser.chooseMove(position, legalMoves);
+            var move = game.chooseAiMove();
             System.out.println("bestmove " + move);
         }
     }
 
     private void sendPrint() {
         // TODO: Add a pretty print method for the board and use it here
-        System.out.println(position.board().unicode());
+        System.out.println(game.board().unicode());
     }
 }

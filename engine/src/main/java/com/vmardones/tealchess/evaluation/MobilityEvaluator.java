@@ -7,6 +7,9 @@ package com.vmardones.tealchess.evaluation;
 
 import com.vmardones.tealchess.game.GameMemento;
 
-public sealed interface BoardEvaluator permits MaterialEvaluator, MobilityEvaluator {
-    int evaluate(GameMemento state);
+public final class MobilityEvaluator implements BoardEvaluator {
+    @Override
+    public int evaluate(GameMemento state) {
+        return state.player().legals().size();
+    }
 }

@@ -10,4 +10,13 @@ import com.vmardones.tealchess.player.Player;
 import com.vmardones.tealchess.position.Position;
 import org.eclipse.jdt.annotation.Nullable;
 
-record GameMemento(Position position, Player whitePlayer, Player blackPlayer, @Nullable Move lastMove) {}
+public record GameMemento(Position position, Player whitePlayer, Player blackPlayer, @Nullable Move lastMove) {
+
+    public Player player() {
+        return position.sideToMove().isWhite() ? whitePlayer : blackPlayer;
+    }
+
+    public Player opponent() {
+        return position.sideToMove().isWhite() ? blackPlayer : whitePlayer;
+    }
+}

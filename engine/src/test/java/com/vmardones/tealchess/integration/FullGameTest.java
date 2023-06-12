@@ -20,12 +20,7 @@ import java.util.List;
 
 import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.game.Game;
-import com.vmardones.tealchess.generator.AttackGenerator;
-import com.vmardones.tealchess.generator.LegalGenerator;
 import com.vmardones.tealchess.move.Move;
-import com.vmardones.tealchess.move.MoveFinder;
-import com.vmardones.tealchess.move.MoveMaker;
-import com.vmardones.tealchess.player.PlayerFactory;
 import com.vmardones.tealchess.player.PlayerStatus;
 import com.vmardones.tealchess.position.Position;
 import com.vmardones.tealchess.square.Coordinate;
@@ -38,12 +33,6 @@ final class FullGameTest {
     // https://www.chess.com/article/view/the-best-chess-games-of-all-time#Kasparov_Topalov
     @Test
     void fullGame() {
-        var moveMaker = new MoveMaker();
-        var moveFinder = new MoveFinder();
-        var attackGenerator = new AttackGenerator();
-        var moveGenerator = new LegalGenerator();
-        var playerFactory = new PlayerFactory(attackGenerator, moveGenerator);
-
         var tags = new HashMap<String, String>();
         tags.put("Event", "It (cat.17)");
         tags.put("Site", "Wijk aan Zee (Netherlands)");
@@ -53,7 +42,7 @@ final class FullGameTest {
         tags.put("Black", "Veselin Topalov");
         tags.put("Result", "1-0");
 
-        var game = new Game(moveMaker, moveFinder, attackGenerator, playerFactory, tags);
+        var game = new Game(tags);
 
         for (var turn : turns()) {
             var position = turn.position;

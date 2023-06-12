@@ -15,6 +15,8 @@ import com.vmardones.tealchess.board.BitboardManipulator;
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.color.Color;
 import com.vmardones.tealchess.generator.AttackGenerator;
+import com.vmardones.tealchess.generator.LegalGenerator;
+import com.vmardones.tealchess.generator.MoveGenerator;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.move.MoveFinder;
 import com.vmardones.tealchess.move.MoveMaker;
@@ -51,34 +53,48 @@ public final class Game implements Fen, Pgn {
     private @Nullable MoveChooser blackAi;
 
     /**
-     * The standard way to create a new game, starting from the initial position.
-     * Also used when loading a PGN file.
+     * The easiest way to create a new game, starting from the initial position.
+     * @param tags Map containing the PGN tag-value pairs.
+     */
+    public Game(Map<String, String> tags) {
+        this(new MoveMaker(), new MoveFinder(), new AttackGenerator(), new LegalGenerator(), tags);
+    }
+
+    public Game(Map<String, String> tags, Position initialPosition) {
+        this(new MoveMaker(), new MoveFinder(), new AttackGenerator(), new LegalGenerator(), tags, initialPosition);
+    }
+
+    /**
+     * A more complete option to create a new game, starting from the initial position.
+     * This alternative allows usage of dependency injection.
+     * The player factory will be created with the injected dependencies.
      * @param tags Map containing the PGN tag-value pairs.
      */
     public Game(
             MoveMaker moveMaker,
             MoveFinder moveFinder,
             AttackGenerator attackGenerator,
-            PlayerFactory playerFactory,
+            MoveGenerator moveGenerator,
             Map<String, String> tags) {
-        this(moveMaker, moveFinder, attackGenerator, playerFactory, tags, Position.INITIAL_POSITION);
+        this(moveMaker, moveFinder, attackGenerator, moveGenerator, tags, Position.INITIAL_POSITION);
     }
 
     public Game(
             MoveMaker moveMaker,
             MoveFinder moveFinder,
             AttackGenerator attackGenerator,
-            PlayerFactory playerFactory,
+            MoveGenerator moveGenerator,
             Map<String, String> tags,
             Position startingPosition) {
         this.moveMaker = moveMaker;
         this.moveFinder = moveFinder;
         this.attackGenerator = attackGenerator;
-        this.playerFactory = playerFactory;
         this.tags = tags;
 
+        playerFactory = new PlayerFactory(attackGenerator, moveGenerator);
         var whitePlayer = playerFactory.create(startingPosition, Color.WHITE);
         var blackPlayer = playerFactory.create(startingPosition, Color.BLACK);
+
         state = new GameState(startingPosition, whitePlayer, blackPlayer);
         history = new GameHistory(state.save());
     }
@@ -217,7 +233,7 @@ public final class Game implements Fen, Pgn {
             throw new UnsupportedOperationException("The current player doesn't have an AI set");
         }
 
-        return currentAi.chooseMove(position(), player().legals());
+        return currentAi.chooseMove(history.lastSave());
     }
 
     /* Analysis methods */

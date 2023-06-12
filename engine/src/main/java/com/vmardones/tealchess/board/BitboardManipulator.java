@@ -19,6 +19,10 @@ public final class BitboardManipulator {
         return 1L << square;
     }
 
+    public static boolean isSingle(long bitboard) {
+        return firstBit(bitboard) == lastBit(bitboard);
+    }
+
     /**
      * Set the bit at a specific square to 1.
      * A 0 will become a 1, an existing 1 will stay the same.
@@ -28,6 +32,16 @@ public final class BitboardManipulator {
      */
     public static long set(long bitboard, int square) {
         return bitboard | singleBit(square);
+    }
+
+    /**
+     * Check if the bit at a specific square is a 1.
+     * @param bitboard The bitboard to check.
+     * @param square The square to check.
+     * @return True if the bit is set (is equal to 1), false otherwise.
+     */
+    public static boolean isSet(long bitboard, int square) {
+        return (bitboard & singleBit(square)) != 0;
     }
 
     /**
@@ -41,6 +55,10 @@ public final class BitboardManipulator {
         return bitboard & ~singleBit(square);
     }
 
+    public static boolean isCleared(long bitboard, int square) {
+        return !isSet(bitboard, square);
+    }
+
     /**
      * Toggle the bit at a specific square.
      * A 1 will be toggled to 0 and a 0 will be toggled to 1.
@@ -50,20 +68,6 @@ public final class BitboardManipulator {
      */
     public static long toggle(long bitboard, int square) {
         return bitboard ^ singleBit(square);
-    }
-
-    /**
-     * Check if the bit at a specific square is a 1.
-     * @param bitboard The bitboard to check.
-     * @param square The square to check.
-     * @return True if the bit is set (is equal to 1), false otherwise.
-     */
-    public static boolean isSet(long bitboard, int square) {
-        return (bitboard & singleBit(square)) != 0;
-    }
-
-    public static boolean isNotSet(long bitboard, int square) {
-        return !isSet(bitboard, square);
     }
 
     /**

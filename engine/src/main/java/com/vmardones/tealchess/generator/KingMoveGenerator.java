@@ -122,15 +122,15 @@ final class KingMoveGenerator implements MoveGenerator, LookupGenerator {
     private boolean isShortCastlePossible(int kingSquare, long emptySquares, long opponentAttacks) {
         return isSet(emptySquares, kingSquare + 1)
                 && isSet(emptySquares, kingSquare + 2)
-                && isNotSet(opponentAttacks, kingSquare + 1)
-                && isNotSet(opponentAttacks, kingSquare + 2);
+                && isCleared(opponentAttacks, kingSquare + 1)
+                && isCleared(opponentAttacks, kingSquare + 2);
     }
 
     private boolean isLongCastlePossible(int kingSquare, long emptySquares, long opponentAttacks) {
         return isSet(emptySquares, kingSquare - 1)
                 && isSet(emptySquares, kingSquare - 2)
                 && isSet(emptySquares, kingSquare - 3)
-                && isNotSet(opponentAttacks, kingSquare - 1)
-                && isNotSet(opponentAttacks, kingSquare - 2);
+                && isCleared(opponentAttacks, kingSquare - 1)
+                && isCleared(opponentAttacks, kingSquare - 2);
     }
 }

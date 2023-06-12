@@ -50,6 +50,10 @@ public final class GameHistory {
                 .toList();
     }
 
+    GameMemento lastSave() {
+        return history.get(history.size() - 1);
+    }
+
     @Nullable Move lastMove() {
         return history.get(history.size() - 1).lastMove();
     }

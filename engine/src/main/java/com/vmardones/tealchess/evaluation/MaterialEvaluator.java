@@ -10,13 +10,14 @@ import java.util.Objects;
 
 import com.vmardones.tealchess.board.Mailbox;
 import com.vmardones.tealchess.color.Color;
+import com.vmardones.tealchess.game.GameMemento;
 import com.vmardones.tealchess.piece.Piece;
-import com.vmardones.tealchess.position.Position;
 import org.eclipse.jdt.annotation.Nullable;
 
 public final class MaterialEvaluator implements BoardEvaluator {
     @Override
-    public int evaluate(Position position) {
+    public int evaluate(GameMemento state) {
+        var position = state.position();
         var mailbox = new Mailbox(position.board());
         var pieces = mailbox.pieces();
 
