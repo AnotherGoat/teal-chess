@@ -12,7 +12,7 @@ import com.vmardones.tealchess.board.Mailbox;
 import com.vmardones.tealchess.color.Color;
 import com.vmardones.tealchess.game.GameMemento;
 import com.vmardones.tealchess.piece.Piece;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class MaterialEvaluator implements BoardEvaluator {
     @Override

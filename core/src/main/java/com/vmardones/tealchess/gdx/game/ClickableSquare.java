@@ -16,7 +16,7 @@ import com.vmardones.tealchess.io.assets.AssetLoader;
 import com.vmardones.tealchess.io.settings.SettingManager;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.square.Coordinate;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 final class ClickableSquare extends Actor {
 

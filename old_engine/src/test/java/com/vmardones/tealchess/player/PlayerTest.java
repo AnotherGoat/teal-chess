@@ -14,11 +14,9 @@ import static org.mockito.Mockito.mock;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.piece.King;
 import org.junit.jupiter.api.Test;
 
-@ExcludeFromNullAway
 final class PlayerTest {
 
     @Test

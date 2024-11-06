@@ -14,7 +14,7 @@ import com.vmardones.tealchess.parser.Unicode;
 import com.vmardones.tealchess.parser.fen.Fen;
 import com.vmardones.tealchess.parser.pgn.San;
 import com.vmardones.tealchess.player.Color;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 
 public abstract sealed class Piece  {

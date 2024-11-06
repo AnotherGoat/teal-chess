@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.stream.IntStream;
 
 import com.vmardones.tealchess.parser.pgn.San;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 
 public final class Coordinate implements San {

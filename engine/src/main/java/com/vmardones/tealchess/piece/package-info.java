@@ -1,7 +1,7 @@
 /**
  * Provides immutable classes that represent chess pieces and their basic behavior.
  */
-@NonNullByDefault
+@NullMarked
 package com.vmardones.tealchess.piece;
 
-import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.jspecify.annotations.NullMarked;

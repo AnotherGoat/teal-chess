@@ -10,7 +10,7 @@ import java.util.Objects;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.parser.pgn.San;
 import com.vmardones.tealchess.piece.*;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The action of moving a piece. This class only represents pseudo-legal moves.

@@ -1,7 +1,7 @@
 /**
  * Provides classes that can handle the position of a particular chess game.
  */
-@NonNullByDefault
+@NullMarked
 package com.vmardones.tealchess.game;
 
-import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.jspecify.annotations.NullMarked;

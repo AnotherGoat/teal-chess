@@ -13,9 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.vmardones.tealchess.io.settings.SettingManager;
 import com.vmardones.tealchess.move.Move;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
-final class PieceAnimator extends Actor {
+public final class PieceAnimator extends Actor {
 
     private static final Event NEXT_TURN = new SimpleEvent(EventType.NEXT_TURN);
     private final SettingManager settings;

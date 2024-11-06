@@ -16,7 +16,7 @@ import com.vmardones.tealchess.piece.PromotionChoice;
 import com.vmardones.tealchess.position.CastlingRights;
 import com.vmardones.tealchess.position.Position;
 import com.vmardones.tealchess.square.Square;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The class responsible for making moves and building a new post-move position.

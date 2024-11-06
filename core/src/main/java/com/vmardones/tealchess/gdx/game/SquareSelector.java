@@ -112,7 +112,7 @@ final class SquareSelector extends Actor {
 
             if (moves.size() == 1) {
                 Gdx.app.log(LOG_TAG, "Legal move found! Updating the chessboard...");
-                var move = moves.get(0);
+                var move = moves.getFirst();
                 game.makeMove(move);
 
                 resetState();

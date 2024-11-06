@@ -1,4 +1,4 @@
-@NonNullByDefault
+@NullMarked
 package com.vmardones.tealchess.gdx.game;
 
-import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.jspecify.annotations.NullMarked;

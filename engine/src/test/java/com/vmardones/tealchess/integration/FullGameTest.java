@@ -18,7 +18,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.game.Game;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.player.PlayerStatus;
@@ -26,7 +25,6 @@ import com.vmardones.tealchess.position.Position;
 import com.vmardones.tealchess.square.Coordinate;
 import org.junit.jupiter.api.Test;
 
-@ExcludeFromNullAway
 final class FullGameTest {
 
     // Kasparov vs. Topalov, Wijk aan Zee 1999

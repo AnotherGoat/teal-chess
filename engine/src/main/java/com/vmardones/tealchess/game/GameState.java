@@ -8,7 +8,7 @@ package com.vmardones.tealchess.game;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.player.Player;
 import com.vmardones.tealchess.position.Position;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 // TODO: Add method to get last saved state
 public final class GameState {

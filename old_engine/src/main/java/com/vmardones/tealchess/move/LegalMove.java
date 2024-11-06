@@ -8,7 +8,7 @@ package com.vmardones.tealchess.move;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.parser.pgn.San;
 import com.vmardones.tealchess.piece.Piece;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a legal move done by one side, also known as a ply depending on the context.

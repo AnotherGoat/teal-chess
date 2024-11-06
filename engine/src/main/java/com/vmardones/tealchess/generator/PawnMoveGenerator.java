@@ -6,7 +6,6 @@
 package com.vmardones.tealchess.generator;
 
 import static com.vmardones.tealchess.board.BitboardManipulator.*;
-import static java.util.Collections.*;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -8,11 +8,9 @@ package com.vmardones.tealchess.board;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.vmardones.tealchess.ExcludeFromNullAway;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
-@ExcludeFromNullAway
 final class CoordinateTest {
 
     @Test

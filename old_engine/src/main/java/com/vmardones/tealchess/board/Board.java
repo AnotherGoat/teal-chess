@@ -14,7 +14,7 @@ import com.vmardones.tealchess.parser.Unicode;
 import com.vmardones.tealchess.piece.King;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.player.Color;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 
 public final class Board implements Unicode {

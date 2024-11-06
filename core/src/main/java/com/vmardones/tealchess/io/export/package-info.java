@@ -1,4 +1,4 @@
-@NonNullByDefault
+@NullMarked
 package com.vmardones.tealchess.io.export;
 
-import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.jspecify.annotations.NullMarked;

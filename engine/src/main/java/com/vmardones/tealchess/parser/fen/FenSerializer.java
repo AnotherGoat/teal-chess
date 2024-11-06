@@ -9,7 +9,7 @@ import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.board.Mailbox;
 import com.vmardones.tealchess.position.Position;
 import com.vmardones.tealchess.square.AlgebraicConverter;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class FenSerializer {
 

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.vmardones.tealchess.move.Move;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class GameHistory {
 
@@ -51,11 +51,11 @@ public final class GameHistory {
     }
 
     GameMemento lastSave() {
-        return history.get(history.size() - 1);
+        return history.getLast();
     }
 
     @Nullable Move lastMove() {
-        return history.get(history.size() - 1).lastMove();
+        return history.getLast().lastMove();
     }
 
     GameHistory add(GameMemento state) {

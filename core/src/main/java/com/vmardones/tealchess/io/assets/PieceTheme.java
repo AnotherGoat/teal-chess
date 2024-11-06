@@ -6,5 +6,5 @@
 package com.vmardones.tealchess.io.assets;
 
 public enum PieceTheme {
-    CBURNETT;
+    CBURNETT
 }

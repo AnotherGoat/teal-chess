@@ -10,12 +10,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.move.LegalMove;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
-@ExcludeFromNullAway
 final class GameHistoryTest {
 
     @Test

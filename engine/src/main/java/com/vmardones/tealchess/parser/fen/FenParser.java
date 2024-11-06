@@ -19,7 +19,7 @@ import com.vmardones.tealchess.piece.*;
 import com.vmardones.tealchess.position.CastlingRights;
 import com.vmardones.tealchess.position.Position;
 import com.vmardones.tealchess.square.AlgebraicConverter;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * FEN (Forsyth-Edwards Notation) parser.

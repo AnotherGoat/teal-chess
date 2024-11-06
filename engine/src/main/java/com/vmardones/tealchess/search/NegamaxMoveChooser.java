@@ -35,7 +35,7 @@ public final class NegamaxMoveChooser implements MoveChooser {
     public Move chooseMove(GameMemento state) {
 
         var legals = state.player().legals();
-        var bestMove = legals.get(0);
+        var bestMove = legals.getFirst();
 
         var highest = Integer.MIN_VALUE;
         var lowest = Integer.MAX_VALUE;

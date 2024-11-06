@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 import com.vmardones.tealchess.game.Position;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.move.MoveMaker;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Responsible for testing pseudo-legal moves and checking whether the player's king is checked after them or not.

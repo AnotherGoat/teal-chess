@@ -9,14 +9,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.stream.Stream;
 
-import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.parser.fen.FenParser;
 import com.vmardones.tealchess.player.Color;
 import org.junit.jupiter.api.Test;
 
-@ExcludeFromNullAway
 final class LegalityTesterTest {
 
     @Test

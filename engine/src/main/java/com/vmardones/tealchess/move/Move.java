@@ -13,7 +13,7 @@ import java.util.Locale;
 
 import com.vmardones.tealchess.piece.PromotionChoice;
 import com.vmardones.tealchess.square.AlgebraicConverter;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public record Move(MoveType type, int source, int destination, @Nullable PromotionChoice promotionChoice) {
 

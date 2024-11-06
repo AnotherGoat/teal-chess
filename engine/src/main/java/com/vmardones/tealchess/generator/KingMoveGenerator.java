@@ -87,11 +87,11 @@ final class KingMoveGenerator implements MoveGenerator, LookupGenerator {
         var emptySquares = position.board().emptySquares();
 
         if (rights.whiteShort() && isShortCastlePossible(WHITE_KING, emptySquares, opponentAttacks)) {
-            moves.add(WHITE_SHORT_CASTLE_STEPS.get(0));
+            moves.add(WHITE_SHORT_CASTLE_STEPS.getFirst());
         }
 
         if (rights.whiteLong() && isLongCastlePossible(WHITE_KING, emptySquares, opponentAttacks)) {
-            moves.add(WHITE_LONG_CASTLE_STEPS.get(0));
+            moves.add(WHITE_LONG_CASTLE_STEPS.getFirst());
         }
     }
 
@@ -111,11 +111,11 @@ final class KingMoveGenerator implements MoveGenerator, LookupGenerator {
         var emptySquares = position.board().emptySquares();
 
         if (rights.blackShort() && isShortCastlePossible(BLACK_KING, emptySquares, opponentAttacks)) {
-            moves.add(BLACK_SHORT_CASTLE_STEPS.get(0));
+            moves.add(BLACK_SHORT_CASTLE_STEPS.getFirst());
         }
 
         if (rights.blackLong() && isLongCastlePossible(BLACK_KING, emptySquares, opponentAttacks)) {
-            moves.add(BLACK_LONG_CASTLE_STEPS.get(0));
+            moves.add(BLACK_LONG_CASTLE_STEPS.getFirst());
         }
     }
 

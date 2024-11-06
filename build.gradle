@@ -15,7 +15,7 @@ allprojects {
         palantirFormatVersion = '2.50.0'
         jacocoVersion = '0.8.12'
 
-        jdtVersion = '2.3.0'
+        jspecifyVersion = '1.0.0'
         errorProneVersion = '2.31.0'
         nullAwayVersion = '0.11.2'
         errorProneSupportVersion = '0.18.0'
@@ -29,7 +29,7 @@ allprojects {
         pitestVersion = '1.16.2'
         junit5PluginVersion = '1.2.1'
 
-        batikVersion = '1.17'
+        batikVersion = '1.18'
         gdxVersion = '1.12.1'
 
         shadowVersion = '8.3.0'
@@ -66,9 +66,9 @@ allprojects {
         options.compilerArgs.add("-Xlint:all")
 
         options.errorprone {
+            excludedPaths = '.*/test/.*'
             disable('JavaTimeDefaultTimeZone', 'TimeZoneUsage')
             option('NullAway:AnnotatedPackages', project.group)
-            option('NullAway:ExcludedClassAnnotations', 'com.vmardones.tealchess.ExcludeFromNullAway')
         }
     }
 
@@ -78,7 +78,7 @@ allprojects {
 
     dependencies {
         // Nullability
-        compileOnly "org.eclipse.jdt:org.eclipse.jdt.annotation:$jdtVersion"
+        compileOnly "org.jspecify:jspecify:$jspecifyVersion"
 
         // Linting
         errorprone "com.google.errorprone:error_prone_core:$errorProneVersion"

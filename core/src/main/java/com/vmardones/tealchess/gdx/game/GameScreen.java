@@ -21,7 +21,7 @@ import com.vmardones.tealchess.io.export.ScreenshotTaker;
 import com.vmardones.tealchess.io.settings.SettingManager;
 import com.vmardones.tealchess.move.Move;
 import com.vmardones.tealchess.search.NegamaxMoveChooser;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public final class GameScreen extends ScreenAdapter {
 

@@ -1,7 +1,7 @@
 /**
  * Provides immutable classes that represent chess players and the color of their pieces.
  */
-@NonNullByDefault
+@NullMarked
 package com.vmardones.tealchess.player;
 
-import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.jspecify.annotations.NullMarked;

@@ -8,7 +8,6 @@ package com.vmardones.tealchess.piece;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.board.Coordinate;
 import com.vmardones.tealchess.player.Color;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -17,7 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExcludeFromNullAway
 @ExtendWith(MockitoExtension.class)
 final class PieceTest {
 

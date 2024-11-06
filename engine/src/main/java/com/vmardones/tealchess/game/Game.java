@@ -32,7 +32,7 @@ import com.vmardones.tealchess.position.CastlingRights;
 import com.vmardones.tealchess.position.Position;
 import com.vmardones.tealchess.search.MoveChooser;
 import com.vmardones.tealchess.square.Coordinate;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A game of chess.

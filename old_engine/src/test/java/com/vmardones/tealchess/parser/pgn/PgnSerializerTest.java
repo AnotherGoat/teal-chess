@@ -13,11 +13,9 @@ import static org.mockito.Mockito.when;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.vmardones.tealchess.ExcludeFromNullAway;
 import com.vmardones.tealchess.move.LegalMove;
 import org.junit.jupiter.api.Test;
 
-@ExcludeFromNullAway
 final class PgnSerializerTest {
 
     @Test

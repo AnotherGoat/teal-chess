@@ -5,7 +5,6 @@
 
 package com.vmardones.tealchess.board;
 
-import static com.vmardones.tealchess.board.BitboardManipulator.*;
 import static com.vmardones.tealchess.color.Color.*;
 import static com.vmardones.tealchess.piece.PieceType.*;
 import static com.vmardones.tealchess.square.Square.*;
@@ -17,7 +16,7 @@ import com.vmardones.tealchess.parser.Unicode;
 import com.vmardones.tealchess.piece.Piece;
 import com.vmardones.tealchess.piece.PieceType;
 import com.vmardones.tealchess.square.Coordinate;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The chessboard, composed of 8x8 squares.

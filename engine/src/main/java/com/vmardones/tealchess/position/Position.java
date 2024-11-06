@@ -7,7 +7,7 @@ package com.vmardones.tealchess.position;
 
 import com.vmardones.tealchess.board.Board;
 import com.vmardones.tealchess.color.Color;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A chess position. The position of the game at a specific point in time.
