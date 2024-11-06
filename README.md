@@ -13,7 +13,7 @@ liked already.
 
 Teal Chess has some differences with the original project, some of which are:
 
-- The project uses Java 17 (the latest LTS version)
+- The project uses Java 21 (the latest LTS version)
 - Gradle is used to manage dependencies, with the Groovy DSL
 - The UI is done using [libGDX](https://libgdx.com/), a game development
   framework, which is more flexible than Swing
